@@ -6,7 +6,7 @@ from typing import Any
 
 from .config import load_config
 from .models import PolicyDecision
-from .policy import Classification, classify, effective_retries, infer_task_type
+from .policy import Classification, classify, infer_task_type
 from .redaction import args_hash, redact, stable_id
 from .storage import PolicyStore, utc_now
 
@@ -40,14 +40,12 @@ class FleetPolicyRuntime:
         used, limits = snapshot["used"], snapshot["limits"]
         if not limits:
             return None
-        retries = effective_retries(
-            int(limits["retries"]), context.get("max_retries"), context.get("failure_limit")
-        )
         checks = {
             "tokens": int(limits["tokens"]),
             "wall_clock_minutes": int(limits["wall_clock_minutes"]),
             "tool_calls": int(limits["tool_calls"]),
-            "retries": retries,
+            # retries is dispatcher-owned (kanban.failure_limit / task
+            # max_retries) and is not enforced from API-error volume.
         }
         for metric, limit in checks.items():
             if int(used.get(metric, 0)) >= limit:
@@ -193,10 +191,14 @@ class FleetPolicyRuntime:
             return None
         request_id = str(context.get("api_request_id") or context.get("request_id") or "")
         if usage:
-            total = usage.get("total_tokens")
-            if total is None:
-                total = int(usage.get("input_tokens") or usage.get("prompt_tokens") or 0) + int(usage.get("output_tokens") or usage.get("completion_tokens") or 0)
-            self.store.add_budget(task_id, "tokens", int(total or 0), stable_id(task_id, request_id, "tokens"))
+            # Budget counts GENERATED tokens only. prompt_tokens is the full
+            # re-sent context on every request (a healthy agent run exhausts a
+            # prompt-inclusive budget in ~7 calls); completion tokens measure the
+            # model's actual work for this task.
+            generated = usage.get("completion_tokens")
+            if generated is None:
+                generated = usage.get("output_tokens")
+            self.store.add_budget(task_id, "tokens", int(generated or 0), stable_id(task_id, request_id, "tokens"))
         # A successful API request breaks the failure streak: fallback-chain errors
         # that resolved within the same turn must not accumulate as retries.
         with self.store.connect() as connection:
@@ -232,34 +234,18 @@ class FleetPolicyRuntime:
         if not task_id:
             return None
         request_id = str(context.get("api_request_id") or context.get("request_id") or "")
-        # Provider fallback chains emit several DISTINCT transient errors per healthy
-        # turn (zai 429 -> codex 429 -> custom). Counting every one of them burns the
-        # retry budget on infrastructure, not worker behavior: only a REPEATED error
-        # class for the same task counts as a retry.
-        error_class = type(error).__name__
-        marker = stable_id(task_id, error_class, "retry-marker")
-        with self.store.connect() as connection:
-            seen = connection.execute(
-                "SELECT 1 FROM budget_ledger WHERE task_id=? AND metric='retries' AND event_id=?",
-                (task_id, marker),
-            ).fetchone()
-        if seen is None:
-            self.store.add_budget(task_id, "retries", 0, marker)
-        else:
-            self.store.add_budget(task_id, "retries", 1, stable_id(task_id, request_id, error_class, "retry"))
+        # Retry accounting is deliberately NOT plugin-owned: within one healthy
+        # turn Hermes walks its fallback chain and fires this hook once per failed
+        # provider (zai 429 -> codex 429 -> ...), so any API-error-derived retry
+        # budget exhausts on infrastructure noise. Dispatcher-level task retries
+        # remain the source of truth via kanban.failure_limit / task max_retries,
+        # reconciled by effective_retries for reporting.
+        self.store.record_event(
+            stable_id(task_id, request_id, type(error).__name__, "api_error"),
+            str(context.get("run_id") or task_id), task_id, "api_request_error",
+            {"error": type(error).__name__}, False,
+        )
         task_type, _ = self.task_type(context)
         snapshot = self.budget_snapshot(context, task_type)
         exhausted = self._exhausted(snapshot, context)
-        if exhausted != "retries":
-            return None
-        payload = {
-            "decision": "deny", "rule_id": "retry_budget_exhausted", "reason": "retry budget exhausted",
-            "task_id": task_id, "project": context.get("project", ""), "profile": context.get("profile", ""),
-            "action": "api_request", "target": request_id, "args_hash": stable_id(request_id),
-            "timestamp": utc_now(), "budget_snapshot": snapshot, "approval_card": None,
-        }
-        inserted = self.store.record_event(
-            stable_id(task_id, "retry_budget_exhausted"), str(context.get("run_id") or task_id),
-            task_id, "budget_exhausted", payload, True,
-        )
-        return payload if inserted else None
+        return None

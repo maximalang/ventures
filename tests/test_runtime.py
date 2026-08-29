@@ -92,15 +92,17 @@ def test_token_budget_and_idle_stop(runtime, task_context):
     assert idle_payload["rule_id"] == "idle_turn_loop"
 
 
-def test_retry_budget_uses_kanban_limit(runtime, task_context):
+def test_api_errors_do_not_block_the_worker(runtime, task_context):
+    # Retry enforcement is dispatcher-owned (kanban.failure_limit / task
+    # max_retries). Hermes fires api_request_error once per failed provider in
+    # the fallback chain within a single healthy turn, so the plugin must log
+    # the error without consuming any retry budget or blocking the worker.
     task_context["max_retries"] = 1
-    # First error of a class is a marker, not a retry — only a repeated error
-    # consumes budget, so provider fallback chains do not burn it.
     task_context["api_request_id"] = "api-error-1"
     assert runtime.api_request_error(task_context, RuntimeError("failure")) is None
     task_context["api_request_id"] = "api-error-2"
-    payload = runtime.api_request_error(task_context, RuntimeError("failure again"))
-    assert payload["rule_id"] == "retry_budget_exhausted"
+    assert runtime.api_request_error(task_context, RuntimeError("failure again")) is None
+    assert runtime.store.budget(task_context["task_id"]).get("retries", 0) == 0
 
 
 def test_provider_fallback_chain_does_not_consume_retries(runtime, task_context):
@@ -110,6 +112,18 @@ def test_provider_fallback_chain_does_not_consume_retries(runtime, task_context)
     task_context["api_request_id"] = "fb-2"
     assert runtime.api_request_error(task_context, TimeoutError("codex 429")) is None
     assert runtime.store.budget(task_context["task_id"]).get("retries", 0) == 0
+
+
+def test_token_budget_counts_generated_tokens_only(runtime, task_context):
+    # prompt_tokens is the full re-sent context per request; counting it would
+    # exhaust a healthy worker in a handful of calls. Only completion counts.
+    runtime.store.add_budget("t_test", "tokens", 119990, "seed")
+    task_context["api_request_id"] = "api-ctx-heavy"
+    payload = runtime.post_api_request(
+        task_context, {"prompt_tokens": 150000, "completion_tokens": 5}, 1
+    )
+    assert payload is None
+    assert runtime.store.budget("t_test")["tokens"] == 119995
 
 
 def test_monetary_cost_is_not_fake_zero(runtime, task_context):

@@ -19,9 +19,9 @@ Runtime configuration lives in `config/fleet-policy.yaml`; shared state lives in
 
 ## Budget and anti-loop interaction
 
-Budget limits are per task type. Token counters use provider/runtime `post_api_request.usage` when present; missing usage is not guessed. Monetary cost remains `unavailable` because GPT/Z.AI subscription runtimes do not provide authoritative per-request currency cost.
+Budget limits are per task type. Token counters use provider/runtime `post_api_request.usage` when present and count GENERATED tokens only (`completion_tokens`); `prompt_tokens` is the full re-sent context on every request and would exhaust any healthy worker in a handful of calls. Missing usage is not guessed. Monetary cost remains `unavailable` because GPT/Z.AI subscription runtimes do not provide authoritative per-request currency cost.
 
-`effective_retries = min(policy retries, per-task max_retries, kanban.failure_limit)`, preventing competing retry systems. Identical-call and same-failure thresholds are counted in the shared DB. Wall-clock uses task `started_at`; tool-call count uses pre-tool decisions.
+Retry enforcement is dispatcher-owned: `kanban.failure_limit` and per-task `max_retries` govern task-level retries. The plugin deliberately does NOT derive a retry budget from `api_request_error` volume, because Hermes fires that hook once per failed provider inside a single healthy turn while walking its fallback chain — counting it would block every worker on infrastructure noise. `effective_retries = min(policy retries, per-task max_retries, kanban.failure_limit)` is kept for reporting only. Identical-call and same-failure thresholds are counted in the shared DB. Wall-clock uses task `started_at`; tool-call count uses pre-tool decisions.
 
 ## RR context
 
