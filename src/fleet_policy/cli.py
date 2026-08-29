@@ -22,6 +22,14 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("drain-notifications")
     suppress = sub.add_parser("fail-notifications")
     suppress.add_argument("--all-pending", action="store_true")
+    grant = sub.add_parser("grant-capability")
+    grant.add_argument("capability_id")
+    grant.add_argument("--project", required=True)
+    grant.add_argument("--kind", required=True)
+    grant.add_argument("--scope", required=True)
+    grant.add_argument("--by", default="user")
+    spend = sub.add_parser("spend-status")
+    spend.add_argument("--project", required=True)
     sub.add_parser("retention")
     sub.add_parser("status")
     sub.add_parser("drift-check")
@@ -46,6 +54,17 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         print(json.dumps({"ok": False, "reason": "pass --all-pending"}))
         return 2
+    if args.command == "grant-capability":
+        ok = runtime.store.grant_capability(args.capability_id, args.project, args.kind, args.scope, args.by)
+        print(json.dumps({"ok": ok, "capability_id": args.capability_id, "project": args.project}))
+        return 0 if ok else 2
+    if args.command == "spend-status":
+        from datetime import datetime, timezone
+        month = datetime.now(timezone.utc).strftime("%Y-%m")
+        spent = runtime.store.monthly_spend(args.project, month)
+        limit = int(runtime.config["financial_mandate"]["max_monthly_per_project"])
+        print(json.dumps({"project": args.project, "month": month, "spent_rub": spent, "remaining_rub": max(0, limit-spent), "limit_rub": limit}))
+        return 0
     if args.command == "retention":
         cfg = runtime.config["retention"]
         print(json.dumps(runtime.store.retention(cfg["events_days"], cfg["call_history_days"], cfg["approvals_days"])))

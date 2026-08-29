@@ -5,7 +5,7 @@ description: Shared operating guidance for Recruiter Radar tasks handled by the 
 
 # Recruiter Radar project guidance
 
-Read `C:/Users/max/Desktop/all/recruiter-radar/AGENTS.md` and `CLAUDE.md` before work. Preflight the actual worktree, branch, HEAD, repository instructions, and relevant runtime evidence. Work only on `codex/*`; preserve user changes. Run the repository-defined checks, perform review, and report reproducible evidence. After a completed RR task, commit and push its scoped change to `codex/*`. Never push or merge `main`.
+Read `C:/Users/max/Desktop/all/recruiter-radar/AGENTS.md` and `CLAUDE.md` before work. Preflight the actual worktree, branch, HEAD, repository instructions, and relevant runtime evidence. Develop in `codex/*` and preserve user changes. Run repository-defined checks and independent review. After `gate:ci=pass`, `gate:review=pass`, and `gate:rollback=pass`, merge/push to main is autonomous; deploy additionally requires `gate:qa=pass` and `gate:backup=pass`. Report reproducible evidence.
 
 This file adds only cross-project routing guidance; the Recruiter Radar repository rules remain authoritative and are not duplicated here.
 

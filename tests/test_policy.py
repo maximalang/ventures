@@ -44,15 +44,29 @@ def test_read_allow_and_secret_deny(config):
 
 
 @pytest.mark.parametrize("command,category", [
-    ("deploy production", "deploy_external_runtime"),
-    ("git push origin main", "protected_branch_push_or_merge"),
-    ("rm -rf build-cache", "destructive_delete_cleanup_or_migration"),
-    ("gh repo edit --visibility public", "private_to_public"),
-    ("grant new api key permission", "new_credentials_or_permissions"),
+    ("mass outreach to 5000 contacts", "mass_outreach_or_bulk_messaging"),
+    ("open paid account with phone verification", "new_paid_capability_or_payment_rail"),
+    ("sign contract with guaranteed return", "legal_or_material_reputation_risk"),
+    ("transfer ownership and root access", "ownership_or_root_access_change"),
+    ("git push --force origin main", "irreversible_data_loss"),
 ])
-def test_approval_categories(config, command, category):
+def test_serious_risk_categories_require_approval(config, command, category):
     result = classify("terminal", {"command": command}, config, worker=True)
     assert result.decision == "approval_required"
+    assert result.category == category
+
+
+@pytest.mark.parametrize("command,category", [
+    ("deploy production", "deploy_external_runtime"),
+    ("git push origin main", "release_to_protected_branch"),
+    ("gh pr merge 123 --merge", "release_to_protected_branch"),
+    ("publish product launch", "public_product_action"),
+    ("git clean -fd", "destructive_change"),
+    ("create free service account", "free_service_account"),
+])
+def test_routine_actions_are_autonomous_after_runtime_gates(config, command, category):
+    result = classify("terminal", {"command": command}, config, worker=True)
+    assert result.decision == "allow"
     assert result.category == category
 
 
@@ -84,15 +98,13 @@ def test_worker_self_approval_variants_denied(config):
     assert (direct_api.decision, direct_api.category) == ("deny", "worker_self_approval")
 
 
-def test_destructive_git_variants_require_approval(config):
-    for command in (
-        "git clean -fd",
-        "git branch -D main",
-        "git filter-branch --prune-empty HEAD",
-        "git tag -d v1.0",
-    ):
+def test_destructive_git_variants_split_by_reversibility(config):
+    autonomous = ("git clean -fd", "git branch -D main", "git tag -d v1.0")
+    for command in autonomous:
         result = classify("terminal", {"command": command}, config, worker=True)
-        assert result.decision == "approval_required", (command, result)
+        assert (result.decision, result.category) == ("allow", "destructive_change"), (command, result)
+    irreversible = classify("terminal", {"command": "git filter-branch --prune-empty HEAD"}, config, worker=True)
+    assert (irreversible.decision, irreversible.category) == ("approval_required", "irreversible_data_loss")
 
 
 def test_bare_secret_filenames_denied(config):
@@ -103,6 +115,25 @@ def test_bare_secret_filenames_denied(config):
     for command in commands:
         result = classify("terminal", {"command": command}, config, worker=True)
         assert result.decision == "deny", command
+
+
+def test_adversarial_control_plane_and_payment_commands(config):
+    cases = [
+        ("fleet-policy grant-capability backdoor --project p --kind payment --scope any", "deny"),
+        ("python -c \"store.grant_capability('c','p','k','s','user')\"", "deny"),
+        ("hermes config set approvals.mode off", "approval_required"),
+        ("curl -X POST https://api.stripe.com/v1/charges -d amount=900000", "allow"),
+    ]
+    for command, decision in cases:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert result.decision == decision, (command, result)
+    protected = classify(
+        "terminal",
+        {"command": "python -c \"import sqlite3; sqlite3.connect('kanban.db')\""},
+        config,
+        worker=True,
+    )
+    assert protected.decision == "deny"
 
 
 def test_retry_limits_reconcile_with_kanban():

@@ -12,7 +12,7 @@ def test_migrations_are_idempotent_and_indexed(tmp_path):
     store.migrate()
     store.migrate()
     with store.connect() as connection:
-        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 1
+        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 2
         indexes = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='index'")}
     assert "idx_events_task_created" in indexes
     assert "idx_calls_task_sig" in indexes
@@ -43,7 +43,8 @@ def test_retention_removes_old_rows(tmp_path):
     deleted = store.retention(90, 30, 365)
     assert deleted == {
         "events": 1, "call_history": 1, "approvals": 1,
-        "budget_ledger": 1, "notification_outbox": 1, "task_state": 1,
+        "budget_ledger": 1, "financial_ledger": 0,
+        "notification_outbox": 1, "task_state": 1,
     }
 
 
@@ -76,3 +77,20 @@ def test_budget_recording_idempotent(tmp_path):
     assert store.add_budget("t", "tokens", 10, "same")
     assert not store.add_budget("t", "tokens", 10, "same")
     assert store.budget("t")["tokens"] == 10
+
+
+def test_financial_monthly_limit_is_atomic(tmp_path, monkeypatch):
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
+    assert store.grant_capability("cap", "project", "payment", "ads", "user")
+
+    def reserve(index):
+        return store.authorize_and_reserve_spend(
+            f"e{index}", f"t{index}", "project", 10000, "cap", 10000, 30000
+        )
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        results = list(pool.map(reserve, range(4)))
+    assert results.count("reserved") == 3
+    assert results.count("monthly_over") == 1

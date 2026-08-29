@@ -102,10 +102,14 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         return Classification("state_change", "secret_read_or_write", "deny", "secret-bearing paths and credential stores are prohibited")
     if worker and re.search(
         r"(?:\bfleet[-_]policy(?:[-\w.\\/]*)?\s+(?:approve|reject)\b|"
-        r"\b(?:decide_approval|consume_exact_approval|ensure_approval)\b|"
+        r"\b(?:decide_approval|consume_exact_approval|ensure_approval|grant_capability)\b|"
         r"\b(?:update|insert|delete)[^\n]*\bapprovals\b)", lower,
     ):
         return Classification("state_change", "worker_self_approval", "deny", "workers cannot approve their own action")
+    if worker and re.search(r"\bfleet[-_]policy(?:[-\w.\\/]*)?\s+grant-capability\b", lower):
+        return Classification("state_change", "worker_capability_grant", "deny", "workers cannot grant capabilities")
+    if worker and re.search(r"\bhermes(?:\s+-p\s+\S+)?\s+config\s+set\s+(?:approvals|security|privacy|plugins|kanban\.dispatch)", lower):
+        return Classification("state_change", "policy_control_plane_mutation", "approval_required", "control-plane security changes require owner approval")
 
     if name in TERMINAL_TOOLS:
         command = str(arguments.get("command") or arguments.get("cmd") or "")
@@ -124,26 +128,29 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
 
     branches = "|".join(re.escape(branch) for branch in config["protected"]["branches"])
     rules = [
-        (r"\b(?:deploy|release|production deploy|staging deploy)\b", "deploy_external_runtime"),
-        (r"\b(?:publish|publication|outreach|advertis|campaign|newsletter|send[_ -]?(?:message|email)|public post)\b", "public_outreach_or_publication"),
-        (r"\b(?:pay|payment|purchase|subscription|billing|change budget)\b", "payments_subscriptions_or_budget"),
-        (r"(?:\b(?:delete|remove|cleanup|purge|drop\s+table|truncate|irreversible|destructive migration)\b|(?:^|\s)rm\s)", "destructive_delete_cleanup_or_migration"),
-        (r"\b(?:git\s+clean|branch\s+-[dD]|filter-branch|tag\s+-d|stash\s+(?:drop|clear)|checkout\s+--\s+\.)\b", "destructive_delete_cleanup_or_migration"),
-        (r"\b(?:force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|rewrite history)\b", "rewrite_history"),
-        (rf"\b(?:push|merge)[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))", "protected_branch_push_or_merge"),
-        (r"\b(?:new credential|grant(?:\s+new)?(?:\s+api\s+key)?\s+permission|access grant|create api key|rotate token)\b", "new_credentials_or_permissions"),
-        (r"\b(?:change|modify|disable|enable)[^\n]*(?:security|privacy|acl|firewall|approval mode)\b", "security_or_privacy_change"),
-        (r"\b(?:private\s*(?:to|->)\s*public|visibility\s+(?:=\s*)?public)\b", "private_to_public"),
+        # Serious-only escalation classes.
+        (r"\b(?:mass outreach|bulk (?:message|email|dm)|unsolicited campaign|scrape and send|spam)\b", "mass_outreach_or_bulk_messaging", "approval_required"),
+        (r"\b(?:new paid capability|payment instrument|payment rail|open paid account)\b", "new_paid_capability_or_payment_rail", "approval_required"),
+        (r"\b(?:kyc|phone verification|domain owner|bank owner|domain or bank ownership)\b", "phone_kyc_domain_or_bank_owner_action", "approval_required"),
+        (r"\b(?:sign contract|legal commitment|regulated claim|material reputation|defamation|guaranteed return)\b", "legal_or_material_reputation_risk", "approval_required"),
+        (r"\b(?:transfer ownership|root access|admin access expansion|recovery key|change owner)\b", "ownership_or_root_access_change", "approval_required"),
+        (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
+        (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
+        # Autonomous actions that require role/evidence gates in runtime.
+        (rf"(?:\b(?:push|merge)[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
+        (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
+        (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
+        (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),
+        (r"(?:\b(?:delete|remove|cleanup|purge|git\s+clean|branch\s+-[dD]|tag\s+-d|stash\s+(?:drop|clear)|checkout\s+--\s+\.)\b|(?:^|\s)rm\s)", "destructive_change", "allow"),
+        (r"\b(?:create|open|register)[^\n]*(?:free service account|free account|trial account)\b", "free_service_account", "allow"),
     ]
-    for pattern, category in rules:
+    for pattern, category, decision in rules:
         if re.search(pattern, lower, re.I):
-            return Classification(effect, category, "approval_required", f"{category} requires user approval")
+            reason = f"{category} requires serious-risk approval" if decision == "approval_required" else f"{category} is autonomous after evidence gates"
+            return Classification(effect, category, decision, reason)
 
-    if re.search(r"\bgit\s+(?:commit|push)\b", lower):
-        if re.search(r"\bcodex/[a-z0-9._/-]+", lower):
-            return Classification(effect, "commit_push_codex_branch", "allow", "commit/push to codex/* is autonomous")
-        if "push" in lower:
-            return Classification(effect, "unscoped_git_push", "approval_required", "push is allowed autonomously only when codex/* is explicit")
+    if re.search(r"\bgit\s+(?:commit|push|merge)\b", lower):
+        return Classification(effect, "repository_change", "allow", "repository changes are autonomous within project rules")
     return Classification(effect, "scoped_state_change", "allow", "scoped state change is autonomous")
 
 

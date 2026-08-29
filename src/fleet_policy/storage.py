@@ -39,6 +39,17 @@ CREATE TABLE IF NOT EXISTS notification_outbox(
   event_id TEXT PRIMARY KEY, payload_json TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending',
   created_at TEXT NOT NULL, sent_at TEXT
 );
+CREATE TABLE IF NOT EXISTS capabilities(
+  capability_id TEXT PRIMARY KEY, project TEXT NOT NULL, kind TEXT NOT NULL,
+  scope TEXT NOT NULL, status TEXT NOT NULL, granted_by TEXT NOT NULL, created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_capabilities_project_status ON capabilities(project,status);
+CREATE TABLE IF NOT EXISTS financial_ledger(
+  event_id TEXT PRIMARY KEY, task_id TEXT NOT NULL, project TEXT NOT NULL,
+  amount_rub INTEGER NOT NULL, capability_id TEXT NOT NULL, status TEXT NOT NULL,
+  created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_financial_project_month ON financial_ledger(project,created_at,status);
 """
 
 
@@ -70,10 +81,11 @@ class PolicyStore:
             # concurrent workers exceed Hermes' 30s pre-tool hook timeout.
             connection.execute("PRAGMA journal_mode=WAL")
             row = connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'").fetchone()
-            if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=1").fetchone() is not None:
+            if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=2").fetchone() is not None:
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
+            connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,?)", (utc_now(),))
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:
@@ -191,6 +203,78 @@ class PolicyStore:
         with self.connect() as connection:
             return list(connection.execute("SELECT * FROM notification_outbox WHERE status='pending' ORDER BY created_at,event_id"))
 
+    def grant_capability(self, capability_id: str, project: str, kind: str, scope: str, granted_by: str) -> bool:
+        if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "INSERT OR REPLACE INTO capabilities VALUES(?,?,?,?,?,?,?)",
+                (capability_id, project, kind, scope, "active", granted_by, utc_now()),
+            )
+            return cursor.rowcount == 1
+
+    def capability_active(self, capability_id: str, project: str) -> bool:
+        with self.connect() as connection:
+            return connection.execute(
+                "SELECT 1 FROM capabilities WHERE capability_id=? AND project=? AND status='active'",
+                (capability_id, project),
+            ).fetchone() is not None
+
+    def monthly_spend(self, project: str, month_prefix: str) -> int:
+        with self.connect() as connection:
+            row = connection.execute(
+                "SELECT COALESCE(SUM(amount_rub),0) AS total FROM financial_ledger "
+                "WHERE project=? AND created_at LIKE ? AND status IN ('reserved','settled')",
+                (project, month_prefix + "%"),
+            ).fetchone()
+            return int(row["total"] or 0)
+
+    def reserve_spend(self, event_id: str, task_id: str, project: str, amount_rub: int, capability_id: str) -> bool:
+        now = utc_now()
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "INSERT OR IGNORE INTO financial_ledger VALUES(?,?,?,?,?,'reserved',?,?)",
+                (event_id, task_id, project, int(amount_rub), capability_id, now, now),
+            )
+            return cursor.rowcount == 1
+
+    def authorize_and_reserve_spend(self, event_id: str, task_id: str, project: str,
+                                    amount_rub: int, capability_id: str,
+                                    max_transaction: int, max_monthly: int) -> str:
+        """Atomically validate capability/limits and reserve spend."""
+        now = utc_now()
+        month = now[:7]
+        with self.connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            if connection.execute(
+                "SELECT 1 FROM capabilities WHERE capability_id=? AND project=? AND status='active'",
+                (capability_id, project),
+            ).fetchone() is None:
+                return "capability_missing"
+            total = int(connection.execute(
+                "SELECT COALESCE(SUM(amount_rub),0) FROM financial_ledger "
+                "WHERE project=? AND created_at LIKE ? AND status IN ('reserved','settled')",
+                (project, month + "%"),
+            ).fetchone()[0] or 0)
+            if amount_rub > max_transaction:
+                return "transaction_over"
+            if total + amount_rub > max_monthly:
+                return "monthly_over"
+            connection.execute(
+                "INSERT OR IGNORE INTO financial_ledger VALUES(?,?,?,?,?,'reserved',?,?)",
+                (event_id, task_id, project, int(amount_rub), capability_id, now, now),
+            )
+            return "reserved"
+
+    def settle_spend(self, event_id: str, success: bool) -> bool:
+        status = "settled" if success else "released"
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE financial_ledger SET status=?,updated_at=? WHERE event_id=? AND status='reserved'",
+                (status, utc_now(), event_id),
+            )
+            return cursor.rowcount == 1
+
     def mark_notification(self, event_id: str, status: str) -> bool:
         with self.connect() as connection:
             cursor = connection.execute(
@@ -204,7 +288,7 @@ class PolicyStore:
         now = now or datetime.now(timezone.utc)
         deleted: dict[str, int] = {}
         with self.connect() as connection:
-            for table, days in (("events", event_days), ("call_history", call_days), ("approvals", approval_days), ("budget_ledger", call_days)):
+            for table, days in (("events", event_days), ("call_history", call_days), ("approvals", approval_days), ("budget_ledger", call_days), ("financial_ledger", approval_days)):
                 cutoff = (now - timedelta(days=days)).isoformat(timespec="seconds").replace("+00:00", "Z")
                 cursor = connection.execute(f"DELETE FROM {table} WHERE created_at < ?", (cutoff,))
                 deleted[table] = cursor.rowcount

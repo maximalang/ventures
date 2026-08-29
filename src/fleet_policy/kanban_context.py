@@ -75,9 +75,10 @@ def load_task_context(base: dict[str, Any], projects: dict[str, Any], env: dict[
         except (TypeError, json.JSONDecodeError):
             context["skills"] = []
         comments = connection.execute(
-            "SELECT body FROM task_comments WHERE task_id=? ORDER BY id", (task_id,)
+            "SELECT author,body FROM task_comments WHERE task_id=? ORDER BY id", (task_id,)
         ).fetchall()
         context["comments"] = [item["body"] for item in comments]
+        context["comment_records"] = [{"author": item["author"] or "", "body": item["body"]} for item in comments]
     finally:
         connection.close()
     return context

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import time
+import re
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,61 @@ class FleetPolicyRuntime:
 
     def task_type(self, context: dict[str, Any]) -> tuple[str | None, str | None]:
         return infer_task_type(context.get("task_body"), context.get("comments"), context.get("skills"))
+
+    GATE_AUTHORS = {
+        "ci": {"tech", "qa"}, "review": {"qa"}, "qa": {"qa"},
+        "rollback": {"tech", "operations"}, "backup": {"operations"},
+        "finance": {"finance"}, "company_decision": {"company"},
+        "scope": {"qa", "operations"},
+    }
+
+    def missing_gates(self, category: str, context: dict[str, Any]) -> list[str]:
+        required = list(self.config.get("evidence_gates", {}).get(category, []))
+        if not required:
+            return []
+        records = context.get("comment_records") or []
+        missing: list[str] = []
+        for gate in required:
+            marker = "decision:company=go" if gate == "company_decision" else f"gate:{gate}=pass"
+            allowed_authors = self.GATE_AUTHORS.get(gate, set())
+            if not any(
+                any(line.strip().lower() == marker for line in str(record.get("body") or "").splitlines())
+                and (not allowed_authors or str(record.get("author") or "").lower() in allowed_authors)
+                and not (gate in {"review", "qa"} and str(record.get("author") or "").lower() == str(context.get("assignee") or "").lower())
+                for record in records
+            ):
+                missing.append(gate)
+        return missing
+
+    def gate_comment_allowed(self, text: str, context: dict[str, Any]) -> bool:
+        lowered = text.lower()
+        marker = re.search(r"gate:([a-z_]+)=pass", lowered)
+        gate = marker.group(1) if marker else ("company_decision" if "decision:company=go" in lowered else "")
+        if not gate:
+            return True
+        profile = str(context.get("profile") or "").lower()
+        if profile not in self.GATE_AUTHORS.get(gate, set()):
+            return False
+        return not (gate in {"review", "qa"} and profile == str(context.get("assignee") or "").lower())
+
+    @staticmethod
+    def _amount_rub(arguments: dict[str, Any]) -> int | None:
+        raw = arguments.get("amount_rub")
+        if raw is None:
+            match = re.search(r"(?i)amount_rub\s*[=:]\s*(\d+)", str(arguments))
+            raw = match.group(1) if match else None
+        try:
+            return int(raw) if raw is not None else None
+        except (TypeError, ValueError):
+            return None
+
+    @staticmethod
+    def _capability_id(arguments: dict[str, Any]) -> str:
+        raw = arguments.get("capability_id")
+        if raw:
+            return str(raw)
+        match = re.search(r"(?i)capability_id\s*[=:]\s*([a-z0-9._-]+)", str(arguments))
+        return match.group(1) if match else ""
 
     def budget_snapshot(self, context: dict[str, Any], task_type: str | None) -> dict[str, Any]:
         task_id = str(context.get("task_id") or "")
@@ -89,6 +145,34 @@ class FleetPolicyRuntime:
         else:
             result = classify(tool_name, arguments, self.config, worker=worker)
 
+        if worker:
+            flat_args = str(arguments)
+            if tool_name.lower() in {"terminal", "shell", "bash", "exec"} and re.search(r"(?i)hermes\s+kanban[^\n]*comment[^\n]*(?:gate:|decision:company=go)", flat_args):
+                result = Classification("state_change", "gate_forgery", "deny", "role gates must be written through kanban_comment by the current profile")
+            elif tool_name.lower() == "kanban_comment":
+                text = str(arguments.get("text") or arguments.get("body") or arguments.get("comment") or "")
+                if not self.gate_comment_allowed(text, context):
+                    result = Classification("state_change", "gate_forgery", "deny", "current profile cannot attest this gate")
+
+        missing = self.missing_gates(result.category, context) if worker and result.decision == "allow" else []
+        if missing:
+            result = Classification(
+                result.effect, "evidence_gate_missing", "deny",
+                "fleet must satisfy gates before execution: " + ", ".join(missing),
+            )
+
+        spend: tuple[int, str, str] | None = None
+        if result.category == "financial_action" and result.decision == "allow":
+            amount = self._amount_rub(arguments)
+            capability_id = self._capability_id(arguments)
+            project = str(context.get("project") or "")
+            if amount is None or amount <= 0:
+                result = Classification(result.effect, "financial_metadata_missing", "deny", "financial action requires positive amount_rub")
+            else:
+                spend = (amount, capability_id, project)
+                if not capability_id or not self.store.capability_active(capability_id, project):
+                    result = Classification(result.effect, "new_paid_capability_or_payment_rail", "approval_required", "a scoped active payment capability is required")
+
         snapshot = self.budget_snapshot(context, task_type)
         exhausted = self._exhausted(snapshot, context) if worker else None
         if exhausted:
@@ -114,6 +198,25 @@ class FleetPolicyRuntime:
                 self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed)
                 approval_card = self._approval_card(context, result.category, target, hashed, rule_key)
 
+        if decision == "allow" and spend and task_id:
+            amount, capability_id, project = spend
+            spend_id = stable_id(task_id, tool_call_id, "spend")
+            if rule_id == "approved_once":
+                self.store.reserve_spend(spend_id, task_id, project, amount, capability_id or "one-time-approval")
+            else:
+                mandate = self.config["financial_mandate"]
+                status = self.store.authorize_and_reserve_spend(
+                    spend_id, task_id, project, amount, capability_id,
+                    int(mandate["max_transaction"]), int(mandate["max_monthly_per_project"]),
+                )
+                if status != "reserved":
+                    rule_id = "new_paid_capability_or_payment_rail" if status == "capability_missing" else "financial_over_budget"
+                    decision = "approval_required"
+                    reason = f"financial mandate blocked action: {status}"
+                    rule_key = stable_id(task_id, tool_name, target, hashed)
+                    self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed)
+                    approval_card = self._approval_card(context, rule_id, target, hashed, rule_key)
+
         policy_decision = PolicyDecision(
             decision=decision,
             rule_id=rule_id,
@@ -128,21 +231,22 @@ class FleetPolicyRuntime:
             budget_snapshot=snapshot,
             approval_card=approval_card,
         )
-        significant = decision != "allow"
+        notify = decision == "approval_required" or rule_id in {"secret_read_or_write", "worker_self_approval"}
         if decision == "allow" and result.effect == "read":
             rate = float(self.config["safe_defaults"].get("read_sampling_rate", 0.1))
             sampled = int(hashed[:8], 16) / 0xFFFFFFFF < rate
         else:
             sampled = True
-        if significant or sampled:
-            event_id = stable_id(task_id, tool_name, target, hashed, rule_id, "policy") if significant else stable_id(tool_call_id, "policy")
+        important = decision != "allow"
+        if important or sampled:
+            event_id = stable_id(task_id, tool_name, target, hashed, rule_id, "policy") if important else stable_id(tool_call_id, "policy")
             self.store.record_event(
                 event_id,
                 str(context.get("run_id") or context.get("session_id") or event_id),
                 task_id or None,
                 "policy_decision",
                 policy_decision.as_dict(),
-                significant,
+                notify,
             )
         return policy_decision
 
@@ -176,6 +280,9 @@ class FleetPolicyRuntime:
             failure_signature = stable_id(tool_name, error_type, normalized_error)
         event_id = stable_id(task_id, context.get("tool_call_id"), call_signature, success, failure_signature)
         self.store.add_call(event_id, task_id, call_signature, failure_signature, success)
+        tool_call_id = str(context.get("tool_call_id") or "")
+        if tool_call_id:
+            self.store.settle_spend(stable_id(task_id, tool_call_id, "spend"), success)
         if failure_signature and self.store.count_signature(task_id, "failure_signature", failure_signature) >= int(self.config["anti_loop"]["max_same_failure"]):
             payload = {
                 "decision": "deny", "rule_id": "same_failure_loop",

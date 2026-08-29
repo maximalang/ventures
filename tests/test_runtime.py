@@ -23,7 +23,7 @@ def test_allow_and_normalized_decision(runtime, task_context):
 
 
 def test_approval_binding_one_time_and_payload_change(runtime, task_context):
-    args = {"command": "deploy production release-a"}
+    args = {"command": "mass outreach to 5000 contacts"}
     first = runtime.pre_tool_call("terminal", args, task_context)
     assert first.decision == "approval_required"
     key = first.approval_card["rule_key"]
@@ -37,7 +37,7 @@ def test_approval_binding_one_time_and_payload_change(runtime, task_context):
     replay = runtime.pre_tool_call("terminal", args, task_context)
     assert replay.decision == "approval_required"
 
-    changed = dict(args, command="deploy production release-b")
+    changed = dict(args, command="mass outreach to 6000 contacts")
     task_context["tool_call_id"] = "call-4"
     invalid = runtime.pre_tool_call("terminal", changed, task_context)
     assert invalid.decision == "approval_required"
@@ -45,10 +45,10 @@ def test_approval_binding_one_time_and_payload_change(runtime, task_context):
 
 
 def test_rejected_approval_never_allows(runtime, task_context):
-    decision = runtime.pre_tool_call("terminal", {"command": "git push origin main"}, task_context)
+    decision = runtime.pre_tool_call("terminal", {"command": "mass outreach to 5000 contacts"}, task_context)
     assert runtime.store.decide_approval(decision.approval_card["rule_key"], False, "user")
     task_context["tool_call_id"] = "next"
-    again = runtime.pre_tool_call("terminal", {"command": "git push origin main"}, task_context)
+    again = runtime.pre_tool_call("terminal", {"command": "mass outreach to 5000 contacts"}, task_context)
     assert again.decision == "approval_required"
 
 
@@ -142,6 +142,80 @@ def test_api_error_dict_records_real_type(runtime, task_context):
         ).fetchone()[0]
     assert '"error":"rate_limit"' in payload
     assert "hidden" not in payload
+
+
+def test_main_merge_is_autonomous_after_independent_gates(runtime, task_context):
+    args = {"command": "git push origin main"}
+    blocked = runtime.pre_tool_call("terminal", args, task_context)
+    assert (blocked.decision, blocked.rule_id) == ("deny", "evidence_gate_missing")
+    task_context["comment_records"] = [
+        {"author": "tech", "body": "gate:ci=pass"},
+        {"author": "qa", "body": "gate:review=pass"},
+        {"author": "operations", "body": "gate:rollback=pass"},
+    ]
+    task_context["tool_call_id"] = "main-ready"
+    allowed = runtime.pre_tool_call("terminal", args, task_context)
+    assert (allowed.decision, allowed.rule_id) == ("allow", "release_to_protected_branch")
+
+
+def test_deploy_and_publish_use_evidence_not_user_approval(runtime, task_context):
+    deploy_args = {"command": "deploy production"}
+    assert runtime.pre_tool_call("terminal", deploy_args, task_context).rule_id == "evidence_gate_missing"
+    task_context["comment_records"] = [
+        {"author": "tech", "body": "gate:ci=pass"},
+        {"author": "qa", "body": "gate:qa=pass"},
+        {"author": "operations", "body": "gate:backup=pass"},
+        {"author": "operations", "body": "gate:rollback=pass"},
+    ]
+    task_context["tool_call_id"] = "deploy-ready"
+    assert runtime.pre_tool_call("terminal", deploy_args, task_context).decision == "allow"
+    publish_context = dict(task_context, tool_call_id="publish-ready", comment_records=[
+        {"author": "qa", "body": "gate:review=pass\ngate:qa=pass"},
+    ])
+    assert runtime.pre_tool_call("terminal", {"command": "publish product launch"}, publish_context).decision == "allow"
+
+
+def test_workers_cannot_forge_role_gates(runtime, task_context):
+    forged_cli = runtime.pre_tool_call(
+        "terminal", {"command": "hermes kanban comment t_x gate:review=pass --author qa"}, task_context
+    )
+    assert (forged_cli.decision, forged_cli.rule_id) == ("deny", "gate_forgery")
+    forged_tool = runtime.pre_tool_call("kanban_comment", {"text": "gate:review=pass"}, task_context)
+    assert (forged_tool.decision, forged_tool.rule_id) == ("deny", "gate_forgery")
+    qa_context = dict(task_context, profile="qa", assignee="tech", tool_call_id="qa-gate")
+    valid = runtime.pre_tool_call("kanban_comment", {"text": "gate:review=pass"}, qa_context)
+    assert valid.decision == "allow"
+
+
+def test_negated_gate_text_does_not_satisfy_gate(runtime, task_context):
+    task_context["comment_records"] = [
+        {"author": "tech", "body": "gate:ci=pass NOT achieved"},
+        {"author": "qa", "body": "expected gate:review=pass but regressions remain"},
+        {"author": "operations", "body": "gate:rollback=pass"},
+    ]
+    decision = runtime.pre_tool_call("terminal", {"command": "git push origin main"}, task_context)
+    assert (decision.decision, decision.rule_id) == ("deny", "evidence_gate_missing")
+
+
+def test_financial_mandate_requires_gates_capability_and_limits(runtime, task_context, monkeypatch):
+    args = {"command": "pay experiment amount_rub=5000 capability_id=ads-card"}
+    task_context["comment_records"] = [
+        {"author": "finance", "body": "gate:finance=pass"},
+        {"author": "company", "body": "decision:company=go"},
+    ]
+    missing_cap = runtime.pre_tool_call("terminal", args, task_context)
+    assert (missing_cap.decision, missing_cap.rule_id) == ("approval_required", "new_paid_capability_or_payment_rail")
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
+    assert runtime.store.grant_capability("ads-card", "recruiter-radar", "payment", "ads-only", "user")
+    task_context["tool_call_id"] = "spend-1"
+    allowed = runtime.pre_tool_call("terminal", args, task_context)
+    assert allowed.decision == "allow"
+    runtime.post_tool_call("terminal", args, task_context, success=True)
+    assert runtime.store.monthly_spend("recruiter-radar", __import__("datetime").datetime.now(__import__("datetime").timezone.utc).strftime("%Y-%m")) == 5000
+    over = {"command": "pay experiment amount_rub=11000 capability_id=ads-card"}
+    task_context["tool_call_id"] = "spend-over"
+    decision = runtime.pre_tool_call("terminal", over, task_context)
+    assert (decision.decision, decision.rule_id) == ("approval_required", "financial_over_budget")
 
 
 def test_monetary_cost_is_not_fake_zero(runtime, task_context):

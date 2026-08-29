@@ -37,4 +37,15 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(f"budget {task_type} must define exactly {sorted(BUDGET_KEYS)}")
         if any(isinstance(v, bool) or not isinstance(v, int) or v <= 0 for v in budget.values()):
             raise ConfigError(f"budget {task_type} values must be positive integers")
+    mandate = data.get("financial_mandate")
+    if not isinstance(mandate, dict):
+        raise ConfigError("financial_mandate is required")
+    for key in ("max_transaction", "max_monthly_per_project"):
+        if not isinstance(mandate.get(key), int) or mandate[key] <= 0:
+            raise ConfigError(f"financial_mandate.{key} must be a positive integer")
+    if mandate["max_transaction"] > mandate["max_monthly_per_project"]:
+        raise ConfigError("transaction limit cannot exceed monthly project limit")
+    gates = data.get("evidence_gates")
+    if not isinstance(gates, dict) or not all(isinstance(v, list) and v for v in gates.values()):
+        raise ConfigError("evidence_gates must map categories to non-empty gate lists")
     return data

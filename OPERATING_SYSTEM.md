@@ -9,7 +9,7 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 1. **Orient** — прочитать `CHARTER.md`, `STATE.md`, релевантные decisions и Kanban context.
 2. **Decide** — выбрать одно измеримое следующее действие; не создавать работу без связи с gate/метрикой.
 3. **Squad** — назначить 2–5 ролей; один owner, остальные дают отдельные artifacts/review.
-4. **Execute** — исследование/код/тесты/commit/push в `codex/*` автономны в пределах `APPROVALS.md`.
+4. **Execute** — исследование, код, main merge, deploy, publishing и эксперименты автономны после role/evidence gates и внутри финансового мандата `APPROVALS.md`.
 5. **Verify** — независимая проверка фактов, тестов, diff и claims; слова исполнителя не evidence.
 6. **Handoff** — результат, пути/URL/SHA/exit codes, риски, решение и одна следующая задача фиксируются в Kanban.
 7. **State update** — обновлять `STATE.md` только при смене фазы, gate, решения или измеримого состояния.

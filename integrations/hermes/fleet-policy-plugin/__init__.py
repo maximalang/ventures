@@ -163,19 +163,28 @@ def fleet_guidance(_session_info: Any) -> str:
     return (
         "# Fleet policy gate\n"
         "Kanban is the task registry. Dispatcher tasks require an exact task_type marker: research, code, review, or ops. "
-        "All risky state-changing calls are automatically checked before execution. A deny or approval_required result must not be bypassed. "
-        "Approvals are exact, one-time bindings to task_id + action + target + args_hash. Record evidence in Kanban; do not spam allow events."
+        "All state-changing calls pass fleet-policy. Routine main/deploy/publishing/spend are autonomous after independent evidence gates. "
+        "Only serious legal, ownership/access, irreversible-data, mass-outreach, capability, or over-budget actions require owner approval. "
+        "Approvals are exact one-time bindings; record decisions, profit hypothesis, kill criteria, gates and evidence in Kanban."
     )
 
 
-def rr_guidance(_session_info: Any) -> str:
-    if os.environ.get("HERMES_KANBAN_BOARD") != "rr-team":
+def project_guidance(_session_info: Any) -> str:
+    board = os.environ.get("HERMES_KANBAN_BOARD") or ""
+    project = runtime().config.get("projects", {}).get(board, {})
+    relative = project.get("guidance") if isinstance(project, dict) else None
+    if not relative:
         return ""
-    path = VENTURES_ROOT / "skills" / "rr-project" / "SKILL.md"
+    path = VENTURES_ROOT / str(relative)
     try:
         return path.read_text(encoding="utf-8")
     except OSError:
-        return "Recruiter Radar task: read the repository AGENTS.md and CLAUDE.md before work; use codex/* and never push or merge main."
+        return f"Project board {board}: read the canonical repository AGENTS.md/CLAUDE.md and record evidence in Kanban."
+
+
+# Backward-compatible test/import alias.
+def rr_guidance(session_info: Any) -> str:
+    return project_guidance(session_info)
 
 
 def register(ctx) -> None:
@@ -187,4 +196,4 @@ def register(ctx) -> None:
     ctx.register_hook("api_request_error", api_request_error)
     ctx.register_hook("kanban_task_claimed", kanban_task_claimed)
     ctx.register_system_prompt_section("fleet-policy", fleet_guidance, position="after_memory", max_chars=1200)
-    ctx.register_system_prompt_section("rr-project", rr_guidance, position="after_memory", max_chars=2000)
+    ctx.register_system_prompt_section("project-guidance", project_guidance, position="after_memory", max_chars=2000)

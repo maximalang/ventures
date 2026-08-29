@@ -15,11 +15,11 @@ def make_kanban(path):
     connection.executescript(
         """
         CREATE TABLE tasks(id TEXT PRIMARY KEY,title TEXT,body TEXT,assignee TEXT,status TEXT,started_at INTEGER,max_retries INTEGER,skills TEXT,current_run_id INTEGER);
-        CREATE TABLE task_comments(id INTEGER PRIMARY KEY,task_id TEXT,body TEXT);
+        CREATE TABLE task_comments(id INTEGER PRIMARY KEY,task_id TEXT,author TEXT,body TEXT);
         """
     )
     connection.execute("INSERT INTO tasks VALUES(?,?,?,?,?,?,?,?,?)", ("t1", "title", "body", "tech", "running", 1, 2, json.dumps(["rr-project"]), 7))
-    connection.execute("INSERT INTO task_comments VALUES(1,'t1','task_type: code')")
+    connection.execute("INSERT INTO task_comments VALUES(1,'t1','qa','task_type: code')")
     connection.commit()
     connection.close()
 

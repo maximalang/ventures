@@ -14,7 +14,7 @@ Hermes-native контур для портфеля автономно разви
 4. `OPERATING_SYSTEM.md` — общий цикл, convergence и handoff.
 5. `APPROVALS.md` — граница автономности.
 
-Hermes `ox-alpha` остаётся единственным интерфейсом пользователя. Профиль `company` ведёт portfolio board и эскалирует approval-запросы в свой Bot Chat; `ox-alpha` собирает решения пользователя и контролирует исполнение.
+Профиль `company` — главный пользовательский интерфейс и автономный CEO/оркестратор. Пользователь выдаёт капитал/capabilities и решает только serious escalation; routine work и решения живут в Kanban.
 
 ## Не копируем из Auto-Company
 

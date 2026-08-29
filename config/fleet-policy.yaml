@@ -35,6 +35,17 @@ anti_loop:
   max_same_failure: 2
   max_idle_turns: 3
   max_retries: 2
+financial_mandate:
+  currency: RUB
+  max_transaction: 10000
+  max_monthly_per_project: 30000
+  require_capability: true
+evidence_gates:
+  release_to_protected_branch: [ci, review, rollback]
+  deploy_external_runtime: [ci, qa, backup, rollback]
+  public_product_action: [review, qa]
+  destructive_change: [backup, scope]
+  financial_action: [finance, company_decision]
 protected:
   branches: [main, master, production, release]
   paths:
@@ -49,28 +60,36 @@ protected:
     - "**/request_dump*"
     - "**/dumps/**"
     - "**/.state/fleet-policy.db*"
+    - "fleet-policy.yaml"
+    - "APPROVALS.md"
+    - "kanban.db*"
 policy_rules:
   autonomous:
     - research_with_sources
     - plans_specs_docs_local_artifacts
     - codex_branch_code_test_build_review
-    - commit_push_codex_branch
+    - protected_branch_merge_or_push_after_gates
+    - deploy_after_gates
+    - product_and_content_publish_after_gates
+    - paid_experiments_within_financial_mandate
+    - free_service_accounts_without_kyc_or_commitment
     - private_repo_after_go
     - kanban_task_routing
     - read_only_state_checks
   approval_required:
-    - deploy_external_runtime
-    - public_outreach_or_publication
-    - payments_subscriptions_or_budget
-    - destructive_delete_cleanup_or_migration
-    - rewrite_history
-    - protected_branch_push_or_merge
-    - new_credentials_or_permissions
-    - security_or_privacy_change
-    - private_to_public
+    - mass_outreach_or_bulk_messaging
+    - financial_over_budget
+    - new_paid_capability_or_payment_rail
+    - phone_kyc_domain_or_bank_owner_action
+    - legal_or_material_reputation_risk
+    - ownership_or_root_access_change
+    - irreversible_data_loss
+    - material_security_or_privacy_policy_change
   hard_deny:
     - secret_read_or_write
     - worker_self_approval
+    - worker_capability_grant
+    - policy_control_plane_mutation
     - missing_or_unknown_task_type
 projects:
   rr-team:
@@ -80,9 +99,17 @@ projects:
   portfolio:
     project: portfolio
     path: "C:/Users/max/Desktop/all/ventures"
+    guidance: "skills/company-os/SKILL.md"
   venture-lab:
     project: venture-lab
     path: "C:/Users/max/Desktop/all/ventures/venture-lab"
+  fleet-ops:
+    project: fleet-ops
+    path: "C:/Users/max/Desktop/all/ventures"
+    guidance: "skills/company-os/SKILL.md"
+  general:
+    project: general
+    path: "C:/Users/max"
 notifications:
   significant_only: true
   events: [deny, approval_required, budget_exhausted, loop_stop, rollback, critical_error]

@@ -32,6 +32,7 @@ def task_context():
         "task_title": "test",
         "task_body": "task_type: code",
         "comments": [],
+        "comment_records": [],
         "skills": [],
         "task_status": "running",
         "started_at": None,
