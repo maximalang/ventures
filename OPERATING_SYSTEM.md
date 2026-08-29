@@ -17,7 +17,7 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 ## Forced convergence для нового venture
 
 - **Discovery 1:** независимые идеи/сигналы → shortlist не более 3.
-- **Discovery 2:** для #1 — рынок и источники (`research`), пользовательская проблема (`product`), pre-mortem (`critic`), экономика (`finance`), канал продаж (`sales`/`marketing`) → `GO`, `NO-GO` или `NEEDS-EVIDENCE`.
+- **Discovery 2:** для #1 — рынок и источники (`research`), пользовательская проблема (`product`), pre-mortem (`critic`), экономика (`finance`), канал продаж (`sales`) → `GO`, `NO-GO` или `NEEDS-EVIDENCE`.
 - **Build 1+:** после GO каждая итерация производит артефакт: repo, код, тест, лендинг, интервью-план или измеримый эксперимент. Чистая дискуссия запрещена.
 - Один и тот же `Next Action` не переносится более двух циклов: на третьем — уменьшить scope, сменить подход или заблокировать с конкретным запросом.
 - `NO-GO` — допустимый успешный результат при наличии evidence.
@@ -41,5 +41,6 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 
 - Проектные специалисты RR: `rr-support`, `rr-frontend`, `rr-backend`, `rr-ops`, `rr-critic`, `rr-mkt-lead`, `rr-mkt-content`, `rr-mkt-seo`, `rr-mkt-smm`.
 - Универсальные роли: `company` (portfolio lead, GPT), `tech`, `product`, `design`, `ux`, `qa`, `sales`, `finance`, `research`, `operations` (GLM).
+- Инфраструктура: `rr-pool` — общий пул моделей/ключей; не роль и не владелец задач, в squad не назначается.
 - Маршрутизация: исполнители и инфраструктура RR не отвязаны от RR; универсальные роли и координатор работают по всем зарегистрированным проектам.
 - Существующие не-RR проекты (донат, консоль, SEO-утилиты) не зарегистрированы в портфеле и автономно не управляются.

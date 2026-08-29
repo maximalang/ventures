@@ -8,7 +8,7 @@
 
 | Проект | Путь | Hermes Project | Kanban | Фаза | Владелец | Следующий gate |
 |---|---|---|---|---|---|---|
-| Recruiter Radar | `C:/Users/max/Desktop/all/recruiter-radar` | `project` (радар) | `rr-team` | Launch readiness | `rr-support` | Закрывать backlog и launch-гейты; deploy/publication требуют approval |
+| Recruiter Radar | `C:/Users/max/Desktop/all/recruiter-radar` | `project` (радар) | `rr-team` | Launch readiness | `rr-support` | Закрыть backlog и launch-гейты; merge по согласованной внутри команды цепочке; deploy только после VDS snapshot+backup и требует approval |
 | Venture Lab | `C:/Users/max/Desktop/all/ventures/venture-lab` | `venture-lab` | `venture-lab` | Discovery | `company` | Выбрать один venture через evidence + GO/NO-GO |
 
 ## Portfolio queue
@@ -23,3 +23,4 @@
 - Максимум 5 одновременно работающих Kanban workers.
 - Squad на задачу: 2–5 необходимых ролей, не весь флот.
 - Закрытая задача обязана иметь проверяемый artifact/evidence либо честный NO-GO.
+- Revenue record и продажа Recruiter Radar заблокированы до: бэкапы, live-proof, lineage/replay, 7 дней чистого Clock.
