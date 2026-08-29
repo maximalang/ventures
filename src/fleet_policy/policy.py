@@ -54,9 +54,15 @@ def _flatten(value: Any) -> str:
 def _protected_path(text: str, patterns: list[str]) -> bool:
     normalized = text.replace("\\", "/").lower()
     words = re.findall(r"[^\s\"']+", normalized)
+    variants: list[str] = []
+    for pattern in patterns:
+        lowered = pattern.lower()
+        variants.append(lowered)
+        if lowered.startswith("**/"):
+            variants.append(lowered[3:])
     for word in words:
         basename = PurePath(word).name.lower()
-        if any(fnmatch.fnmatch(word, pattern.lower()) or fnmatch.fnmatch(basename, pattern.lower()) for pattern in patterns):
+        if any(fnmatch.fnmatch(word, v) or fnmatch.fnmatch(basename, v) for v in variants):
             return True
     return False
 
@@ -94,7 +100,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     lower = flat.lower()
     if _protected_path(flat, list(config["protected"]["paths"])):
         return Classification("state_change", "secret_read_or_write", "deny", "secret-bearing paths and credential stores are prohibited")
-    if worker and re.search(r"\bfleet-policy\s+(?:approve|reject)\b", lower):
+    if worker and re.search(r"\bfleet[-_]policy(?:[-\w.\\/]*)?\s+(?:approve|reject)\b", lower):
         return Classification("state_change", "worker_self_approval", "deny", "workers cannot approve their own action")
 
     if name in TERMINAL_TOOLS:
@@ -118,6 +124,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"\b(?:publish|publication|outreach|advertis|campaign|newsletter|send[_ -]?(?:message|email)|public post)\b", "public_outreach_or_publication"),
         (r"\b(?:pay|payment|purchase|subscription|billing|change budget)\b", "payments_subscriptions_or_budget"),
         (r"(?:\b(?:delete|remove|cleanup|purge|drop\s+table|truncate|irreversible|destructive migration)\b|(?:^|\s)rm\s)", "destructive_delete_cleanup_or_migration"),
+        (r"\b(?:git\s+clean|branch\s+-[dD]|filter-branch|tag\s+-d|stash\s+(?:drop|clear)|checkout\s+--\s+\.)\b", "destructive_delete_cleanup_or_migration"),
         (r"\b(?:force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|rewrite history)\b", "rewrite_history"),
         (rf"\b(?:push|merge)[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))", "protected_branch_push_or_merge"),
         (r"\b(?:new credential|grant(?:\s+new)?(?:\s+api\s+key)?\s+permission|access grant|create api key|rotate token)\b", "new_credentials_or_permissions"),

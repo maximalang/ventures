@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -53,10 +54,20 @@ def _project(payload: dict[str, Any]) -> None:
     task_id = str(payload.get("task_id") or "")
     if not task_id or not runtime().claim_projection(payload):
         return
-    board = str(os.environ.get("HERMES_KANBAN_BOARD") or payload.get("project") or "default")
-    # Projecting policy evidence is a compensating control action, not the blocked user action.
-    _PROJECTOR.comment_and_block(board, task_id, _message(payload), block=True)
-    _PROJECTOR.drain_company(runtime().store, profile=runtime().config["notifications"]["profile"])
+    board = str(os.environ.get("HERMES_KANBAN_BOARD") or payload.get("board") or "default")
+
+    def _work() -> None:
+        # Projecting policy evidence is a compensating control action, not the blocked user action.
+        try:
+            _PROJECTOR.comment_and_block(board, task_id, _message(payload), block=True)
+            _PROJECTOR.drain_company(runtime().store, profile=runtime().config["notifications"]["profile"])
+        except Exception:
+            pass
+
+    # pre_tool_call callbacks are bounded by plugins.hook_callback_timeout (30s).
+    # Kanban block + Bot Chat projection are subprocess-bound and can exceed it,
+    # so projection runs detached; the fail-closed block decision returns immediately.
+    threading.Thread(target=_work, name="fleet-policy-projection", daemon=True).start()
 
 
 def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[str, Any] | None:
@@ -70,6 +81,7 @@ def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[
         return {"action": "block", "message": f"FLEET POLICY FAIL-CLOSED: {type(exc).__name__}"}
     payload = decision.as_dict()
     if decision.decision in {"deny", "approval_required"}:
+        payload.setdefault("board", os.environ.get("HERMES_KANBAN_BOARD") or "")
         _project(payload)
         return {"action": "block", "message": _message(payload)}
     return None
@@ -112,6 +124,7 @@ def kanban_task_claimed(task_id: str = "", board: str = "", assignee: str = "", 
     payload = {
         "decision": "deny", "rule_id": "missing_or_unknown_task_type", "reason": error,
         "task_id": task_id, "project": ctx.get("project", board), "profile": assignee,
+        "board": board or "",
         "action": "worker_launch", "target": task_id, "args_hash": "not-applicable",
         "timestamp": "", "budget_snapshot": runtime().budget_snapshot(ctx, task_type), "approval_card": None,
     }

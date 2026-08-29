@@ -68,6 +68,9 @@ class PolicyStore:
             # every hot-path connection requires an exclusive lock and can make
             # concurrent workers exceed Hermes' 30s pre-tool hook timeout.
             connection.execute("PRAGMA journal_mode=WAL")
+            row = connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'").fetchone()
+            if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=1").fetchone() is not None:
+                return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
 

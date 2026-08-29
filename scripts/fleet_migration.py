@@ -72,7 +72,16 @@ def sanitized_profile_files(profile: str) -> list[Path]:
     skills = root / "skills"
     if skills.is_dir():
         for path in skills.rglob("*"):
-            if path.is_file() and not any(part.lower().startswith(".env") or part.lower() == "auth.json" for part in path.parts):
+            relative = path.relative_to(root).as_posix().lower()
+            unique_rr_skill = relative.startswith("skills/recruiter-radar/") or "/rr-" in relative
+            prohibited = any(
+                part.lower().startswith(".env")
+                or part.lower() == "auth.json"
+                or "credential" in part.lower()
+                or part.lower() in {"sessions", "request_dump", "dumps"}
+                for part in path.parts
+            )
+            if path.is_file() and unique_rr_skill and not prohibited:
                 allowed.append(path)
     return allowed
 
@@ -84,7 +93,7 @@ def snapshot() -> Path:
     archives.mkdir(parents=True, exist_ok=True)
     profiles = rr_profiles()
     manifest: dict[str, Any] = {"created_at": stamp, "rr_profiles": profiles, "universal_profiles": UNIVERSAL, "profiles": {}}
-    for profile in [*profiles, *UNIVERSAL]:
+    for profile in profiles:
         files = sanitized_profile_files(profile)
         archive = archives / f"{profile}-safe.zip"
         entries: list[dict[str, Any]] = []

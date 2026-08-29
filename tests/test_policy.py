@@ -66,6 +66,34 @@ def test_worker_cannot_self_approve(config):
     assert (result.decision, result.category) == ("deny", "worker_self_approval")
 
 
+def test_worker_self_approval_variants_denied(config):
+    for command in (
+        "fleet-policy.exe approve rule-key",
+        ".venv/Scripts/fleet-policy approve rule-key",
+        "python -m fleet_policy.cli approve rule-key",
+        "uv run fleet-policy reject rule-key",
+    ):
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == ("deny", "worker_self_approval"), command
+
+
+def test_destructive_git_variants_require_approval(config):
+    for command in (
+        "git clean -fd",
+        "git branch -D main",
+        "git filter-branch --prune-empty HEAD",
+        "git tag -d v1.0",
+    ):
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert result.decision == "approval_required", (command, result)
+
+
+def test_bare_secret_filenames_denied(config):
+    for command in ("cat secrets.txt", "rm credentials.json", "cp auth.json /tmp"):
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert result.decision == "deny", command
+
+
 def test_retry_limits_reconcile_with_kanban():
     assert effective_retries(2, 4, 3) == 2
     assert effective_retries(4, 2, 3) == 2
