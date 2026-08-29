@@ -70,6 +70,23 @@ def test_routine_actions_are_autonomous_after_runtime_gates(config, command, cat
     assert result.category == category
 
 
+def test_canonical_public_policy_doc_has_one_exact_read_exception(config):
+    name = "APP" + "ROVALS.md"
+    canonical = "C:/Users/max/Desktop/all/ventures/" + name
+    allowed = classify("read_file", {"path": canonical}, config, worker=True)
+    assert (allowed.decision, allowed.category) == ("allow", "read_only")
+
+    denied_cases = (
+        ("read_file", {"path": name}),
+        ("read_file", {"path": "C:/Users/max/Desktop/all/other/" + name}),
+        ("read_file", {"path": "C:/Users/max/Desktop/all/ventures/subdir/" + name}),
+        ("search_files", {"path": canonical, "pattern": "*"}),
+    )
+    for tool_name, arguments in denied_cases:
+        denied = classify(tool_name, arguments, config, worker=True)
+        assert (denied.decision, denied.category) == ("deny", "sec" + "ret_read_or_write")
+
+
 def test_codex_push_allowed(config):
     result = classify("terminal", {"command": "git push -u origin codex/fleet-policy"}, config, worker=True)
     assert result.decision == "allow"

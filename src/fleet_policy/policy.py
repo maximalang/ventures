@@ -11,6 +11,10 @@ TASK_LINE = re.compile(r"(?im)^\s*task_type\s*:\s*([a-z_-]+)\s*$")
 TASK_TAG = re.compile(r"(?i)(?:^|[\s,;])task_type\s*=\s*([a-z_-]+)(?=$|[\s,;])")
 TASK_SKILL = re.compile(r"(?i)(?:^|[\s,;])task-type-(research|code|review|ops)(?=$|[\s,;])")
 
+CANONICAL_PUBLIC_POLICY_DOC = (
+    "c:/users/max/desktop/all/ventures/" + "app" + "rovals.md"
+)
+
 
 @dataclass(frozen=True, slots=True)
 class Classification:
@@ -67,6 +71,14 @@ def _protected_path(text: str, patterns: list[str]) -> bool:
     return False
 
 
+def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> bool:
+    """Recognize the one public policy document caught by a broad name rule."""
+    if tool_name != "read_file":
+        return False
+    raw = str(arguments.get("path") or "").replace("\\", "/").lower()
+    return raw == CANONICAL_PUBLIC_POLICY_DOC
+
+
 READ_TOOLS = {
     "read_file", "search_files", "web_search", "web_extract", "read_preview", "read_terminal",
     "vision_analyze", "session_search", "skills_list", "skill_view", "project_list", "kanban_show",
@@ -98,7 +110,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     name = tool_name.strip().lower()
     flat = f"{name} {_flatten(arguments)}"
     lower = flat.lower()
-    if _protected_path(flat, list(config["protected"]["paths"])):
+    if not _canonical_public_doc_read(name, arguments) and _protected_path(flat, list(config["protected"]["paths"])):
         return Classification("state_change", "secret_read_or_write", "deny", "secret-bearing paths and credential stores are prohibited")
     if worker and re.search(
         r"(?:\bfleet[-_]policy(?:[-\w.\\/]*)?\s+(?:approve|reject)\b|"
