@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
 from fleet_policy.storage import PolicyStore
@@ -38,6 +39,20 @@ def test_retention_removes_old_rows(tmp_path):
         connection.execute("INSERT INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at) VALUES(?,?,?,?,?,?,?)", ("old", "t", "a", "x", "h", "rejected", old))
     deleted = store.retention(90, 30, 365)
     assert deleted == {"events": 1, "call_history": 1, "approvals": 1}
+
+
+def test_concurrent_hot_path_connections_do_not_change_journal_mode(tmp_path):
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+
+    def read_count(_):
+        with store.connect() as connection:
+            return connection.execute("SELECT COUNT(*) FROM events").fetchone()[0]
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        assert list(pool.map(read_count, range(64))) == [0] * 64
+    with store.connect() as connection:
+        assert connection.execute("PRAGMA journal_mode").fetchone()[0].lower() == "wal"
 
 
 def test_budget_recording_idempotent(tmp_path):

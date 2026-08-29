@@ -147,6 +147,12 @@ def cutover(dry_run: bool = False) -> list[dict[str, Any]]:
         marker = f"task_type: {item['task_type']}\nrr-project: automatically applied by fleet-policy for board rr-team"
         result = run("hermes", "kanban", "--board", "rr-team", "comment", item["id"], marker, "--author", "ox-alpha")
         evidence.append({"action": "comment", "id": item["id"], "exit_code": result.returncode})
+        if item["status"] == "blocked":
+            result = run(
+                "hermes", "kanban", "--board", "rr-team", "block", item["id"],
+                "Cutover preservation: original blocked gate remains in force.", "--kind", "needs_input",
+            )
+            evidence.append({"action": "preserve_blocked", "id": item["id"], "exit_code": result.returncode})
     for key, value in (("kanban.orchestrator_profile", "company"), ("kanban.default_assignee", "company"), ("kanban.max_in_progress", "5")):
         result = run("hermes", "config", "set", key, value)
         evidence.append({"action": "config", "key": key, "value": value, "exit_code": result.returncode})
@@ -164,6 +170,12 @@ def rollback(dry_run: bool = False) -> list[dict[str, Any]]:
         else:
             result = run("hermes", "kanban", "--board", "rr-team", "reassign", task["id"], task["assignee"], "--reason", "Idempotent rollback to pre-cutover owner")
             evidence.append({**action, "exit_code": result.returncode})
+            if task["status"] == "blocked":
+                result = run(
+                    "hermes", "kanban", "--board", "rr-team", "block", task["id"],
+                    "Rollback preservation: original blocked gate remains in force.", "--kind", "needs_input",
+                )
+                evidence.append({"action": "preserve_blocked", "id": task["id"], "exit_code": result.returncode})
     if not dry_run:
         for key, value in (("kanban.orchestrator_profile", "default"), ("kanban.default_assignee", "rr-support")):
             result = run("hermes", "config", "set", key, value)

@@ -54,7 +54,6 @@ class PolicyStore:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         connection = sqlite3.connect(self.path, timeout=10)
         connection.row_factory = sqlite3.Row
-        connection.execute("PRAGMA journal_mode=WAL")
         connection.execute("PRAGMA busy_timeout=10000")
         connection.execute("PRAGMA foreign_keys=ON")
         try:
@@ -65,6 +64,10 @@ class PolicyStore:
 
     def migrate(self) -> None:
         with self.connect() as connection:
+            # Journal mode is a database-level setup operation. Re-running it on
+            # every hot-path connection requires an exclusive lock and can make
+            # concurrent workers exceed Hermes' 30s pre-tool hook timeout.
+            connection.execute("PRAGMA journal_mode=WAL")
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
 
