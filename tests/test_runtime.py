@@ -94,9 +94,22 @@ def test_token_budget_and_idle_stop(runtime, task_context):
 
 def test_retry_budget_uses_kanban_limit(runtime, task_context):
     task_context["max_retries"] = 1
-    task_context["api_request_id"] = "api-error"
-    payload = runtime.api_request_error(task_context, RuntimeError("failure"))
+    # First error of a class is a marker, not a retry — only a repeated error
+    # consumes budget, so provider fallback chains do not burn it.
+    task_context["api_request_id"] = "api-error-1"
+    assert runtime.api_request_error(task_context, RuntimeError("failure")) is None
+    task_context["api_request_id"] = "api-error-2"
+    payload = runtime.api_request_error(task_context, RuntimeError("failure again"))
     assert payload["rule_id"] == "retry_budget_exhausted"
+
+
+def test_provider_fallback_chain_does_not_consume_retries(runtime, task_context):
+    # zai 429 -> codex 429 -> custom: distinct errors within one healthy turn.
+    task_context["api_request_id"] = "fb-1"
+    assert runtime.api_request_error(task_context, ConnectionError("zai 429")) is None
+    task_context["api_request_id"] = "fb-2"
+    assert runtime.api_request_error(task_context, TimeoutError("codex 429")) is None
+    assert runtime.store.budget(task_context["task_id"]).get("retries", 0) == 0
 
 
 def test_monetary_cost_is_not_fake_zero(runtime, task_context):

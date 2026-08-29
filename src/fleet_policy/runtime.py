@@ -226,7 +226,21 @@ class FleetPolicyRuntime:
         if not task_id:
             return None
         request_id = str(context.get("api_request_id") or context.get("request_id") or "")
-        self.store.add_budget(task_id, "retries", 1, stable_id(task_id, request_id, type(error).__name__, "retry"))
+        # Provider fallback chains emit several DISTINCT transient errors per healthy
+        # turn (zai 429 -> codex 429 -> custom). Counting every one of them burns the
+        # retry budget on infrastructure, not worker behavior: only a REPEATED error
+        # class for the same task counts as a retry.
+        error_class = type(error).__name__
+        marker = stable_id(task_id, error_class, "retry-marker")
+        with self.store.connect() as connection:
+            seen = connection.execute(
+                "SELECT 1 FROM budget_ledger WHERE task_id=? AND metric='retries' AND event_id=?",
+                (task_id, marker),
+            ).fetchone()
+        if seen is None:
+            self.store.add_budget(task_id, "retries", 0, marker)
+        else:
+            self.store.add_budget(task_id, "retries", 1, stable_id(task_id, request_id, error_class, "retry"))
         task_type, _ = self.task_type(context)
         snapshot = self.budget_snapshot(context, task_type)
         exhausted = self._exhausted(snapshot, context)
