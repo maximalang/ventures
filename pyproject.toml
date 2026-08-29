@@ -1,18 +1,18 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=68,<82"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "ventures-fleet-policy"
 version = "0.1.0"
 requires-python = ">=3.11"
-dependencies = ["PyYAML>=6"]
+dependencies = ["PyYAML>=6,<7"]
 
 [project.scripts]
 fleet-policy = "fleet_policy.cli:main"
 
 [dependency-groups]
-dev = ["pytest>=8.3"]
+dev = ["pytest>=8.3,<10"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

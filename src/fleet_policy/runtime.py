@@ -238,14 +238,10 @@ class FleetPolicyRuntime:
         # turn Hermes walks its fallback chain and fires this hook once per failed
         # provider (zai 429 -> codex 429 -> ...), so any API-error-derived retry
         # budget exhausts on infrastructure noise. Dispatcher-level task retries
-        # remain the source of truth via kanban.failure_limit / task max_retries,
-        # reconciled by effective_retries for reporting.
+        # remain the source of truth via kanban.failure_limit / task max_retries.
         self.store.record_event(
             stable_id(task_id, request_id, type(error).__name__, "api_error"),
             str(context.get("run_id") or task_id), task_id, "api_request_error",
             {"error": type(error).__name__}, False,
         )
-        task_type, _ = self.task_type(context)
-        snapshot = self.budget_snapshot(context, task_type)
-        exhausted = self._exhausted(snapshot, context)
         return None
