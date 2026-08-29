@@ -12,6 +12,7 @@ Board taxonomy: `portfolio` — стратегия/капитал/инкубац
 |---|---|---|---|---|---|---|
 | Recruiter Radar | `C:/Users/max/Desktop/all/recruiter-radar` | `project` (радар) | `rr-team` | Launch readiness | `company` | Универсальный squad назначается по task type; закрыть backlog и launch-гейты; deploy только после VDS snapshot+backup и требует approval |
 | Venture Lab | `C:/Users/max/Desktop/all/ventures/venture-lab` | `venture-lab` | `venture-lab` | Discovery | `company` | Выбрать один venture через evidence + GO/NO-GO |
+| SEO Utility Site | `C:/Users/max/Documents/seo-niche-research/mvp-peni-site` | `seo-site` | `seo-site` | Pre-launch / local MVP | `company` | Исправить source-integrity regression, получить независимый QA и закрыть publication gates перед organic pilot |
 
 ## Portfolio queue
 
