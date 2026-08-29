@@ -1,0 +1,4 @@
+date,signal_type,segment,count,source_or_channel,evidence_path,notes
+2026-08-29,preorder_or_loi,ALL,0,n/a,n/a,"стартовый ноль, сигнал не фиксирован"
+2026-08-29,wcms_scan,S1,0,n/a,n/a,"метод NEEDS-CLARIFICATION (блокер B3)"
+2026-08-29,landing_registration,ALL,0,n/a,n/a,"лендинг не одобрен/не построен (блокер B2)"

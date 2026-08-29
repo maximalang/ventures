@@ -1,0 +1,24 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - sources: https://openai.com/products/release-notes ; https://help.openai.com/en/articles/6825453-chatgpt-release-notes (web_search snippets, 2026-08-29)
+Claim checked: kill-criterion K1 - absence of SHIPPED GPT->Skills conversion in official release notes as of 2026-08-29
+--------------------------------------------------------------------------------
+
+1) Release notes page (openai.com/products/release-notes) shows August 2026 entries; verbatim example confirming currency of the notes:
+
+"On August 30, 2026, we're retiring the official DALL·E GPT in ChatGPT. We encourage you to download any images you want to keep before then."
+
+NO entry mentions a GPT->Skills converter or conversion option in the August 2026 release notes (checked snippets 2026-08-29).
+
+2) ChatGPT Release Notes (help.openai.com/en/articles/6825453-chatgpt-release-notes): August 2026 entries cover large-paste handling etc.; NO mention of GPT->Skills conversion.
+
+3) GPTs in ChatGPT (help.openai.com/en/articles/8554407, "Updated: 13 days ago" as of 2026-08-29, i.e. ~2026-08-16) - verbatim:
+
+"New GPT creation and publishing are not available on personal ChatGPT accounts, including Free, Go, Plus, and Pro."
+
+"Existing GPTs remain available to use. Editing an existing GPT continues to require an eligible subscription and any applicable account or workspace permissions."
+
+Confirms S01 closure state still current; no conversion/export announcements on the GPTs page.
+
+4) CONTRADICTION LOG (third party, UNVERIFIED): aiautomationglobal.com/blog/chatgpt-skills-workflow-automation-replace-gpts-2026 claims "OpenAI offers a one-click migration tool... Navigate to your GPT, click the migrate button" and dates Skills launch "March 5, 2026". This contradicts official pages (release notes silent, Academy uses future tense). Classification: LOW, unverified secondary, internally inconsistent dates. Action: 10-minute manual check in a real ChatGPT account (E4-style verification) before treating as signal.
+
+ACCESS DEFECT: release-notes pages captured via search snippets, not full fetches (same defect class as S12). Level: MED for the negative claim ("no converter in release notes") - negative claims from snippets are weaker; weekly re-check mandated.
+--------------------------------------------------------------------------------

@@ -1,0 +1,17 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://academy.openai.com/public/clubs/work-users-ynjqu/resources/skills (web_extract/exa + web_search snippet, 2026-08-29)
+Article dated: February 24, 2026, "Last updated on August 27, 2026"
+Claim checked: kill-criterion K1 (OpenAI ships native GPT->Skills conversion) - sprint-H1 field validation
+--------------------------------------------------------------------------------
+
+VERBATIM (from search snippet of the page, position 1, 2026-08-29; same passage visible in page body):
+
+"During the beta, we'll learn from customer feedback on how teams use skills alongside GPTs. After that time, we'll offer options for both users and admins to convert GPTs into skills when they're better suited for repeatable workflows."
+
+Context (verbatim, same page): "Here's a simple framework to think about how these fit together: Skills = reusable workflows that teach ChatGPT to complete specific tasks; GPTs = goal-oriented, custom versions of ChatGPT..."
+
+VERBATIM (same page, retrieved via web_extract 2026-08-29): "Note that this article covers using skills within ChatGPT for new users, but skills can be exported and imported into other tools that support the Agent Skills format."
+
+VERBATIM (same page): "Skills can also be used across experiences like custom GPTs and projects and can incorporate apps (formerly connectors)"
+
+ACCESS DEFECT: full FAQ section of the page not fully captured by extract (page truncated at "The file generally outlines:"); the K1-relevant passage captured verbatim from the search-engine snippet of the same URL (position 1, 2026-08-29). Same defect class as S21 in aggregate register. Level: HIGH (official OpenAI Academy page, verbatim passage).
+--------------------------------------------------------------------------------
