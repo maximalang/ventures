@@ -25,8 +25,7 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 ## Review pipeline
 
 - Автор не принимает собственную работу.
-- `rr-critic` — независимый read-only adversarial review дорогих решений (RR-специализация, берёт и чужие проекты от @company).
-- `qa` — воспроизводимая проверка поведения и acceptance criteria.
+- `qa` — независимый adversarial review и воспроизводимая проверка поведения/acceptance criteria; автор не принимает собственную работу.
 - `finance` проверяет pricing, unit economics, бюджетные assumptions; не тратит деньги.
 - Для дорогих portfolio/architecture/launch решений `company` запрашивает явный GPT cross-check; это не автоматический fallback.
 
@@ -39,8 +38,8 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 
 ## Флот (финальный ростер)
 
-- Проектные специалисты RR: `rr-support`, `rr-frontend`, `rr-backend`, `rr-ops`, `rr-critic`, `rr-mkt-lead`, `rr-mkt-content`, `rr-mkt-seo`, `rr-mkt-smm`.
-- Универсальные роли: `company` (portfolio lead, GPT), `tech`, `product`, `design`, `ux`, `qa`, `sales`, `finance`, `research`, `operations` (GLM).
-- Инфраструктура: `rr-pool` — общий пул моделей/ключей; не роль и не владелец задач, в squad не назначается.
-- Маршрутизация: исполнители и инфраструктура RR не отвязаны от RR; универсальные роли и координатор работают по всем зарегистрированным проектам.
+- Единый универсальный состав: `company`, `tech`, `product`, `design`, `ux`, `qa`, `sales`, `finance`, `research`, `operations`.
+- `company` выбирает lead и squad 2–5 ролей; Kanban dispatcher запускает назначенного owner.
+- Проектный контекст приходит из board/project metadata и каноничных правил соответствующего repo. Для `rr-team` автоматически применяется общий `rr-project` guidance; отдельных RR-ролей нет.
+- Профили `rr-*` заморожены как rollback-контур на 7 дней после cutover, не получают новые assignments/routines и не входят в активный roster.
 - Существующие не-RR проекты (донат, консоль, SEO-утилиты) не зарегистрированы в портфеле и автономно не управляются.
