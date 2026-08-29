@@ -12,7 +12,8 @@ Discovery
 - Build только после GO.
 
 ## Active risks/blockers
-- Первая discovery brief ещё не создана.
+- Discovery 1 завершена 2026-08-29: реестр 7 гипотез, shortlist 3 (H1 Custom GPT Escape & Compliance, H2 Agent Cost Guard, H3 Art.50 Transparency Scanner) — venture-lab/discovery-2026-09.md.
+- Review от product по shortlist не проведён.
 
 ## Next action
-Создать на `portfolio` board hypothesis/discovery task с рынками, ограничениями и acceptance criteria.
+Discovery 2 по shortlist #1 (H1): рынок и источники (research), пользовательская проблема (product), pre-mortem (critic), экономика (finance), канал (sales/marketing) → GO / NO-GO / NEEDS-EVIDENCE.
