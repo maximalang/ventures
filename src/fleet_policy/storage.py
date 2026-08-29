@@ -90,6 +90,14 @@ class PolicyStore:
                 )
             return cursor.rowcount == 1
 
+    def delete_event(self, event_id: str) -> bool:
+        """Release a non-significant idempotency claim after failed delivery."""
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "DELETE FROM events WHERE event_id=? AND significant=0", (event_id,)
+            )
+            return cursor.rowcount == 1
+
     def add_budget(self, task_id: str, metric: str, amount: int, event_id: str) -> bool:
         with self.connect() as connection:
             cursor = connection.execute(

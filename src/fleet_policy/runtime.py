@@ -145,15 +145,22 @@ class FleetPolicyRuntime:
             )
         return policy_decision
 
-    def claim_projection(self, payload: dict[str, Any]) -> bool:
-        event_id = stable_id(
+    @staticmethod
+    def projection_event_id(payload: dict[str, Any]) -> str:
+        return stable_id(
             payload.get("task_id"), payload.get("action"), payload.get("target"),
             payload.get("args_hash"), payload.get("rule_id"), "projection",
         )
+
+    def claim_projection(self, payload: dict[str, Any]) -> bool:
+        event_id = self.projection_event_id(payload)
         return self.store.record_event(
             event_id, event_id, str(payload.get("task_id") or "") or None,
             "projection_claim", {"source_rule": payload.get("rule_id")}, False,
         )
+
+    def release_projection(self, payload: dict[str, Any]) -> bool:
+        return self.store.delete_event(self.projection_event_id(payload))
 
     def post_tool_call(self, tool_name: str, arguments: dict[str, Any], context: dict[str, Any], *,
                        success: bool, error_type: str = "", error_message: str = "") -> dict[str, Any] | None:

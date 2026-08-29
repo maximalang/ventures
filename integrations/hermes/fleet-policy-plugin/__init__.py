@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import os
 import sys
-import threading
 import re
 from pathlib import Path
 from typing import Any
@@ -68,21 +67,21 @@ def _project(payload: dict[str, Any]) -> None:
         return
     board = str(os.environ.get("HERMES_KANBAN_BOARD") or payload.get("board") or "default")
 
-    def _work() -> None:
-        # Projecting policy evidence is a compensating control action, not the blocked user action.
-        try:
-            _PROJECTOR.comment_and_block(board, task_id, _message(payload), block=True)
-        except Exception:
-            pass
-        # Company notifications are NOT drained here: _project fires on every
-        # significant deny/approval, so auto-drain would retry the whole pending
-        # outbox per blocked call and spam company's Bot Chat. Delivery is an
-        # explicit operator action: `fleet-policy drain-notifications`.
-
-    # pre_tool_call callbacks are bounded by plugins.hook_callback_timeout (30s).
-    # Kanban block + Bot Chat projection are subprocess-bound and can exceed it,
-    # so projection runs detached; the fail-closed block decision returns immediately.
-    threading.Thread(target=_work, name="fleet-policy-projection", daemon=True).start()
+    # Synchronous official CLI projection is deliberate: a daemon thread could be
+    # killed with a short-lived worker before the block lands. `kanban block` also
+    # appends the evidence comment and normally completes in <2s; the callback's
+    # 30s Hermes timeout remains fail-closed if the CLI itself is unavailable.
+    try:
+        result = _PROJECTOR.comment_and_block(board, task_id, _message(payload), block=True)
+    except Exception:
+        runtime().release_projection(payload)
+        raise
+    if result.get("block") != 0:
+        runtime().release_projection(payload)
+    # Company notifications are NOT drained here: _project fires on every
+    # significant deny/approval, so auto-drain would retry the whole pending
+    # outbox per blocked call and spam company's Bot Chat. Delivery is explicit:
+    # `fleet-policy drain-notifications`.
 
 
 def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[str, Any] | None:

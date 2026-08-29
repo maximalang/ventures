@@ -120,11 +120,26 @@ def test_projection_never_auto_drains_company_notifications(tmp_path, monkeypatc
         store.record_event(f"sig-{n}", "c", "t_x", "policy_decision",
                            {"decision": "deny", "rule_id": f"r{n}", "task_id": "t_x"}, True)
         module._project({"task_id": "t_x", "rule_id": f"r{n}", "project": "rr-team"})
-    import time
-    deadline = time.time() + 5
-    while time.time() < deadline:
-        if not any(t.is_alive() for t in __import__("threading").enumerate()):
-            break
-        time.sleep(0.05)
     assert drained["count"] == 0
     assert len(store.pending_notifications()) == 3
+
+
+def test_failed_projection_releases_idempotency_claim(tmp_path, monkeypatch):
+    import importlib.util
+    from pathlib import Path
+    module_path = Path(__file__).parents[1] / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    spec = importlib.util.spec_from_file_location("fleet_policy_plugin_retry_projection", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    runtime = module.runtime()
+    monkeypatch.setattr(runtime, "store", store)
+    monkeypatch.setattr(module, "_RUNTIME", runtime)
+    monkeypatch.setattr(module._PROJECTOR, "comment_and_block", lambda *a, **k: {"block": 1})
+    payload = {"task_id": "t_retry", "rule_id": "approval", "action": "terminal",
+               "target": "deploy", "args_hash": "abc", "board": "rr-team"}
+    module._project(payload)
+    # Failed delivery released the claim; a later retry can claim again.
+    assert runtime.claim_projection(payload) is True
