@@ -1,0 +1,5 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://openai.com/index/introducing-workspace-agents-in-chatgpt/ (exa extract 2026-08-29)
+--------------------------------------------------------------------------------
+Workspace agents are an evolution of GPTs. Powered by Codex, they can take on many of the tasks people already do at work.
+
+Editor’s note: GPTs will remain available while teams test workspace agents with their workflows. Soon, we’ll make it easy to convert GPTs into workspace agents.

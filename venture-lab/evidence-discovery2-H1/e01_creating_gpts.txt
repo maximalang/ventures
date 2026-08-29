@@ -1,0 +1,7 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://help.openai.com/en/articles/8554397-creating-and-editing-gpts (exa extract 2026-08-29)
+--------------------------------------------------------------------------------
+New GPT creation and publishing are not available on personal ChatGPT accounts, including Free, Go, Plus, and Pro.
+
+Existing GPTs remain available to use and can still be edited if existing plan and permission requirements are met.
+
+Users in Business, Enterprise, and Edu workspaces can create, edit, and publish GPTs when their workspace settings and permissions allow it.

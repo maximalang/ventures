@@ -1,0 +1,3 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://openai.com/index/introducing-agentkit (exa extract 2026-08-29)
+--------------------------------------------------------------------------------
+A June 3 update: Agent Builder, a low-energy tool for visually assembling agents, is being wound down.

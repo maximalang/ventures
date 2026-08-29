@@ -1,0 +1,5 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data (exa extract 2026-08-29)
+--------------------------------------------------------------------------------
+The downloaded ZIP file includes your chat history and other relevant account data.
+
+If you use a ChatGPT Business, Enterprise, or ChatGPT for Healthcare workspace, contact your workspace owner about organization-managed data access. Self-service export is not available in these workspaces.

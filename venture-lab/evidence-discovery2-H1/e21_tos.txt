@@ -1,0 +1,7 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://openai.com/policies/row-terms-of-use/ (page text via search-engine snapshot 2026-08-29; direct fetch is a JS shell; prohibition corroborated by OpenAI staff reply in community.openai.com/t/74678)
+--------------------------------------------------------------------------------
+What you cannot do. You may not use our Services for any illegal, harmful, or abusive activity. For example, you may not:
+
+Automatically or programmatically extract data or Output (defined below).
+
+CORROBORATION (OpenAI moderator 'vb', community.openai.com/t/is-it-against-tos-to-scrape-a-conversation-with-chatgpt/74678, Dec 2023): It is against the terms of service to automate the process of saving the output from ChatGPT.

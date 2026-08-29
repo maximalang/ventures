@@ -1,0 +1,5 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://help.openai.com/en/articles/9106926-transfer-exported-conversations-between-chatgpt-accounts (exa extract 2026-08-29)
+--------------------------------------------------------------------------------
+This is not a full account migration. Uploading exported conversations does not:
+
+Move subscriptions, settings, memories, GPTs, files, or workspace access to another account.

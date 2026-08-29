@@ -1,0 +1,5 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://gpt2skill.com/ (exa extract 2026-08-29)
+--------------------------------------------------------------------------------
+Capabilities
+
+Web Search Code Interpreter DALL·E Image Generation Not supported Actions (API Integrations) Not supported

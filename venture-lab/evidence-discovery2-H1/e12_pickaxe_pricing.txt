@@ -1,0 +1,3 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: davidriha.com search snippet quoting pickaxe.co/pricing (web_search 2026-08-29; claimed origin pickaxe.co/pricing not fetched directly)
+--------------------------------------------------------------------------------
+Pickaxe — no-code platform for building and monetizing GPT-like agents, apps, and AI tools. Pricing: Gold — $37 per month (or $29 per month when paying annually)

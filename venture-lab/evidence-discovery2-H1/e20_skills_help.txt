@@ -1,0 +1,5 @@
+EVIDENCE SNAPSHOT - retrieved 2026-08-29 - source: https://help.openai.com/en/articles/20001066 (exa extract 2026-08-29)
+--------------------------------------------------------------------------------
+Personal Skills are generally available for ChatGPT Business, Enterprise, Healthcare, and Edu users.
+
+OpenAI Skills follow the Agent Skills open standard, so you can download them from one product and install them in another.
