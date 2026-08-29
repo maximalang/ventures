@@ -96,3 +96,35 @@ def test_task_id_resolution_prefers_kanban_env_over_session_id(monkeypatch):
     monkeypatch.delenv("HERMES_KANBAN_TASK")
     assert module._resolve_task_id({"task_id": "20260829_182523_93318d"}) is None
     assert module._resolve_task_id({"task_id": "t_cafe1234"}) == "t_cafe1234"
+
+
+def test_projection_never_auto_drains_company_notifications(tmp_path, monkeypatch):
+    import importlib.util
+    from pathlib import Path
+    module_path = Path(__file__).parents[1] / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    spec = importlib.util.spec_from_file_location("fleet_policy_plugin_nospam", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    drained = {"count": 0}
+    monkeypatch.setattr(module._PROJECTOR, "comment_and_block", lambda *a, **k: {"block": 0})
+    monkeypatch.setattr(module._PROJECTOR, "drain_company", lambda *a, **k: drained.__setitem__("count", drained["count"] + 1))
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    runtime = module.runtime()
+    monkeypatch.setattr(runtime, "store", store)
+    monkeypatch.setattr(module, "_RUNTIME", runtime)
+
+    # Three consecutive significant blocks must never auto-drain company.
+    for n in range(3):
+        store.record_event(f"sig-{n}", "c", "t_x", "policy_decision",
+                           {"decision": "deny", "rule_id": f"r{n}", "task_id": "t_x"}, True)
+        module._project({"task_id": "t_x", "rule_id": f"r{n}", "project": "rr-team"})
+    import time
+    deadline = time.time() + 5
+    while time.time() < deadline:
+        if not any(t.is_alive() for t in __import__("threading").enumerate()):
+            break
+        time.sleep(0.05)
+    assert drained["count"] == 0
+    assert len(store.pending_notifications()) == 3

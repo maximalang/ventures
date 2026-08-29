@@ -72,9 +72,12 @@ def _project(payload: dict[str, Any]) -> None:
         # Projecting policy evidence is a compensating control action, not the blocked user action.
         try:
             _PROJECTOR.comment_and_block(board, task_id, _message(payload), block=True)
-            _PROJECTOR.drain_company(runtime().store, profile=runtime().config["notifications"]["profile"])
         except Exception:
             pass
+        # Company notifications are NOT drained here: _project fires on every
+        # significant deny/approval, so auto-drain would retry the whole pending
+        # outbox per blocked call and spam company's Bot Chat. Delivery is an
+        # explicit operator action: `fleet-policy drain-notifications`.
 
     # pre_tool_call callbacks are bounded by plugins.hook_callback_timeout (30s).
     # Kanban block + Bot Chat projection are subprocess-bound and can exceed it,

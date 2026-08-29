@@ -20,6 +20,8 @@ def parser() -> argparse.ArgumentParser:
     reject.add_argument("rule_key")
     reject.add_argument("--by", default="user")
     sub.add_parser("drain-notifications")
+    suppress = sub.add_parser("fail-notifications")
+    suppress.add_argument("--all-pending", action="store_true")
     sub.add_parser("retention")
     sub.add_parser("status")
     sub.add_parser("drift-check")
@@ -37,6 +39,13 @@ def main(argv: list[str] | None = None) -> int:
         sent = HermesProjector().drain_company(runtime.store, profile=runtime.config["notifications"]["profile"])
         print(json.dumps({"sent": sent}))
         return 0
+    if args.command == "fail-notifications":
+        if getattr(args, "all_pending", False):
+            failed = sum(1 for row in runtime.store.pending_notifications() if runtime.store.mark_notification(row["event_id"], "failed"))
+            print(json.dumps({"failed": failed}))
+            return 0
+        print(json.dumps({"ok": False, "reason": "pass --all-pending"}))
+        return 2
     if args.command == "retention":
         cfg = runtime.config["retention"]
         print(json.dumps(runtime.store.retention(cfg["events_days"], cfg["call_history_days"], cfg["approvals_days"])))
