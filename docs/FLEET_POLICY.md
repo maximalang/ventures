@@ -14,7 +14,7 @@ Runtime configuration lives in `config/fleet-policy.yaml`; shared state lives in
 4. Check hard budgets and anti-loop history.
 5. Classify `allow`, `deny`, or `approval_required`.
 6. For approval, persist an exact binding `(task_id, action, target, args_hash)` and block the call.
-7. A non-worker operator may approve with `fleet-policy approve <rule_key> --actor <name>`; the next exact call consumes the grant atomically before execution. Changed payloads never match and grants cannot be reused.
+7. A non-worker operator may approve with `fleet-policy approve <rule_key> --by <name>`; the next exact call consumes the grant atomically before execution. Changed payloads never match and grants cannot be reused.
 8. Significant events project to the task as a Kanban comment/block. Company Bot Chat delivery is explicit (`fleet-policy drain-notifications`) and never auto-drained from the pre-tool path, so repeated blocks cannot spam `company`. `fleet-policy fail-notifications --all-pending` retires stale outbox rows.
 
 ## Budget and anti-loop interaction
@@ -38,9 +38,12 @@ Covered: every normal Hermes tool routed through the built-in tool executor, inc
 Known gaps:
 
 - shell commands or external programs launched outside a Hermes agent process are not intercepted;
+- the plugin is a workflow policy boundary, not an OS security sandbox: all local profiles run as the same Windows user, so deliberately obfuscated arbitrary code could bypass textual terminal classification or write files directly. Defense-in-depth denies known approval APIs/DB paths and worker-context decisions; hostile-code isolation would require a separate OS account/container;
 - direct human edits to Kanban/profile files are outside the hook;
 - already-running sessions do not pick up newly installed plugins until restarted;
 - `kanban_task_claimed` is observer-only, so missing task type is enforced at the first state-changing tool call and by task-creation/cutover conventions, not by vetoing the dispatcher claim itself;
 - company Bot Chat delivery is explicit (`fleet-policy drain-notifications`) and never auto-fired from a pre-tool callback, avoiding spam and nested agent loops.
 
 Compensating controls: official CLI-only config changes, immutable plugin install SHA, SOUL rule, task creator conventions, dispatcher default owner/company, snapshots, rollback script, and post-cutover smoke tests.
+
+Rollback is the repository-side operator command `uv run python scripts/fleet_migration.py rollback [--dry-run]`; the `fleet-policy` CLI intentionally handles policy state only and does not duplicate migration orchestration.

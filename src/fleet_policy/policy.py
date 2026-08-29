@@ -100,7 +100,11 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     lower = flat.lower()
     if _protected_path(flat, list(config["protected"]["paths"])):
         return Classification("state_change", "secret_read_or_write", "deny", "secret-bearing paths and credential stores are prohibited")
-    if worker and re.search(r"\bfleet[-_]policy(?:[-\w.\\/]*)?\s+(?:approve|reject)\b", lower):
+    if worker and re.search(
+        r"(?:\bfleet[-_]policy(?:[-\w.\\/]*)?\s+(?:approve|reject)\b|"
+        r"\b(?:decide_approval|consume_exact_approval|ensure_approval)\b|"
+        r"\b(?:update|insert|delete)[^\n]*\bapprovals\b)", lower,
+    ):
         return Classification("state_change", "worker_self_approval", "deny", "workers cannot approve their own action")
 
     if name in TERMINAL_TOOLS:

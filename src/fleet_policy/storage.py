@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
@@ -155,6 +156,11 @@ class PolicyStore:
             return cursor.rowcount == 1
 
     def decide_approval(self, rule_key: str, approved: bool, decided_by: str) -> bool:
+        # Defense in depth: dispatcher workers cannot approve through a direct
+        # Python import even if the terminal command evades the textual policy.
+        # The authoritative operator CLI runs outside HERMES_KANBAN_TASK.
+        if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
         status = "approved" if approved else "rejected"
         with self.connect() as connection:
             cursor = connection.execute(
@@ -198,8 +204,15 @@ class PolicyStore:
         now = now or datetime.now(timezone.utc)
         deleted: dict[str, int] = {}
         with self.connect() as connection:
-            for table, days in (("events", event_days), ("call_history", call_days), ("approvals", approval_days)):
+            for table, days in (("events", event_days), ("call_history", call_days), ("approvals", approval_days), ("budget_ledger", call_days)):
                 cutoff = (now - timedelta(days=days)).isoformat(timespec="seconds").replace("+00:00", "Z")
                 cursor = connection.execute(f"DELETE FROM {table} WHERE created_at < ?", (cutoff,))
                 deleted[table] = cursor.rowcount
+            event_cutoff = (now - timedelta(days=event_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
+            cursor = connection.execute(
+                "DELETE FROM notification_outbox WHERE status!='pending' AND created_at < ?", (event_cutoff,)
+            )
+            deleted["notification_outbox"] = cursor.rowcount
+            cursor = connection.execute("DELETE FROM task_state WHERE updated_at < ?", (event_cutoff,))
+            deleted["task_state"] = cursor.rowcount
         return deleted

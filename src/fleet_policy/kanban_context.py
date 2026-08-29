@@ -2,12 +2,15 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sqlite3
 from pathlib import Path
 from typing import Any
 
 
 def board_db(board: str, env: dict[str, str] | None = None) -> Path:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{0,63}", board or ""):
+        raise ValueError("invalid Kanban board slug")
     environ = env or os.environ
     explicit = environ.get("HERMES_KANBAN_DB")
     if explicit:

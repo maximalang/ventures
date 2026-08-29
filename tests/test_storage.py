@@ -37,8 +37,23 @@ def test_retention_removes_old_rows(tmp_path):
         connection.execute("INSERT INTO events VALUES(?,?,?,?,?,?,?)", ("old", "c", "t", "x", 0, "{}", old))
         connection.execute("INSERT INTO call_history VALUES(?,?,?,?,?,?)", ("old", "t", "c", None, 1, old))
         connection.execute("INSERT INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at) VALUES(?,?,?,?,?,?,?)", ("old", "t", "a", "x", "h", "rejected", old))
+        connection.execute("INSERT INTO budget_ledger VALUES(?,?,?,?,?)", ("t", "tokens", 1, "old-budget", old))
+        connection.execute("INSERT INTO notification_outbox(event_id,payload_json,status,created_at) VALUES(?,?,?,?)", ("old-note", "{}", "failed", old))
+        connection.execute("INSERT INTO task_state VALUES(?,?,?)", ("old-task", 1, old))
     deleted = store.retention(90, 30, 365)
-    assert deleted == {"events": 1, "call_history": 1, "approvals": 1}
+    assert deleted == {
+        "events": 1, "call_history": 1, "approvals": 1,
+        "budget_ledger": 1, "notification_outbox": 1, "task_state": 1,
+    }
+
+
+def test_worker_environment_cannot_decide_approval(tmp_path, monkeypatch):
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    assert store.ensure_approval("rule", "t", "terminal", "deploy", "hash")
+    monkeypatch.setenv("HERMES_KANBAN_TASK", "t")
+    assert store.decide_approval("rule", True, "worker") is False
+    assert store.approval("rule")["status"] == "pending"
 
 
 def test_concurrent_hot_path_connections_do_not_change_journal_mode(tmp_path):

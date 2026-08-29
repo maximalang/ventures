@@ -75,6 +75,13 @@ def test_worker_self_approval_variants_denied(config):
     ):
         result = classify("terminal", {"command": command}, config, worker=True)
         assert (result.decision, result.category) == ("deny", "worker_self_approval"), command
+    direct_api = classify(
+        "terminal",
+        {"command": "python -c \"store.decide_approval('rule', True, 'worker')\""},
+        config,
+        worker=True,
+    )
+    assert (direct_api.decision, direct_api.category) == ("deny", "worker_self_approval")
 
 
 def test_destructive_git_variants_require_approval(config):

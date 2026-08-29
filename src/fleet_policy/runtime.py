@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import time
 from pathlib import Path
 from typing import Any
 
@@ -196,7 +197,11 @@ class FleetPolicyRuntime:
         task_id = str(context.get("task_id") or "")
         if not task_id:
             return None
-        request_id = str(context.get("api_request_id") or context.get("request_id") or "")
+        request_id = str(
+            context.get("api_request_id")
+            or context.get("request_id")
+            or stable_id(task_id, time.time_ns(), usage or {})
+        )
         if usage:
             # Budget counts GENERATED tokens only. prompt_tokens is the full
             # re-sent context on every request (a healthy agent run exhausts a
@@ -240,15 +245,20 @@ class FleetPolicyRuntime:
         task_id = str(context.get("task_id") or "")
         if not task_id:
             return None
-        request_id = str(context.get("api_request_id") or context.get("request_id") or "")
+        request_id = str(
+            context.get("api_request_id")
+            or context.get("request_id")
+            or stable_id(task_id, time.time_ns(), "api_error")
+        )
+        error_type = str(error.get("type") or "unknown") if isinstance(error, dict) else type(error).__name__
         # Retry accounting is deliberately NOT plugin-owned: within one healthy
         # turn Hermes walks its fallback chain and fires this hook once per failed
         # provider (zai 429 -> codex 429 -> ...), so any API-error-derived retry
         # budget exhausts on infrastructure noise. Dispatcher-level task retries
         # remain the source of truth via kanban.failure_limit / task max_retries.
         self.store.record_event(
-            stable_id(task_id, request_id, type(error).__name__, "api_error"),
+            stable_id(task_id, request_id, error_type, "api_error"),
             str(context.get("run_id") or task_id), task_id, "api_request_error",
-            {"error": type(error).__name__}, False,
+            {"error": error_type}, False,
         )
         return None

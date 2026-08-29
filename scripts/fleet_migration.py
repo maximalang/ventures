@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import zipfile
+import yaml
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -131,6 +132,17 @@ def latest_snapshot() -> Path:
     return Path(marker.read_text(encoding="utf-8").strip())
 
 
+def verified_snapshot(root: Path | None = None) -> tuple[Path, dict[str, Any]]:
+    root = root or latest_snapshot()
+    snapshot_path = root / "snapshot.json"
+    checksum_path = root / "snapshot.sha256"
+    expected = checksum_path.read_text(encoding="utf-8").split()[0]
+    actual = sha256(snapshot_path)
+    if actual != expected:
+        raise RuntimeError(f"snapshot checksum mismatch: expected {expected}, got {actual}")
+    return root, json.loads(snapshot_path.read_text(encoding="utf-8"))
+
+
 def plan(snapshot_root: Path | None = None) -> list[dict[str, str]]:
     root = snapshot_root or latest_snapshot()
     data = json.loads((root / "snapshot.json").read_text(encoding="utf-8"))
@@ -169,8 +181,7 @@ def cutover(dry_run: bool = False) -> list[dict[str, Any]]:
 
 
 def rollback(dry_run: bool = False) -> list[dict[str, Any]]:
-    root = latest_snapshot()
-    data = json.loads((root / "snapshot.json").read_text(encoding="utf-8"))
+    root, data = verified_snapshot()
     evidence: list[dict[str, Any]] = []
     for task in data["active_tasks"]:
         action = {"id": task["id"], "to": task["assignee"]}
@@ -185,9 +196,18 @@ def rollback(dry_run: bool = False) -> list[dict[str, Any]]:
                     "Rollback preservation: original blocked gate remains in force.", "--kind", "needs_input",
                 )
                 evidence.append({"action": "preserve_blocked", "id": task["id"], "exit_code": result.returncode})
-    if not dry_run:
-        for key, value in (("kanban.orchestrator_profile", "default"), ("kanban.default_assignee", "rr-support")):
-            result = run("hermes", "config", "set", key, value)
+    previous = yaml.safe_load(data["routing_snapshot"]["kanban_config"]["stdout"]) or {}
+    restore = (
+        ("kanban.orchestrator_profile", previous.get("orchestrator_profile")),
+        ("kanban.default_assignee", previous.get("default_assignee")),
+        ("kanban.max_in_progress", previous.get("max_in_progress")),
+    )
+    for key, value in restore:
+        encoded = "null" if value is None else json.dumps(value)
+        if dry_run:
+            evidence.append({"action": "config", "key": key, "value": value})
+        else:
+            result = run("hermes", "config", "set", key, encoded)
             evidence.append({"action": "config", "key": key, "value": value, "exit_code": result.returncode})
     return evidence
 

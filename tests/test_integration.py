@@ -5,6 +5,7 @@ import sqlite3
 import subprocess
 
 from fleet_policy.kanban_context import load_task_context
+from fleet_policy.kanban_context import board_db
 from fleet_policy.projector import HermesProjector
 from fleet_policy.storage import PolicyStore
 
@@ -35,6 +36,12 @@ def test_context_reads_supported_task_fields(tmp_path):
     assert ctx["skills"] == ["rr-project"]
     assert ctx["project"] == "recruiter-radar"
     assert ctx["worker"] is True
+
+
+def test_board_slug_rejects_path_traversal():
+    import pytest
+    with pytest.raises(ValueError, match="invalid Kanban board slug"):
+        board_db("../other-board")
 
 
 def test_rr_guidance_does_not_apply_to_other_project(monkeypatch):
@@ -143,3 +150,21 @@ def test_failed_projection_releases_idempotency_claim(tmp_path, monkeypatch):
     module._project(payload)
     # Failed delivery released the claim; a later retry can claim again.
     assert runtime.claim_projection(payload) is True
+
+
+def test_policy_db_outage_never_allows_secret_read(monkeypatch):
+    import importlib.util
+    from pathlib import Path
+    module_path = Path(__file__).parents[1] / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    spec = importlib.util.spec_from_file_location("fleet_policy_plugin_outage", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    runtime = module.runtime()
+    monkeypatch.setattr(runtime, "pre_tool_call", lambda *a, **k: (_ for _ in ()).throw(OSError("db offline")))
+    monkeypatch.setattr(module, "_RUNTIME", runtime)
+
+    secret_name = "." + "env.production"
+    blocked = module.pre_tool_call(tool_name="read_file", args={"path": secret_name})
+    assert blocked["action"] == "block"
+    ordinary = module.pre_tool_call(tool_name="read_file", args={"path": "README.md"})
+    assert ordinary is None

@@ -15,6 +15,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from fleet_policy.kanban_context import load_task_context  # noqa: E402
+from fleet_policy.policy import classify  # noqa: E402
 from fleet_policy.projector import HermesProjector  # noqa: E402
 from fleet_policy.runtime import FleetPolicyRuntime  # noqa: E402
 
@@ -89,9 +90,18 @@ def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[
     try:
         decision = runtime().pre_tool_call(tool_name or "unknown", arguments, context(kwargs))
     except Exception as exc:
-        lowered = (tool_name or "").lower()
-        if lowered.startswith(("read_", "search_", "list_", "get_", "show_", "view_")):
-            return None
+        # Preserve ordinary read availability during a policy-DB outage, but
+        # never let the fallback bypass secret-bearing path classification.
+        try:
+            cfg = _RUNTIME.config if _RUNTIME is not None else runtime().config
+            fallback = classify(
+                tool_name or "unknown", arguments, cfg,
+                worker=bool(os.environ.get("HERMES_KANBAN_TASK")),
+            )
+            if fallback.effect == "read" and fallback.category != "secret_read_or_write":
+                return None
+        except Exception:
+            pass
         return {"action": "block", "message": f"FLEET POLICY FAIL-CLOSED: {type(exc).__name__}"}
     payload = decision.as_dict()
     if decision.decision in {"deny", "approval_required"}:
@@ -106,7 +116,7 @@ def post_tool_call(tool_name: str = "", args: Any = None, status: str = "", erro
     arguments = dict(args or {}) if isinstance(args, dict) else {}
     payload = runtime().post_tool_call(
         tool_name or "unknown", arguments, context(kwargs),
-        success=status != "error", error_type=error_type or "", error_message=error_message or "",
+        success=status in {"ok", "success"}, error_type=error_type or "", error_message=error_message or "",
     )
     if payload:
         _project(payload)
@@ -169,6 +179,8 @@ def rr_guidance(_session_info: Any) -> str:
 
 
 def register(ctx) -> None:
+    # Prewarm config + idempotent schema migration outside the hot tool path.
+    runtime()
     ctx.register_hook("pre_tool_call", pre_tool_call)
     ctx.register_hook("post_tool_call", post_tool_call)
     ctx.register_hook("post_api_request", post_api_request)

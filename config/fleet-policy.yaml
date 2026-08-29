@@ -45,8 +45,10 @@ protected:
     - "**/*credential*"
     - "**/*secret*"
     - "**/sessions/**"
+    - "**/request_dump/**"
     - "**/request_dump*"
     - "**/dumps/**"
+    - "**/.state/fleet-policy.db*"
 policy_rules:
   autonomous:
     - research_with_sources

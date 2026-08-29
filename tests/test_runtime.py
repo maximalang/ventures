@@ -126,6 +126,24 @@ def test_token_budget_counts_generated_tokens_only(runtime, task_context):
     assert runtime.store.budget("t_test")["tokens"] == 119995
 
 
+def test_missing_request_id_does_not_collapse_token_events(runtime, task_context):
+    task_context.pop("api_request_id", None)
+    runtime.post_api_request(task_context, {"completion_tokens": 5}, 1)
+    runtime.post_api_request(task_context, {"completion_tokens": 5}, 1)
+    assert runtime.store.budget(task_context["task_id"])["tokens"] == 10
+
+
+def test_api_error_dict_records_real_type(runtime, task_context):
+    task_context["api_request_id"] = "dict-error"
+    runtime.api_request_error(task_context, {"type": "rate_limit", "message": "hidden"})
+    with runtime.store.connect() as connection:
+        payload = connection.execute(
+            "SELECT payload_json FROM events WHERE kind='api_request_error' ORDER BY created_at DESC LIMIT 1"
+        ).fetchone()[0]
+    assert '"error":"rate_limit"' in payload
+    assert "hidden" not in payload
+
+
 def test_monetary_cost_is_not_fake_zero(runtime, task_context):
     snapshot = runtime.budget_snapshot(task_context, "code")
     assert snapshot["monetary_cost"] == {"status": "unavailable", "amount": None, "currency": None}
