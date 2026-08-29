@@ -1,0 +1,19 @@
+name: fleet-policy
+version: "1.0.0"
+description: "Fail-closed policy gate, budgets, loop guard, and event log for the universal Hermes fleet."
+author: "ox-alpha"
+hooks:
+  - pre_tool_call
+  - post_tool_call
+  - post_api_request
+  - api_request_error
+  - kanban_task_claimed
+provides_hooks:
+  - pre_tool_call
+  - post_tool_call
+  - post_api_request
+  - api_request_error
+  - kanban_task_claimed
+system_prompt_sections:
+  - fleet-policy
+  - rr-project
