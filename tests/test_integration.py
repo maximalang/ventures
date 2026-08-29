@@ -81,3 +81,18 @@ def test_failed_company_notification_remains_pending(tmp_path):
     store.record_event("e1", "c1", "t1", "deny", {"decision": "deny"}, True)
     assert HermesProjector(runner).drain_company(store) == 0
     assert len(store.pending_notifications()) == 1
+
+
+def test_task_id_resolution_prefers_kanban_env_over_session_id(monkeypatch):
+    import importlib.util
+    from pathlib import Path
+    module_path = Path(__file__).parents[1] / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    spec = importlib.util.spec_from_file_location("fleet_policy_plugin_resolve", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setenv("HERMES_KANBAN_TASK", "t_deadbeef")
+    # Hermes hook kwargs carry the session-scoped id, not the board task.
+    assert module._resolve_task_id({"task_id": "20260829_182523_93318d"}) == "t_deadbeef"
+    monkeypatch.delenv("HERMES_KANBAN_TASK")
+    assert module._resolve_task_id({"task_id": "20260829_182523_93318d"}) is None
+    assert module._resolve_task_id({"task_id": "t_cafe1234"}) == "t_cafe1234"

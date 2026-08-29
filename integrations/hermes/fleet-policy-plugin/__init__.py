@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import sys
 import threading
+import re
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,7 @@ from fleet_policy.runtime import FleetPolicyRuntime  # noqa: E402
 
 _RUNTIME: FleetPolicyRuntime | None = None
 _PROJECTOR = HermesProjector()
+_KANBAN_TASK_RE = re.compile(r"^t_[0-9a-f]{6,}$")
 
 
 def runtime() -> FleetPolicyRuntime:
@@ -29,9 +31,19 @@ def runtime() -> FleetPolicyRuntime:
     return _RUNTIME
 
 
+def _resolve_task_id(kwargs: dict[str, Any]) -> str | None:
+    # The hook kwarg "task_id" is the Hermes session-scoped id, NOT the Kanban
+    # task. The dispatcher pins the real board task in $HERMES_KANBAN_TASK.
+    env_task = os.environ.get("HERMES_KANBAN_TASK") or ""
+    if env_task:
+        return env_task
+    kwarg = str(kwargs.get("task_id") or "")
+    return kwarg if _KANBAN_TASK_RE.match(kwarg) else None
+
+
 def context(kwargs: dict[str, Any]) -> dict[str, Any]:
     base = {
-        "task_id": kwargs.get("task_id"),
+        "task_id": _resolve_task_id(kwargs),
         "run_id": kwargs.get("run_id"),
         "session_id": kwargs.get("session_id"),
         "tool_call_id": kwargs.get("tool_call_id"),
