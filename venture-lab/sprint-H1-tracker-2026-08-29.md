@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | G1. Интервью: ≥10 проблемных, из них ≥3 с подтверждением боли на сегмент | 5×S1 + 5×S2 + 5×S3 (product doc §interview plan) | 0 проведено; 0 записано | venture-lab/sprint-H1-interviews-2026-08-29.csv (пуст) | NOT STARTED — блокер: outreach требует user-approval |
 | G2. Предзаказы/LOI: ≥3 | aggregate §0 | 0 | venture-lab/sprint-H1-signals-2026-08-29.csv | NOT STARTED — зависит от G1/лендинга |
-| G3. WCMS-скан: ≥50 портфелей ИЛИ ≥30 регистраций | aggregate §4 тест 4 | 0 сканов; 0 регистраций; метод NOT SPECIFIED | venture-lab/sprint-H1-signals-2026-08-29.csv | NOT STARTED — 2 блокера: метод NEEDS-CLARIFICATION, лендинг требует approval |
+| G3. Consented GPT portfolio inventory scan: ≥50 completed distinct scans ИЛИ ≥30 регистраций (счётчики раздельные, не комбинируются) | aggregate §4 тест 4 + протокол: venture-lab/sprint-H1-g3-portfolio-scan-protocol-2026-08-29.md | 0 completed scans; 0 регистраций (день 0; seed-строки scans-CSV — примеры протокола §5, не полевые данные) | venture-lab/sprint-H1-scans-2026-08-29.csv (регистр сканов) + venture-lab/sprint-H1-signals-2026-08-29.csv (регистрации) | METHOD DEFINED — сбор не начинается до approvals B1–B4; лендинг-плечо (≥30 регистраций) дополнительно требует B2 |
 | G4. S2: 3 agency discovery-call, ≥1 LOI | aggregate §4 тест 5 | 0 | venture-lab/sprint-H1-signals-2026-08-29.csv | NOT STARTED — блокер: outreach требует user-approval |
 
 ## 2. Kill-критерии (мониторинг, еженедельно до вердикта)
@@ -27,7 +27,7 @@
 |---|---|---|---|
 | B1. Email-sequence 7 писем S1/S2 | G1(часть)/G2/G4 | user-approval по APPROVALS.md до отправки первого касания | нет |
 | B2. Промо-лендинг + email-захват | G2/G3 | user-approval: публикация + плейсмент. $0-варианты не верифицированы (Netlify/Vercel free tier), часть требует FPA или валидного email | нет; уточнить у userа разрешённые $0-плейсменты |
-| B3. WCMS-метод не определён | G3 | clarification: что считается «просканированным портфелем», что такое аббревиатура WCMS (в артефактах не расшифровано) | нет |
+| B3. WCMS-метод не определён | G3 | RESOLVED 2026-08-29 (карточка t_9b0bda2c): метрика переименована в «consented GPT portfolio inventory scan», метод и правила счёта — venture-lab/sprint-H1-g3-portfolio-scan-protocol-2026-08-29.md; аббревиатура WCMS не расшифрована (первичного артефакта нет, гадание запрещено). Остаточный блокер: продвижение скана = outreach → approval B1/B2 | да, для остаточного (approval обязателен) |
 | B4. Reddit/форум-кейсы (посты) | G1 (recruiting)/G3 (трафик) | публикация = outreach → approval | нет |
 
 Ни один из 4 гейтов не может начать набор фактов без разблокировки B1–B4. Автономная работа (kill-мониторинг, консьюмер-контекст, документация спринта) продолжается.
@@ -45,11 +45,12 @@
 | SH1 | ≥30% из 10+ проблемных интервью подтвердят боль «потеря/миграция портфеля GPT» | интервью по product doc | если после ≥5 интервью <30% подтверждений — kill K2 |
 | SH2 | ≥3 из 15 интервью дадут предзаказ/LOI при оффере $29–49 solo / $99–199 год agency | оффер в конце интервью/письма | 0 из 15 → G2 провален |
 | SH3 | Free-скан даёт visitor→scan ≥20% и scan→email ≥25% | лендинг-аналитика после approval | недобор обеих в первые 2 недели → канал не работает |
-| SH4 | WCMS-скан достижим ($0, 2–3 дня) | метод + пилот | если метод требует платного API/обхода ToS → G3 пересматривается |
+| SH4 | Consented portfolio-scan достижим ($0, 2–3 дня труда) | метод: venture-lab/sprint-H1-g3-portfolio-scan-protocol-2026-08-29.md; пилот — при открытии поля | если ручной consent-сбор не даёт 50 completed scans за спринт ИЛИ требуется платный API → G3 пересматривается; automated extraction (скрейпинг UI, неофициальные API) запрещён ToS [S21] и обходом не является |
 
 ## 6. Чекпойнты
 
 - 2026-08-29: день 0. Инфраструктура, kill-проверка №1, регистрация блокеров. Полевые цифры: 0/0/0.
+- 2026-08-29 (t_9b0bda2c): метод G3 определён — протокол «consented GPT portfolio inventory scan» (venture-lab/sprint-H1-g3-portfolio-scan-protocol-2026-08-29.md) + raw-регистр venture-lab/sprint-H1-scans-2026-08-29.csv с seed-примерами EX1–EX5 (примеры протокола §5, НЕ полевые данные). Блокер B3 закрыт (метод); счётчики сканов и регистраций раздельны (≥50 OR ≥30, комбинирование запрещено). Полевые цифры G3 остаются 0/0 — сбор данных ждёт approvals B1–B4.
 - Неделя 1 (план): kill-проверка №2; повторная S2-конкурентная проверка; при approval — старт outreach.
 - Вердикт (план): карточка агрегации результатов спринта принимает GO/NO-GO по гейтам §0 aggregate.
 
