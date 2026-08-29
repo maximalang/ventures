@@ -1,0 +1,126 @@
+schema: hermes-fleet-policy
+version: 1
+safe_defaults:
+  fail_closed_state_changes: true
+  fail_open_read_only: true
+  read_sampling_rate: 0.1
+  task_type_source: exact_marker_in_task_body_comment_or_skill
+  task_type_markers:
+    - "task_type: <research|code|review|ops>"
+    - "task_type=<research|code|review|ops>"
+  monetary_cost_when_unreported: unavailable
+budgets:
+  research:
+    tokens: 120000
+    wall_clock_minutes: 90
+    tool_calls: 80
+    retries: 2
+  code:
+    tokens: 180000
+    wall_clock_minutes: 120
+    tool_calls: 140
+    retries: 2
+  review:
+    tokens: 60000
+    wall_clock_minutes: 45
+    tool_calls: 50
+    retries: 2
+  ops:
+    tokens: 50000
+    wall_clock_minutes: 30
+    tool_calls: 40
+    retries: 2
+anti_loop:
+  max_identical_calls: 3
+  max_same_failure: 2
+  max_idle_turns: 3
+  max_retries: 2
+financial_mandate:
+  currency: RUB
+  max_transaction: 10000
+  max_monthly_per_project: 30000
+  require_capability: true
+evidence_gates:
+  release_to_protected_branch: [ci, review, rollback]
+  deploy_external_runtime: [ci, qa, backup, rollback]
+  public_product_action: [review, qa]
+  destructive_change: [backup, scope]
+  financial_action: [finance, company_decision]
+protected:
+  branches: [main, master, production, release]
+  paths:
+    - ".env*"
+    - "**/.env*"
+    - "auth.json"
+    - "**/auth.json"
+    - "**/*credential*"
+    - "**/*secret*"
+    - "**/sessions/**"
+    - "**/request_dump/**"
+    - "**/request_dump*"
+    - "**/dumps/**"
+    - "**/.state/fleet-policy.db*"
+    - "fleet-policy.yaml"
+    - "APPROVALS.md"
+    - "kanban.db*"
+policy_rules:
+  autonomous:
+    - research_with_sources
+    - plans_specs_docs_local_artifacts
+    - codex_branch_code_test_build_review
+    - protected_branch_merge_or_push_after_gates
+    - deploy_after_gates
+    - product_and_content_publish_after_gates
+    - paid_experiments_within_financial_mandate
+    - free_service_accounts_without_kyc_or_commitment
+    - private_repo_after_go
+    - kanban_task_routing
+    - read_only_state_checks
+  approval_required:
+    - mass_outreach_or_bulk_messaging
+    - financial_over_budget
+    - new_paid_capability_or_payment_rail
+    - phone_kyc_domain_or_bank_owner_action
+    - legal_or_material_reputation_risk
+    - ownership_or_root_access_change
+    - irreversible_data_loss
+    - material_security_or_privacy_policy_change
+  hard_deny:
+    - secret_read_or_write
+    - worker_self_approval
+    - worker_capability_grant
+    - policy_control_plane_mutation
+    - missing_or_unknown_task_type
+projects:
+  rr-team:
+    project: recruiter-radar
+    path: "C:/Users/max/Desktop/all/recruiter-radar"
+    guidance: "skills/rr-project/SKILL.md"
+  portfolio:
+    project: portfolio
+    path: "C:/Users/max/Desktop/all/ventures"
+    guidance: "skills/company-os/SKILL.md"
+  venture-lab:
+    project: venture-lab
+    path: "C:/Users/max/Desktop/all/ventures/venture-lab"
+  fleet-ops:
+    project: fleet-ops
+    path: "C:/Users/max/Desktop/all/ventures"
+    guidance: "skills/company-os/SKILL.md"
+  general:
+    project: general
+    path: "C:/Users/max"
+notifications:
+  significant_only: true
+  events: [deny, approval_required, budget_exhausted, loop_stop, rollback, critical_error]
+  allow_spam: false
+  profile: company
+  channel: "Bot Chat"
+retention:
+  events_days: 90
+  call_history_days: 30
+  approvals_days: 365
+overrides:
+  model: narrowing_only
+  allow_relaxation: false
+  source: exact_task_markers

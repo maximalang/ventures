@@ -1,0 +1,24 @@
+{
+  "schema": "rr-profile-migration",
+  "version": 1,
+  "target_roster": ["company", "tech", "product", "design", "ux", "qa", "research", "sales", "finance", "operations"],
+  "profiles": {
+    "rr-support": {"recipients": ["company", "qa", "tech"], "functions": ["coordination", "acceptance", "routing"]},
+    "rr-backend": {"recipients": ["tech", "operations", "qa"], "functions": ["application/data engineering", "runtime operations", "acceptance"]},
+    "rr-frontend": {"recipients": ["tech", "design", "ux", "qa"], "functions": ["frontend engineering", "visual design", "conversion UX", "browser QA"]},
+    "rr-ops": {"recipients": ["operations"], "functions": ["VDS/CI/CD/backups/monitoring"]},
+    "rr-critic": {"recipients": ["qa", "company"], "functions": ["independent adversarial review", "high-cost decision escalation"]},
+    "rr-mkt-lead": {"recipients": ["product", "sales", "company"], "functions": ["go-to-market prioritization", "pipeline", "portfolio decisions"]},
+    "rr-mkt-content": {"recipients": ["product", "sales"], "functions": ["content planning", "conversion copy"]},
+    "rr-mkt-seo": {"recipients": ["research", "qa"], "functions": ["competitive monitoring", "SEO audit"]},
+    "rr-mkt-smm": {"recipients": ["sales", "product"], "functions": ["channel strategy", "public posting approval gate"]},
+    "rr-pool": {"recipients": ["none"], "functions": ["credential/model pool was infrastructure, not an assignable role"]}
+  },
+  "data_policy": {
+    "migrate": ["stable non-secret facts", "reusable procedures as skills", "safe scripts/cron", "active Kanban ownership"],
+    "deduplicate": ["repo rules already canonical", "repeated evidence/security/branch rules"],
+    "drop": ["temporary progress", "stale SHA/PR/issue IDs", "one-shot logs", "session dumps"],
+    "never_archive": [".env*", "auth.json", "OAuth tokens", "API keys", "credential stores", "sessions", "request dumps"]
+  },
+  "state": "prepared"
+}

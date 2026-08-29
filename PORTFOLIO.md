@@ -2,13 +2,15 @@
 
 ## Политика регистрации
 
-Автономно управляются только проекты, явно внесённые сюда, имеющие папку, Hermes Project и отдельную Kanban-доску.
+Автономно управляются только проекты, явно внесённые сюда. Самостоятельный продукт/venture регистрируется при наличии git repo, accountable owner и измеримой primary metric; затем получает Hermes Project, отдельную Kanban-доску и thin project skill.
+
+Board taxonomy: `portfolio` — стратегия/капитал/инкубация; отдельная board на зарегистрированный продукт; `fleet-ops` — общие capabilities/accounts/infra; `general` — разовые непроектные задачи.
 
 ## Активные проекты
 
 | Проект | Путь | Hermes Project | Kanban | Фаза | Владелец | Следующий gate |
 |---|---|---|---|---|---|---|
-| Recruiter Radar | `C:/Users/max/Desktop/all/recruiter-radar` | `project` (радар) | `rr-team` | Launch readiness | `rr-support` | Закрыть backlog и launch-гейты; merge по согласованной внутри команды цепочке; deploy только после VDS snapshot+backup и требует approval |
+| Recruiter Radar | `C:/Users/max/Desktop/all/recruiter-radar` | `project` (радар) | `rr-team` | Launch readiness | `company` | Универсальный squad назначается по task type; закрыть backlog и launch-гейты; deploy только после VDS snapshot+backup и требует approval |
 | Venture Lab | `C:/Users/max/Desktop/all/ventures/venture-lab` | `venture-lab` | `venture-lab` | Discovery | `company` | Выбрать один venture через evidence + GO/NO-GO |
 
 ## Portfolio queue
