@@ -197,6 +197,12 @@ class FleetPolicyRuntime:
             if total is None:
                 total = int(usage.get("input_tokens") or usage.get("prompt_tokens") or 0) + int(usage.get("output_tokens") or usage.get("completion_tokens") or 0)
             self.store.add_budget(task_id, "tokens", int(total or 0), stable_id(task_id, request_id, "tokens"))
+        # A successful API request breaks the failure streak: fallback-chain errors
+        # that resolved within the same turn must not accumulate as retries.
+        with self.store.connect() as connection:
+            connection.execute(
+                "DELETE FROM budget_ledger WHERE task_id=? AND metric='retries'", (task_id,)
+            )
         idle = self.store.set_idle_turns(task_id, increment=int(assistant_tool_call_count or 0) == 0)
         task_type, _ = self.task_type(context)
         snapshot = self.budget_snapshot(context, task_type)
