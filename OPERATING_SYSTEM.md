@@ -25,7 +25,7 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 ## Review pipeline
 
 - Автор не принимает собственную работу.
-- `critic` — независимый read-only adversarial review дорогих решений.
+- `rr-critic` — независимый read-only adversarial review дорогих решений (RR-специализация, берёт и чужие проекты от @company).
 - `qa` — воспроизводимая проверка поведения и acceptance criteria.
 - `finance` проверяет pricing, unit economics, бюджетные assumptions; не тратит деньги.
 - Для дорогих portfolio/architecture/launch решений `company` запрашивает явный GPT cross-check; это не автоматический fallback.
@@ -33,6 +33,13 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 ## Ритм
 
 - Event-driven dispatcher двигает готовые Kanban tasks.
-- Ежедневная routine: triage blocked/ready, approvals, stale Next Action, portfolio WIP.
-- Еженедельная routine: portfolio review, метрики, GO/NO-GO, риски и 1–3 приоритета.
+- Ежедневная routine (`company-daily-ops`, 09:00): triage blocked/ready, approvals, stale Next Action, portfolio WIP.
+- Еженедельная routine (`company-weekly-review`, пн 10:00): portfolio review, метрики, GO/NO-GO, риски и 1–3 приоритета.
 - Никаких busy loops и циклов каждые 30 секунд.
+
+## Флот (финальный ростер)
+
+- Проектные специалисты RR: `rr-support`, `rr-frontend`, `rr-backend`, `rr-ops`, `rr-critic`, `rr-mkt-lead`, `rr-mkt-content`, `rr-mkt-seo`, `rr-mkt-smm`.
+- Универсальные роли: `company` (portfolio lead, GPT), `tech`, `product`, `design`, `ux`, `qa`, `sales`, `finance`, `research`, `operations` (GLM).
+- Маршрутизация: исполнители и инфраструктура RR не отвязаны от RR; универсальные роли и координатор работают по всем зарегистрированным проектам.
+- Существующие не-RR проекты (донат, консоль, SEO-утилиты) не зарегистрированы в портфеле и автономно не управляются.
