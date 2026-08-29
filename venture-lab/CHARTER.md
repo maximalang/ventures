@@ -14,4 +14,4 @@
 - Out: параллельное строительство нескольких продуктов, публичный launch без approval, выдуманные цифры.
 
 ## Current gate
-Discovery — выбрать первую hypothesis card на `portfolio` board.
+Discovery 2 H1 field validation — вердикт NEEDS-EVIDENCE (2026-08-29, агрегация t_f3573ec1; decisions/0001-h1-needs-evidence-field-gate.md). Build запрещён до полного GO gate; условия GO и kill-критерии — venture-lab/discovery2-H1-aggregate-2026-08-29.md.

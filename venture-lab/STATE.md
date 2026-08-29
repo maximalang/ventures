@@ -4,7 +4,7 @@
 Discovery
 
 ## Current objective
-Сформировать evidence-backed shortlist до 3 идей и провести одну через GO/NO-GO.
+Собрать field evidence по H1 (Custom GPT Escape & Compliance) до рекомендации GO/NO-GO в рамках гейта NEEDS-EVIDENCE (decisions/0001-h1-needs-evidence-field-gate.md): проблемные интервью, предзаказы/LOI, usage signal по venture-lab/sprint-H1-tracker-2026-08-29.md.
 
 ## Constraints
 - Один новый venture одновременно.
