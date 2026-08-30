@@ -96,6 +96,60 @@ def test_release_bundle_builder_is_deterministic_and_excludes_local_state(tmp_pa
         raise AssertionError("tampered bundle unexpectedly verified")
 
 
+def test_release_bundle_inventory_is_stable_after_generated_egg_info(tmp_path):
+    from fleet_policy.release_bundle import build_release_bundle, release_inventory, verify_release_bundle
+
+    source = tmp_path / "exact-source"
+    shutil.copytree(
+        ROOT,
+        source,
+        ignore=shutil.ignore_patterns(
+            ".git", ".venv", ".state", ".pytest_cache", "__pycache__", "*.egg-info", "*.pyc", "*.pyo"
+        ),
+    )
+    clean_bundle = tmp_path / "clean-bundle"
+    generated_bundle = tmp_path / "generated-bundle"
+    build_release_bundle(source, clean_bundle)
+
+    metadata = source / "src" / "ventures_fleet_policy.egg-info"
+    metadata.mkdir()
+    (metadata / "PKG-INFO").write_text("generated metadata\n", encoding="utf-8")
+    build_release_bundle(source, generated_bundle)
+
+    clean_inventory = verify_release_bundle(clean_bundle)
+    generated_inventory = verify_release_bundle(generated_bundle)
+    assert clean_inventory == generated_inventory
+    assert clean_inventory == [item for item in release_inventory(clean_bundle) if item != "RELEASE-MANIFEST.json"]
+    assert not any(part.endswith(".egg-info") for item in generated_inventory for part in item.split("/"))
+
+
+def test_default_bundle_is_self_contained_for_drift_and_rr_guidance(tmp_path, monkeypatch):
+    from fleet_policy.release_bundle import build_release_bundle, verify_release_bundle
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(ROOT, bundle)
+    assert verify_release_bundle(bundle)
+
+    drift = subprocess.run(
+        [sys.executable, "-m", "fleet_policy.cli", "--root", str(bundle), "drift-check"],
+        cwd=bundle,
+        capture_output=True,
+        text=True,
+    )
+    assert drift.returncode == 0, drift.stderr
+    assert json.loads(drift.stdout) == {"missing": [], "ok": True}
+
+    monkeypatch.delenv("HERMES_VENTURES_ROOT", raising=False)
+    monkeypatch.setenv("HERMES_KANBAN_BOARD", "rr-team")
+    module_path = bundle / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    spec = importlib.util.spec_from_file_location("fleet_policy_plugin_bundle_guidance", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    guidance = module.project_guidance(None)
+    assert "# Recruiter Radar project guidance" in guidance
+
+
 def test_release_bundle_rejects_rewritten_manifest_missing_canonical_payload(tmp_path):
     from fleet_policy.release_bundle import build_release_bundle, verify_release_bundle
 

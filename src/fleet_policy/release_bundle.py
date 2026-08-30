@@ -10,12 +10,18 @@ RELEASE_PATHS = (
     "pyproject.toml",
     "uv.lock",
     "plugin.yaml",
+    "AGENTS.md",
+    "APPROVALS.md",
     "README.md",
     "CHANGELOG.md",
+    "OPERATING_SYSTEM.md",
+    "PORTFOLIO.md",
     "config",
     "src",
     "tests",
     "scripts",
+    "skills/company-os",
+    "skills/rr-project",
     "integrations/hermes/fleet-policy-plugin",
 )
 
@@ -24,6 +30,8 @@ _DIRECTORY_RELEASE_PATHS = {
     "src",
     "tests",
     "scripts",
+    "skills/company-os",
+    "skills/rr-project",
     "integrations/hermes/fleet-policy-plugin",
 }
 _EXCLUDED_PARTS = {".git", ".venv", ".state", ".pytest_cache", "__pycache__"}
@@ -33,7 +41,10 @@ _REPARSE_POINT_ATTRIBUTE = 0x400
 
 
 def _included(path: Path) -> bool:
-    return not any(part in _EXCLUDED_PARTS for part in path.parts) and path.suffix not in _EXCLUDED_SUFFIXES
+    return (
+        not any(part in _EXCLUDED_PARTS or part.endswith(".egg-info") for part in path.parts)
+        and path.suffix not in _EXCLUDED_SUFFIXES
+    )
 
 
 def _is_link_or_reparse(path: Path) -> bool:
@@ -96,7 +107,9 @@ def _copy_path(source_root: Path, destination_root: Path, relative: str) -> None
             source,
             destination,
             dirs_exist_ok=False,
-            ignore=shutil.ignore_patterns(".git", ".venv", ".state", ".pytest_cache", "__pycache__", "*.pyc", "*.pyo"),
+            ignore=shutil.ignore_patterns(
+                ".git", ".venv", ".state", ".pytest_cache", "__pycache__", "*.egg-info", "*.pyc", "*.pyo"
+            ),
         )
     else:
         destination.parent.mkdir(parents=True, exist_ok=True)
