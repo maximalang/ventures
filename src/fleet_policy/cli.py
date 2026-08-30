@@ -11,6 +11,21 @@ from .projector import HermesProjector
 from .runtime import FleetPolicyRuntime
 
 
+def _find_runtime_root(start: Path) -> Path:
+    """Find the nearest release bundle or source root above ``start``."""
+    resolved = start.resolve()
+    current = resolved if resolved.is_dir() else resolved.parent
+    for candidate in (current, *current.parents):
+        if (candidate / "RELEASE-MANIFEST.json").is_file():
+            return candidate
+        if (candidate / "src" / "fleet_policy").is_dir():
+            return candidate
+    raise FileNotFoundError(
+        f"cannot locate fleet-policy runtime root from {resolved}; "
+        "expected RELEASE-MANIFEST.json or src/fleet_policy in an ancestor"
+    )
+
+
 def default_root(arguments: dict | argparse.Namespace) -> Path:
     """Portable self-contained default root for the bundle checkout or install.
 
@@ -25,7 +40,7 @@ def default_root(arguments: dict | argparse.Namespace) -> Path:
     override = os.environ.get("HERMES_VENTURES_ROOT")
     if override:
         return Path(override)
-    return Path(__file__).resolve().parents[2]
+    return _find_runtime_root(Path(__file__))
 
 
 def parser() -> argparse.ArgumentParser:

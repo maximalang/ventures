@@ -41,8 +41,12 @@ _MANIFEST_NAME = "RELEASE-MANIFEST.json"
 _REPARSE_POINT_ATTRIBUTE = 0x400
 
 
+def _is_generated_metadata_part(part: str) -> bool:
+    return part.lower().endswith(_GENERATED_METADATA_SUFFIXES)
+
+
 def _included(path: Path) -> bool:
-    if any(part in _EXCLUDED_PARTS or part.endswith(_GENERATED_METADATA_SUFFIXES) for part in path.parts):
+    if any(part in _EXCLUDED_PARTS or _is_generated_metadata_part(part) for part in path.parts):
         return False
     return path.suffix not in _EXCLUDED_SUFFIXES
 
@@ -51,8 +55,22 @@ def _generated_metadata(root: Path) -> list[str]:
     return sorted(
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
-        if any(part.endswith(_GENERATED_METADATA_SUFFIXES) for part in path.relative_to(root).parts)
+        if any(_is_generated_metadata_part(part) for part in path.relative_to(root).parts)
     )
+
+
+def _copy_ignore(_directory: str, names: list[str]) -> set[str]:
+    ignored: set[str] = set()
+    for name in names:
+        lowered = name.lower()
+        if (
+            name in _EXCLUDED_PARTS
+            or lowered in _EXCLUDED_PARTS
+            or _is_generated_metadata_part(lowered)
+            or lowered.endswith(tuple(_EXCLUDED_SUFFIXES))
+        ):
+            ignored.add(name)
+    return ignored
 
 
 def _is_link_or_reparse(path: Path) -> bool:
@@ -115,10 +133,7 @@ def _copy_path(source_root: Path, destination_root: Path, relative: str) -> None
             source,
             destination,
             dirs_exist_ok=False,
-            ignore=shutil.ignore_patterns(
-                ".git", ".venv", ".state", ".pytest_cache", "__pycache__",
-                "*.egg-info", "*.dist-info", "*.egg", "*.pyc", "*.pyo",
-            ),
+            ignore=_copy_ignore,
         )
     else:
         destination.parent.mkdir(parents=True, exist_ok=True)

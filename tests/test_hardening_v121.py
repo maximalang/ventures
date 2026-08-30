@@ -375,6 +375,51 @@ def test_release_bundle_build_excludes_source_package_metadata(tmp_path):
     assert not leaked, leaked
 
 
+def test_release_bundle_handles_generated_metadata_case_insensitively(tmp_path):
+    from fleet_policy.release_bundle import build_release_bundle, verify_release_bundle
+
+    source = tmp_path / "source"
+    shutil.copytree(
+        ROOT,
+        source,
+        ignore=shutil.ignore_patterns(
+            ".git", ".venv", ".state", ".pytest_cache", "__pycache__", "*.egg-info", "*.pyc", "*.pyo"
+        ),
+    )
+    mixed_case_metadata = source / "src" / "X.EGG-INFO"
+    mixed_case_metadata.mkdir()
+    (mixed_case_metadata / "PKG-INFO").write_text("Metadata-Version: 2.1\n", encoding="utf-8")
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(source, bundle)
+    assert not any(
+        part.lower().endswith((".egg-info", ".dist-info", ".egg"))
+        for path in bundle.rglob("*")
+        for part in path.relative_to(bundle).parts
+    )
+
+    leaked_metadata = bundle / "src" / "X.EGG-INFO"
+    leaked_metadata.mkdir()
+    (leaked_metadata / "PKG-INFO").write_text("Metadata-Version: 2.1\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="generated package metadata"):
+        verify_release_bundle(bundle)
+
+
+def test_cli_default_root_finds_source_root_from_wheel_layout(monkeypatch, tmp_path):
+    from fleet_policy import cli
+
+    runtime_root = tmp_path / "runtime"
+    (runtime_root / "src" / "fleet_policy").mkdir(parents=True)
+    installed_cli = runtime_root / ".venv" / "Lib" / "site-packages" / "fleet_policy" / "cli.py"
+    installed_cli.parent.mkdir(parents=True)
+    installed_cli.touch()
+
+    monkeypatch.delenv("HERMES_VENTURES_ROOT", raising=False)
+    monkeypatch.setattr(cli, "__file__", str(installed_cli))
+
+    assert cli.default_root({}) == runtime_root
+
+
 
 def test_cli_default_root_is_portable_and_self_contained(monkeypatch, tmp_path):
     from fleet_policy import cli
