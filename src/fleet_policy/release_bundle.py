@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import stat
 from pathlib import Path
 
 RELEASE_PATHS = (
@@ -17,25 +18,66 @@ RELEASE_PATHS = (
     "scripts",
     "integrations/hermes/fleet-policy-plugin",
 )
-RELEASE_DIRECTORIES = (
+
+_DIRECTORY_RELEASE_PATHS = {
     "config",
     "src",
     "tests",
     "scripts",
     "integrations/hermes/fleet-policy-plugin",
-)
-
+}
 _EXCLUDED_PARTS = {".git", ".venv", ".state", ".pytest_cache", "__pycache__"}
 _EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
 _MANIFEST_NAME = "RELEASE-MANIFEST.json"
+_REPARSE_POINT_ATTRIBUTE = 0x400
 
 
 def _included(path: Path) -> bool:
     return not any(part in _EXCLUDED_PARTS for part in path.parts) and path.suffix not in _EXCLUDED_SUFFIXES
 
 
+def _is_link_or_reparse(path: Path) -> bool:
+    try:
+        if path.is_symlink():
+            return True
+        attributes = getattr(path.lstat(), "st_file_attributes", 0)
+    except OSError as exc:
+        raise ValueError(f"cannot inspect release path: {path}") from exc
+    return bool(attributes & _REPARSE_POINT_ATTRIBUTE)
+
+
+def _assert_tree_has_no_links(root: Path, label: str) -> None:
+    if _is_link_or_reparse(root):
+        raise ValueError(f"{label} contains link or reparse point: .")
+    if root.is_file():
+        return
+    if not root.is_dir():
+        raise ValueError(f"{label} is neither a file nor a directory: {root}")
+
+    pending = [root]
+    while pending:
+        current = pending.pop()
+        try:
+            children = list(current.iterdir())
+        except OSError as exc:
+            raise ValueError(f"cannot inspect release directory: {current}") from exc
+        for child in children:
+            relative = child.relative_to(root).as_posix()
+            if _is_link_or_reparse(child):
+                raise ValueError(f"{label} contains link or reparse point: {relative}")
+            try:
+                mode = child.lstat().st_mode
+            except OSError as exc:
+                raise ValueError(f"cannot inspect release path: {child}") from exc
+            if stat.S_ISDIR(mode):
+                pending.append(child)
+            elif not stat.S_ISREG(mode):
+                raise ValueError(f"{label} contains unsupported filesystem entry: {relative}")
+
+
 def release_inventory(root: str | Path) -> list[str]:
     root = Path(root)
+    _assert_tree_has_no_links(root, "release bundle")
     return sorted(
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
@@ -47,8 +89,7 @@ def _copy_path(source_root: Path, destination_root: Path, relative: str) -> None
     source = source_root / relative
     if not source.exists():
         raise FileNotFoundError(f"release path is missing: {relative}")
-    if source.is_symlink() or (source.is_dir() and any(path.is_symlink() for path in source.rglob("*"))):
-        raise ValueError(f"release source contains a symbolic link: {relative}")
+    _assert_tree_has_no_links(source, f"release source {relative}")
     destination = destination_root / relative
     if source.is_dir():
         shutil.copytree(
@@ -101,18 +142,19 @@ def build_release_bundle(source_root: str | Path, destination_root: str | Path) 
 
 
 def verify_release_bundle(bundle_root: str | Path) -> list[str]:
-    bundle_root = Path(bundle_root).resolve()
+    bundle_root = Path(bundle_root).absolute()
+    _assert_tree_has_no_links(bundle_root, "release bundle")
     for relative in RELEASE_PATHS:
         required = bundle_root / relative
         if not required.exists():
             raise ValueError(f"missing required release path: {relative}")
-        if required.is_symlink():
-            raise ValueError(f"release path is symbolic link: {relative}")
-        if relative in RELEASE_DIRECTORIES:
-            if not required.is_dir():
-                raise ValueError(f"required release path is not a directory: {relative}")
-        elif not required.is_file():
+        if _is_link_or_reparse(required):
+            raise ValueError(f"release required path is a link or reparse point: {relative}")
+        if relative in _DIRECTORY_RELEASE_PATHS and not required.is_dir():
+            raise ValueError(f"required release path is not a directory: {relative}")
+        if relative not in _DIRECTORY_RELEASE_PATHS and not required.is_file():
             raise ValueError(f"required release path is not a file: {relative}")
+
     manifest_path = bundle_root / _MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("schema") != "fleet-policy-release-bundle-v1":

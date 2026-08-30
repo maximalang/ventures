@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -10,6 +11,7 @@ import tomllib
 from pathlib import Path
 
 import yaml
+import pytest
 
 from fleet_policy.policy import classify
 
@@ -133,6 +135,55 @@ def test_release_bundle_rejects_rewritten_manifest_with_wrong_required_path_type
         assert "required release path is not a directory: config" in str(exc)
     else:
         raise AssertionError("rewritten manifest unexpectedly verified with a file replacing a required directory")
+
+
+def _poison_manifest(manifest_path):
+    # The verifier must reject the filesystem entry before parsing this input.
+    manifest_path.write_text("{", encoding="utf-8")
+
+
+def test_release_bundle_rejects_nested_directory_symlink_before_manifest(tmp_path):
+    from fleet_policy.release_bundle import build_release_bundle, verify_release_bundle
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(ROOT, bundle)
+    nested = bundle / "src" / "fleet_policy"
+    outside = tmp_path / "outside" / "fleet_policy"
+    outside.mkdir(parents=True)
+    (outside / "__init__.py").write_text("marker = 67\n", encoding="utf-8")
+    shutil.rmtree(nested)
+    try:
+        nested.symlink_to(outside, target_is_directory=True)
+    except OSError as exc:
+        pytest.skip(f"directory symlink is unavailable: {exc}")
+    _poison_manifest(bundle / "RELEASE-MANIFEST.json")
+
+    with pytest.raises(ValueError, match="link or reparse point"):
+        verify_release_bundle(bundle)
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows junction semantics")
+def test_release_bundle_rejects_nested_windows_junction_before_manifest(tmp_path):
+    from fleet_policy.release_bundle import build_release_bundle, verify_release_bundle
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(ROOT, bundle)
+    nested = bundle / "src" / "fleet_policy"
+    outside = tmp_path / "outside" / "fleet_policy"
+    outside.mkdir(parents=True)
+    (outside / "__init__.py").write_text("marker = 67\n", encoding="utf-8")
+    shutil.rmtree(nested)
+    subprocess.run(
+        ["cmd", "/c", "mklink", "/J", str(nested), str(outside)],
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    assert nested.is_dir() and not nested.is_symlink()
+    _poison_manifest(bundle / "RELEASE-MANIFEST.json")
+
+    with pytest.raises(ValueError, match="link or reparse point"):
+        verify_release_bundle(bundle)
 
 
 def test_bundle_cli_does_not_initialize_policy_state(tmp_path):
