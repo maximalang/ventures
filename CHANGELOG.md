@@ -4,6 +4,7 @@
 
 ### Security
 - Worker `execute_code` теперь требует exact one-time approval binding; operator sessions остаются доступны для bounded incident response.
+- Release-bundle verifier требует все канонические пути с ожидаемым типом и отклоняет symbolic links до проверки manifest inventory.
 
 ### Added
 - Канонический release bundle с детерминированным inventory и SHA-256 verification.

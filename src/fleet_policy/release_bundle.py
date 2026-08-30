@@ -17,6 +17,13 @@ RELEASE_PATHS = (
     "scripts",
     "integrations/hermes/fleet-policy-plugin",
 )
+RELEASE_DIRECTORIES = (
+    "config",
+    "src",
+    "tests",
+    "scripts",
+    "integrations/hermes/fleet-policy-plugin",
+)
 
 _EXCLUDED_PARTS = {".git", ".venv", ".state", ".pytest_cache", "__pycache__"}
 _EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
@@ -95,6 +102,17 @@ def build_release_bundle(source_root: str | Path, destination_root: str | Path) 
 
 def verify_release_bundle(bundle_root: str | Path) -> list[str]:
     bundle_root = Path(bundle_root).resolve()
+    for relative in RELEASE_PATHS:
+        required = bundle_root / relative
+        if not required.exists():
+            raise ValueError(f"missing required release path: {relative}")
+        if required.is_symlink():
+            raise ValueError(f"release path is symbolic link: {relative}")
+        if relative in RELEASE_DIRECTORIES:
+            if not required.is_dir():
+                raise ValueError(f"required release path is not a directory: {relative}")
+        elif not required.is_file():
+            raise ValueError(f"required release path is not a file: {relative}")
     manifest_path = bundle_root / _MANIFEST_NAME
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("schema") != "fleet-policy-release-bundle-v1":

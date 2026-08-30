@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-import json
+import hashlib
 import importlib.util
+import json
+import shutil
 import subprocess
 import sys
 import tomllib
@@ -90,6 +92,47 @@ def test_release_bundle_builder_is_deterministic_and_excludes_local_state(tmp_pa
         assert "checksum mismatch" in str(exc)
     else:
         raise AssertionError("tampered bundle unexpectedly verified")
+
+
+def test_release_bundle_rejects_rewritten_manifest_missing_canonical_payload(tmp_path):
+    from fleet_policy.release_bundle import build_release_bundle, verify_release_bundle
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(ROOT, bundle)
+    (bundle / "plugin.yaml").unlink()
+    manifest_path = bundle / "RELEASE-MANIFEST.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"] = [entry for entry in manifest["files"] if entry["path"] != "plugin.yaml"]
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
+
+    try:
+        verify_release_bundle(bundle)
+    except ValueError as exc:
+        assert "missing required release path: plugin.yaml" in str(exc)
+    else:
+        raise AssertionError("rewritten manifest unexpectedly verified without canonical payload")
+
+
+def test_release_bundle_rejects_rewritten_manifest_with_wrong_required_path_type(tmp_path):
+    from fleet_policy.release_bundle import build_release_bundle, verify_release_bundle
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(ROOT, bundle)
+    config = bundle / "config"
+    shutil.rmtree(config)
+    config.write_text("not a directory", encoding="utf-8")
+    manifest_path = bundle / "RELEASE-MANIFEST.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["files"] = [entry for entry in manifest["files"] if not entry["path"].startswith("config/")]
+    manifest["files"].append({"path": "config", "sha256": hashlib.sha256(config.read_bytes()).hexdigest()})
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
+
+    try:
+        verify_release_bundle(bundle)
+    except ValueError as exc:
+        assert "required release path is not a directory: config" in str(exc)
+    else:
+        raise AssertionError("rewritten manifest unexpectedly verified with a file replacing a required directory")
 
 
 def test_bundle_cli_does_not_initialize_policy_state(tmp_path):
