@@ -3,4 +3,6 @@
 from .models import PolicyDecision
 from .runtime import FleetPolicyRuntime
 
-__all__ = ["FleetPolicyRuntime", "PolicyDecision"]
+__version__ = "1.2.1"
+
+__all__ = ["FleetPolicyRuntime", "PolicyDecision", "__version__"]

@@ -25,3 +25,14 @@ Hermes-native контур для портфеля автономно разви
 - бесконечную дискуссию, имитацию известных людей и неконтролируемую публикацию.
 
 Используем нативные Hermes Profiles, Projects, Kanban, Cron/Routines, worktrees, skills и evidence-first review.
+
+## Fleet-policy release bundle
+
+Review и install обязаны использовать один канонический bundle:
+
+```bash
+uv run --frozen fleet-policy --root . build-bundle --output <outside-repo-path>
+uv run --frozen fleet-policy verify-bundle --bundle <outside-repo-path>
+```
+
+`RELEASE-MANIFEST.json` фиксирует полный inventory и SHA-256 каждого файла. Сборка исключает локальные `.git`, `.venv`, cache и state; destination внутри source tree запрещён. Live rollout выполняется только после независимого exact-head review и rollback/backup gates.

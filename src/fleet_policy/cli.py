@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from . import __version__
 from .drift import approval_drift
 from .projector import HermesProjector
 from .runtime import FleetPolicyRuntime
@@ -12,7 +13,8 @@ from .runtime import FleetPolicyRuntime
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(prog="fleet-policy")
     result.add_argument("--root", default="C:/Users/max/Desktop/all/ventures")
-    sub = result.add_subparsers(dest="command", required=True)
+    result.add_argument("--version", action="store_true")
+    sub = result.add_subparsers(dest="command")
     approve = sub.add_parser("approve")
     approve.add_argument("rule_key")
     approve.add_argument("--by", default="user")
@@ -33,11 +35,32 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("retention")
     sub.add_parser("status")
     sub.add_parser("drift-check")
+    bundle = sub.add_parser("build-bundle")
+    bundle.add_argument("--output", required=True)
+    verify = sub.add_parser("verify-bundle")
+    verify.add_argument("--bundle", required=True)
     return result
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
+    if args.version:
+        print(json.dumps({"version": __version__}))
+        return 0
+    if not args.command:
+        parser().error("a command is required")
+
+    if args.command == "build-bundle":
+        from .release_bundle import build_release_bundle
+        files = build_release_bundle(Path(args.root), Path(args.output))
+        print(json.dumps({"output": str(Path(args.output)), "files": len(files)}, ensure_ascii=False))
+        return 0
+    if args.command == "verify-bundle":
+        from .release_bundle import verify_release_bundle
+        files = verify_release_bundle(Path(args.bundle))
+        print(json.dumps({"bundle": str(Path(args.bundle)), "files": len(files), "ok": True}, ensure_ascii=False))
+        return 0
+
     runtime = FleetPolicyRuntime(Path(args.root))
     if args.command in {"approve", "reject"}:
         ok = runtime.store.decide_approval(args.rule_key, args.command == "approve", args.by)

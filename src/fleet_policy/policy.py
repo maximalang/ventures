@@ -120,7 +120,7 @@ FREE_TEXT_TOOLS = {
     "kanban_unblock", "kanban_heartbeat", "kanban_link", "kanban_edit",
     "kanban_attach", "kanban_attach_url", "kanban_request_review",
     "kanban_request_changes", "write_file", "patch", "skill_manage",
-    "memory", "todo", "clarify", "delegate_task", "execute_code",
+    "memory", "todo", "clarify", "delegate_task",
 }
 
 READ_COMMAND = re.compile(
@@ -201,6 +201,16 @@ def _risk_subject(name: str, arguments: dict[str, Any]) -> str:
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
     name = tool_name.strip().lower()
     effect = _effect_for(name, arguments)
+
+    # In-kernel Python can access the filesystem and network without passing
+    # its nested operations through this hook. Worker use therefore requires
+    # the existing exact, one-time approval binding. Operator sessions remain
+    # available for bounded maintenance and incident response.
+    if worker and name == "execute_code":
+        return Classification(
+            "state_change", "worker_code_execution", "approval_required",
+            "worker in-kernel code execution requires an exact one-time grant",
+        )
 
     # F4(a)/(b): protected-path guard over path-like subjects only.
     patterns = list(config["protected"]["paths"])
