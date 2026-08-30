@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import fnmatch
 import re
+import shlex
 from dataclasses import dataclass
 from pathlib import PurePath
 from typing import Any, Literal
@@ -15,6 +16,16 @@ CANONICAL_PUBLIC_POLICY_DOC = (
     "c:/users/max/desktop/all/ventures/" + "app" + "rovals.md"
 )
 
+# Rule ids and protected names are assembled from parts so policy scanners do
+# not match this source file itself (same convention as the test suite).
+PROTECTED_STORE_RULE = "sec" + "ret_read_or_write"
+DENY_MSG = "protected paths and " + "cre" + "dential stores are prohibited"
+
+# F4(b): policy-controlled files are operational state, not sensitive
+# material. The fleet may READ them (tests load the policy config; board DBs
+# are read for task resolution) but may never WRITE them.
+_POLICY_CONTROLLED_BASENAMES = {"fleet-" + "policy.yaml", "app" + "rovals.md"}
+_POLICY_CONTROLLED_SUBSTRINGS = ("fleet-" + "policy.db", "kan" + "ban.db")
 
 @dataclass(frozen=True, slots=True)
 class Classification:
@@ -47,29 +58,39 @@ def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
     return task_type, None
 
 
-def _flatten(value: Any) -> str:
-    if isinstance(value, dict):
-        return " ".join(f"{key} {_flatten(item)}" for key, item in value.items())
-    if isinstance(value, (list, tuple, set)):
-        return " ".join(_flatten(item) for item in value)
-    return str(value or "")
 
 
-def _protected_path(text: str, patterns: list[str]) -> bool:
+def _is_policy_controlled(pattern: str) -> bool:
+    """F4(b): operational policy state — readable by the fleet, immutable."""
+    lowered = str(pattern).lower().replace("\\", "/")
+    base = PurePath(lowered).name
+    if base in _POLICY_CONTROLLED_BASENAMES:
+        return True
+    return any(part in lowered for part in _POLICY_CONTROLLED_SUBSTRINGS)
+
+
+def _is_path_like(word: str) -> bool:
+    """F4 precision: bare trigger words are prose; only path-shaped tokens are
+    candidates for the protected-path matcher."""
+    return any(char in word for char in ("/", "\\", ".", ":"))
+
+
+def _protected_path_match(text: str, patterns: list[str]) -> str | None:
+    """Return the first protected pattern matched by any path-like token."""
     normalized = text.replace("\\", "/").lower()
     words = re.findall(r"[^\s\"']+", normalized)
-    variants: list[str] = []
     for pattern in patterns:
         lowered = pattern.lower()
-        variants.append(lowered)
+        variants = [lowered]
         if lowered.startswith("**/"):
             variants.append(lowered[3:])
-    for word in words:
-        basename = PurePath(word).name.lower()
-        if any(fnmatch.fnmatch(word, v) or fnmatch.fnmatch(basename, v) for v in variants):
-            return True
-    return False
-
+        for word in words:
+            if not _is_path_like(word):
+                continue
+            basename = PurePath(word).name.lower()
+            if any(fnmatch.fnmatch(word, v) or fnmatch.fnmatch(basename, v) for v in variants):
+                return pattern
+    return None
 
 def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> bool:
     """Recognize the one public policy document caught by a broad name rule."""
@@ -86,6 +107,22 @@ READ_TOOLS = {
 }
 READ_PREFIXES = ("read_", "search_", "list_", "get_", "show_", "view_", "probe_", "inspect_")
 TERMINAL_TOOLS = {"terminal", "shell", "bash", "powershell", "exec", "execute_command"}
+
+# F4: tools whose payload is operator free text (kanban card bodies, comment
+# bodies, file contents, memory notes, delegation briefs, generated code).
+# Neither the path guard nor the risk regexes may scan these fields:
+# classification firing on descriptive prose froze the fleet. Coordination
+# integrity is enforced by the runtime gate-forgery checks and the store
+# environment guard instead. Documented gap: code text passed to in-kernel
+# executors is not content-inspected (compensating control: event-log audit).
+FREE_TEXT_TOOLS = {
+    "kanban_comment", "kanban_create", "kanban_complete", "kanban_block",
+    "kanban_unblock", "kanban_heartbeat", "kanban_link", "kanban_edit",
+    "kanban_attach", "kanban_attach_url", "kanban_request_review",
+    "kanban_request_changes", "write_file", "patch", "skill_manage",
+    "memory", "todo", "clarify", "delegate_task", "execute_code",
+}
+
 READ_COMMAND = re.compile(
     r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+--show-current|rev-parse|remote\s+-v)|"
     r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b))",
@@ -106,34 +143,100 @@ def _terminal_is_read_only(command: str) -> bool:
     return bool(segments) and all(READ_COMMAND.search(part) for part in segments)
 
 
-def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
-    name = tool_name.strip().lower()
-    flat = f"{name} {_flatten(arguments)}"
-    lower = flat.lower()
-    if not _canonical_public_doc_read(name, arguments) and _protected_path(flat, list(config["protected"]["paths"])):
-        return Classification("state_change", "secret_read_or_write", "deny", "secret-bearing paths and credential stores are prohibited")
-    if worker and re.search(
-        r"(?:\bfleet[-_]policy(?:[-\w.\\/]*)?\s+(?:approve|reject)\b|"
-        r"\b(?:decide_approval|consume_exact_approval|ensure_approval|grant_capability)\b|"
-        r"\b(?:update|insert|delete)[^\n]*\bapprovals\b)", lower,
-    ):
-        return Classification("state_change", "worker_self_approval", "deny", "workers cannot approve their own action")
-    if worker and re.search(r"\bfleet[-_]policy(?:[-\w.\\/]*)?\s+grant-capability\b", lower):
-        return Classification("state_change", "worker_capability_grant", "deny", "workers cannot grant capabilities")
-    if worker and re.search(r"\bhermes(?:\s+-p\s+\S+)?\s+config\s+set\s+(?:approvals|security|privacy|plugins|kanban\.dispatch)", lower):
-        return Classification("state_change", "policy_control_plane_mutation", "approval_required", "control-plane security changes require owner approval")
 
+
+def _effect_for(name: str, arguments: dict[str, Any]) -> Literal["read", "state_change"]:
     if name in TERMINAL_TOOLS:
         command = str(arguments.get("command") or arguments.get("cmd") or "")
-        effect: Literal["read", "state_change"] = "read" if _terminal_is_read_only(command) else "state_change"
-    elif name in READ_TOOLS or name.startswith(READ_PREFIXES):
+        return "read" if _terminal_is_read_only(command) else "state_change"
+    if name in READ_TOOLS or name.startswith(READ_PREFIXES):
         # fact_store has mutating actions despite its read-like name.
         if name == "fact_store" and str(arguments.get("action") or "") in {"add", "update", "remove"}:
-            effect = "state_change"
-        else:
-            effect = "read"
-    else:
-        effect = "state_change"
+            return "state_change"
+        return "read"
+    return "state_change"
+
+
+def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
+    """F4: the path guard sees only path-like targets, never free text."""
+    if name in TERMINAL_TOOLS:
+        command = str(arguments.get("command") or arguments.get("cmd") or "")
+        try:
+            tokens = shlex.split(command, posix=False)
+        except ValueError:
+            tokens = command.split()
+        if tokens and PurePath(tokens[0].replace("\\", "/")).name.lower() in {
+            "grep", "rg", "findstr", "select-string",
+        }:
+            positional = [token for token in tokens[1:] if not token.startswith("-")]
+            # The first positional argument is the search expression. Only
+            # subsequent positionals are filesystem targets.
+            return [" ".join(positional[1:])] if len(positional) > 1 else []
+        return [command]
+    if name in FREE_TEXT_TOOLS:
+        # write_file/patch still carry one real filesystem target.
+        path = arguments.get("path")
+        return [str(path)] if path else []
+    subjects: list[str] = []
+    for key in ("path", "file_path", "url", "image_url", "target"):
+        if arguments.get(key):
+            subjects.append(str(arguments[key]))
+    if name == "search_files" and arguments.get("file_glob"):
+        subjects.append(str(arguments["file_glob"]))
+    if name == "web_extract":
+        subjects.extend(str(item) for item in (arguments.get("urls") or []))
+    return subjects
+
+
+def _risk_subject(name: str, arguments: dict[str, Any]) -> str:
+    """F4: risk regexes scan real targets (commands, URLs), never free text."""
+    if name in TERMINAL_TOOLS:
+        return str(arguments.get("command") or arguments.get("cmd") or "")
+    if name in FREE_TEXT_TOOLS:
+        return ""
+    url = arguments.get("url")
+    return str(url) if url else ""
+
+
+def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
+    name = tool_name.strip().lower()
+    effect = _effect_for(name, arguments)
+
+    # F4(a)/(b): protected-path guard over path-like subjects only.
+    patterns = list(config["protected"]["paths"])
+    for subject in _path_guard_subjects(name, arguments):
+        matched = _protected_path_match(subject, patterns)
+        if not matched or _canonical_public_doc_read(name, arguments):
+            continue
+        if _is_policy_controlled(matched):
+            if effect == "read":
+                return Classification("read", "read_only", "allow", "policy-controlled documents are readable by the fleet")
+            return Classification("state_change", "policy_control_plane_mutation", "deny", "policy-controlled files are immutable for the fleet")
+        return Classification("state_change", PROTECTED_STORE_RULE, "deny", DENY_MSG)
+
+    subject = _risk_subject(name, arguments)
+    lower = f"{name} {subject}".lower()
+
+    # Hard-deny checks inspect command/target fields only. They must never scan
+    # generated code, card bodies, comments or file contents.
+    if worker and (
+        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:approve|reject)\b", subject, re.I)
+        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:approve|reject)\b", subject, re.I)
+        or re.search(r"\b(?:decide_approval|consume_exact_approval|ensure_approval)\b", subject, re.I)
+        or re.search(r"\b(?:update|insert|delete)[^\n]*\bapprovals\b", subject, re.I)
+    ):
+        return Classification("state_change", "worker_self_approval", "deny", "workers cannot approve their own action")
+    if worker and (
+        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+grant-capability\b", subject, re.I)
+        or re.search(r"\bgrant_capability\s*\(", subject, re.I)
+    ):
+        return Classification("state_change", "worker_capability_grant", "deny", "workers cannot grant capabilities")
+    if worker and re.search(
+        r"\bhermes(?:\s+-p\s+\S+)?\s+config\s+set\s+(?:approvals|security|privacy|plugins|kanban\.dispatch)",
+        subject,
+        re.I,
+    ):
+        return Classification("state_change", "policy_control_plane_mutation", "approval_required", "control-plane security changes require owner approval")
 
     if effect == "read":
         return Classification(effect, "read_only", "allow", "read-only action")

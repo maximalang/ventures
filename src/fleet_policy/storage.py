@@ -52,6 +52,28 @@ CREATE TABLE IF NOT EXISTS financial_ledger(
 CREATE INDEX IF NOT EXISTS idx_financial_project_month ON financial_ledger(project,created_at,status);
 """
 
+# v1.2 F1: dispatch-run-scoped accounting. The cumulative budget_ledger and
+# call_history stay as the audit trail; enforcement reads run_budget and
+# run_state for the CURRENT dispatch run only.
+SCHEMA_V3 = """
+CREATE TABLE IF NOT EXISTS run_budget(
+  task_id TEXT NOT NULL, run_key TEXT NOT NULL, metric TEXT NOT NULL,
+  amount INTEGER NOT NULL, event_id TEXT NOT NULL, created_at TEXT NOT NULL,
+  PRIMARY KEY(task_id, run_key, metric, event_id)
+);
+CREATE INDEX IF NOT EXISTS idx_run_budget_lookup ON run_budget(task_id, run_key, metric);
+CREATE TABLE IF NOT EXISTS run_state(
+  task_id TEXT PRIMARY KEY, run_key TEXT NOT NULL, claimed_at INTEGER NOT NULL, updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS run_call_history(
+  event_id TEXT NOT NULL, task_id TEXT NOT NULL, run_key TEXT NOT NULL,
+  call_signature TEXT NOT NULL, failure_signature TEXT, success INTEGER,
+  created_at TEXT NOT NULL, PRIMARY KEY(task_id, run_key, event_id)
+);
+CREATE INDEX IF NOT EXISTS idx_run_calls_sig ON run_call_history(task_id,run_key,call_signature,created_at);
+CREATE INDEX IF NOT EXISTS idx_run_calls_failure ON run_call_history(task_id,run_key,failure_signature,created_at);
+"""
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -81,11 +103,13 @@ class PolicyStore:
             # concurrent workers exceed Hermes' 30s pre-tool hook timeout.
             connection.execute("PRAGMA journal_mode=WAL")
             row = connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'").fetchone()
-            if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=2").fetchone() is not None:
+            if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=3").fetchone() is not None:
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,?)", (utc_now(),))
+            connection.executescript(SCHEMA_V3)
+            connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,?)", (utc_now(),))
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:
@@ -111,15 +135,26 @@ class PolicyStore:
             )
             return cursor.rowcount == 1
 
-    def add_budget(self, task_id: str, metric: str, amount: int, event_id: str) -> bool:
+    # ------------------------------------------------------------------ budgets
+    def add_budget(self, task_id: str, metric: str, amount: int, event_id: str, run_key: str | None = None) -> bool:
+        """Record spend. With run_key: current-run ledger (enforced). Without:
+        cumulative legacy ledger (audit trail; still enforced for backward
+        compatibility with rows recorded before v1.2)."""
         with self.connect() as connection:
-            cursor = connection.execute(
-                "INSERT OR IGNORE INTO budget_ledger(task_id,metric,amount,event_id,created_at) VALUES(?,?,?,?,?)",
-                (task_id, metric, int(amount), event_id, utc_now()),
-            )
+            if run_key:
+                cursor = connection.execute(
+                    "INSERT OR IGNORE INTO run_budget(task_id,run_key,metric,amount,event_id,created_at) VALUES(?,?,?,?,?,?)",
+                    (task_id, run_key, metric, int(amount), event_id, utc_now()),
+                )
+            else:
+                cursor = connection.execute(
+                    "INSERT OR IGNORE INTO budget_ledger(task_id,metric,amount,event_id,created_at) VALUES(?,?,?,?,?)",
+                    (task_id, metric, int(amount), event_id, utc_now()),
+                )
             return cursor.rowcount == 1
 
     def budget(self, task_id: str) -> dict[str, int]:
+        """Cumulative audit view across all runs."""
         result = {"tokens": 0, "tool_calls": 0, "retries": 0}
         with self.connect() as connection:
             rows = connection.execute(
@@ -129,22 +164,81 @@ class PolicyStore:
                 result[str(row["metric"])] = int(row["total"] or 0)
         return result
 
+    def budget_for_run(self, task_id: str, run_key: str | None) -> dict[str, int]:
+        """Enforcement view for the current dispatch run only."""
+        result = {"tokens": 0, "tool_calls": 0, "retries": 0}
+        if not run_key:
+            return self.budget(task_id)
+        with self.connect() as connection:
+            rows = connection.execute(
+                "SELECT metric,SUM(amount) AS total FROM run_budget WHERE task_id=? AND run_key=? GROUP BY metric",
+                (task_id, run_key),
+            )
+            for row in rows:
+                metric = str(row["metric"])
+                result[metric] = int(row["total"] or 0)
+        return result
+
+    # --------------------------------------------------------------- run state
+    def touch_run(self, task_id: str, run_key: str, now_epoch: int) -> int:
+        """Register the current dispatch run. A changed run_key resets the
+        wall-clock baseline and idle-turn counter. Returns claimed_at epoch."""
+        with self.connect() as connection:
+            row = connection.execute("SELECT run_key,claimed_at FROM run_state WHERE task_id=?", (task_id,)).fetchone()
+            if row is None:
+                connection.execute(
+                    "INSERT OR IGNORE INTO run_state(task_id,run_key,claimed_at,updated_at) VALUES(?,?,?,?)",
+                    (task_id, run_key, int(now_epoch), utc_now()),
+                )
+                connection.execute(
+                    "INSERT OR IGNORE INTO task_state(task_id,idle_turns,updated_at) VALUES(?,0,?)", (task_id, utc_now())
+                )
+                return int(now_epoch)
+            if str(row["run_key"]) != str(run_key):
+                connection.execute(
+                    "UPDATE run_state SET run_key=?,claimed_at=?,updated_at=? WHERE task_id=?",
+                    (run_key, int(now_epoch), utc_now(), task_id),
+                )
+                connection.execute(
+                    "INSERT OR IGNORE INTO task_state(task_id,idle_turns,updated_at) VALUES(?,0,?)", (task_id, utc_now())
+                )
+                connection.execute("UPDATE task_state SET idle_turns=0,updated_at=? WHERE task_id=?", (utc_now(), task_id))
+                return int(now_epoch)
+            return int(row["claimed_at"])
+
+    def claimed_at(self, task_id: str) -> int | None:
+        with self.connect() as connection:
+            row = connection.execute("SELECT claimed_at FROM run_state WHERE task_id=?", (task_id,)).fetchone()
+            return int(row["claimed_at"]) if row else None
+
+    # ------------------------------------------------------------------- calls
     def add_call(self, event_id: str, task_id: str, call_signature: str,
-                 failure_signature: str | None, success: bool) -> bool:
+                 failure_signature: str | None, success: bool, run_key: str | None = None) -> bool:
         with self.connect() as connection:
             cursor = connection.execute(
                 "INSERT OR IGNORE INTO call_history(event_id,task_id,call_signature,failure_signature,success,created_at) VALUES(?,?,?,?,?,?)",
                 (event_id, task_id, call_signature, failure_signature, int(success), utc_now()),
             )
+            if run_key:
+                connection.execute(
+                    "INSERT OR IGNORE INTO run_call_history(event_id,task_id,run_key,call_signature,failure_signature,success,created_at) VALUES(?,?,?,?,?,?,?)",
+                    (event_id, task_id, run_key, call_signature, failure_signature, int(success), utc_now()),
+                )
             return cursor.rowcount == 1
 
-    def count_signature(self, task_id: str, column: str, value: str) -> int:
+    def count_signature(self, task_id: str, column: str, value: str, run_key: str | None = None) -> int:
         if column not in {"call_signature", "failure_signature"}:
             raise ValueError("unsupported signature column")
         with self.connect() as connection:
-            row = connection.execute(
-                f"SELECT COUNT(*) AS count FROM call_history WHERE task_id=? AND {column}=?", (task_id, value)
-            ).fetchone()
+            if run_key:
+                row = connection.execute(
+                    f"SELECT COUNT(*) AS count FROM run_call_history WHERE task_id=? AND {column}=?"
+                    " AND run_key=?", (task_id, value, run_key)
+                ).fetchone()
+            else:
+                row = connection.execute(
+                    f"SELECT COUNT(*) AS count FROM call_history WHERE task_id=? AND {column}=?", (task_id, value)
+                ).fetchone()
             return int(row["count"])
 
     def set_idle_turns(self, task_id: str, *, increment: bool) -> int:
@@ -159,6 +253,7 @@ class PolicyStore:
             row = connection.execute("SELECT idle_turns FROM task_state WHERE task_id=?", (task_id,)).fetchone()
             return int(row["idle_turns"])
 
+    # --------------------------------------------------------------- approvals
     def ensure_approval(self, rule_key: str, task_id: str, action: str, target: str, hashed_args: str) -> bool:
         with self.connect() as connection:
             cursor = connection.execute(
@@ -182,12 +277,16 @@ class PolicyStore:
             return cursor.rowcount == 1
 
     def consume_exact_approval(self, task_id: str, action: str, target: str, hashed_args: str) -> bool:
+        if os.environ.get("HERMES_KANBAN_TASK") and os.environ.get("HERMES_KANBAN_TASK") == task_id:
+            pass
         with self.connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
-                "SELECT rule_key FROM approvals WHERE task_id=? AND action=? AND target=? AND args_hash=? AND status='approved'",
+                "SELECT rule_key,status FROM approvals WHERE task_id=? AND action=? AND target=? AND args_hash=?"
+                " ORDER BY created_at LIMIT 1",
                 (task_id, action, target, hashed_args),
             ).fetchone()
-            if row is None:
+            if row is None or row["status"] != "approved":
                 return False
             cursor = connection.execute(
                 "UPDATE approvals SET status='consumed',consumed_at=? WHERE rule_key=? AND status='approved'",
@@ -292,6 +391,11 @@ class PolicyStore:
                 cutoff = (now - timedelta(days=days)).isoformat(timespec="seconds").replace("+00:00", "Z")
                 cursor = connection.execute(f"DELETE FROM {table} WHERE created_at < ?", (cutoff,))
                 deleted[table] = cursor.rowcount
+            # run_budget follows the call-history horizon but is pruned outside
+            # the returned shape so v1.x callers keep a stable report dict.
+            call_cutoff = (now - timedelta(days=call_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
+            connection.execute("DELETE FROM run_budget WHERE created_at < ?", (call_cutoff,))
+            connection.execute("DELETE FROM run_call_history WHERE created_at < ?", (call_cutoff,))
             event_cutoff = (now - timedelta(days=event_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
             cursor = connection.execute(
                 "DELETE FROM notification_outbox WHERE status!='pending' AND created_at < ?", (event_cutoff,)

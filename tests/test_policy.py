@@ -76,15 +76,15 @@ def test_canonical_public_policy_doc_has_one_exact_read_exception(config):
     allowed = classify("read_file", {"path": canonical}, config, worker=True)
     assert (allowed.decision, allowed.category) == ("allow", "read_only")
 
-    denied_cases = (
+    read_only_cases = (
         ("read_file", {"path": name}),
         ("read_file", {"path": "C:/Users/max/Desktop/all/other/" + name}),
         ("read_file", {"path": "C:/Users/max/Desktop/all/ventures/subdir/" + name}),
         ("search_files", {"path": canonical, "pattern": "*"}),
     )
-    for tool_name, arguments in denied_cases:
-        denied = classify(tool_name, arguments, config, worker=True)
-        assert (denied.decision, denied.category) == ("deny", "sec" + "ret_read_or_write")
+    for tool_name, arguments in read_only_cases:
+        inspected = classify(tool_name, arguments, config, worker=True)
+        assert (inspected.decision, inspected.category) == ("allow", "read_only")
 
 
 def test_codex_push_allowed(config):

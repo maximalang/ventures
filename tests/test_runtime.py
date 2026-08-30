@@ -73,14 +73,14 @@ def test_same_failure_signature_stops(runtime, task_context):
 
 def test_tool_call_budget_exhaustion(runtime, task_context):
     limit = runtime.config["budgets"]["code"]["tool_calls"]
-    runtime.store.add_budget("t_test", "tool_calls", limit, "seed")
+    runtime.store.add_budget("t_test", "tool_calls", limit, "seed", "r1")
     decision = runtime.pre_tool_call("write_file", {"path": "x.txt", "content": "x"}, task_context)
     assert (decision.decision, decision.rule_id) == ("deny", "budget_exhausted")
     assert decision.budget_snapshot["used"]["tool_calls"] >= limit
 
 
 def test_token_budget_and_idle_stop(runtime, task_context):
-    runtime.store.add_budget("t_test", "tokens", 179999, "seed")
+    runtime.store.add_budget("t_test", "tokens", 179999, "seed", "r1")
     task_context["api_request_id"] = "api-1"
     payload = runtime.post_api_request(task_context, {"input_tokens": 1, "output_tokens": 1}, 1)
     assert payload["rule_id"] == "budget_exhausted"
