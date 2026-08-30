@@ -1,0 +1,51 @@
+name: fleet-policy-ci
+
+on:
+  pull_request:
+    branches: [codex/company-os]
+  push:
+    branches: [codex/company-os]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fleet-policy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Python 3.11
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: "3.11"
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86
+        with:
+          enable-cache: true
+      - name: Frozen environment
+        run: uv sync --frozen --all-groups
+      - name: Full tests
+        run: uv run --frozen python -m pytest tests/ -q
+      - name: Worker-environment tests
+        env:
+          HERMES_KANBAN_TASK: t_ci_simulated
+        run: uv run --frozen python -m pytest tests/ -q
+      - name: Static and drift checks
+        run: |
+          uv lock --check
+          uv run --frozen python -m compileall -q src tests scripts integrations
+          uv run --frozen fleet-policy --root . drift-check
+          uv run --frozen fleet-policy --version
+      - name: Release bundle proof
+        run: |
+          uv run --frozen fleet-policy --root . build-bundle --output "$RUNNER_TEMP/fleet-policy-bundle"
+          uv run --frozen fleet-policy verify-bundle --bundle "$RUNNER_TEMP/fleet-policy-bundle"
+      - name: Distribution proof
+        run: uv build --out-dir "$RUNNER_TEMP/dist"

@@ -138,3 +138,18 @@ def test_package_plugin_and_cli_versions_match():
         payload["version"],
     }
     assert versions == {"1.2.1"}
+
+
+def test_ci_is_pinned_frozen_and_exercises_release_contract():
+    path = ROOT / ".github" / "workflows" / "fleet-policy-ci.yml"
+    workflow = path.read_text(encoding="utf-8")
+    assert "permissions:\n  contents: read" in workflow
+    assert "actions/checkout@11d5960a326750d5838078e36cf38b85af677262" in workflow
+    assert "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065" in workflow
+    setup_uv = "astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86"
+    assert setup_uv in workflow
+    command = "uv run --frozen python -m pytest tests/ -q"
+    assert workflow.count(command) == 2
+    assert "HERMES_KANBAN_TASK: t_ci_simulated" in workflow
+    assert "build-bundle" in workflow
+    assert "verify-bundle" in workflow
