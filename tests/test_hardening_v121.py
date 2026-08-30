@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import importlib.util
 import subprocess
 import sys
 import tomllib
@@ -153,3 +154,21 @@ def test_ci_is_pinned_frozen_and_exercises_release_contract():
     assert "HERMES_KANBAN_TASK: t_ci_simulated" in workflow
     assert "build-bundle" in workflow
     assert "verify-bundle" in workflow
+
+
+def test_integration_root_defaults_to_bundle_and_supports_override(monkeypatch, tmp_path):
+    module_path = ROOT / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    monkeypatch.delenv("HERMES_VENTURES_ROOT", raising=False)
+    spec = importlib.util.spec_from_file_location("fleet_policy_plugin_portable", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    assert module.CODE_ROOT == ROOT
+    assert module.VENTURES_ROOT == ROOT
+
+    monkeypatch.setenv("HERMES_VENTURES_ROOT", str(tmp_path))
+    override_spec = importlib.util.spec_from_file_location("fleet_policy_plugin_override", module_path)
+    override = importlib.util.module_from_spec(override_spec)
+    assert override_spec.loader is not None
+    override_spec.loader.exec_module(override)
+    assert override.VENTURES_ROOT == tmp_path

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 CODE_ROOT = Path(__file__).resolve().parents[3]
-VENTURES_ROOT = Path("C:/Users/max/Desktop/all/ventures")
+VENTURES_ROOT = Path(os.environ.get("HERMES_VENTURES_ROOT") or CODE_ROOT)
 if not (CODE_ROOT / "src" / "fleet_policy").is_dir():
     CODE_ROOT = VENTURES_ROOT
 SRC = CODE_ROOT / "src"
