@@ -36,14 +36,22 @@ _DIRECTORY_RELEASE_PATHS = {
 }
 _EXCLUDED_PARTS = {".git", ".venv", ".state", ".pytest_cache", "__pycache__"}
 _EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
+_GENERATED_METADATA_SUFFIXES = (".egg-info", ".dist-info", ".egg")
 _MANIFEST_NAME = "RELEASE-MANIFEST.json"
 _REPARSE_POINT_ATTRIBUTE = 0x400
 
 
 def _included(path: Path) -> bool:
-    return (
-        not any(part in _EXCLUDED_PARTS or part.endswith(".egg-info") for part in path.parts)
-        and path.suffix not in _EXCLUDED_SUFFIXES
+    if any(part in _EXCLUDED_PARTS or part.endswith(_GENERATED_METADATA_SUFFIXES) for part in path.parts):
+        return False
+    return path.suffix not in _EXCLUDED_SUFFIXES
+
+
+def _generated_metadata(root: Path) -> list[str]:
+    return sorted(
+        path.relative_to(root).as_posix()
+        for path in root.rglob("*")
+        if any(part.endswith(_GENERATED_METADATA_SUFFIXES) for part in path.relative_to(root).parts)
     )
 
 
@@ -108,7 +116,8 @@ def _copy_path(source_root: Path, destination_root: Path, relative: str) -> None
             destination,
             dirs_exist_ok=False,
             ignore=shutil.ignore_patterns(
-                ".git", ".venv", ".state", ".pytest_cache", "__pycache__", "*.egg-info", "*.pyc", "*.pyo"
+                ".git", ".venv", ".state", ".pytest_cache", "__pycache__",
+                "*.egg-info", "*.dist-info", "*.egg", "*.pyc", "*.pyo",
             ),
         )
     else:
@@ -157,6 +166,11 @@ def build_release_bundle(source_root: str | Path, destination_root: str | Path) 
 def verify_release_bundle(bundle_root: str | Path) -> list[str]:
     bundle_root = Path(bundle_root).absolute()
     _assert_tree_has_no_links(bundle_root, "release bundle")
+    leaked_metadata = _generated_metadata(bundle_root)
+    if leaked_metadata:
+        raise ValueError(
+            "release bundle contains generated package metadata: " + ", ".join(sorted(set(leaked_metadata)))
+        )
     for relative in RELEASE_PATHS:
         required = bundle_root / relative
         if not required.exists():

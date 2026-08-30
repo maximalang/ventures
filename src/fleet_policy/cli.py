@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 from . import __version__
@@ -10,9 +11,26 @@ from .projector import HermesProjector
 from .runtime import FleetPolicyRuntime
 
 
+def default_root(arguments: dict | argparse.Namespace) -> Path:
+    """Portable self-contained default root for the bundle checkout or install.
+
+    Resolution order: explicit ``--root`` argument, ``HERMES_VENTURES_ROOT``,
+    then the repository/install root that contains ``src/fleet_policy`` next to
+    this module. The fallback never pins a machine-specific absolute path, so
+    the same bundle runs unchanged on any host (F-02).
+    """
+    explicit = arguments.get("root") if isinstance(arguments, dict) else getattr(arguments, "root", None)
+    if explicit:
+        return Path(str(explicit))
+    override = os.environ.get("HERMES_VENTURES_ROOT")
+    if override:
+        return Path(override)
+    return Path(__file__).resolve().parents[2]
+
+
 def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(prog="fleet-policy")
-    result.add_argument("--root", default="C:/Users/max/Desktop/all/ventures")
+    result.add_argument("--root", default=None, help="Repository root; defaults to HERMES_VENTURES_ROOT or the installed bundle root.")
     result.add_argument("--version", action="store_true")
     sub = result.add_subparsers(dest="command")
     approve = sub.add_parser("approve")
@@ -52,7 +70,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "build-bundle":
         from .release_bundle import build_release_bundle
-        files = build_release_bundle(Path(args.root), Path(args.output))
+        files = build_release_bundle(default_root(args), Path(args.output))
         print(json.dumps({"output": str(Path(args.output)), "files": len(files)}, ensure_ascii=False))
         return 0
     if args.command == "verify-bundle":
@@ -61,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"bundle": str(Path(args.bundle)), "files": len(files), "ok": True}, ensure_ascii=False))
         return 0
 
-    runtime = FleetPolicyRuntime(Path(args.root))
+    runtime = FleetPolicyRuntime(default_root(args))
     if args.command in {"approve", "reject"}:
         ok = runtime.store.decide_approval(args.rule_key, args.command == "approve", args.by)
         print(json.dumps({"ok": ok, "rule_key": args.rule_key, "decision": args.command}, ensure_ascii=False))
@@ -93,7 +111,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(runtime.store.retention(cfg["events_days"], cfg["call_history_days"], cfg["approvals_days"])))
         return 0
     if args.command == "drift-check":
-        missing = approval_drift(Path(args.root), runtime.config)
+        missing = approval_drift(default_root(args), runtime.config)
         print(json.dumps({"ok": not missing, "missing": missing}, ensure_ascii=False, sort_keys=True))
         return 0 if not missing else 1
     with runtime.store.connect() as connection:

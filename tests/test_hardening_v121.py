@@ -320,3 +320,70 @@ def test_integration_root_defaults_to_bundle_and_supports_override(monkeypatch, 
     assert override_spec.loader is not None
     override_spec.loader.exec_module(override)
     assert override.VENTURES_ROOT == tmp_path
+
+
+def test_release_bundle_inventory_excludes_generated_package_metadata(tmp_path):
+    from fleet_policy.release_bundle import build_release_bundle, release_inventory, verify_release_bundle
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(ROOT, bundle)
+
+    # Simulate generated package metadata landing inside a canonical payload dir.
+    egg_info = bundle / "src" / "ventures_fleet_policy.egg-info"
+    egg_info.mkdir()
+    (egg_info / "PKG-INFO").write_text("Metadata-Version: 2.1\n", encoding="utf-8")
+    dist_info = bundle / "src" / "fleet_policy" / "fleet_policy-1.2.1.dist-info"
+    dist_info.mkdir()
+    (dist_info / "METADATA").write_text("Metadata-Version: 2.1\n", encoding="utf-8")
+
+    inventory = release_inventory(bundle)
+    leaked = [item for item in inventory if ".egg-info" in item or ".dist-info" in item]
+    assert not leaked, leaked
+
+    # A verified bundle must be fail-closed about generated metadata on disk.
+    try:
+        verify_release_bundle(bundle)
+    except ValueError as exc:
+        assert "generated package metadata" in str(exc)
+    else:
+        raise AssertionError("bundle with generated package metadata unexpectedly verified")
+
+
+def test_release_bundle_build_excludes_source_package_metadata(tmp_path):
+    from fleet_policy.release_bundle import RELEASE_PATHS, build_release_bundle, release_inventory
+
+    source = tmp_path / "source"
+    for relative in RELEASE_PATHS:
+        target = source / relative
+        if relative in {"config", "src", "tests", "scripts", "integrations/hermes/fleet-policy-plugin"}:
+            target.mkdir(parents=True)
+            (target / "payload.txt").write_text("x", encoding="utf-8")
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("x", encoding="utf-8")
+    egg_info = source / "src" / "ventures_fleet_policy.egg-info"
+    egg_info.mkdir()
+    (egg_info / "PKG-INFO").write_text("Metadata-Version: 2.1\n", encoding="utf-8")
+    (source / "src" / "legacy.egg").mkdir()
+    (source / "src" / "legacy.egg" / "EGG-INFO").mkdir()
+    (source / "src" / "legacy.egg" / "EGG-INFO" / "PKG-INFO").write_text("x", encoding="utf-8")
+
+    bundle = tmp_path / "bundle"
+    build_release_bundle(source, bundle)
+    inventory = release_inventory(bundle)
+    leaked = [item for item in inventory if any(part.endswith((".egg-info", ".dist-info", ".egg")) for part in item.split("/"))]
+    assert not leaked, leaked
+
+
+
+def test_cli_default_root_is_portable_and_self_contained(monkeypatch, tmp_path):
+    from fleet_policy import cli
+
+    monkeypatch.delenv("HERMES_VENTURES_ROOT", raising=False)
+    root = cli.default_root({})
+    assert (root / "src" / "fleet_policy").is_dir()
+    assert "desktop/all/ventures" not in root.as_posix().lower()
+
+    monkeypatch.setenv("HERMES_VENTURES_ROOT", str(tmp_path))
+    assert cli.default_root({}) == tmp_path
+    assert cli.default_root({"root": str(tmp_path / "explicit")}) == tmp_path / "explicit"
