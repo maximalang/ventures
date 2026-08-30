@@ -22,7 +22,8 @@ def test_allow_and_normalized_decision(runtime, task_context):
     assert set(payload) == {"decision", "rule_id", "reason", "task_id", "project", "profile", "action", "target", "args_hash", "timestamp", "budget_snapshot", "approval_card"}
 
 
-def test_approval_binding_one_time_and_payload_change(runtime, task_context):
+def test_approval_binding_one_time_and_payload_change(runtime, task_context, monkeypatch):
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
     args = {"command": "mass outreach to 5000 contacts"}
     first = runtime.pre_tool_call("terminal", args, task_context)
     assert first.decision == "approval_required"
@@ -44,7 +45,8 @@ def test_approval_binding_one_time_and_payload_change(runtime, task_context):
     assert invalid.args_hash != args_hash(args)
 
 
-def test_rejected_approval_never_allows(runtime, task_context):
+def test_rejected_approval_never_allows(runtime, task_context, monkeypatch):
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
     decision = runtime.pre_tool_call("terminal", {"command": "mass outreach to 5000 contacts"}, task_context)
     assert runtime.store.decide_approval(decision.approval_card["rule_key"], False, "user")
     task_context["tool_call_id"] = "next"
