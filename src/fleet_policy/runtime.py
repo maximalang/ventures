@@ -24,6 +24,10 @@ class FleetPolicyRuntime:
     def task_type(self, context: dict[str, Any]) -> tuple[str | None, str | None]:
         return infer_task_type(context.get("task_body"), context.get("comments"), context.get("skills"))
 
+    @staticmethod
+    def _run_key(context: dict[str, Any]) -> str:
+        return str(context.get("current_run_id") or context.get("run_id") or "")
+
     GATE_AUTHORS = {
         "ci": {"tech", "qa"}, "review": {"qa"}, "qa": {"qa"},
         "rollback": {"tech", "operations"}, "backup": {"operations"},
@@ -33,6 +37,9 @@ class FleetPolicyRuntime:
 
     def missing_gates(self, category: str, context: dict[str, Any]) -> list[str]:
         required = list(self.config.get("evidence_gates", {}).get(category, []))
+        task_type, _ = self.task_type(context)
+        if task_type == "review":
+            required = [gate for gate in required if gate not in {"review", "qa"}]
         if not required:
             return []
         records = context.get("comment_records") or []
@@ -81,10 +88,16 @@ class FleetPolicyRuntime:
 
     def budget_snapshot(self, context: dict[str, Any], task_type: str | None) -> dict[str, Any]:
         task_id = str(context.get("task_id") or "")
-        used = self.store.budget(task_id) if task_id else {"tokens": 0, "tool_calls": 0, "retries": 0}
-        started = context.get("started_at")
         now_epoch = int(datetime.now(timezone.utc).timestamp())
-        used["wall_clock_minutes"] = max(0, (now_epoch - int(started)) // 60) if started else 0
+        run_key = self._run_key(context)
+        if task_id and run_key:
+            claimed_at = self.store.touch_run(task_id, run_key, now_epoch)
+            used = self.store.budget_for_run(task_id, run_key)
+            used["wall_clock_minutes"] = max(0, (now_epoch - claimed_at) // 60)
+        else:
+            used = self.store.budget(task_id) if task_id else {"tokens": 0, "tool_calls": 0, "retries": 0}
+            started = context.get("started_at")
+            used["wall_clock_minutes"] = max(0, (now_epoch - int(started)) // 60) if started else 0
         limits = dict(self.config["budgets"].get(task_type, {})) if task_type else {}
         return {
             "task_type": task_type,
@@ -140,10 +153,10 @@ class FleetPolicyRuntime:
             result = Classification("state_change", "task_context_unavailable", "deny", str(context["task_context_error"]))
         elif worker and task_error:
             result = Classification("state_change", "missing_or_unknown_task_type", "deny", task_error)
-        elif worker and context.get("task_status") == "blocked":
-            result = Classification("state_change", "task_already_blocked", "deny", "Kanban task is blocked")
         else:
             result = classify(tool_name, arguments, self.config, worker=worker)
+            if worker and context.get("task_status") == "blocked" and result.effect != "read":
+                result = Classification("state_change", "task_already_blocked", "deny", "Kanban task is blocked")
 
         if worker:
             flat_args = str(arguments)
@@ -175,13 +188,19 @@ class FleetPolicyRuntime:
 
         snapshot = self.budget_snapshot(context, task_type)
         exhausted = self._exhausted(snapshot, context) if worker else None
-        if exhausted:
+        blocked_read = context.get("task_status") == "blocked" and result.effect == "read"
+        if exhausted and not blocked_read:
             result = Classification(result.effect, "budget_exhausted", "deny", f"hard budget exhausted: {exhausted}")
-        elif worker and self.store.count_signature(task_id, "call_signature", call_signature) >= int(self.config["anti_loop"]["max_identical_calls"]):
+        elif worker and not blocked_read and self.store.count_signature(
+            task_id, "call_signature", call_signature, self._run_key(context) or None
+        ) >= int(self.config["anti_loop"]["max_identical_calls"]):
             result = Classification(result.effect, "identical_call_loop", "deny", "maximum identical calls reached")
 
         if worker and task_type:
-            self.store.add_budget(task_id, "tool_calls", 1, stable_id(task_id, tool_call_id, "tool_call"))
+            run_key = self._run_key(context) or None
+            event_id = stable_id(task_id, tool_call_id, "tool_call")
+            self.store.add_budget(task_id, "tool_calls", 1, event_id, run_key)
+            self.store.add_budget(task_id, "tool_calls", 1, event_id)
             snapshot = self.budget_snapshot(context, task_type)
 
         approval_card = None
@@ -238,14 +257,23 @@ class FleetPolicyRuntime:
         else:
             sampled = True
         important = decision != "allow"
+        payload = policy_decision.as_dict()
+        payload["task_status"] = str(context.get("task_status") or "unknown")
+        payload["board"] = str(context.get("board") or "")
+        payload["run_key"] = self._run_key(context) or "session"
         if important or sampled:
-            event_id = stable_id(task_id, tool_name, target, hashed, rule_id, "policy") if important else stable_id(tool_call_id, "policy")
+            if decision == "deny":
+                event_id = stable_id(task_id, rule_id, payload["task_status"], payload["run_key"], "policy")
+            elif important:
+                event_id = stable_id(task_id, tool_name, target, hashed, rule_id, "policy")
+            else:
+                event_id = stable_id(tool_call_id, "policy")
             self.store.record_event(
                 event_id,
                 str(context.get("run_id") or context.get("session_id") or event_id),
                 task_id or None,
                 "policy_decision",
-                policy_decision.as_dict(),
+                payload,
                 notify,
             )
         return policy_decision
@@ -253,8 +281,8 @@ class FleetPolicyRuntime:
     @staticmethod
     def projection_event_id(payload: dict[str, Any]) -> str:
         return stable_id(
-            payload.get("task_id"), payload.get("action"), payload.get("target"),
-            payload.get("args_hash"), payload.get("rule_id"), "projection",
+            payload.get("task_id"), payload.get("rule_id"),
+            payload.get("task_status") or "unknown", payload.get("run_key") or "session", "projection",
         )
 
     def claim_projection(self, payload: dict[str, Any]) -> bool:
@@ -279,11 +307,14 @@ class FleetPolicyRuntime:
             normalized_error = " ".join(str(error_message or "").lower().split())[:300]
             failure_signature = stable_id(tool_name, error_type, normalized_error)
         event_id = stable_id(task_id, context.get("tool_call_id"), call_signature, success, failure_signature)
-        self.store.add_call(event_id, task_id, call_signature, failure_signature, success)
+        run_key = self._run_key(context) or None
+        self.store.add_call(event_id, task_id, call_signature, failure_signature, success, run_key)
         tool_call_id = str(context.get("tool_call_id") or "")
         if tool_call_id:
             self.store.settle_spend(stable_id(task_id, tool_call_id, "spend"), success)
-        if failure_signature and self.store.count_signature(task_id, "failure_signature", failure_signature) >= int(self.config["anti_loop"]["max_same_failure"]):
+        if failure_signature and self.store.count_signature(
+            task_id, "failure_signature", failure_signature, run_key
+        ) >= int(self.config["anti_loop"]["max_same_failure"]):
             payload = {
                 "decision": "deny", "rule_id": "same_failure_loop",
                 "reason": "same failure signature reached the stop threshold",
@@ -317,7 +348,10 @@ class FleetPolicyRuntime:
             generated = usage.get("completion_tokens")
             if generated is None:
                 generated = usage.get("output_tokens")
-            self.store.add_budget(task_id, "tokens", int(generated or 0), stable_id(task_id, request_id, "tokens"))
+            run_key = self._run_key(context) or None
+            event_id = stable_id(task_id, request_id, "tokens")
+            self.store.add_budget(task_id, "tokens", int(generated or 0), event_id, run_key)
+            self.store.add_budget(task_id, "tokens", int(generated or 0), event_id)
         # A successful API request breaks the failure streak: fallback-chain errors
         # that resolved within the same turn must not accumulate as retries.
         with self.store.connect() as connection:

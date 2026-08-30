@@ -66,7 +66,7 @@ def _project(payload: dict[str, Any]) -> None:
     task_id = str(payload.get("task_id") or "")
     if not task_id or not runtime().claim_projection(payload):
         return
-    board = str(os.environ.get("HERMES_KANBAN_BOARD") or payload.get("board") or "default")
+    board = str(payload.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "default")
 
     # Synchronous official CLI projection is deliberate: a daemon thread could be
     # killed with a short-lived worker before the block lands. `kanban block` also
@@ -88,7 +88,8 @@ def _project(payload: dict[str, Any]) -> None:
 def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[str, Any] | None:
     arguments = dict(args or {}) if isinstance(args, dict) else {}
     try:
-        decision = runtime().pre_tool_call(tool_name or "unknown", arguments, context(kwargs))
+        ctx = context(kwargs)
+        decision = runtime().pre_tool_call(tool_name or "unknown", arguments, ctx)
     except Exception as exc:
         # Preserve ordinary read availability during a policy-DB outage, but
         # never let the fallback bypass secret-bearing path classification.
@@ -105,7 +106,9 @@ def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[
         return {"action": "block", "message": f"FLEET POLICY FAIL-CLOSED: {type(exc).__name__}"}
     payload = decision.as_dict()
     if decision.decision in {"deny", "approval_required"}:
-        payload.setdefault("board", os.environ.get("HERMES_KANBAN_BOARD") or "")
+        payload["board"] = str(ctx.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "")
+        payload["task_status"] = str(ctx.get("task_status") or "unknown")
+        payload["run_key"] = str(ctx.get("current_run_id") or ctx.get("run_id") or "session")
         _project(payload)
         return {"action": "block", "message": _message(payload)}
     return None
@@ -149,6 +152,8 @@ def kanban_task_claimed(task_id: str = "", board: str = "", assignee: str = "", 
         "decision": "deny", "rule_id": "missing_or_unknown_task_type", "reason": error,
         "task_id": task_id, "project": ctx.get("project", board), "profile": assignee,
         "board": board or "",
+        "task_status": str(ctx.get("task_status") or "unknown"),
+        "run_key": str(ctx.get("current_run_id") or ctx.get("run_id") or "session"),
         "action": "worker_launch", "target": task_id, "args_hash": "not-applicable",
         "timestamp": "", "budget_snapshot": runtime().budget_snapshot(ctx, task_type), "approval_card": None,
     }

@@ -12,10 +12,13 @@ def test_migrations_are_idempotent_and_indexed(tmp_path):
     store.migrate()
     store.migrate()
     with store.connect() as connection:
-        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 2
+        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 3
         indexes = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='index'")}
     assert "idx_events_task_created" in indexes
     assert "idx_calls_task_sig" in indexes
+    assert "idx_calls_task_failure" in indexes
+    assert "idx_run_budget_lookup" in indexes
+    assert "idx_run_calls_sig" in indexes
 
 
 def test_event_recording_and_notifications_are_idempotent(tmp_path):
