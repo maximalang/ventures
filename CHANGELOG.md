@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.4] - 2026-08-31
+
+### Fixed
+- Anti-loop stops are keyed and projected by dispatch run: the same failure stops once per run, a genuinely new run receives a fresh stop, and post-tool payloads retain their board/status/run binding.
+- A `task_already_blocked` fallback denial no longer creates another Kanban projection, preventing comment/notification amplification after the primary block.
+
 ## [1.2.3] - 2026-08-31
 
 ### Fixed

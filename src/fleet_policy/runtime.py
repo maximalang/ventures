@@ -326,6 +326,7 @@ class FleetPolicyRuntime:
             failure_signature = stable_id(tool_name, error_type, normalized_error)
         event_id = stable_id(task_id, context.get("tool_call_id"), call_signature, success, failure_signature)
         run_key = self._run_key(context) or None
+        projection_run_key = run_key or "session"
         self.store.add_call(event_id, task_id, call_signature, failure_signature, success, run_key)
         tool_call_id = str(context.get("tool_call_id") or "")
         if tool_call_id:
@@ -340,10 +341,13 @@ class FleetPolicyRuntime:
                 "action": tool_name, "target": self._target(tool_name, arguments), "args_hash": hashed,
                 "timestamp": utc_now(), "budget_snapshot": self.budget_snapshot(context, self.task_type(context)[0]),
                 "approval_card": None, "failure_signature": failure_signature,
+                "task_status": str(context.get("task_status") or "unknown"),
+                "board": str(context.get("board") or ""),
+                "run_key": projection_run_key,
             }
             inserted = self.store.record_event(
-                stable_id(task_id, failure_signature, "same_failure_loop"), str(context.get("run_id") or task_id),
-                task_id, "anti_loop_stop", payload, True,
+                stable_id(task_id, projection_run_key, failure_signature, "same_failure_loop"),
+                projection_run_key, task_id, "anti_loop_stop", payload, True,
             )
             return payload if inserted else None
         return None
