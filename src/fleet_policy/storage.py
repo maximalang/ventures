@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS approvals(
 CREATE UNIQUE INDEX IF NOT EXISTS idx_approval_binding ON approvals(task_id, action, target, args_hash);
 CREATE TABLE IF NOT EXISTS notification_outbox(
   event_id TEXT PRIMARY KEY, payload_json TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending',
-  created_at TEXT NOT NULL, sent_at TEXT
+  created_at TEXT NOT NULL, sent_at TEXT, claim_token TEXT, claimed_at TEXT,
+  suppression_reason TEXT, resolved_at TEXT
 );
 CREATE TABLE IF NOT EXISTS capabilities(
   capability_id TEXT PRIMARY KEY, project TEXT NOT NULL, kind TEXT NOT NULL,
@@ -111,10 +112,12 @@ class PolicyStore:
             row = connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'").fetchone()
             if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=3").fetchone() is not None:
                 self._heal_v3_tables(connection)
+                self._heal_outbox_columns(connection)
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,?)", (utc_now(),))
+            self._heal_outbox_columns(connection)
             connection.executescript(SCHEMA_V3)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,?)", (utc_now(),))
 
@@ -129,6 +132,23 @@ class PolicyStore:
         if all(name in present for name in self.V3_TABLES):
             return
         connection.executescript(SCHEMA_V3)
+
+    @staticmethod
+    def _heal_outbox_columns(connection: sqlite3.Connection) -> None:
+        """Add notifier claim and suppression columns to legacy stores.
+
+        Idempotent column checks preserve historical events/outbox rows while
+        making stale-task suppression auditable on stores created before it.
+        """
+        columns = {row["name"] for row in connection.execute("PRAGMA table_info(notification_outbox)")}
+        if "claim_token" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN claim_token TEXT")
+        if "claimed_at" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN claimed_at TEXT")
+        if "suppression_reason" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN suppression_reason TEXT")
+        if "resolved_at" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN resolved_at TEXT")
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:
@@ -321,6 +341,71 @@ class PolicyStore:
         with self.connect() as connection:
             return list(connection.execute("SELECT * FROM notification_outbox WHERE status='pending' ORDER BY created_at,event_id"))
 
+    def claim_pending_notifications(self, limit: int) -> tuple[str, list[sqlite3.Row]] | None:
+        """Atomically reserve one bounded batch so concurrent drains cannot duplicate it."""
+        if limit <= 0:
+            return None
+        from uuid import uuid4
+
+        claim_token = uuid4().hex
+        stale_before = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat(timespec="seconds").replace("+00:00", "Z")
+        with self.connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            connection.execute(
+                "UPDATE notification_outbox SET status='pending',claim_token=NULL,claimed_at=NULL "
+                "WHERE status='dispatching' AND claimed_at < ?",
+                (stale_before,),
+            )
+            rows = list(connection.execute(
+                "SELECT * FROM notification_outbox WHERE status='pending' ORDER BY created_at,event_id LIMIT ?", (limit,)
+            ))
+            if not rows:
+                return None
+            event_ids = [str(row["event_id"]) for row in rows]
+            placeholders = ",".join("?" for _ in event_ids)
+            cursor = connection.execute(
+                f"UPDATE notification_outbox SET status='dispatching',claim_token=?,claimed_at=? "
+                f"WHERE status='pending' AND event_id IN ({placeholders})",
+                (claim_token, utc_now(), *event_ids),
+            )
+            if cursor.rowcount != len(event_ids):
+                raise RuntimeError("notification batch claim lost atomicity")
+        return claim_token, rows
+
+    def mark_claimed_notifications_sent(self, claim_token: str, event_ids: list[str]) -> int:
+        if not event_ids:
+            return 0
+        placeholders = ",".join("?" for _ in event_ids)
+        with self.connect() as connection:
+            cursor = connection.execute(
+                f"UPDATE notification_outbox SET status='sent',sent_at=?,claim_token=NULL "
+                f"WHERE status='dispatching' AND claim_token=? AND event_id IN ({placeholders})",
+                (utc_now(), claim_token, *event_ids),
+            )
+            return cursor.rowcount
+
+    def suppress_claimed_notification(self, claim_token: str, event_id: str, reason: str) -> bool:
+        """Resolve one claimed row without delivery, retaining an audit reason."""
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE notification_outbox "
+                "SET status='suppressed',suppression_reason=?,resolved_at=?,claim_token=NULL "
+                "WHERE status='dispatching' AND claim_token=? AND event_id=?",
+                (reason, utc_now(), claim_token, event_id),
+            )
+            return cursor.rowcount == 1
+
+    def release_notification_claim(self, claim_token: str, event_ids: list[str]) -> int:
+        if not event_ids:
+            return 0
+        placeholders = ",".join("?" for _ in event_ids)
+        with self.connect() as connection:
+            cursor = connection.execute(
+                f"UPDATE notification_outbox SET status='pending',claim_token=NULL,claimed_at=NULL "
+                f"WHERE status='dispatching' AND claim_token=? AND event_id IN ({placeholders})",
+                (claim_token, *event_ids),
+            )
+            return cursor.rowcount
     def grant_capability(self, capability_id: str, project: str, kind: str, scope: str, granted_by: str) -> bool:
         if os.environ.get("HERMES_KANBAN_TASK"):
             return False
