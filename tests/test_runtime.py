@@ -73,6 +73,43 @@ def test_same_failure_signature_stops(runtime, task_context):
     assert event["rule_id"] == "same_failure_loop"
 
 
+def test_same_failure_stop_is_scoped_to_each_dispatch_run(runtime, task_context):
+    # Run 206's stop class: a terminal Git-object check fails twice with the
+    # same normalized error. A later genuine dispatch must get a fresh stop,
+    # while a third failure in that same run must not emit a second event.
+    args = {"command": "git cat-file -e ee3448f4^{commit}"}
+    first_run = dict(task_context, current_run_id="206")
+    for index in range(2):
+        first_run["tool_call_id"] = f"run-206-fail-{index}"
+        first = runtime.post_tool_call(
+            "terminal", args, first_run, success=False,
+            error_type="tool_error", error_message="fatal: Not a valid object name 'ee3448f4^{commit}'",
+        )
+    assert first["rule_id"] == "same_failure_loop"
+    assert first["run_key"] == "206"
+
+    new_run = dict(task_context, current_run_id="207")
+    for index in range(2):
+        new_run["tool_call_id"] = f"run-207-fail-{index}"
+        second = runtime.post_tool_call(
+            "terminal", args, new_run, success=False,
+            error_type="tool_error", error_message="fatal: Not a valid object name 'ee3448f4^{commit}'",
+        )
+    assert second["rule_id"] == "same_failure_loop"
+    assert second["run_key"] == "207"
+
+    new_run["tool_call_id"] = "run-207-fail-2"
+    assert runtime.post_tool_call(
+        "terminal", args, new_run, success=False,
+        error_type="tool_error", error_message="fatal: Not a valid object name 'ee3448f4^{commit}'",
+    ) is None
+    with runtime.store.connect() as connection:
+        assert connection.execute(
+            "SELECT COUNT(*) FROM events WHERE kind='anti_loop_stop'"
+        ).fetchone()[0] == 2
+        assert connection.execute("SELECT COUNT(*) FROM notification_outbox").fetchone()[0] == 2
+
+
 def test_tool_call_budget_exhaustion(runtime, task_context):
     limit = runtime.config["budgets"]["code"]["tool_calls"]
     runtime.store.add_budget("t_test", "tool_calls", limit, "seed", "r1")

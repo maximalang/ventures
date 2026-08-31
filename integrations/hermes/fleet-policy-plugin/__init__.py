@@ -63,6 +63,11 @@ def _message(payload: dict[str, Any]) -> str:
 
 
 def _project(payload: dict[str, Any]) -> None:
+    # This denial is emitted only after a primary projection already moved the
+    # card to blocked. Re-projecting it produces comments without changing the
+    # stop outcome and can amplify fallback chains into owner-visible noise.
+    if payload.get("rule_id") == "task_already_blocked":
+        return
     task_id = str(payload.get("task_id") or "")
     if not task_id or not runtime().claim_projection(payload):
         return

@@ -164,6 +164,47 @@ def test_failed_projection_releases_idempotency_claim(tmp_path, monkeypatch):
     assert runtime.claim_projection(payload) is True
 
 
+def test_blocked_task_denials_do_not_create_fallback_projections(tmp_path, monkeypatch):
+    import importlib.util
+    from pathlib import Path
+    module_path = Path(__file__).parents[1] / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    spec = importlib.util.spec_from_file_location("fleet_policy_plugin_blocked_projection", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    runtime = module.runtime()
+    monkeypatch.setattr(runtime, "store", store)
+    monkeypatch.setattr(module, "_RUNTIME", runtime)
+    calls = []
+    monkeypatch.setattr(
+        module._PROJECTOR,
+        "comment_and_block",
+        lambda board, task_id, message, *, block: calls.append((board, task_id, message)) or {"block": 0},
+    )
+
+    primary = {
+        "task_id": "t_run206", "rule_id": "same_failure_loop", "action": "terminal",
+        "target": "git", "args_hash": "68f08eb", "board": "fleet-ops",
+        "task_status": "running", "run_key": "206",
+    }
+    module._project(primary)
+    for suffix in range(4):
+        module._project({
+            "task_id": "t_run206", "rule_id": "task_already_blocked", "action": "terminal",
+            "target": "fallback", "args_hash": f"fallback-{suffix}", "board": "fleet-ops",
+            "task_status": "blocked", "run_key": f"fallback-{suffix}",
+        })
+
+    assert len(calls) == 1
+    assert calls[0][:2] == ("fleet-ops", "t_run206")
+    with runtime.store.connect() as connection:
+        assert connection.execute(
+            "SELECT COUNT(*) FROM events WHERE kind='projection_claim'"
+        ).fetchone()[0] == 1
+
+
 def test_policy_db_outage_never_allows_secret_read(monkeypatch):
     import importlib.util
     from pathlib import Path
