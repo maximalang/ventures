@@ -14,6 +14,14 @@ from .storage import PolicyStore, utc_now
 
 
 class FleetPolicyRuntime:
+    EVIDENCE_GATED_CATEGORIES = {
+        "release_to_protected_branch",
+        "deploy_external_runtime",
+        "public_product_action",
+        "financial_action",
+        "destructive_change",
+    }
+
     def __init__(self, root: str | Path, *, config_path: str | Path | None = None,
                  db_path: str | Path | None = None):
         self.root = Path(root)
@@ -167,7 +175,17 @@ class FleetPolicyRuntime:
                 if not self.gate_comment_allowed(text, context):
                     result = Classification("state_change", "gate_forgery", "deny", "current profile cannot attest this gate")
 
-        missing = self.missing_gates(result.category, context) if worker and result.decision == "allow" else []
+        # Evidence gates protect consequential transitions, not the ordinary
+        # implementation/review work that produces their evidence. Applying
+        # gates to every configured category creates a lifecycle deadlock: a
+        # worker cannot edit or test before it has backup/scope/review output.
+        missing = (
+            self.missing_gates(result.category, context)
+            if worker
+            and result.decision == "allow"
+            and result.category in self.EVIDENCE_GATED_CATEGORIES
+            else []
+        )
         if missing:
             result = Classification(
                 result.effect, "evidence_gate_missing", "deny",

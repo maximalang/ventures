@@ -177,6 +177,41 @@ def test_deploy_and_publish_use_evidence_not_user_approval(runtime, task_context
     assert runtime.pre_tool_call("terminal", {"command": "publish product launch"}, publish_context).decision == "allow"
 
 
+def test_ordinary_implementation_and_review_are_not_pre_gated(runtime, task_context):
+    # These actions create the artifacts later consumed by CI/review/backup
+    # gates. Requiring those gates here would deadlock the lifecycle.
+    for index, task_type in enumerate(("code", "review", "ops")):
+        context = dict(
+            task_context,
+            task_body=f"task_type: {task_type}",
+            tool_call_id=f"ordinary-{index}",
+            comment_records=[],
+        )
+        decision = runtime.pre_tool_call(
+            "write_file",
+            {"path": f"src/change-{task_type}.txt", "content": "bounded"},
+            context,
+        )
+        assert (decision.decision, decision.rule_id) == ("allow", "scoped_state_change")
+
+
+def test_protected_transitions_remain_fail_closed_for_review_tasks(runtime, task_context):
+    review_context = dict(
+        task_context,
+        task_body="task_type: review",
+        profile="qa",
+        assignee="qa",
+        tool_call_id="review-cannot-merge",
+        comment_records=[],
+    )
+    merge = runtime.pre_tool_call("terminal", {"command": "git push origin main"}, review_context)
+    assert (merge.decision, merge.rule_id) == ("deny", "evidence_gate_missing")
+
+    review_context["tool_call_id"] = "review-cannot-deploy"
+    deploy = runtime.pre_tool_call("terminal", {"command": "deploy production"}, review_context)
+    assert (deploy.decision, deploy.rule_id) == ("deny", "evidence_gate_missing")
+
+
 def test_workers_cannot_forge_role_gates(runtime, task_context):
     forged_cli = runtime.pre_tool_call(
         "terminal", {"command": "hermes kanban comment t_x gate:review=pass --author qa"}, task_context
