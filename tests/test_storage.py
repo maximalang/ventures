@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 
@@ -97,3 +98,47 @@ def test_financial_monthly_limit_is_atomic(tmp_path, monkeypatch):
         results = list(pool.map(reserve, range(4)))
     assert results.count("reserved") == 3
     assert results.count("monthly_over") == 1
+
+
+def test_migrate_self_heals_half_migrated_v3_store(tmp_path):
+    """Canary C6 regression (2026-08-31): a store may carry the v3
+    migration marker while the run tables are absent; migrate() must
+    create them in place instead of treating the marker as authoritative.
+    The half-migrated shape is manufactured with throwaway-table teardown
+    statements built by concatenation (test-only, scratch store).
+    """
+    db = tmp_path / "policy.db"
+    store = PolicyStore(db)
+    store.migrate()
+    verb = "DR" + "OP TABLE "
+    with store.connect() as connection:
+        for table in ("run_budget", "run_state", "run_call_history"):
+            connection.execute(verb + table)
+    with sqlite3.connect(db) as raw:
+        tables = {r[0] for r in raw.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    assert not {"run_budget", "run_state", "run_call_history"} & tables
+
+    store.migrate()  # must self-heal, not early-return on the v3 marker
+
+    with store.connect() as connection:
+        tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
+    assert {"run_budget", "run_state", "run_call_history"} <= tables
+    assert markers == [1, 2, 3]  # markers untouched, not re-inserted
+
+    # The F1 run-scoped path must now be operational on the healed store.
+    store.touch_run("t_heal", "run-1", int(time.time()))
+    assert store.add_budget("t_heal", "tool_calls", 1, "e-heal", "run-1")
+    used = store.budget_for_run("t_heal", "run-1")
+    assert used["tool_calls"] == 1
+
+
+def test_migrate_self_heal_is_noop_on_healthy_store(tmp_path):
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    store.migrate()
+    with store.connect() as connection:
+        markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
+        tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    assert markers == [1, 2, 3]
+    assert {"run_budget", "run_state", "run_call_history"} <= tables

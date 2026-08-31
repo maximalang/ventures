@@ -96,6 +96,12 @@ class PolicyStore:
         finally:
             connection.close()
 
+    #: Tables guaranteed by SCHEMA_V3. A store can carry the v3 migration
+    #: marker while some of these tables are absent (half-applied DDL left
+    #: the database permanently half-migrated); migrate() self-heals that
+    #: shape idempotently. Regression: post-release canary C6, 2026-08-31.
+    V3_TABLES = ("run_budget", "run_state", "run_call_history")
+
     def migrate(self) -> None:
         with self.connect() as connection:
             # Journal mode is a database-level setup operation. Re-running it on
@@ -104,12 +110,25 @@ class PolicyStore:
             connection.execute("PRAGMA journal_mode=WAL")
             row = connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'").fetchone()
             if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=3").fetchone() is not None:
+                self._heal_v3_tables(connection)
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(2,?)", (utc_now(),))
             connection.executescript(SCHEMA_V3)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,?)", (utc_now(),))
+
+    def _heal_v3_tables(self, connection: sqlite3.Connection) -> None:
+        """Create any SCHEMA_V3 tables missing despite the v3 marker.
+
+        Idempotent IF NOT EXISTS DDL only — never drops or rewrites rows,
+        so it is safe to run on every connection of a healthy store (cheap
+        sqlite_master read first) and heals half-migrated stores in place.
+        """
+        present = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+        if all(name in present for name in self.V3_TABLES):
+            return
+        connection.executescript(SCHEMA_V3)
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:
