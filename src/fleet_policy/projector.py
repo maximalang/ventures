@@ -16,8 +16,42 @@ def subprocess_runner(command: Sequence[str], timeout: int) -> subprocess.Comple
 
 
 class HermesProjector:
+    CLOSED_TASK_STATUSES = frozenset({"done", "archived", "superseded"})
+    LOOKUP_TIMEOUT_SECONDS = 5
+
     def __init__(self, runner: Runner = subprocess_runner):
         self.runner = runner
+
+    def live_task_status(self, board: str, task_id: str) -> str | None:
+        """Read one task through the board-bound public Hermes CLI.
+
+        A missing task, non-zero CLI result, malformed response, or expected
+        transport error is intentionally indistinguishable to callers: none
+        may be converted into a new active incident.
+        """
+        command = ["hermes", "kanban", "--board", board, "show", task_id, "--json"]
+        try:
+            result = self.runner(command, self.LOOKUP_TIMEOUT_SECONDS)
+        except (subprocess.TimeoutExpired, OSError, subprocess.SubprocessError):
+            return None
+        if result.returncode != 0:
+            return None
+        try:
+            response = json.loads(result.stdout)
+        except (TypeError, json.JSONDecodeError):
+            return None
+        task = response.get("task") if isinstance(response, dict) else None
+        status = task.get("status") if isinstance(task, dict) else None
+        return status.lower() if isinstance(status, str) and status else None
+
+    @staticmethod
+    def notification_binding(payload: dict) -> tuple[str, str] | None:
+        """Return only an explicit, unmodified board/task binding."""
+        board = payload.get("board")
+        task_id = payload.get("task_id")
+        if not isinstance(board, str) or not board or not isinstance(task_id, str) or not task_id:
+            return None
+        return board, task_id
 
     def comment_and_block(self, board: str, task_id: str, message: str, *, block: bool = True) -> dict[str, int]:
         result: dict[str, int] = {}
@@ -49,29 +83,60 @@ class HermesProjector:
         ])
 
     def drain_company(self, store: PolicyStore, *, profile: str = "company", batch_limit: int = 20) -> int:
-        """Deliver pending notifications in ONE bounded bot turn.
+        """Deliver active task-bound alerts in one bounded bot turn.
 
-        The batch is atomically claimed (claim_token) so concurrent drains
-        cannot duplicate it; a timeout or failed turn releases the claim and
-        the rows stay pending for the next cycle. Delivery acceptance is a
-        single exit-code check, not full agent-turn completion.
+        Every row is claimed atomically before processing. Before Bot Chat sees
+        any row, the projector reads its exact board/task through the public
+        Kanban CLI. Closed tasks are resolved as ``suppressed`` with an audit
+        reason; malformed/unresolvable rows are released pending and never
+        become synthetic alerts. The live status cache bounds duplicate logical
+        events to one read per exact board/task binding.
         """
         claimed = store.claim_pending_notifications(batch_limit)
         if claimed is None:
             return 0
         claim_token, rows = claimed
-        event_ids = [str(row["event_id"]) for row in rows]
+        status_cache: dict[tuple[str, str], str | None] = {}
+        active_event_ids: list[str] = []
         sections: list[str] = []
         for row in rows:
-            payload = json.loads(row["payload_json"])
+            event_id = str(row["event_id"])
+            try:
+                payload = json.loads(row["payload_json"])
+            except (TypeError, json.JSONDecodeError):
+                store.release_notification_claim(claim_token, [event_id])
+                continue
+            if not isinstance(payload, dict):
+                store.release_notification_claim(claim_token, [event_id])
+                continue
+            binding = self.notification_binding(payload)
+            if binding is None:
+                store.release_notification_claim(claim_token, [event_id])
+                continue
+            if binding not in status_cache:
+                status_cache[binding] = self.live_task_status(*binding)
+            status = status_cache[binding]
+            if status is None:
+                store.release_notification_claim(claim_token, [event_id])
+                continue
+            if status in self.CLOSED_TASK_STATUSES:
+                store.suppress_claimed_notification(claim_token, event_id, f"task_status:{status}")
+                continue
             if payload.get("decision") == "approval_required":
                 sections.append(self.approval_text(payload))
             else:
                 sections.append(json.dumps(payload, ensure_ascii=False, indent=2))
+            active_event_ids.append(event_id)
+        if not active_event_ids:
+            return 0
         text = "\n\n---\n\n".join(sections)
-        with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".txt", delete=False) as handle:
-            handle.write(text)
-            temp_path = Path(handle.name)
+        try:
+            with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".txt", delete=False) as handle:
+                handle.write(text)
+                temp_path = Path(handle.name)
+        except OSError:
+            store.release_notification_claim(claim_token, active_event_ids)
+            return 0
         try:
             command = [
                 "hermes", "-p", profile, "chat", "--in", "~", "-c", "Bot Chat",
@@ -79,12 +144,15 @@ class HermesProjector:
             ]
             try:
                 result = self.runner(command, 15)
-            except subprocess.TimeoutExpired:
-                store.release_notification_claim(claim_token, event_ids)
+            except (subprocess.TimeoutExpired, OSError, subprocess.SubprocessError):
+                store.release_notification_claim(claim_token, active_event_ids)
                 return 0
             if result.returncode != 0:
-                store.release_notification_claim(claim_token, event_ids)
+                store.release_notification_claim(claim_token, active_event_ids)
                 return 0
-            return store.mark_claimed_notifications_sent(claim_token, event_ids)
+            return store.mark_claimed_notifications_sent(claim_token, active_event_ids)
         finally:
-            temp_path.unlink(missing_ok=True)
+            try:
+                temp_path.unlink(missing_ok=True)
+            except OSError:
+                pass

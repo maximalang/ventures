@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS approvals(
 CREATE UNIQUE INDEX IF NOT EXISTS idx_approval_binding ON approvals(task_id, action, target, args_hash);
 CREATE TABLE IF NOT EXISTS notification_outbox(
   event_id TEXT PRIMARY KEY, payload_json TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending',
-  created_at TEXT NOT NULL, sent_at TEXT, claim_token TEXT, claimed_at TEXT
+  created_at TEXT NOT NULL, sent_at TEXT, claim_token TEXT, claimed_at TEXT,
+  suppression_reason TEXT, resolved_at TEXT
 );
 CREATE TABLE IF NOT EXISTS capabilities(
   capability_id TEXT PRIMARY KEY, project TEXT NOT NULL, kind TEXT NOT NULL,
@@ -134,15 +135,20 @@ class PolicyStore:
 
     @staticmethod
     def _heal_outbox_columns(connection: sqlite3.Connection) -> None:
-        """Add notifier claim columns to stores created before they existed.
+        """Add notifier claim and suppression columns to legacy stores.
 
-        Idempotent column check; safe on every migrate() call.
+        Idempotent column checks preserve historical events/outbox rows while
+        making stale-task suppression auditable on stores created before it.
         """
         columns = {row["name"] for row in connection.execute("PRAGMA table_info(notification_outbox)")}
         if "claim_token" not in columns:
             connection.execute("ALTER TABLE notification_outbox ADD COLUMN claim_token TEXT")
         if "claimed_at" not in columns:
             connection.execute("ALTER TABLE notification_outbox ADD COLUMN claimed_at TEXT")
+        if "suppression_reason" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN suppression_reason TEXT")
+        if "resolved_at" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN resolved_at TEXT")
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:
@@ -377,6 +383,17 @@ class PolicyStore:
                 (utc_now(), claim_token, *event_ids),
             )
             return cursor.rowcount
+
+    def suppress_claimed_notification(self, claim_token: str, event_id: str, reason: str) -> bool:
+        """Resolve one claimed row without delivery, retaining an audit reason."""
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE notification_outbox "
+                "SET status='suppressed',suppression_reason=?,resolved_at=?,claim_token=NULL "
+                "WHERE status='dispatching' AND claim_token=? AND event_id=?",
+                (reason, utc_now(), claim_token, event_id),
+            )
+            return cursor.rowcount == 1
 
     def release_notification_claim(self, claim_token: str, event_ids: list[str]) -> int:
         if not event_ids:

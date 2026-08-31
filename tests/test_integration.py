@@ -62,6 +62,8 @@ def test_projector_uses_real_cli_syntax_and_exactly_once_outbox(tmp_path):
 
     def runner(command, timeout):
         calls.append(list(command))
+        if command[:2] == ["hermes", "kanban"]:
+            return subprocess.CompletedProcess(command, 0, json.dumps({"task": {"status": "running"}}), "")
         return subprocess.CompletedProcess(command, 0, "ok", "")
 
     projector = HermesProjector(runner)
@@ -72,11 +74,21 @@ def test_projector_uses_real_cli_syntax_and_exactly_once_outbox(tmp_path):
 
     store = PolicyStore(tmp_path / "policy.db")
     store.migrate()
-    store.record_event("e1", "c1", "t1", "approval", {"decision": "approval_required"}, True)
+    store.record_event(
+        "e1", "c1", "t1", "approval",
+        {"decision": "approval_required", "board": "rr-team", "task_id": "t1"}, True,
+    )
     assert projector.drain_company(store) == 1
     assert projector.drain_company(store) == 0
+    assert calls[1] == ["hermes", "kanban", "--board", "rr-team", "show", "t1", "--json"]
     chat = calls[-1]
     assert chat[:4] == ["hermes", "-p", "company", "chat"]
+
+    # An unbound legacy row must stay pending, never delivered or dropped:
+    # delivery requires an exact board/task binding from the payload.
+    store.record_event("e2", "c1", "t1", "approval", {"decision": "approval_required"}, True)
+    assert projector.drain_company(store) == 0
+    assert [row["event_id"] for row in store.pending_notifications()] == ["e2"]
 
 
 def test_failed_company_notification_remains_pending(tmp_path):
