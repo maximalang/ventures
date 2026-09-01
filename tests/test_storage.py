@@ -13,7 +13,7 @@ def test_migrations_are_idempotent_and_indexed(tmp_path):
     store.migrate()
     store.migrate()
     with store.connect() as connection:
-        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 3
+        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 4
         indexes = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='index'")}
     assert "idx_events_task_created" in indexes
     assert "idx_calls_task_sig" in indexes
@@ -57,8 +57,63 @@ def test_worker_environment_cannot_decide_approval(tmp_path, monkeypatch):
     store.migrate()
     assert store.ensure_approval("rule", "t", "terminal", "deploy", "hash")
     monkeypatch.setenv("HERMES_KANBAN_TASK", "t")
-    assert store.decide_approval("rule", True, "worker") is False
+    # Even a valid confirmation code must not bypass the worker-env guard.
+    assert store.decide_approval("rule", True, "worker", confirm_code="rule") is False
     assert store.approval("rule")["status"] == "pending"
+
+
+def test_decide_approval_requires_owner_confirmation(tmp_path, monkeypatch):
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
+    key = "abcdef1234567890"
+    assert store.ensure_approval(key, "t", "terminal", "deploy", "hash")
+    # Missing or wrong confirmation (free-text --by spoofing) fails closed.
+    assert store.decide_approval(key, True, "company") is False
+    assert store.decide_approval(key, True, "company", confirm_code="00000000") is False
+    assert store.approval(key)["status"] == "pending"
+    # Exact binding suffix confirmation is the only valid decision path.
+    assert store.decide_approval(key, True, "owner", confirm_code=key[-8:]) is True
+    row = store.approval(key)
+    assert row["status"] == "approved"
+    assert row["decided_by"] == "owner"
+
+
+def test_revoke_approval_blocks_consumption_and_keeps_audit(tmp_path, monkeypatch):
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
+    key = "abcdef1234567890"
+    store.ensure_approval(key, "t", "terminal", "deploy", "hash")
+    assert store.decide_approval(key, True, "owner", confirm_code=key[-8:]) is True
+    # Revoke with owner confirmation; wrong codes fail closed.
+    assert store.revoke_approval(key, "owner", confirm_code="00000000") is False
+    assert store.revoke_approval(key, "owner", confirm_code=key[-8:]) is True
+    row = store.approval(key)
+    assert row["status"] == "revoked"
+    assert row["revoked_by"] == "owner"
+    assert row["revoked_at"]
+    # A revoked binding must never be consumable (explicit replay guard).
+    assert store.consume_exact_approval("t", "terminal", "deploy", "hash") is False
+    assert store.approval(key)["status"] == "revoked"
+    # Already revoked -> no second revocation.
+    assert store.revoke_approval(key, "owner", confirm_code=key[-8:]) is False
+
+
+def test_revoke_pending_binding_and_worker_env_guard(tmp_path, monkeypatch):
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
+    key = "pending123456789"
+    store.ensure_approval(key, "t", "terminal", "deploy", "hash")
+    # Pending bindings can be cancelled the same way (incident cleanup).
+    assert store.revoke_approval(key, "owner", confirm_code=key[-8:]) is True
+    assert store.approval(key)["status"] == "revoked"
+    # Workers cannot revoke through the store guard either.
+    store.ensure_approval(key + "b", "t", "terminal", "deploy", "hash2")
+    monkeypatch.setenv("HERMES_KANBAN_TASK", "t")
+    assert store.revoke_approval(key + "b", "worker", confirm_code=(key + "b")[-8:]) is False
+    assert store.approval(key + "b")["status"] == "pending"
 
 
 def test_concurrent_hot_path_connections_do_not_change_journal_mode(tmp_path):
@@ -124,7 +179,7 @@ def test_migrate_self_heals_half_migrated_v3_store(tmp_path):
         tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
     assert {"run_budget", "run_state", "run_call_history"} <= tables
-    assert markers == [1, 2, 3]  # markers untouched, not re-inserted
+    assert markers == [1, 2, 3, 4]  # markers untouched, not re-inserted
 
     # The F1 run-scoped path must now be operational on the healed store.
     store.touch_run("t_heal", "run-1", int(time.time()))
@@ -140,5 +195,5 @@ def test_migrate_self_heal_is_noop_on_healthy_store(tmp_path):
     with store.connect() as connection:
         markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
         tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    assert markers == [1, 2, 3]
+    assert markers == [1, 2, 3, 4]
     assert {"run_budget", "run_state", "run_call_history"} <= tables

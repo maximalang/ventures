@@ -110,9 +110,10 @@ class PolicyStore:
             # concurrent workers exceed Hermes' 30s pre-tool hook timeout.
             connection.execute("PRAGMA journal_mode=WAL")
             row = connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'").fetchone()
-            if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=3").fetchone() is not None:
+            if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=4").fetchone() is not None:
                 self._heal_v3_tables(connection)
                 self._heal_outbox_columns(connection)
+                self._heal_approvals_v4(connection)
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
@@ -120,6 +121,8 @@ class PolicyStore:
             self._heal_outbox_columns(connection)
             connection.executescript(SCHEMA_V3)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,?)", (utc_now(),))
+            self._heal_approvals_v4(connection)
+            connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(4,?)", (utc_now(),))
 
     def _heal_v3_tables(self, connection: sqlite3.Connection) -> None:
         """Create any SCHEMA_V3 tables missing despite the v3 marker.
@@ -149,6 +152,20 @@ class PolicyStore:
             connection.execute("ALTER TABLE notification_outbox ADD COLUMN suppression_reason TEXT")
         if "resolved_at" not in columns:
             connection.execute("ALTER TABLE notification_outbox ADD COLUMN resolved_at TEXT")
+
+    @staticmethod
+    def _heal_approvals_v4(connection: sqlite3.Connection) -> None:
+        """Add revocation columns to approvals on legacy stores.
+
+        Idempotent column checks preserve every historical approval row (the
+        incident audit row must survive migration untouched); revocation data
+        exists only on decisions made or revoked after v4.
+        """
+        columns = {row["name"] for row in connection.execute("PRAGMA table_info(approvals)")}
+        if "revoked_at" not in columns:
+            connection.execute("ALTER TABLE approvals ADD COLUMN revoked_at TEXT")
+        if "revoked_by" not in columns:
+            connection.execute("ALTER TABLE approvals ADD COLUMN revoked_by TEXT")
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:
@@ -301,17 +318,44 @@ class PolicyStore:
             )
             return cursor.rowcount == 1
 
-    def decide_approval(self, rule_key: str, approved: bool, decided_by: str) -> bool:
+    def decide_approval(self, rule_key: str, approved: bool, decided_by: str,
+                        confirm_code: str | None = None) -> bool:
         # Defense in depth: dispatcher workers cannot approve through a direct
         # Python import even if the terminal command evades the textual policy.
-        # The authoritative operator CLI runs outside HERMES_KANBAN_TASK.
+        # The authoritative operator CLI runs outside HERMES_KANBAN_TASK and
+        # must additionally present the exact binding suffix confirmation,
+        # which only an interactive owner who read the binding can supply
+        # (free-text `--by` claims are no longer sufficient on their own).
         if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
+        if not isinstance(confirm_code, str) or confirm_code != rule_key[-8:]:
             return False
         status = "approved" if approved else "rejected"
         with self.connect() as connection:
             cursor = connection.execute(
                 "UPDATE approvals SET status=?,decided_at=?,decided_by=? WHERE rule_key=? AND status='pending'",
                 (status, utc_now(), decided_by, rule_key),
+            )
+            return cursor.rowcount == 1
+
+    def revoke_approval(self, rule_key: str, revoked_by: str,
+                        confirm_code: str | None = None) -> bool:
+        """Revoke a granted binding (or cancel a still-pending one).
+
+        A revoked row never matches the consumption filter
+        (``status='approved'``), so the granted action can no longer be
+        executed; the row is kept as immutable audit history. The same owner
+        confirmation required for decide applies here.
+        """
+        if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
+        if not isinstance(confirm_code, str) or confirm_code != rule_key[-8:]:
+            return False
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE approvals SET status='revoked',revoked_at=?,revoked_by=? "
+                "WHERE rule_key=? AND status IN ('approved','pending')",
+                (utc_now(), revoked_by, rule_key),
             )
             return cursor.rowcount == 1
 

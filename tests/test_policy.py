@@ -103,6 +103,8 @@ def test_worker_self_approval_variants_denied(config):
         ".venv/Scripts/fleet-policy approve rule-key",
         "python -m fleet_policy.cli approve rule-key",
         "uv run fleet-policy reject rule-key",
+        "fleet-policy revoke rule-key",
+        "python -m fleet_policy.cli revoke rule-key",
     ):
         result = classify("terminal", {"command": command}, config, worker=True)
         assert (result.decision, result.category) == ("deny", "worker_self_approval"), command
@@ -113,6 +115,13 @@ def test_worker_self_approval_variants_denied(config):
         worker=True,
     )
     assert (direct_api.decision, direct_api.category) == ("deny", "worker_self_approval")
+    revoke_api = classify(
+        "terminal",
+        {"command": "python -c \"store.revoke_approval('rule', 'worker')\""},
+        config,
+        worker=True,
+    )
+    assert (revoke_api.decision, revoke_api.category) == ("deny", "worker_self_approval")
 
 
 def test_destructive_git_variants_split_by_reversibility(config):

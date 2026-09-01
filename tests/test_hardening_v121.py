@@ -25,7 +25,8 @@ def test_worker_execute_code_requires_exact_one_time_approval(runtime, task_cont
     assert first.approval_card is not None
 
     monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
-    assert runtime.store.decide_approval(first.approval_card["rule_key"], True, "user")
+    key = first.approval_card["rule_key"]
+    assert runtime.store.decide_approval(key, True, "user", confirm_code=key[-8:])
 
     task_context["tool_call_id"] = "changed-code"
     changed = runtime.pre_tool_call("execute_code", {"code": "print('different')"}, task_context)
@@ -286,7 +287,7 @@ def test_package_plugin_and_cli_versions_match():
         str(integration_plugin["version"]),
         payload["version"],
     }
-    assert versions == {"1.2.4"}
+    assert versions == {"1.2.5"}
 
 
 def test_ci_is_pinned_frozen_and_exercises_release_contract():
