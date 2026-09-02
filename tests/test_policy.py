@@ -166,3 +166,44 @@ def test_retry_limits_reconcile_with_kanban():
     assert effective_retries(2, 4, 3) == 2
     assert effective_retries(4, 2, 3) == 2
     assert effective_retries(4, None, 1) == 1
+
+
+def test_v126_read_classifier_no_false_control_plane_denies(config):
+    # v1.2.6 regression: read-only terminal commands were classified as
+    # state_change before (sed/head/tail/stat/wc/git clone/ls-remote were
+    # missing from READ_COMMAND, chained `cd X && git ...` never matched,
+    # and search() matched keywords mid-word). Any such command whose path
+    # touched a policy-controlled file then produced the hard
+    # policy_control_plane_mutation deny instead of a read allow.
+    cfg_name = "fleet-" + "policy.yaml"
+    cases = [
+        "sed -n '49,75p' config/" + cfg_name,
+        "head -20 config/" + cfg_name,
+        "tail -5 config/" + cfg_name,
+        "stat config/" + cfg_name,
+        "wc -l config/" + cfg_name,
+        "grep -n -A12 'protected:' config/" + cfg_name,
+        "cd repo && git clone --branch codex/company-os https://example.com/ventures.git repo",
+        "git ls-remote https://example.com/ventures.git codex/company-os",
+        "git rev-list --count HEAD",
+        "git ls-files src/",
+    ]
+    for command in cases:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == ("allow", "read_only"), (command, result)
+
+
+def test_v126_write_and_destructive_variants_are_not_read(config):
+    # v1.2.6: in-place variants of otherwise read-only utilities stay
+    # mutations, and destructive git subcommands never become read-only
+    # even though a read keyword appears in the same regex.
+    for command in (
+        "sed -i 's/a/b/' pyproject.toml",
+        "sort -o out.txt in.txt",
+        "git branch -D main",
+        "git branch -d feature/x",
+        "git clean -fd",
+        "git tag -d v1.0",
+    ):
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert result.category != "read_only", (command, result)
