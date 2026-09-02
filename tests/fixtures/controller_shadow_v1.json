@@ -1,0 +1,43 @@
+{
+  "boards": {
+    "portfolio": [
+      {"task_id": "t_docs", "title": "Company OS docs", "status": "done",
+       "priority": 10, "assignee": "tech", "revenue_critical": false,
+       "revenue_project": "", "effort_known": true,
+       "scores": {"metric_impact": 1, "gate_removal": 0, "confidence": 9, "cost_rub": 0},
+       "evidence_gaps": [], "proposal": {}}
+    ],
+    "seo-site": [
+      {"task_id": "t_seo_measurement", "title": "seo-site: source/measurement evidence lane", "status": "todo",
+       "priority": 900, "assignee": "research", "revenue_critical": true,
+       "revenue_project": "seo-site", "effort_known": false,
+       "scores": {"metric_impact": 0, "gate_removal": 0, "confidence": 0, "cost_rub": 0},
+       "evidence_gaps": [
+         {"field": "sources_measurement", "priority": 5, "owner": "research",
+          "squad": ["research", "qa"], "freshness_target": "2026-09-05T00:00:00Z",
+          "evidence_refs": ["fixture:seo-site/STATE.md#measurement"],
+          "missing_fields": ["sources_measurement"]}
+       ],
+       "proposal": {
+         "hypothesis": "Fresh source/measurement evidence unlocks the seo-site revenue gate",
+         "expected_impact": "Enables the only deterministic evidence unlock for seo-site revenue",
+         "kill_criterion": "Evidence cannot be produced fresh by 2026-09-05",
+         "rollback": "None required: shadow recommendation changes nothing"
+       }},
+      {"task_id": "t_superseded_lane", "title": "old lane", "status": "superseded",
+       "priority": 999, "assignee": "", "revenue_critical": true,
+       "revenue_project": "seo-site", "effort_known": true,
+       "scores": {"metric_impact": 9, "gate_removal": 9, "confidence": 9, "cost_rub": 0},
+       "evidence_gaps": [], "proposal": {}}
+    ],
+    "rr-team": [
+      {"task_id": "t_rr_payment", "title": "rr payment rail", "status": "blocked",
+       "priority": 800, "assignee": "tech", "revenue_critical": true,
+       "revenue_project": "recruiter-radar", "effort_known": false,
+       "scores": {"metric_impact": 0, "gate_removal": 0, "confidence": 0, "cost_rub": 0},
+       "evidence_gaps": [], "proposal": {}}
+    ]
+  },
+  "metric": {"status": "gap", "note": "no dashboard measurement"},
+  "finance": {"status": "gap", "note": "cost model unavailable"}
+}

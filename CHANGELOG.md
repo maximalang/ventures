@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7] - 2026-09-02
+
+### Added
+
+- Company OS deterministic next-bet controller v1, SHADOW mode only (`fleet_policy.controller`, `fleet-policy controller` CLI). Pure reducer over a board snapshot: fixed rule `running=0 && ready=0` with a revenue-critical `triage`/`todo` gate is `ACTIONABLE_IDLE`, never success. `decision_type` is `execute_bet` only when metric AND finance inputs are fresh/authoritative/non-gap and candidate effort is known; otherwise at most one `collect_evidence` recommendation for the single deterministic highest-priority missing-evidence step (`execution_eligible=false`, missing fields, collector owner/squad, freshness target, kill/rollback, evidence refs, no invented RUB). Ties (score or evidence priority), empty boards, blocked-only gates and busy/ready fleets resolve to `no_action` with a deterministic reason. Decisions are content-hashed (`decision_id` = idempotency key); the engine is append-only into the events store — an identical repeat run writes zero new records and returns the stored decision. Live input is read-only via the official `hermes kanban list --json` CLI (no direct kanban DB access); canonical boards restricted to `rr-team`, `seo-site`. Shadow mode never creates/promotes/unblocks/archives/deletes tasks or alters cron/config.
+- Tests: acceptance fixture (portfolio+seo-site+rr-team mirror), determinism/order-independence, zero-new-record repeat, empty/blocked/duplicate/tie cases, fail-closed invalid input, marker parser and live adapter.
+
 ## [1.2.5] - 2026-09-01
 
 ### Security
