@@ -149,7 +149,7 @@ def test_projector_batches_alerts_into_one_bounded_bot_turn(tmp_path):
         if _is_task_lookup(command):
             return _task_result(command)
         calls.append(list(command))
-        assert timeout == 15
+        assert timeout == HermesProjector.DELIVERY_TIMEOUT_SECONDS
         assert command[command.index("--max-turns") + 1] == "1"
         assert Path(command[-1]).read_text(encoding="utf-8").count("APPROVAL REQUIRED") == 3
         return subprocess.CompletedProcess(command, 0, "ok", "")

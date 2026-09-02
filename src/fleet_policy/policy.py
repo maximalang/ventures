@@ -230,9 +230,9 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     # Hard-deny checks inspect command/target fields only. They must never scan
     # generated code, card bodies, comments or file contents.
     if worker and (
-        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:approve|reject)\b", subject, re.I)
-        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:approve|reject)\b", subject, re.I)
-        or re.search(r"\b(?:decide_approval|consume_exact_approval|ensure_approval)\b", subject, re.I)
+        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:approve|reject|revoke)\b", subject, re.I)
+        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:approve|reject|revoke)\b", subject, re.I)
+        or re.search(r"\b(?:decide_approval|consume_exact_approval|ensure_approval|revoke_approval)\b", subject, re.I)
         or re.search(r"\b(?:update|insert|delete)[^\n]*\bapprovals\b", subject, re.I)
     ):
         return Classification("state_change", "worker_self_approval", "deny", "workers cannot approve their own action")

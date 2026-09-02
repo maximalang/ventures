@@ -28,7 +28,7 @@ def test_approval_binding_one_time_and_payload_change(runtime, task_context, mon
     first = runtime.pre_tool_call("terminal", args, task_context)
     assert first.decision == "approval_required"
     key = first.approval_card["rule_key"]
-    assert runtime.store.decide_approval(key, True, "user")
+    assert runtime.store.decide_approval(key, True, "user", confirm_code=key[-8:])
 
     task_context["tool_call_id"] = "call-2"
     allowed = runtime.pre_tool_call("terminal", args, task_context)
@@ -48,7 +48,8 @@ def test_approval_binding_one_time_and_payload_change(runtime, task_context, mon
 def test_rejected_approval_never_allows(runtime, task_context, monkeypatch):
     monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
     decision = runtime.pre_tool_call("terminal", {"command": "mass outreach to 5000 contacts"}, task_context)
-    assert runtime.store.decide_approval(decision.approval_card["rule_key"], False, "user")
+    key = decision.approval_card["rule_key"]
+    assert runtime.store.decide_approval(key, False, "user", confirm_code=key[-8:])
     task_context["tool_call_id"] = "next"
     again = runtime.pre_tool_call("terminal", {"command": "mass outreach to 5000 contacts"}, task_context)
     assert again.decision == "approval_required"

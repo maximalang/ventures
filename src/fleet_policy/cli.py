@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 
 from . import __version__
@@ -51,9 +52,18 @@ def parser() -> argparse.ArgumentParser:
     approve = sub.add_parser("approve")
     approve.add_argument("rule_key")
     approve.add_argument("--by", default="user")
+    approve.add_argument("--confirm", default=None,
+                         help="Interactive owner confirmation: the last 8 characters of the binding's rule_key.")
     reject = sub.add_parser("reject")
     reject.add_argument("rule_key")
     reject.add_argument("--by", default="user")
+    reject.add_argument("--confirm", default=None,
+                        help="Interactive owner confirmation: the last 8 characters of the binding's rule_key.")
+    revoke = sub.add_parser("revoke")
+    revoke.add_argument("rule_key")
+    revoke.add_argument("--by", default="user")
+    revoke.add_argument("--confirm", default=None,
+                        help="Interactive owner confirmation: the last 8 characters of the binding's rule_key.")
     sub.add_parser("drain-notifications")
     suppress = sub.add_parser("fail-notifications")
     suppress.add_argument("--all-pending", action="store_true")
@@ -96,8 +106,29 @@ def main(argv: list[str] | None = None) -> int:
 
     runtime = FleetPolicyRuntime(default_root(args))
     if args.command in {"approve", "reject"}:
-        ok = runtime.store.decide_approval(args.rule_key, args.command == "approve", args.by)
-        print(json.dumps({"ok": ok, "rule_key": args.rule_key, "decision": args.command}, ensure_ascii=False))
+        if not sys.stdin.isatty():
+            print(json.dumps({"ok": False, "rule_key": args.rule_key,
+                              "reason": "approval decisions require an interactive owner terminal (no TTY)"},
+                             ensure_ascii=False))
+            return 2
+        ok = runtime.store.decide_approval(args.rule_key, args.command == "approve", args.by,
+                                           confirm_code=args.confirm)
+        payload = {"ok": ok, "rule_key": args.rule_key, "decision": args.command}
+        if not ok:
+            payload["reason"] = "binding missing, already decided, or confirmation code invalid (expected the binding's last 8 characters)"
+        print(json.dumps(payload, ensure_ascii=False))
+        return 0 if ok else 2
+    if args.command == "revoke":
+        if not sys.stdin.isatty():
+            print(json.dumps({"ok": False, "rule_key": args.rule_key,
+                              "reason": "revocation requires an interactive owner terminal (no TTY)"},
+                             ensure_ascii=False))
+            return 2
+        ok = runtime.store.revoke_approval(args.rule_key, args.by, confirm_code=args.confirm)
+        payload = {"ok": ok, "rule_key": args.rule_key, "decision": "revoked"}
+        if not ok:
+            payload["reason"] = "binding missing, already consumed/rejected/revoked, or confirmation code invalid"
+        print(json.dumps(payload, ensure_ascii=False))
         return 0 if ok else 2
     if args.command == "drain-notifications":
         sent = HermesProjector().drain_company(runtime.store, profile=runtime.config["notifications"]["profile"])

@@ -102,6 +102,33 @@ def test_failed_company_notification_remains_pending(tmp_path):
     assert len(store.pending_notifications()) == 1
 
 
+def test_drain_delivery_timeout_covers_slow_bot_turn(tmp_path):
+    """Regression (2026-09-01): the delivery call used a hardcoded 15s
+    timeout while a real session-resume + one model turn takes ~19s, so
+    nearly every batch expired and rows cycled forever (586 failed / 20
+    sent). The delivery timeout must be a module constant >= 60s, and a
+    delivery that completes inside it must succeed."""
+    assert HermesProjector.DELIVERY_TIMEOUT_SECONDS >= 60
+    observed = {}
+
+    def runner(command, timeout):
+        if command[:2] == ["hermes", "kanban"]:
+            return subprocess.CompletedProcess(command, 0, json.dumps({"task": {"status": "running"}}), "")
+        observed["timeout"] = timeout
+        # Simulates the measured 19-second turn inside the new bound.
+        return subprocess.CompletedProcess(command, 0, "ok", "")
+
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    store.record_event(
+        "e1", "c1", "t1", "approval",
+        {"decision": "approval_required", "board": "rr-team", "task_id": "t1"}, True,
+    )
+    assert HermesProjector(runner).drain_company(store) == 1
+    assert observed["timeout"] == HermesProjector.DELIVERY_TIMEOUT_SECONDS
+    assert len(store.pending_notifications()) == 0
+
+
 def test_task_id_resolution_prefers_kanban_env_over_session_id(monkeypatch):
     import importlib.util
     from pathlib import Path

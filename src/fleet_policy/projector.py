@@ -18,6 +18,12 @@ def subprocess_runner(command: Sequence[str], timeout: int) -> subprocess.Comple
 class HermesProjector:
     CLOSED_TASK_STATUSES = frozenset({"done", "archived", "superseded"})
     LOOKUP_TIMEOUT_SECONDS = 5
+    # One bounded bot turn: session resume + a single model turn. Measured
+    # real latency is ~19s on this host (2026-09-01 probe); the former 15s
+    # hard timeout made nearly every batch expire, releasing rows into an
+    # endless retry cycle (586 failed vs 20 sent). 90s covers session resume
+    # plus one turn with headroom while keeping the drain bounded.
+    DELIVERY_TIMEOUT_SECONDS = 90
 
     def __init__(self, runner: Runner = subprocess_runner):
         self.runner = runner
@@ -143,7 +149,7 @@ class HermesProjector:
                 "--create-if-missing", "-Q", "--max-turns", "1", "--query-file", str(temp_path),
             ]
             try:
-                result = self.runner(command, 15)
+                result = self.runner(command, self.DELIVERY_TIMEOUT_SECONDS)
             except (subprocess.TimeoutExpired, OSError, subprocess.SubprocessError):
                 store.release_notification_claim(claim_token, active_event_ids)
                 return 0
