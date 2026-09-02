@@ -1,0 +1,4 @@
+{
+  "note": "Superseded 2026-09-02 (run 367): v1-era acceptance fixture. The controller was re-derived from the exact v3 contracts; the current acceptance fixture is tests/fixtures/controller_shadow_v3.json. Retained as a stub because deletions are prohibited on this branch; see git history.",
+  "superseded_by": "controller_shadow_v3.json"
+}

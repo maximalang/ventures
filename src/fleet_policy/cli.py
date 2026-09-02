@@ -82,6 +82,14 @@ def parser() -> argparse.ArgumentParser:
     bundle.add_argument("--output", required=True)
     verify = sub.add_parser("verify-bundle")
     verify.add_argument("--bundle", required=True)
+    ctrl = sub.add_parser("controller")
+    ctrl.add_argument("--snapshot", default=None,
+                      help="Path to a snapshot JSON (deterministic input; mutually exclusive with --live).")
+    ctrl.add_argument("--live", action="store_true",
+                      help="Build the snapshot read-only via the official Kanban CLI.")
+    ctrl.add_argument("--boards", default="rr-team,seo-site",
+                      help="Comma-separated canonical boards for --live.")
+    ctrl.add_argument("--now", default=None, help="Timestamp annotation (not part of the decision hash).")
     return result
 
 
@@ -102,6 +110,25 @@ def main(argv: list[str] | None = None) -> int:
         from .release_bundle import verify_release_bundle
         files = verify_release_bundle(Path(args.bundle))
         print(json.dumps({"bundle": str(Path(args.bundle)), "files": len(files), "ok": True}, ensure_ascii=False))
+        return 0
+
+    if args.command == "controller":
+        from .controller import ControllerEngine, ControllerInputError, load_live_snapshot, load_snapshot_file
+        try:
+            if args.snapshot and args.live:
+                raise ControllerInputError("--snapshot and --live are mutually exclusive")
+            if args.live:
+                boards = [board.strip() for board in str(args.boards).split(",") if board.strip()]
+                snapshot = load_live_snapshot(boards)
+            elif args.snapshot:
+                snapshot = load_snapshot_file(args.snapshot)
+            else:
+                raise ControllerInputError("pass --snapshot <path> or --live")
+            decision = ControllerEngine(FleetPolicyRuntime(default_root(args)).store).run(snapshot, now=args.now or "")
+        except ControllerInputError as exc:
+            print(json.dumps({"ok": False, "reason": str(exc)}, ensure_ascii=False))
+            return 2
+        print(json.dumps(decision, ensure_ascii=False, sort_keys=True))
         return 0
 
     runtime = FleetPolicyRuntime(default_root(args))

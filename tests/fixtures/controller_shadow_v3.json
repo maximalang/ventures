@@ -1,0 +1,54 @@
+{
+  "evaluated_at": "2026-09-02T18:00:00+03:00",
+  "boards": {
+    "portfolio": {
+      "service": true,
+      "project": "",
+      "tasks": [
+        {"task_id": "t_docs", "title": "Company OS docs", "status": "done", "priority": 10, "assignee": "tech", "revenue_critical": false, "revenue_project": ""}
+      ],
+      "candidates": []
+    },
+    "seo-site": {
+      "project": "seo-site",
+      "canonical": true,
+      "primary_metric_id": "successful_organic_calculations_28d",
+      "metric": {"value": null, "observed_at": null, "evidence_gap": "metric_definition_source_value_unprovided"},
+      "tasks": [
+        {"task_id": "t_seo_measurement", "title": "seo-site: source/measurement evidence lane", "status": "todo", "priority": 900, "assignee": "research", "revenue_critical": true, "revenue_project": "seo-site"},
+        {"task_id": "t_superseded_lane", "title": "old lane", "status": "superseded", "priority": 999, "assignee": "", "revenue_critical": true, "revenue_project": "seo-site"}
+      ],
+      "candidates": []
+    },
+    "rr-team": {
+      "project": "recruiter-radar",
+      "canonical": true,
+      "primary_metric_id": "accepted_evidence_backed_leads_28d",
+      "metric": {"value": null, "observed_at": null, "evidence_gap": "metric_definition_source_value_unprovided"},
+      "tasks": [
+        {"task_id": "t_rr_payment", "title": "rr payment rail", "status": "blocked", "priority": 800, "assignee": "tech", "revenue_critical": true, "revenue_project": "recruiter-radar"}
+      ],
+      "candidates": []
+    }
+  },
+  "budget": {},
+  "economics_state": {
+    "expected_profit_rub_30d": null,
+    "avoided_loss_rub_30d": null,
+    "cash_cost_rub": null,
+    "capacity_cost_rub": null,
+    "total_cost_rub": null,
+    "confidence_0_1": null,
+    "evidence_refs": [],
+    "evidence_gap": true,
+    "evidence_gap_reasons": [
+      "no finance-verified expected_profit_rub_30d for recruiter-radar (board rr-team)",
+      "no finance-verified avoided_loss_rub_30d for recruiter-radar (board rr-team)",
+      "no evidence-backed capacity_cost_rub rate ledger",
+      "no baseline value for rr metric accepted_evidence_backed_leads_28d (definition/unit/source/value null per t_dbb4235b)",
+      "no baseline value for seo-site metric successful_organic_calculations_28d (definition/unit/source/value null per t_dbb4235b)",
+      "no monetization model mapping seo-site metric to RUB"
+    ]
+  },
+  "collectors": {"owner": "finance", "squad": ["finance", "research"], "freshness_target_days": 30}
+}
