@@ -135,13 +135,69 @@ MUTATOR = re.compile(
     re.I,
 )
 # v1.2.6: in-place/redirecting variants of otherwise read-only utilities are
-# mutations. They are caught here so the effect classifier and the protected
-# path guard agree (read whitelist above stays free-form).
-WRITE_FLAG = re.compile(r"\bsed\b[^\n|;&]*\s-i\b|\bsort\b[^\n|;&]*\s-o\b", re.I)
+# mutations so the effect classifier and the protected path guard agree.
+# v1.2.6.1 (F-01): the write-marker scan is token-based and covers every
+# spelling — long option names (`--in-place`, `--output`, including `=`
+# forms), option clusters (`sed -ni`, `sort -uo`), suffix forms (`sed -i.bak`),
+# `tee` pipeline stages and shell output redirects — so no mutating form of a
+# read-whitelisted utility can be classified as a read. Fail-closed by design:
+# anything unrecognized as a write keeps the stricter classification.
+_SHORT_OPTION_CLUSTER = re.compile(r"^-[A-Za-z]+$")
+_FD_DUP_REDIRECT = re.compile(r"\d*>&\d+")
+_OUTPUT_REDIRECT = re.compile(r"&>>|&>|>>|>")
+
+
+def _simple_commands(command: str) -> list[str]:
+    """Split a command line into stages: chains, lists and pipes."""
+    return [part.strip() for part in re.split(r"&&|\|\||;|\|", command) if part.strip()]
+
+
+def _stage_tokens(segment: str) -> list[str]:
+    try:
+        return shlex.split(segment, posix=False)
+    except ValueError:
+        return segment.split()
+
+
+def _writes_via_option(program: str, args: list[str]) -> bool:
+    """F-01: in-place/output forms of read-whitelisted utilities.
+
+    `sed` writes when any option is `-i` (with or without suffix) or
+    `--in-place[=SUFFIX]`; `sort` writes when any option is `-o[FILE]` or
+    `--output[=FILE]`. Option clusters (`-ni`, `-uo`) count too.
+    """
+    if program not in {"sed", "sort"}:
+        return False
+    write_letter = "i" if program == "sed" else "o"
+    long_name = "--in-place" if program == "sed" else "--output"
+    for token in args:
+        bare = token.strip("\"'")
+        if bare.startswith(f"-{write_letter}") or bare == long_name or bare.startswith(f"{long_name}="):
+            return True
+        if _SHORT_OPTION_CLUSTER.match(bare) and write_letter in bare.lower():
+            return True
+    return False
+
+
+def _has_write_marker(command: str) -> bool:
+    for segment in _simple_commands(command):
+        tokens = _stage_tokens(segment)
+        if not tokens:
+            continue
+        program = PurePath(tokens[0].replace("\\", "/")).name.lower()
+        if program == "tee" or _writes_via_option(program, tokens[1:]):
+            return True
+        # Shell output redirects write regardless of the program. Quoted
+        # payload text is ignored; `2>&1`-style fd duplication is not a write.
+        unquoted = re.sub(r"\"[^\"]*\"|'[^']*'", " ", segment)
+        unquoted = _FD_DUP_REDIRECT.sub(" ", unquoted)
+        if _OUTPUT_REDIRECT.search(unquoted):
+            return True
+    return False
 
 
 def _terminal_is_read_only(command: str) -> bool:
-    if MUTATOR.search(command) or WRITE_FLAG.search(command):
+    if MUTATOR.search(command) or _has_write_marker(command):
         return False
     segments = [part.strip() for part in re.split(r"&&|\|\||;", command) if part.strip()]
     # v1.2.6: bare `cd <dir>` segments are no-ops for the read classifier;

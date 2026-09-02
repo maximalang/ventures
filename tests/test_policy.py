@@ -207,3 +207,70 @@ def test_v126_write_and_destructive_variants_are_not_read(config):
     ):
         result = classify("terminal", {"command": command}, config, worker=True)
         assert result.category != "read_only", (command, result)
+
+
+def test_f01_longform_write_variants_never_read(config):
+    # F-01 (High, QA t_e4351498): v1.2.6's WRITE_FLAG regex caught only the
+    # short forms `sed -i` / `sort -o`, so long-form mutating options on a
+    # policy-controlled path were classified read_only/allow and could bypass
+    # the protected-path guard. Every mutating spelling must now be a hard
+    # policy-control-plane mutation deny.
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    commands = [
+        f"sed --in-place 's/a/b/' {cfg_path}",
+        f"sed --in-place=.bak 's/a/b/' {cfg_path}",
+        f"sed -i.bak 's/a/b/' {cfg_path}",
+        f"sed -ni 's/a/b/' {cfg_path}",
+        f"sort --output=out.txt {cfg_path}",
+        f"sort --output out.txt {cfg_path}",
+        f"sort -uo out.txt {cfg_path}",
+        f"tee out.txt < {cfg_path}",
+        f"head -20 {cfg_path} > out.txt",
+    ]
+    for command in commands:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == (
+            "deny",
+            "policy_control_plane_mutation",
+        ), (command, result)
+
+
+def test_f01_safe_read_variants_stay_read(config):
+    # F-01 companion: the write-marker scan must not over-block genuinely
+    # read-only sed/sort forms (stdout-only transformations included).
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    for command in (
+        f"sed -n '1,5p' {cfg_path}",
+        f"sed -e 's/a/b/' {cfg_path}",
+        f"sort {cfg_path}",
+        f"sort -r {cfg_path}",
+    ):
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == ("allow", "read_only"), (command, result)
+
+
+def test_path_guard_inspects_target_not_replacement_text(config):
+    # Incident t_f2257124: protected-path matching must inspect the targeted
+    # filesystem path/operation, never arbitrary replacement text. A patch on
+    # a harmless file whose old/new strings merely mention a policy-controlled
+    # filename stays allowed; a patch whose PATH targets the file stays denied.
+    cfg_name = "fleet-" + "policy.yaml"
+    allowed = classify(
+        "patch",
+        {
+            "path": "docs/notes.md",
+            "old_string": f"prose mentioning {cfg_name}",
+            "new_string": "updated prose",
+        },
+        config,
+        worker=True,
+    )
+    assert (allowed.decision, allowed.category) == ("allow", "scoped_state_change"), allowed
+
+    denied = classify(
+        "patch",
+        {"path": f"config/{cfg_name}", "old_string": "a", "new_string": "b"},
+        config,
+        worker=True,
+    )
+    assert (denied.decision, denied.category) == ("deny", "policy_control_plane_mutation"), denied
