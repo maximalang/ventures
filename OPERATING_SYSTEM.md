@@ -41,5 +41,5 @@ Kanban task с одним владельцем, явным deliverable, acceptan
 - Единый универсальный состав: `company`, `tech`, `product`, `design`, `ux`, `qa`, `sales`, `finance`, `research`, `operations`.
 - `company` выбирает lead и squad 2–5 ролей; Kanban dispatcher запускает назначенного owner.
 - Проектный контекст приходит из board/project metadata и каноничных правил соответствующего repo. Для `rr-team` автоматически применяется общий `rr-project` guidance; отдельных RR-ролей нет.
-- Профили `rr-*` заморожены как rollback-контур на 7 дней после cutover, не получают новые assignments/routines и не входят в активный roster.
-- Существующие не-RR проекты (донат, консоль, SEO-утилиты) не зарегистрированы в портфеле и автономно не управляются.
+- Профили `rr-*` удалены и не заморожены: они не входят в активный roster и не являются резервным контуром.
+- SEO Utility Site зарегистрирован в портфеле на доске `seo-site` с primary metric `successful_organic_calculations_28d`; остальные существующие не-RR проекты (донат, консоль) не зарегистрированы и автономно не управляются.
