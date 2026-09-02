@@ -124,8 +124,8 @@ FREE_TEXT_TOOLS = {
 }
 
 READ_COMMAND = re.compile(
-    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+--show-current|rev-parse|remote\s+-v)|"
-    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b))",
+    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|clone|fetch)\b|"
+    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
 MUTATOR = re.compile(
@@ -134,13 +134,24 @@ MUTATOR = re.compile(
     r"fleet-policy\s+approve|deploy|publish)\b",
     re.I,
 )
+# v1.2.6: in-place/redirecting variants of otherwise read-only utilities are
+# mutations. They are caught here so the effect classifier and the protected
+# path guard agree (read whitelist above stays free-form).
+WRITE_FLAG = re.compile(r"\bsed\b[^\n|;&]*\s-i\b|\bsort\b[^\n|;&]*\s-o\b", re.I)
 
 
 def _terminal_is_read_only(command: str) -> bool:
-    if MUTATOR.search(command):
+    if MUTATOR.search(command) or WRITE_FLAG.search(command):
         return False
     segments = [part.strip() for part in re.split(r"&&|\|\||;", command) if part.strip()]
-    return bool(segments) and all(READ_COMMAND.search(part) for part in segments)
+    # v1.2.6: bare `cd <dir>` segments are no-ops for the read classifier;
+    # chained read (cd repo && git clone ...) was misclassified before.
+    # v1.2.6: match() (anchored) instead of search() — search() let the
+    # non-word-bounded `type` keyword match inside words like "...ownership".
+    return bool(segments) and all(
+        READ_COMMAND.match(part) or re.match(r"^\s*cd\s+\S+\s*$", part, re.I)
+        for part in segments
+    )
 
 
 

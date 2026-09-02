@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ventures-fleet-policy"
-version = "1.2.5"
+version = "1.2.6"
 requires-python = ">=3.11"
 dependencies = ["PyYAML>=6,<7"]
 

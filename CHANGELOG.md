@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.6] - 2026-09-02
+
+### Fixed
+- Read-effect classifier false denies eliminated. `READ_COMMAND` was missing `sed`, `head`, `tail`, `stat`, `wc`, `file`, `du`, `sort`, `uniq`, `cut`, `tr`, `column` and several git subcommands (`clone`, `fetch`, `ls-remote`, `ls-files`, `ls-tree`, `rev-list`, bare `branch --list/-l`), so reading a policy-controlled file (e.g. `sed -n '49,75p' config/fleet-policy.yaml`) was classified as `state_change` and hard-denied as `policy_control_plane_mutation` instead of allowed as `read_only`.
+- Chained terminal commands with a leading `cd <dir>` segment (`cd repo && git clone ...`) were misclassified as `state_change` because the `cd` segment never matched the read whitelist. Bare `cd` segments are now read no-ops.
+- Effect matching switched from `READ_COMMAND.search()` to anchored `READ_COMMAND.match()` per segment, and all read keywords are word-bounded. Previously non-word-bounded keywords (`tr`, `type`) matched mid-word inside adversarial commands ("transfer ownership...", "...type..."), misclassifying approval-required serious-risk commands as read-only.
+- In-place/redirecting variants of otherwise read-only utilities (`sed -i`, `sort -o`) are explicitly classified as mutations via `WRITE_FLAG`, so the effect classifier and the protected-path guard agree.
+
+### Added
+- Regression tests: `test_v126_read_classifier_no_false_control_plane_denies` (10 read cases against policy-controlled paths, chained cd+clone, ls-remote) and `test_v126_write_and_destructive_variants_are_not_read` (sed -i/sort -o/git branch -D/-d/clean/tag -d stay non-read).
+
 ## [1.2.5] - 2026-09-01
 
 ### Security
