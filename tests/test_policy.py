@@ -384,3 +384,41 @@ def test_v127_gh_hostname_and_web_flags_fail_closed(config):
     for command in cases:
         result = classify("terminal", {"command": command}, config, worker=True)
         assert result.category != "read_only", (command, result)
+
+
+def test_v127_gh_hostname_equals_and_absolute_url_fail_closed(config):
+    """F-01: the cobra inline `--hostname=evil` spelling and its cobra
+    prefix/abbreviated variants must fail closed, not only the space form.
+    F-02: an absolute URL endpoint must not inherit the read lane."""
+    cases = (
+        # F-01: inline = spelling of the hostname override.
+        "gh api --hostname=evil.example repos/o/r",
+        "gh api --gh-hostname=evil.example repos/o/r",
+        # F-01: cobra prefix abbreviation of the hostname override.
+        "gh api --hostn evil.example repos/o/r",
+        # F-01: an unknown/foreign option must not be treated as a read.
+        "gh api --jq '.items' repos/o/r",
+        # F-02: absolute URL endpoint stays fail closed.
+        "gh api https://evil.example/repos/o/r",
+        "gh api http://api.github.com/repos/o/r",
+    )
+    for command in cases:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert result.category != "read_only", (command, result)
+
+
+def test_v127_gh_safe_flags_remain_read_only(config):
+    """The allowlisted read-safe flags keep the legitimate read lane."""
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    endpoint = "repos/maximalang/ventures/contents/" + cfg_path
+    cases = (
+        "gh api " + endpoint,
+        "gh api --method GET " + endpoint,
+        "gh api --paginate " + endpoint,
+        "gh api --include " + endpoint,
+        "gh api -i " + endpoint,
+        "gh api /user/repos",
+    )
+    for command in cases:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == ("allow", "read_only"), (command, result)
