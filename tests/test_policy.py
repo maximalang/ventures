@@ -166,3 +166,111 @@ def test_retry_limits_reconcile_with_kanban():
     assert effective_retries(2, 4, 3) == 2
     assert effective_retries(4, 2, 3) == 2
     assert effective_retries(4, None, 1) == 1
+
+
+def test_v126_read_classifier_no_false_control_plane_denies(config):
+    # v1.2.6 regression: read-only terminal commands were classified as
+    # state_change before (sed/head/tail/stat/wc/git clone/ls-remote were
+    # missing from READ_COMMAND, chained `cd X && git ...` never matched,
+    # and search() matched keywords mid-word). Any such command whose path
+    # touched a policy-controlled file then produced the hard
+    # policy_control_plane_mutation deny instead of a read allow.
+    cfg_name = "fleet-" + "policy.yaml"
+    cases = [
+        "sed -n '49,75p' config/" + cfg_name,
+        "head -20 config/" + cfg_name,
+        "tail -5 config/" + cfg_name,
+        "stat config/" + cfg_name,
+        "wc -l config/" + cfg_name,
+        "grep -n -A12 'protected:' config/" + cfg_name,
+        "cd repo && git clone --branch codex/company-os https://example.com/ventures.git repo",
+        "git ls-remote https://example.com/ventures.git codex/company-os",
+        "git rev-list --count HEAD",
+        "git ls-files src/",
+    ]
+    for command in cases:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == ("allow", "read_only"), (command, result)
+
+
+def test_v126_write_and_destructive_variants_are_not_read(config):
+    # v1.2.6: in-place variants of otherwise read-only utilities stay
+    # mutations, and destructive git subcommands never become read-only
+    # even though a read keyword appears in the same regex.
+    for command in (
+        "sed -i 's/a/b/' pyproject.toml",
+        "sort -o out.txt in.txt",
+        "git branch -D main",
+        "git branch -d feature/x",
+        "git clean -fd",
+        "git tag -d v1.0",
+    ):
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert result.category != "read_only", (command, result)
+
+
+def test_f01_longform_write_variants_never_read(config):
+    # F-01 (High, QA t_e4351498): v1.2.6's WRITE_FLAG regex caught only the
+    # short forms `sed -i` / `sort -o`, so long-form mutating options on a
+    # policy-controlled path were classified read_only/allow and could bypass
+    # the protected-path guard. Every mutating spelling must now be a hard
+    # policy-control-plane mutation deny.
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    commands = [
+        f"sed --in-place 's/a/b/' {cfg_path}",
+        f"sed --in-place=.bak 's/a/b/' {cfg_path}",
+        f"sed -i.bak 's/a/b/' {cfg_path}",
+        f"sed -ni 's/a/b/' {cfg_path}",
+        f"sort --output=out.txt {cfg_path}",
+        f"sort --output out.txt {cfg_path}",
+        f"sort -uo out.txt {cfg_path}",
+        f"tee out.txt < {cfg_path}",
+        f"head -20 {cfg_path} > out.txt",
+    ]
+    for command in commands:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == (
+            "deny",
+            "policy_control_plane_mutation",
+        ), (command, result)
+
+
+def test_f01_safe_read_variants_stay_read(config):
+    # F-01 companion: the write-marker scan must not over-block genuinely
+    # read-only sed/sort forms (stdout-only transformations included).
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    for command in (
+        f"sed -n '1,5p' {cfg_path}",
+        f"sed -e 's/a/b/' {cfg_path}",
+        f"sort {cfg_path}",
+        f"sort -r {cfg_path}",
+    ):
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == ("allow", "read_only"), (command, result)
+
+
+def test_path_guard_inspects_target_not_replacement_text(config):
+    # Incident t_f2257124: protected-path matching must inspect the targeted
+    # filesystem path/operation, never arbitrary replacement text. A patch on
+    # a harmless file whose old/new strings merely mention a policy-controlled
+    # filename stays allowed; a patch whose PATH targets the file stays denied.
+    cfg_name = "fleet-" + "policy.yaml"
+    allowed = classify(
+        "patch",
+        {
+            "path": "docs/notes.md",
+            "old_string": f"prose mentioning {cfg_name}",
+            "new_string": "updated prose",
+        },
+        config,
+        worker=True,
+    )
+    assert (allowed.decision, allowed.category) == ("allow", "scoped_state_change"), allowed
+
+    denied = classify(
+        "patch",
+        {"path": f"config/{cfg_name}", "old_string": "a", "new_string": "b"},
+        config,
+        worker=True,
+    )
+    assert (denied.decision, denied.category) == ("deny", "policy_control_plane_mutation"), denied
