@@ -133,8 +133,12 @@ FREE_TEXT_TOOLS = {
     "memory", "todo", "clarify", "delegate_task",
 }
 
+# v1.2.7: `git clone`/`git fetch` moved out of READ_COMMAND. They are
+# network downloads into a local tree (state change), not pure reads; the
+# exact-head verifier lane never needed them. Chained `cd X && git status`
+# still classifies as a read via the per-stage rules below.
 READ_COMMAND = re.compile(
-    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|clone|fetch)\b|"
+    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree)\b|"
     r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
@@ -220,6 +224,11 @@ _GH_READ_VERBS = {
 }
 _GH_API_WRITE_FLAGS = ("--field", "--raw-field", "--input", "--header", "--cache")
 _GH_API_WRITE_SHORT_FLAGS = ("-f", "-F", "-H")
+_GH_API_EXFIL_FLAGS = ("--hostname", "--gh-hostname")
+# Background jobs (`cmd &`) and unconditional chaining would otherwise
+# hide a second command behind a read-only first stage; fd duplication
+# like `2>&1` is handled by the redirect scanner, not matched here.
+_SHELL_METACHARACTERS = re.compile("[\\n\\r]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
 
 
 def _clean_shell_token(token: str) -> str:
@@ -255,6 +264,8 @@ def _gh_api_is_read_only(args: list[str]) -> bool:
             continue
         if lowered in _GH_API_WRITE_FLAGS or raw in _GH_API_WRITE_SHORT_FLAGS:
             return False
+        if lowered in _GH_API_EXFIL_FLAGS:
+            return False
         if any(lowered.startswith(flag + "=") for flag in _GH_API_WRITE_FLAGS):
             return False
         if any(raw.startswith(flag) and len(raw) > len(flag) for flag in _GH_API_WRITE_SHORT_FLAGS):
@@ -276,7 +287,7 @@ def _gh_stage_is_read_only(tokens: list[str]) -> bool:
     if len(args) < 2 or (args[0].lower(), args[1].lower()) not in _GH_READ_VERBS:
         return False
     # Opening an external browser is a local state change, not a verifier read.
-    return "--web" not in {arg.lower() for arg in args[2:]}
+    return not any(arg.lower() in {"--web", "-w"} for arg in args[2:])
 
 
 def _hash_stage_is_read_only(tokens: list[str]) -> bool:
@@ -302,6 +313,12 @@ def _stage_is_read_only(segment: str) -> bool:
 
 
 def _terminal_is_read_only(command: str) -> bool:
+    # v1.2.7: bash executes newlines, background-job ampersands, and command
+    # substitutions that shlex(posix=False) hides from the tokenizer, so any
+    # command carrying these metacharacters fails closed. `&&` chaining is
+    # excluded because every stage is still classified independently below.
+    if _SHELL_METACHARACTERS.search(command):
+        return False
     if MUTATOR.search(command) or _has_write_marker(command):
         return False
     segments = _simple_commands(command)
@@ -310,7 +327,8 @@ def _terminal_is_read_only(command: str) -> bool:
     # local hash utilities; any payload, mutation verb or unknown stage fails
     # closed. Bare `cd <dir>` remains a no-op for the read classifier.
     return bool(segments) and all(
-        _stage_is_read_only(part) or re.match(r"^\s*cd\s+\S+\s*$", part, re.I)
+        _stage_is_read_only(part)
+        or (part.split() and part.split()[0].lower() == "cd" and len(part.split()) == 2)
         for part in segments
     )
 
