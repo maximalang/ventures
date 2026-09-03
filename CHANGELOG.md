@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.7] - 2026-09-03
+
+### Security
+- Added a narrow, fail-closed self-verification lane for exact-head QA: only explicit GitHub CLI view/list/check operations, REST `gh api` GET requests without payload/header fields, and local digest utilities are classified as read-only. GitHub REST POST/PUT/PATCH/DELETE, GraphQL, field/input/header flags, browser-opening flags, redirects, unknown executables and every non-read pipeline stage remain state changes.
+- Terminal pipelines are now classified stage by stage instead of inheriting read semantics from the first command; an unknown or write-capable downstream stage cannot hide behind a read-only GitHub/hash probe.
+- Direct Hermes namespaced calls (`functions.<tool>`) normalize to their canonical tool name without broad MCP namespace stripping.
+
+### Added
+- Regression coverage for exact-head PR/check/API/hash reads over policy-controlled paths, all GitHub API mutation spellings, pipeline smuggling, executable identity and namespaced direct tools.
+
+### Release identity
+- `1.2.7` is assigned to this prerequisite security fix. The draft controller lane that previously reserved the number must rebase after this release and advance its version before merge.
+
 ## [1.2.6] - 2026-09-02
 
 ### Security

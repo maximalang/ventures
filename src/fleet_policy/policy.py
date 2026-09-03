@@ -108,6 +108,16 @@ READ_TOOLS = {
 READ_PREFIXES = ("read_", "search_", "list_", "get_", "show_", "view_", "probe_", "inspect_")
 TERMINAL_TOOLS = {"terminal", "shell", "bash", "powershell", "exec", "execute_command"}
 
+
+def _normalize_tool_name(tool_name: str) -> str:
+    """Normalize the namespace used by direct Hermes tool dispatch only.
+
+    Deferred MCP names are intentionally left untouched: stripping arbitrary
+    namespaces could accidentally assign read semantics to an unrelated tool.
+    """
+    lowered = tool_name.strip().lower()
+    return lowered.removeprefix("functions.")
+
 # F4: tools whose payload is operator free text (kanban card bodies, comment
 # bodies, file contents, memory notes, delegation briefs, generated code).
 # Neither the path guard nor the risk regexes may scan these fields:
@@ -196,16 +206,111 @@ def _has_write_marker(command: str) -> bool:
     return False
 
 
+_GH_READ_VERBS = {
+    ("pr", "view"),
+    ("pr", "diff"),
+    ("pr", "checks"),
+    ("pr", "list"),
+    ("run", "view"),
+    ("run", "list"),
+    ("repo", "view"),
+    ("release", "view"),
+    ("workflow", "view"),
+    ("issue", "view"),
+}
+_GH_API_WRITE_FLAGS = ("--field", "--raw-field", "--input", "--header", "--cache")
+_GH_API_WRITE_SHORT_FLAGS = ("-f", "-F", "-H")
+
+
+def _clean_shell_token(token: str) -> str:
+    return token.strip().strip("\"'")
+
+
+def _program_name(token: str) -> str:
+    normalized = _clean_shell_token(token).replace("\\", "/")
+    return PurePath(normalized).name.lower().removesuffix(".exe")
+
+
+def _gh_api_is_read_only(args: list[str]) -> bool:
+    """Allow REST GET probes only; GraphQL and payload/header flags fail closed."""
+    method = "GET"
+    endpoint: str | None = None
+    index = 0
+    while index < len(args):
+        raw = _clean_shell_token(args[index])
+        lowered = raw.lower()
+        if lowered in {"--method", "-x"}:
+            if index + 1 >= len(args):
+                return False
+            method = _clean_shell_token(args[index + 1]).upper()
+            index += 2
+            continue
+        if lowered.startswith("--method="):
+            method = raw.split("=", 1)[1].upper()
+            index += 1
+            continue
+        if lowered.startswith("-x") and len(raw) > 2:
+            method = raw[2:].upper()
+            index += 1
+            continue
+        if lowered in _GH_API_WRITE_FLAGS or raw in _GH_API_WRITE_SHORT_FLAGS:
+            return False
+        if any(lowered.startswith(flag + "=") for flag in _GH_API_WRITE_FLAGS):
+            return False
+        if any(raw.startswith(flag) and len(raw) > len(flag) for flag in _GH_API_WRITE_SHORT_FLAGS):
+            return False
+        if not raw.startswith("-") and endpoint is None:
+            endpoint = lowered
+        index += 1
+    return bool(endpoint) and endpoint != "graphql" and method == "GET"
+
+
+def _gh_stage_is_read_only(tokens: list[str]) -> bool:
+    if len(tokens) < 2 or _program_name(tokens[0]) != "gh":
+        return False
+    args = [_clean_shell_token(token) for token in tokens[1:]]
+    if not args:
+        return False
+    if args[0].lower() == "api":
+        return _gh_api_is_read_only(args[1:])
+    if len(args) < 2 or (args[0].lower(), args[1].lower()) not in _GH_READ_VERBS:
+        return False
+    # Opening an external browser is a local state change, not a verifier read.
+    return "--web" not in {arg.lower() for arg in args[2:]}
+
+
+def _hash_stage_is_read_only(tokens: list[str]) -> bool:
+    if not tokens:
+        return False
+    program = _program_name(tokens[0])
+    if program == "sha256sum":
+        return True
+    if program == "shasum":
+        args = [_clean_shell_token(token).lower() for token in tokens[1:]]
+        return any(
+            args[index] == "-a" and index + 1 < len(args) and args[index + 1] == "256"
+            for index in range(len(args))
+        ) or "-a256" in args
+    return program == "certutil" and len(tokens) > 1 and _clean_shell_token(tokens[1]).lower() == "-hashfile"
+
+
+def _stage_is_read_only(segment: str) -> bool:
+    if READ_COMMAND.match(segment):
+        return True
+    tokens = _stage_tokens(segment)
+    return _gh_stage_is_read_only(tokens) or _hash_stage_is_read_only(tokens)
+
+
 def _terminal_is_read_only(command: str) -> bool:
     if MUTATOR.search(command) or _has_write_marker(command):
         return False
-    segments = [part.strip() for part in re.split(r"&&|\|\||;", command) if part.strip()]
-    # v1.2.6: bare `cd <dir>` segments are no-ops for the read classifier;
-    # chained read (cd repo && git clone ...) was misclassified before.
-    # v1.2.6: match() (anchored) instead of search() — search() let the
-    # non-word-bounded `type` keyword match inside words like "...ownership".
+    segments = _simple_commands(command)
+    # v1.2.7: every pipeline stage is classified independently. Remote exact-
+    # head verification permits only explicit GitHub view/GET operations and
+    # local hash utilities; any payload, mutation verb or unknown stage fails
+    # closed. Bare `cd <dir>` remains a no-op for the read classifier.
     return bool(segments) and all(
-        READ_COMMAND.match(part) or re.match(r"^\s*cd\s+\S+\s*$", part, re.I)
+        _stage_is_read_only(part) or re.match(r"^\s*cd\s+\S+\s*$", part, re.I)
         for part in segments
     )
 
@@ -266,7 +371,7 @@ def _risk_subject(name: str, arguments: dict[str, Any]) -> str:
 
 
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
-    name = tool_name.strip().lower()
+    name = _normalize_tool_name(tool_name)
     effect = _effect_for(name, arguments)
 
     # In-kernel Python can access the filesystem and network without passing

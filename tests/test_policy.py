@@ -274,3 +274,70 @@ def test_path_guard_inspects_target_not_replacement_text(config):
         worker=True,
     )
     assert (denied.decision, denied.category) == ("deny", "policy_control_plane_mutation"), denied
+
+
+def test_v127_remote_exact_head_verifier_reads_are_allowed(config):
+    """Remote GET/view/hash probes may inspect policy state without mutating it."""
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    endpoint = "repos/maximalang/ventures/contents/" + cfg_path
+    cases = (
+        "gh pr view 13 --repo maximalang/ventures --json headRefOid,statusCheckRollup",
+        "gh pr diff 13 --repo maximalang/ventures --name-only",
+        "gh pr checks 13 --repo maximalang/ventures",
+        "gh run view 123 --repo maximalang/ventures --json conclusion,headSha",
+        "gh api " + endpoint,
+        "gh api --method GET " + endpoint,
+        "sha256sum " + cfg_path,
+        "shasum -a 256 " + cfg_path,
+        "certutil -hashfile " + cfg_path + " SHA256",
+    )
+    for command in cases:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert (result.decision, result.category) == ("allow", "read_only"), (command, result)
+
+
+def test_v127_remote_verifier_mutations_remain_fail_closed(config):
+    """No write-capable GitHub API spelling may inherit the read exception."""
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    endpoint = "repos/maximalang/ventures/contents/" + cfg_path
+    cases = (
+        "gh api --method POST " + endpoint,
+        "gh api --method=PUT " + endpoint,
+        "gh api -X PATCH " + endpoint,
+        "gh api -XDELETE " + endpoint,
+        "gh api -f content=changed " + endpoint,
+        "gh api --raw-field content=changed " + endpoint,
+        "gh api --input payload.json " + endpoint,
+        "gh api --cache 1h " + endpoint,
+        "gh api graphql -f query=mutation",
+        "gh pr view 13 --web",
+        "md5sum " + cfg_path,
+        "not-gh api " + endpoint,
+    )
+    for command in cases:
+        result = classify("terminal", {"command": command}, config, worker=True)
+        assert result.category != "read_only", (command, result)
+
+
+def test_v127_each_pipeline_stage_must_be_read_only(config):
+    cfg_path = "config/" + "fleet-" + "policy.yaml"
+    safe = classify(
+        "terminal",
+        {"command": "gh api repos/maximalang/ventures/contents/" + cfg_path + " | sha256sum"},
+        config,
+        worker=True,
+    )
+    assert (safe.decision, safe.category) == ("allow", "read_only")
+
+    unsafe = classify(
+        "terminal",
+        {"command": "gh api repos/maximalang/ventures/contents/" + cfg_path + " | python -c pass"},
+        config,
+        worker=True,
+    )
+    assert unsafe.category != "read_only"
+
+
+def test_v127_functions_namespace_keeps_read_semantics(config):
+    result = classify("functions.read_file", {"path": "README.md"}, config, worker=True)
+    assert (result.decision, result.category) == ("allow", "read_only")
