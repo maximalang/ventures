@@ -267,6 +267,8 @@ class FleetPolicyRuntime:
             timestamp=utc_now(),
             budget_snapshot=snapshot,
             approval_card=approval_card,
+            pattern_category=result.category,
+            call_index=max(1, int(snapshot.get("used", {}).get("tool_calls", 0))),
         )
         notify = decision == "approval_required" or rule_id in {"secret_read_or_write", "worker_self_approval"}
         if decision == "allow" and result.effect == "read":
