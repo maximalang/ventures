@@ -100,3 +100,84 @@ def test_operational_allowlist_never_allows_writes(runtime, task_context):
     )
     decision = runtime.pre_tool_call("write_file", {"path": path, "content": "x"}, task_context)
     assert decision.decision == "deny"
+
+
+# ------------------------------------------------------------------ item C
+
+
+def _review_probe_context(task_context):
+    return dict(
+        task_context,
+        task_body="task_type: review",
+        profile="qa",
+        assignee="qa",
+        comment_records=[],
+        current_run_id="r1",
+    )
+
+
+def test_review_probe_deny_is_fail_closed_nonce_not_failure(runtime, task_context):
+    """A review task probing a gated transition gets a per-run deny artifact;
+    the probe must not grow loop counters or repeat the same failure."""
+    ctx = _review_probe_context(task_context)
+    args = {"command": "git push origin main"}
+    for index in range(4):
+        ctx["tool_call_id"] = f"probe-{index}"
+        decision = runtime.pre_tool_call("terminal", args, ctx)
+        assert decision.decision == "deny"
+        assert decision.rule_id == "evidence_gate_missing"
+        # Fail-closed: the refusal stays a deny carrying a stable per-run nonce.
+        assert decision.as_dict().get("deny_nonce")
+    with runtime.store.connect() as connection:
+        # One artifact per dispatch run — repeated probes do not stack events.
+        assert connection.execute(
+            "SELECT COUNT(*) FROM events WHERE kind='review_probe_nonce'"
+        ).fetchone()[0] == 1
+
+
+def test_review_probe_does_not_grow_failure_loop(runtime, task_context):
+    """The denied probe's failure report must not escalate into a
+    same_failure_loop stop (no failure-signature accounting for the nonce lane)."""
+    ctx = _review_probe_context(task_context)
+    args = {"command": "git push origin main"}
+    for index in range(4):
+        ctx["tool_call_id"] = f"probe-{index}"
+        runtime.pre_tool_call("terminal", args, ctx)
+        event = runtime.post_tool_call(
+            "terminal", args, ctx, success=False,
+            error_type="review_probe_nonce", error_message="FLEET POLICY BLOCKED",
+        )
+        assert event is None, f"probe {index} must not emit a stop event"
+    assert runtime.store.count_signature(
+        ctx["task_id"], "failure_signature",
+        __import__("fleet_policy.redaction", fromlist=["stable_id"]).stable_id(
+            "terminal", "review_probe_nonce", "fleet policy blocked"
+        ),
+        "r1",
+    ) == 0
+
+
+def test_review_probe_budget_keeps_charging(runtime, task_context):
+    """The nonce lane skips loop counters only; the tool-call budget still
+    accounts every probe so wall-clock/token limits remain the stop class."""
+    ctx = _review_probe_context(task_context)
+    args = {"command": "git push origin main"}
+    for index in range(3):
+        ctx["tool_call_id"] = f"probe-{index}"
+        runtime.pre_tool_call("terminal", args, ctx)
+    task_type, _ = runtime.task_type(ctx)
+    assert runtime.budget_snapshot(ctx, task_type)["used"]["tool_calls"] == 3
+
+
+def test_non_review_task_failure_loop_is_unchanged(runtime, task_context):
+    """A code task hitting the same gated command keeps the stop behavior."""
+    code_ctx = dict(task_context, task_body="task_type: code", current_run_id="r1")
+    args = {"command": "git push origin main"}
+    events = []
+    for index in range(2):
+        code_ctx["tool_call_id"] = f"code-fail-{index}"
+        events.append(runtime.post_tool_call(
+            "terminal", args, code_ctx, success=False,
+            error_type="tool_error", error_message="gate missing",
+        ))
+    assert events[-1] is not None and events[-1]["rule_id"] == "same_failure_loop"

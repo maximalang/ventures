@@ -22,6 +22,10 @@ class PolicyDecision:
     approval_card: dict[str, Any] | None = None
     pattern_category: str = "unknown"
     call_index: int = 0
+    #: v1.2.10 item C — set only on the review-probe nonce lane: a stable
+    #: per-run identifier proving the refusal is an expected QA artifact,
+    #: not a worker failure; the lane never grows loop counters.
+    deny_nonce: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)

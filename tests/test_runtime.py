@@ -19,7 +19,10 @@ def test_allow_and_normalized_decision(runtime, task_context):
     decision = runtime.pre_tool_call("read_file", {"path": "README.md"}, task_context)
     payload = decision.as_dict()
     assert payload["decision"] == "allow"
-    assert set(payload) == {"decision", "rule_id", "reason", "task_id", "project", "profile", "action", "target", "args_hash", "timestamp", "budget_snapshot", "approval_card", "pattern_category", "call_index"}
+    assert set(payload) == {"decision", "rule_id", "reason", "task_id", "project", "profile", "action", "target", "args_hash", "timestamp", "budget_snapshot", "approval_card", "pattern_category", "call_index", "deny_nonce"}
+    # v1.2.10 item C: deny_nonce is reserved for the review-probe lane and
+    # must stay None on ordinary decisions.
+    assert payload["deny_nonce"] is None
 
 
 def test_approval_binding_one_time_and_payload_change(runtime, task_context, monkeypatch):

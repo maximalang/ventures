@@ -186,11 +186,28 @@ class FleetPolicyRuntime:
             and result.category in self.EVIDENCE_GATED_CATEGORIES
             else []
         )
+        deny_nonce: str | None = None
         if missing:
             result = Classification(
                 result.effect, "evidence_gate_missing", "deny",
                 "fleet must satisfy gates before execution: " + ", ".join(missing),
             )
+            if worker and (self.task_type(context)[0] or "") == "review":
+                # v1.2.10 item C — review-probe nonce lane. A review task
+                # probing a gated transition is an expected QA probe, not a
+                # worker failure: the refusal stays fail-closed but carries a
+                # stable per-run nonce and records exactly one artifact per
+                # run. It must not grow loop counters (post_tool_call skips
+                # probe failures) and the plugin must not project/block the
+                # card on it; the tool-call budget above still charges every
+                # probe so runaway review runs keep their stop class.
+                run_key = self._run_key(context) or "session"
+                deny_nonce = stable_id(task_id, run_key, "review_probe_nonce")
+                self.store.record_event(
+                    stable_id(task_id, run_key, "review_probe_nonce", "artifact"),
+                    run_key, task_id or None, "review_probe_nonce",
+                    {"nonce": deny_nonce, "rule_id": result.category}, False,
+                )
 
         spend: tuple[int, str, str] | None = None
         if result.category == "financial_action" and result.decision == "allow":
@@ -269,6 +286,7 @@ class FleetPolicyRuntime:
             approval_card=approval_card,
             pattern_category=result.category,
             call_index=max(1, int(snapshot.get("used", {}).get("tool_calls", 0))),
+            deny_nonce=deny_nonce,
         )
         notify = decision == "approval_required" or rule_id in {"secret_read_or_write", "worker_self_approval"}
         if decision == "allow" and result.effect == "read":
@@ -326,6 +344,12 @@ class FleetPolicyRuntime:
         if not success:
             normalized_error = " ".join(str(error_message or "").lower().split())[:300]
             failure_signature = stable_id(tool_name, error_type, normalized_error)
+            if (self.task_type(context)[0] or "") == "review" and error_type == "review_probe_nonce":
+                # v1.2.10 item C — the probe refusal is an expected artifact:
+                # no call ledger row and no failure-signature accounting, so
+                # reviewing gates can never escalate into same_failure_loop.
+                # Budget was already charged at pre_tool_call.
+                return None
         event_id = stable_id(task_id, context.get("tool_call_id"), call_signature, success, failure_signature)
         run_key = self._run_key(context) or None
         projection_run_key = run_key or "session"
