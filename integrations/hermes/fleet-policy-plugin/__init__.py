@@ -57,8 +57,9 @@ def context(kwargs: dict[str, Any]) -> dict[str, Any]:
 
 def _message(payload: dict[str, Any]) -> str:
     return (
-        f"FLEET POLICY BLOCKED [{payload.get('rule_id')}]: {payload.get('reason')}\n"
-        f"task={payload.get('task_id') or 'none'} args_hash={payload.get('args_hash')}"
+        f"FLEET POLICY BLOCKED [{payload.get('rule_id')}] "
+        f"pattern={payload.get('pattern_category') or 'unknown'} "
+        f"call_index={payload.get('call_index') or 0}"
     )
 
 

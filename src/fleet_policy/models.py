@@ -20,6 +20,8 @@ class PolicyDecision:
     timestamp: str
     budget_snapshot: dict[str, Any]
     approval_card: dict[str, Any] | None = None
+    pattern_category: str = "unknown"
+    call_index: int = 0
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
