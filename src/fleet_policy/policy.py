@@ -36,26 +36,31 @@ class Classification:
 
 
 def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
-    found: list[str] = []
+    """v1.2.10 item E — first-canonical-marker-only semantics.
+
+    Sources are scanned in argument order (task body, then comments, then
+    skills); within each text in positional order. The FIRST marker whose
+    value is a canonical task type decides the class and scanning stops —
+    later markers (older comments, injected text) can never poison or switch
+    it. Markers with unknown values are skipped in favour of a canonical one
+    and reported only when nothing canonical exists anywhere."""
+    first_noncanonical: str | None = None
     for value in values:
-        if isinstance(value, (list, tuple, set)):
-            items = value
-        else:
-            items = [value]
+        items = value if isinstance(value, (list, tuple, set)) else [value]
         for item in items:
             text = str(item or "")
-            found.extend(TASK_LINE.findall(text))
-            found.extend(TASK_TAG.findall(text))
-            found.extend(TASK_SKILL.findall(text))
-    normalized = {item.lower() for item in found}
-    if not normalized:
-        return None, "missing task_type marker"
-    if len(normalized) != 1:
-        return None, "conflicting task_type markers"
-    task_type = next(iter(normalized))
-    if task_type not in TASK_TYPES:
-        return None, f"unknown task_type: {task_type}"
-    return task_type, None
+            matches: list[tuple[int, str]] = []
+            for pattern in (TASK_LINE, TASK_TAG, TASK_SKILL):
+                matches.extend((match.start(1), match.group(1)) for match in pattern.finditer(text))
+            for _, raw in sorted(matches):
+                task_type = raw.lower()
+                if task_type in TASK_TYPES:
+                    return task_type, None
+                if first_noncanonical is None:
+                    first_noncanonical = raw
+    if first_noncanonical is not None:
+        return None, f"unknown task_type: {first_noncanonical}"
+    return None, "missing task_type marker"
 
 
 

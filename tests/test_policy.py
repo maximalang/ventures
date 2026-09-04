@@ -19,7 +19,11 @@ def test_task_type_exact_sources():
 def test_task_type_missing_unknown_and_conflict():
     assert infer_task_type("nothing")[0] is None
     assert infer_task_type("task_type: magic")[0] is None
-    assert infer_task_type("task_type: code", ["task_type: review"])[0] is None
+    # v1.2.10 item E: first-canonical-marker-only — a later (poisoned/injected)
+    # comment marker can never switch or null the class fixed by the body.
+    assert infer_task_type("task_type: code", ["task_type: review"]) == ("code", None)
+    assert infer_task_type("task_type: code", ["task_type: review", "task-type-ops"]) == ("code", None)
+    assert infer_task_type(None, ["task_type: research", "task_type=ops"], ["task-type-code"]) == ("research", None)
 
 
 def test_redaction_and_stable_canonical_hash():
