@@ -287,7 +287,7 @@ def test_package_plugin_and_cli_versions_match():
         str(integration_plugin["version"]),
         payload["version"],
     }
-    assert versions == {"1.2.6"}
+    assert versions == {"1.2.7"}
 
 
 def test_ci_is_pinned_frozen_and_exercises_release_contract():
@@ -428,7 +428,13 @@ def test_cli_default_root_is_portable_and_self_contained(monkeypatch, tmp_path):
     monkeypatch.delenv("HERMES_VENTURES_ROOT", raising=False)
     root = cli.default_root({})
     assert (root / "src" / "fleet_policy").is_dir()
-    assert "desktop/all/ventures" not in root.as_posix().lower()
+    # Functional invariant: the fallback root is derived from this cli
+    # module's own location (the source checkout that contains it), never
+    # pinned to any machine-specific absolute path. The wheel-layout test
+    # above already proves the same derivation works for installed layouts.
+    cli_module = Path(cli.__file__).resolve()
+    assert cli_module.is_relative_to(root.resolve())
+    assert (root / "src" / "fleet_policy" / "cli.py").resolve() == cli_module
 
     monkeypatch.setenv("HERMES_VENTURES_ROOT", str(tmp_path))
     assert cli.default_root({}) == tmp_path

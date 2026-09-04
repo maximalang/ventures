@@ -108,6 +108,16 @@ READ_TOOLS = {
 READ_PREFIXES = ("read_", "search_", "list_", "get_", "show_", "view_", "probe_", "inspect_")
 TERMINAL_TOOLS = {"terminal", "shell", "bash", "powershell", "exec", "execute_command"}
 
+
+def _normalize_tool_name(tool_name: str) -> str:
+    """Normalize the namespace used by direct Hermes tool dispatch only.
+
+    Deferred MCP names are intentionally left untouched: stripping arbitrary
+    namespaces could accidentally assign read semantics to an unrelated tool.
+    """
+    lowered = tool_name.strip().lower()
+    return lowered.removeprefix("functions.")
+
 # F4: tools whose payload is operator free text (kanban card bodies, comment
 # bodies, file contents, memory notes, delegation briefs, generated code).
 # Neither the path guard nor the risk regexes may scan these fields:
@@ -123,8 +133,12 @@ FREE_TEXT_TOOLS = {
     "memory", "todo", "clarify", "delegate_task",
 }
 
+# v1.2.7: `git clone`/`git fetch` moved out of READ_COMMAND. They are
+# network downloads into a local tree (state change), not pure reads; the
+# exact-head verifier lane never needed them. Chained `cd X && git status`
+# still classifies as a read via the per-stage rules below.
 READ_COMMAND = re.compile(
-    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|clone|fetch)\b|"
+    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree)\b|"
     r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
@@ -196,16 +210,150 @@ def _has_write_marker(command: str) -> bool:
     return False
 
 
+_GH_READ_VERBS = {
+    ("pr", "view"),
+    ("pr", "diff"),
+    ("pr", "checks"),
+    ("pr", "list"),
+    ("run", "view"),
+    ("run", "list"),
+    ("repo", "view"),
+    ("release", "view"),
+    ("workflow", "view"),
+    ("issue", "view"),
+}
+# F-01: token-skip flags whose argument carries the HTTP method. (`--hostname`
+# / `--gh-hostname` redirect the OAuth token to an attacker host; they are not
+# allowlisted below, so every spelling fails closed.)
+_GH_API_METHOD_FLAGS = ("--method", "-x")
+# F-01/F-02: option handling is allowlist-based. pflag/cobra accepts inline
+# `=` spellings (`--hostname=evil`) and unambiguous prefix abbreviations
+# (`--hostn evil`), so a blocklist on exact flag names can be bypassed. Only
+# these read-safe option forms are accepted; every other option fails closed.
+_GH_API_SAFE_FLAGS = {"--paginate", "--include", "-i"}
+# F-02: a read-only endpoint must be a relative GitHub REST path — lowercase
+# alphanumeric segments joined by slashes (optionally with a leading slash).
+# Schemes (`https://...`), hosts, and any other character fail closed.
+_GH_API_ENDPOINT_PATH = re.compile(r"/?[a-z0-9._-]+(?:/[a-z0-9._-]+)*")
+# Background jobs (`cmd &`) and unconditional chaining would otherwise
+# hide a second command behind a read-only first stage; fd duplication
+# like `2>&1` is handled by the redirect scanner, not matched here.
+_SHELL_METACHARACTERS = re.compile("[\\n\\r]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
+
+
+def _clean_shell_token(token: str) -> str:
+    return token.strip().strip("\"'")
+
+
+def _program_name(token: str) -> str:
+    normalized = _clean_shell_token(token).replace("\\", "/")
+    return PurePath(normalized).name.lower().removesuffix(".exe")
+
+
+def _gh_api_is_read_only(args: list[str]) -> bool:
+    """Allow REST GET probes only; anything unrecognized fails closed.
+
+    F-01: option handling is allowlist-based. pflag/cobra accepts inline
+    `--flag=VALUE` spellings and unambiguous prefix abbreviations (`--hostn`),
+    so matching only exact flag names missed every `=`/abbreviated spelling of
+    `--hostname`. Here every option token must be a known read-safe form
+    (`--paginate`, `--include`, `-i`, or the method selectors) before the
+    command can be read-only; `--hostname`, `--field`, `--input`, and every
+    unknown option fall closed.
+    """
+    method = "GET"
+    endpoint: str | None = None
+    index = 0
+    while index < len(args):
+        raw = _clean_shell_token(args[index])
+        lowered = raw.lower()
+        if lowered in _GH_API_METHOD_FLAGS or lowered.startswith("--method=") or (
+            lowered.startswith("-x") and len(raw) > 2
+        ):
+            if lowered.startswith(("--method=", "-x")):
+                method = raw.split("=", 1)[1].upper() if "=" in raw else raw[2:].upper()
+                index += 1
+                continue
+            if index + 1 >= len(args):
+                return False
+            method = _clean_shell_token(args[index + 1]).upper()
+            index += 2
+            continue
+        if raw in _GH_API_SAFE_FLAGS or lowered in _GH_API_SAFE_FLAGS:
+            index += 1
+            continue
+        if raw.startswith("-"):
+            # Any other option spelling fails closed: write/payload flags
+            # (`--field`, `--raw-field`, `--input`, `--header`, `--cache`,
+            # `-f`, `-F`, `-H`), host overrides (`--hostname[=...]`,
+            # `--gh-hostname[=...]`, abbreviations like `--hostn evil`),
+            # template and jq selectors, and anything not allowlisted.
+            return False
+        if endpoint is None:
+            endpoint = lowered
+        index += 1
+    if endpoint is None or endpoint == "graphql" or method != "GET":
+        return False
+    # F-02: the endpoint must be a relative REST path (`repos/o/r`,
+    # `/user/repos`). Absolute URLs would let `gh api https://evil.example/...`
+    # inherit the read lane, so any scheme or foreign-host spelling fails
+    # closed against a strict path allowlist.
+    return _GH_API_ENDPOINT_PATH.fullmatch(endpoint) is not None
+
+
+def _gh_stage_is_read_only(tokens: list[str]) -> bool:
+    if len(tokens) < 2 or _program_name(tokens[0]) != "gh":
+        return False
+    args = [_clean_shell_token(token) for token in tokens[1:]]
+    if not args:
+        return False
+    if args[0].lower() == "api":
+        return _gh_api_is_read_only(args[1:])
+    if len(args) < 2 or (args[0].lower(), args[1].lower()) not in _GH_READ_VERBS:
+        return False
+    # Opening an external browser is a local state change, not a verifier read.
+    return not any(arg.lower() in {"--web", "-w"} for arg in args[2:])
+
+
+def _hash_stage_is_read_only(tokens: list[str]) -> bool:
+    if not tokens:
+        return False
+    program = _program_name(tokens[0])
+    if program == "sha256sum":
+        return True
+    if program == "shasum":
+        args = [_clean_shell_token(token).lower() for token in tokens[1:]]
+        return any(
+            args[index] == "-a" and index + 1 < len(args) and args[index + 1] == "256"
+            for index in range(len(args))
+        ) or "-a256" in args
+    return program == "certutil" and len(tokens) > 1 and _clean_shell_token(tokens[1]).lower() == "-hashfile"
+
+
+def _stage_is_read_only(segment: str) -> bool:
+    if READ_COMMAND.match(segment):
+        return True
+    tokens = _stage_tokens(segment)
+    return _gh_stage_is_read_only(tokens) or _hash_stage_is_read_only(tokens)
+
+
 def _terminal_is_read_only(command: str) -> bool:
+    # v1.2.7: bash executes newlines, background-job ampersands, and command
+    # substitutions that shlex(posix=False) hides from the tokenizer, so any
+    # command carrying these metacharacters fails closed. `&&` chaining is
+    # excluded because every stage is still classified independently below.
+    if _SHELL_METACHARACTERS.search(command):
+        return False
     if MUTATOR.search(command) or _has_write_marker(command):
         return False
-    segments = [part.strip() for part in re.split(r"&&|\|\||;", command) if part.strip()]
-    # v1.2.6: bare `cd <dir>` segments are no-ops for the read classifier;
-    # chained read (cd repo && git clone ...) was misclassified before.
-    # v1.2.6: match() (anchored) instead of search() — search() let the
-    # non-word-bounded `type` keyword match inside words like "...ownership".
+    segments = _simple_commands(command)
+    # v1.2.7: every pipeline stage is classified independently. Remote exact-
+    # head verification permits only explicit GitHub view/GET operations and
+    # local hash utilities; any payload, mutation verb or unknown stage fails
+    # closed. Bare `cd <dir>` remains a no-op for the read classifier.
     return bool(segments) and all(
-        READ_COMMAND.match(part) or re.match(r"^\s*cd\s+\S+\s*$", part, re.I)
+        _stage_is_read_only(part)
+        or (part.split() and part.split()[0].lower() == "cd" and len(part.split()) == 2)
         for part in segments
     )
 
@@ -266,7 +414,7 @@ def _risk_subject(name: str, arguments: dict[str, Any]) -> str:
 
 
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
-    name = tool_name.strip().lower()
+    name = _normalize_tool_name(tool_name)
     effect = _effect_for(name, arguments)
 
     # In-kernel Python can access the filesystem and network without passing
