@@ -114,6 +114,7 @@ class PolicyStore:
                 self._heal_v3_tables(connection)
                 self._heal_outbox_columns(connection)
                 self._heal_approvals_v4(connection)
+                self._heal_failure_overrides(connection)
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
@@ -122,6 +123,7 @@ class PolicyStore:
             connection.executescript(SCHEMA_V3)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,?)", (utc_now(),))
             self._heal_approvals_v4(connection)
+            self._heal_failure_overrides(connection)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(4,?)", (utc_now(),))
 
     def _heal_v3_tables(self, connection: sqlite3.Connection) -> None:
@@ -166,6 +168,57 @@ class PolicyStore:
             connection.execute("ALTER TABLE approvals ADD COLUMN revoked_at TEXT")
         if "revoked_by" not in columns:
             connection.execute("ALTER TABLE approvals ADD COLUMN revoked_by TEXT")
+
+    @staticmethod
+    def _heal_failure_overrides(connection: sqlite3.Connection) -> None:
+        """v1.2.10 item D — blast-radius override ledger.
+
+        Idempotent CREATE IF NOT EXISTS: the same failure_signature counter
+        that stops a loop can now be marked expected for one (task, run); the
+        override itself is always separately recorded as a significant event.
+        """
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS failure_overrides(
+                task_id TEXT NOT NULL,
+                failure_signature TEXT NOT NULL,
+                run_key TEXT NOT NULL DEFAULT '',
+                overridden_at TEXT NOT NULL,
+                PRIMARY KEY(task_id, failure_signature, run_key)
+            )"""
+        )
+
+    def mark_expected_failure(self, task_id: str, failure_signature: str, run_key: str | None) -> bool:
+        """Record a blast-radius override: this failure signature is an
+        expected part of the task's QA plan. Resets the same-failure counter
+        (existing ledger rows for the signature) and records a significant,
+        auditable event so the notification pipeline fires exactly once.
+        Idempotent: a duplicate override returns False and emits nothing."""
+        from .redaction import stable_id
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "INSERT OR IGNORE INTO failure_overrides(task_id,failure_signature,run_key,overridden_at) VALUES(?,?,?,?)",
+                (task_id, failure_signature, run_key or "", utc_now()),
+            )
+            if not cursor.rowcount:
+                return False
+            connection.execute(
+                "DELETE FROM run_call_history WHERE task_id=? AND failure_signature=?",
+                (task_id, failure_signature),
+            )
+        self.record_event(
+            stable_id(task_id, failure_signature, run_key or "", "expected_failure_override"),
+            run_key or "session", task_id, "expected_failure_override",
+            {"failure_signature": failure_signature, "run_key": run_key or ""}, True,
+        )
+        return True
+
+    def has_expected_failure(self, task_id: str, failure_signature: str, run_key: str | None) -> bool:
+        with self.connect() as connection:
+            row = connection.execute(
+                "SELECT 1 FROM failure_overrides WHERE task_id=? AND failure_signature=? AND run_key=?",
+                (task_id, failure_signature, run_key or ""),
+            ).fetchone()
+            return row is not None
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:

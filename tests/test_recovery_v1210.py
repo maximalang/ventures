@@ -181,3 +181,46 @@ def test_non_review_task_failure_loop_is_unchanged(runtime, task_context):
             error_type="tool_error", error_message="gate missing",
         ))
     assert events[-1] is not None and events[-1]["rule_id"] == "same_failure_loop"
+
+
+# ------------------------------------------------------------------ item D
+
+
+def test_expected_failure_override_prevents_stop_event(runtime, task_context):
+    """A pre-marked expected failure never escalates into a stop event; the
+    override itself is recorded exactly once as a significant event."""
+    from fleet_policy.redaction import stable_id
+    code_ctx = dict(task_context, task_body="task_type: code", current_run_id="r1")
+    args = {"command": "git push origin main"}
+    signature = stable_id("terminal", "tool_error", "gate missing")
+    assert runtime.store.mark_expected_failure(code_ctx["task_id"], signature, "r1") is True
+    assert runtime.store.mark_expected_failure(code_ctx["task_id"], signature, "r1") is False
+    for index in range(3):
+        code_ctx["tool_call_id"] = f"override-{index}"
+        event = runtime.post_tool_call(
+            "terminal", args, code_ctx, success=False,
+            error_type="tool_error", error_message="gate missing",
+        )
+        assert event is None, f"failure {index} must not stop an overridden signature"
+    with runtime.store.connect() as connection:
+        assert connection.execute(
+            "SELECT COUNT(*) FROM events WHERE kind='expected_failure_override'"
+        ).fetchone()[0] == 1
+
+
+def test_expected_failure_override_is_run_scoped(runtime, task_context):
+    """An override for run r1 leaves other runs of the same task fail-closed."""
+    from fleet_policy.redaction import stable_id
+    code_ctx = dict(task_context, task_body="task_type: code", current_run_id="r1")
+    args = {"command": "git push origin main"}
+    signature = stable_id("terminal", "tool_error", "gate missing")
+    assert runtime.store.mark_expected_failure(code_ctx["task_id"], signature, "r1") is True
+    fresh = dict(code_ctx, current_run_id="r2")
+    event = None
+    for index in range(2):
+        fresh["tool_call_id"] = f"other-run-{index}"
+        event = runtime.post_tool_call(
+            "terminal", args, fresh, success=False,
+            error_type="tool_error", error_message="gate missing",
+        )
+    assert event is not None and event["rule_id"] == "same_failure_loop"

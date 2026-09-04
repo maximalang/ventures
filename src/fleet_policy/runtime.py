@@ -360,6 +360,14 @@ class FleetPolicyRuntime:
         if failure_signature and self.store.count_signature(
             task_id, "failure_signature", failure_signature, run_key
         ) >= int(self.config["anti_loop"]["max_same_failure"]):
+            if self.store.has_expected_failure(task_id, failure_signature, run_key):
+                # v1.2.10 item D — blast-radius override: this exact failure
+                # signature was marked expected for this task/run by an
+                # out-of-band operator decision (audited in failure_overrides
+                # + a significant event), so the stop event must not fire.
+                # The counter keeps being observed on later failures; the
+                # override simply removes this signature from the stop class.
+                return None
             payload = {
                 "decision": "deny", "rule_id": "same_failure_loop",
                 "reason": "same failure signature reached the stop threshold",
