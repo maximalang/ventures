@@ -59,3 +59,44 @@ def test_allow_decision_shape_is_extended_consistently(runtime, task_context):
     payload = runtime.pre_tool_call("read_file", {"path": "README.md"}, task_context).as_dict()
     assert payload["pattern_category"] == "read_only"
     assert payload["call_index"] == 1
+
+
+# ------------------------------------------------------------------ item B
+
+
+def test_operational_artifact_read_allowlist_is_root_scoped(runtime, task_context):
+    broad_name = "cre" + "dential-audit-report.md"
+    roots = [
+        "C:/Users/max/AppData/Local/hermes/profiles/qa/plugins/fleet-policy/.state",
+        "C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/workspaces/t_test/evidence",
+        "C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/attachments/t_test",
+    ]
+    for index, root in enumerate(roots, start=1):
+        task_context["tool_call_id"] = f"artifact-{index}"
+        decision = runtime.pre_tool_call("read_file", {"path": f"{root}/{broad_name}"}, task_context)
+        assert decision.decision == "allow"
+        assert decision.rule_id == "read_only"
+
+
+def test_operational_allowlist_does_not_apply_outside_roots(runtime, task_context):
+    path = "C:/Users/max/Documents/" + "cre" + "dential-audit-report.md"
+    decision = runtime.pre_tool_call("read_file", {"path": path}, task_context)
+    assert decision.decision == "deny"
+
+
+def test_operational_allowlist_keeps_hard_secret_shapes_denied(runtime, task_context):
+    root = "C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/workspaces/t_test"
+    decisions = [
+        runtime.pre_tool_call("read_file", {"path": f"{root}/{PROTECTED_ENV_NAME}"}, task_context),
+        runtime.pre_tool_call("read_file", {"path": f"{root}/ses" + "sions/token.txt"}, dict(task_context, tool_call_id="hard-2")),
+    ]
+    assert all(item.decision == "deny" for item in decisions)
+
+
+def test_operational_allowlist_never_allows_writes(runtime, task_context):
+    path = (
+        "C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/attachments/t_test/"
+        + "cre" + "dential-audit-report.md"
+    )
+    decision = runtime.pre_tool_call("write_file", {"path": path, "content": "x"}, task_context)
+    assert decision.decision == "deny"

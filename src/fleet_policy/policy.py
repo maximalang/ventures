@@ -100,6 +100,32 @@ def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> boo
     return raw == CANONICAL_PUBLIC_POLICY_DOC
 
 
+def _canonical_operational_artifact_read(tool_name: str, arguments: dict[str, Any]) -> bool:
+    """Allow direct reads of fleet artifacts without opening a search lane.
+
+    Broad protected-name patterns can match benign audit filenames.  The
+    exception is deliberately limited to a single explicit file read inside a
+    fleet-owned state, task-workspace, or attachment root.  Secret-shaped
+    basenames and directory segments remain denied even inside those roots.
+    """
+    if tool_name != "read_file":
+        return False
+    raw = str(arguments.get("path") or "").replace("\\", "/").lower()
+    if not raw:
+        return False
+    parts = [part for part in raw.split("/") if part]
+    basename = parts[-1] if parts else ""
+    hard_basename = basename.startswith(".env") or basename == "auth.json"
+    hard_segment = any(part in {"sessions", "request_dump", "dumps"} for part in parts)
+    if hard_basename or hard_segment:
+        return False
+    plugin_state = re.search(r"/profiles/[^/]+/plugins/[^/]+/\.state(?:/|$)", raw)
+    task_artifact = re.search(
+        r"/kanban/boards/[^/]+/(?:workspaces|attachments)/[^/]+(?:/|$)", raw
+    )
+    return bool(plugin_state or task_artifact)
+
+
 READ_TOOLS = {
     "read_file", "search_files", "web_search", "web_extract", "read_preview", "read_terminal",
     "vision_analyze", "session_search", "skills_list", "skill_view", "project_list", "kanban_show",
@@ -431,7 +457,11 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     patterns = list(config["protected"]["paths"])
     for subject in _path_guard_subjects(name, arguments):
         matched = _protected_path_match(subject, patterns)
-        if not matched or _canonical_public_doc_read(name, arguments):
+        if (
+            not matched
+            or _canonical_public_doc_read(name, arguments)
+            or (effect == "read" and _canonical_operational_artifact_read(name, arguments))
+        ):
             continue
         if _is_policy_controlled(matched):
             if effect == "read":
