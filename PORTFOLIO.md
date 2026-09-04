@@ -10,8 +10,15 @@ Board taxonomy: `portfolio` — стратегия/капитал/инкубац
 
 | Проект | Путь | Hermes Project | Kanban | Фаза | Владелец | Следующий gate |
 |---|---|---|---|---|---|---|
-| Recruiter Radar | `C:/Users/max/Desktop/all/recruiter-radar` | `project` (радар) | `rr-team` | Launch readiness | `company` | Универсальный squad назначается по task type; закрыть backlog и launch-гейты; deploy только после VDS snapshot+backup и требует approval |
+| Recruiter Radar | `C:/Users/max/Desktop/all/recruiter-radar` | `project` (радар) | `rr-team` | Launch readiness | `company` | Универсальный squad назначается по task type; закрыть backlog и launch-гейты; рутинные merge/deploy автономны после VDS snapshot+backup и остальных evidence-гейтов из `APPROVALS.md` |
 | Venture Lab | `C:/Users/max/Desktop/all/ventures/venture-lab` | `venture-lab` | `venture-lab` | Discovery | `company` | Выбрать один venture через evidence + GO/NO-GO |
+| SEO Utility Site | `C:/Users/max/Desktop/all/mvp-peni-site` | `seo-site` | `seo-site` | Pre-launch / local MVP | `company` | Снять source-integrity blocker и получить независимый QA; публикация до этого запрещена, затем включить измерение |
+
+## Primary metrics
+
+- Recruiter Radar — `accepted_evidence_backed_leads_28d`.
+- Venture Lab — `evidence_backed_go_no_go_decisions_28d`.
+- SEO Utility Site — `successful_organic_calculations_28d`.
 
 ## Portfolio queue
 
