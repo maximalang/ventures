@@ -56,7 +56,9 @@ Class A — autonomous (no owner involvement; evidence gates still apply where
 | A2  | Creation of free accounts | No KYC, no payment obligation, no phone/domain/bank-owner obligation. |
 | A3  | Routine login, OAuth flows, token rotation, least-privilege IAM changes | Owner break-glass/recovery material is untouched; change is reversible; no expansion beyond least privilege. |
 | A4  | Ordinary product/UX/brand-risk changes | Non-blocking Telegram review notice with veto path is emitted; work continues during the veto window (section 4). |
-| A5  | Spend inside the project mandate | Within ≤10,000 RUB/transaction and ≤30,000 RUB/project/month using an already granted scoped payment capability; `gate:finance=pass` + `decision:company=go` recorded. |
+| A5  | Spend inside the project mandate | Both limits must hold simultaneously: transaction amount ≤10,000 RUB **AND** resulting project spend for the calendar month ≤30,000 RUB, using an already granted scoped payment capability; `gate:finance=pass` + `decision:company=go` recorded. Neither cap replaces or relaxes the other. |
+
+The canonical autonomous identifiers in this ADR are A1–A5. No A6 class is defined or implied; follow-on implementation, tests, and audit events must use these exact identifiers.
 
 Class H — owner hard gate ONLY (exhaustive list; anything not listed here is
 decided by the fleet):
@@ -266,10 +268,13 @@ Consequences:
 Rollback:
 
 - This record is documentation-only; its rollback is a PR revert.
-- For the future implementation: restore the prior attested policy/gateway
-  payloads, disable the new approval route, and preserve existing capability
-  records and immutable approval rows; the
-  `scripts/fleet_migration.py rollback` path (validates `snapshot.sha256` and
-  restores prior routing values) covers control-plane state. No account or
-  product mutation is part of rollout, so nothing outside the policy payload
-  needs reversal.
+- For the future implementation, agent-executable rollback is limited to
+  policy-permitted reversible mechanisms: an operations task restores the
+  prior attested policy/gateway payloads, disables the new approval route, and
+  preserves existing capability records and immutable approval rows after the
+  required backup, scope and rollback evidence is present.
+- The destructive/move-style `scripts/fleet_migration.py rollback` path is
+  **operator-only break-glass**. A fleet agent must not invoke or emulate it;
+  it validates `snapshot.sha256` and restores prior routing values only when an
+  authorized operator performs that procedure. No account or product mutation
+  is part of rollout, so nothing outside the policy payload needs reversal.
