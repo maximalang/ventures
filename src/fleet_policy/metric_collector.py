@@ -85,8 +85,13 @@ LEAD_CONTEXT_WORDS = (
     "outreach", "аутрич", "отклик", "отклики",
 )
 MARKER_RE = re.compile(r"\b(accepted|contacted|replied|won)\b", re.IGNORECASE)
+# Word-boundary contexts: plain alternation would also match inside larger
+# words (e.g. "candidate" inside "candidateship", "outreach" inside
+# "outreached"). Wrap every context word so contextual proximity cannot
+# trigger on a substring inside a larger token.
 CONTEXT_RE = re.compile(
-    "|".join(re.escape(w) for w in LEAD_CONTEXT_WORDS), re.IGNORECASE
+    r"\b(?:" + "|".join(re.escape(w) for w in LEAD_CONTEXT_WORDS) + r")\b",
+    re.IGNORECASE,
 )
 STRUCTURED_OUTCOME_KEY_RE = re.compile(
     r"^(lead[_ -]?outcome|outcome|lead[_ -]?status|исход)$", re.IGNORECASE
@@ -353,6 +358,10 @@ def collect_company_decisions(runner, window: dict) -> dict:
 
 def collect_seo(env: dict | None = None) -> dict:
     spec = RECORDS_SPEC[1]
+    # Explicit env is authoritative for tests/callers; when omitted, use the
+    # ambient process environment but ONLY variable names, never values. This
+    # keeps the live-collector behaviour testable while avoiding a hidden
+    # dependence on whatever environment the caller happens to inherit.
     environment = dict(os.environ if env is None else env)
     token_present = any(
         METRIKA_TOKEN_NAME_RE.search(name) for name in environment
@@ -550,11 +559,15 @@ def main(argv: list[str] | None = None) -> int:
     out_path = Path(args.out_dir) / f"snapshot-{run_date.isoformat()}.json"
     if not args.dry_run:
         out_path.parent.mkdir(parents=True, exist_ok=True)
+        # Atomic write: write to a temp sibling file then replace, so a
+        # crash mid-write never leaves a truncated/corrupt snapshot behind.
         # write_bytes: text-mode write_text would translate '\n' to the OS
         # line separator (CRLF on Windows), making on-disk bytes differ
         # from the serialized canonical bytes and breaking the reported
         # sha256 evidence. Exact bytes only.
-        out_path.write_bytes(text.encode("utf-8"))
+        tmp_path = out_path.with_name(out_path.name + ".tmp")
+        tmp_path.write_bytes(text.encode("utf-8"))
+        tmp_path.replace(out_path)
     print(f"sha256={digest}")
     print(f"path={out_path}")
     print(f"window={window['start_date']}..{window['end_date']}")

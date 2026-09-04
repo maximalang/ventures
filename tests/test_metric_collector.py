@@ -8,6 +8,7 @@ from __future__ import annotations
 import datetime as _dt
 import hashlib
 import json
+import os
 import re
 
 import pytest
@@ -70,6 +71,16 @@ def test_window_end_exclusive_day_boundary():
 
 
 # ------------------------------------------------------------- rr metric
+
+def test_rr_context_boundary_no_false_positive():
+    # CONTEXT_RE must not match substrings inside larger words:
+    # "outreached" and "candidateship" must NOT count as lead context.
+    assert not mc.CONTEXT_RE.search(
+        "Discussion about outreached envelopes and candidateship status."
+    )
+    # Genuine standalone words still match (with word boundaries).
+    assert mc.CONTEXT_RE.search("We sent outreach to the candidates.")
+
 
 def test_rr_gap_when_no_markers_anywhere():
     boards = {"rr-team": [
@@ -140,13 +151,29 @@ def test_rr_empty_board_fixture():
 
 # -------------------------------------------------------------- seo metric
 
-def test_seo_gap_without_token():
+def test_seo_gap_without_token(monkeypatch):
+    # Explicit env is authoritative and independent of ambient variables:
+    # clear any Metrika-looking names so ambient leakage cannot flip the gap.
+    for name in list(os.environ):
+        if mc.METRIKA_TOKEN_NAME_RE.search(name):
+            monkeypatch.delenv(name, raising=False)
     env = {"PATH": "/bin", "HOME": "/home/x"}
     res = mc.collect_seo(env)
     rec = res["record"]
     assert rec["value"] is None and rec["observed_at"] is None
     assert rec["evidence_gap"] == mc.GAP_METRIKA_TOKEN
     assert "112116194" in res["evidence"]["note"]
+
+
+def test_seo_explicit_env_overrides_ambient(monkeypatch):
+    # If the caller passes an explicit env, ambient Metrika variables must not
+    # leak into the result. This guards the deterministic test contract.
+    for name in list(os.environ):
+        if mc.METRIKA_TOKEN_NAME_RE.search(name):
+            monkeypatch.delenv(name, raising=False)
+    env = {"PATH": "/bin"}
+    res = mc.collect_seo(env)
+    assert res["record"]["evidence_gap"] == mc.GAP_METRIKA_TOKEN
 
 
 def test_seo_token_detection_is_name_only_and_phase1b_gap():
@@ -367,6 +394,11 @@ def test_main_dry_run_prints_sha_and_path(tmp_path, capsys, monkeypatch):
 def test_main_writes_file_and_is_idempotent(tmp_path, monkeypatch):
     monkeypatch.setattr(mc, "KanbanCliRunner", lambda: FakeRunner({}, {}))
     monkeypatch.setenv("HOME", str(tmp_path))
+    # Determinism must not depend on ambient Metrika-looking variables:
+    # clear them so the collector always falls into the documented gap.
+    for name in list(os.environ):
+        if mc.METRIKA_TOKEN_NAME_RE.search(name):
+            monkeypatch.delenv(name, raising=False)
     rc1 = mc.main(["--date", "2026-09-03", "--out-dir", str(tmp_path)])
     rc2 = mc.main(["--date", "2026-09-03", "--out-dir", str(tmp_path)])
     assert rc1 == 0 and rc2 == 0
@@ -381,3 +413,5 @@ def test_main_writes_file_and_is_idempotent(tmp_path, monkeypatch):
         mc.serialize(mc.build_snapshot(FakeRunner({}, {}), WINDOW, env={}))
         .encode("utf-8")).hexdigest()
     assert on_disk_sha == canonical_sha  # disk bytes == reported sha256
+    # Atomic write: temp sibling must be cleaned up after successful replace.
+    assert not (tmp_path / "snapshot-2026-09-03.json.tmp").exists()
