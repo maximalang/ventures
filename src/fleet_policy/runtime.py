@@ -64,16 +64,38 @@ class FleetPolicyRuntime:
                 missing.append(gate)
         return missing
 
-    def gate_comment_allowed(self, text: str, context: dict[str, Any]) -> bool:
+    def gate_comment_allowed(self, text: str, context: dict[str, Any],
+                             target_task_id: str | None = None) -> bool:
+        """v1.2.10 item E — write-guard for gate attestations.
+
+        Every marker in the comment body is evaluated (a comment carrying an
+        authorized and an unauthorized marker together is denied); review/qa
+        self-approval is checked against the TARGET card's assignee, because
+        the poison-marker attack lands the comment on someone else's card.
+        An explicit target card that cannot be resolved fails closed."""
+        from .kanban_context import task_assignee
         lowered = text.lower()
-        marker = re.search(r"gate:([a-z_]+)=pass", lowered)
-        gate = marker.group(1) if marker else ("company_decision" if "decision:company=go" in lowered else "")
-        if not gate:
+        gates = [match.group(1) for match in re.finditer(r"gate:([a-z_]+)=pass", lowered)]
+        if "decision:company=go" in lowered:
+            gates.append("company_decision")
+        if not gates:
             return True
         profile = str(context.get("profile") or "").lower()
-        if profile not in self.GATE_AUTHORS.get(gate, set()):
-            return False
-        return not (gate in {"review", "qa"} and profile == str(context.get("assignee") or "").lower())
+        task_id = str(context.get("task_id") or "")
+        target = str(target_task_id or task_id)
+        for gate in gates:
+            if profile not in self.GATE_AUTHORS.get(gate, set()):
+                return False
+            if gate in {"review", "qa"}:
+                if target != task_id:
+                    target_assignee = task_assignee(str(context.get("board") or "default"), target)
+                    if target_assignee is None:
+                        return False
+                else:
+                    target_assignee = str(context.get("assignee") or "")
+                if profile == str(target_assignee or "").lower():
+                    return False
+        return True
 
     @staticmethod
     def _amount_rub(arguments: dict[str, Any]) -> int | None:
@@ -172,7 +194,8 @@ class FleetPolicyRuntime:
                 result = Classification("state_change", "gate_forgery", "deny", "role gates must be written through kanban_comment by the current profile")
             elif tool_name.lower() == "kanban_comment":
                 text = str(arguments.get("text") or arguments.get("body") or arguments.get("comment") or "")
-                if not self.gate_comment_allowed(text, context):
+                target_task_id = str(arguments.get("task_id") or "") or None
+                if not self.gate_comment_allowed(text, context, target_task_id):
                     result = Classification("state_change", "gate_forgery", "deny", "current profile cannot attest this gate")
 
         # Evidence gates protect consequential transitions, not the ordinary
