@@ -1,0 +1,17 @@
+{
+  "schema_version": "bet/v1",
+  "bet_id": "rr-source-acceptance-2026-09",
+  "product_id": "recruiter-radar",
+  "owner_profile": "product",
+  "hypothesis": "A narrower evidence contract increases accepted leads without raising review load.",
+  "baseline_ref": "kanban:rr-team/t_baseline",
+  "target": {"metric_id": "accepted_evidence_backed_leads_28d", "operator": "gte", "value": 25, "unit": "leads"},
+  "horizon_end": "2026-10-03T08:00:00Z",
+  "confidence": 0.6,
+  "cost_cap_ref": "budget:recruiter-radar/2026-09#source-bet",
+  "kill_criterion": "Stop if independent QA finds a lineage regression.",
+  "rollback_ref": "repo:docs/rollback/source-contract.md",
+  "evidence_refs": ["kanban:rr-team/t_baseline"],
+  "decision_ref": "kanban:rr-team/t_decision#decision-company-go",
+  "state": "active"
+}
