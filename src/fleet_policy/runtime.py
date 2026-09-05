@@ -64,16 +64,38 @@ class FleetPolicyRuntime:
                 missing.append(gate)
         return missing
 
-    def gate_comment_allowed(self, text: str, context: dict[str, Any]) -> bool:
+    def gate_comment_allowed(self, text: str, context: dict[str, Any],
+                             target_task_id: str | None = None) -> bool:
+        """v1.2.10 item E — write-guard for gate attestations.
+
+        Every marker in the comment body is evaluated (a comment carrying an
+        authorized and an unauthorized marker together is denied); review/qa
+        self-approval is checked against the TARGET card's assignee, because
+        the poison-marker attack lands the comment on someone else's card.
+        An explicit target card that cannot be resolved fails closed."""
+        from .kanban_context import task_assignee
         lowered = text.lower()
-        marker = re.search(r"gate:([a-z_]+)=pass", lowered)
-        gate = marker.group(1) if marker else ("company_decision" if "decision:company=go" in lowered else "")
-        if not gate:
+        gates = [match.group(1) for match in re.finditer(r"gate:([a-z_]+)=pass", lowered)]
+        if "decision:company=go" in lowered:
+            gates.append("company_decision")
+        if not gates:
             return True
         profile = str(context.get("profile") or "").lower()
-        if profile not in self.GATE_AUTHORS.get(gate, set()):
-            return False
-        return not (gate in {"review", "qa"} and profile == str(context.get("assignee") or "").lower())
+        task_id = str(context.get("task_id") or "")
+        target = str(target_task_id or task_id)
+        for gate in gates:
+            if profile not in self.GATE_AUTHORS.get(gate, set()):
+                return False
+            if gate in {"review", "qa"}:
+                if target != task_id:
+                    target_assignee = task_assignee(str(context.get("board") or "default"), target)
+                    if target_assignee is None:
+                        return False
+                else:
+                    target_assignee = str(context.get("assignee") or "")
+                if profile == str(target_assignee or "").lower():
+                    return False
+        return True
 
     @staticmethod
     def _amount_rub(arguments: dict[str, Any]) -> int | None:
@@ -172,7 +194,8 @@ class FleetPolicyRuntime:
                 result = Classification("state_change", "gate_forgery", "deny", "role gates must be written through kanban_comment by the current profile")
             elif tool_name.lower() == "kanban_comment":
                 text = str(arguments.get("text") or arguments.get("body") or arguments.get("comment") or "")
-                if not self.gate_comment_allowed(text, context):
+                target_task_id = str(arguments.get("task_id") or "") or None
+                if not self.gate_comment_allowed(text, context, target_task_id):
                     result = Classification("state_change", "gate_forgery", "deny", "current profile cannot attest this gate")
 
         # Evidence gates protect consequential transitions, not the ordinary
@@ -186,11 +209,28 @@ class FleetPolicyRuntime:
             and result.category in self.EVIDENCE_GATED_CATEGORIES
             else []
         )
+        deny_nonce: str | None = None
         if missing:
             result = Classification(
                 result.effect, "evidence_gate_missing", "deny",
                 "fleet must satisfy gates before execution: " + ", ".join(missing),
             )
+            if worker and (self.task_type(context)[0] or "") == "review":
+                # v1.2.10 item C — review-probe nonce lane. A review task
+                # probing a gated transition is an expected QA probe, not a
+                # worker failure: the refusal stays fail-closed but carries a
+                # stable per-run nonce and records exactly one artifact per
+                # run. It must not grow loop counters (post_tool_call skips
+                # probe failures) and the plugin must not project/block the
+                # card on it; the tool-call budget above still charges every
+                # probe so runaway review runs keep their stop class.
+                run_key = self._run_key(context) or "session"
+                deny_nonce = stable_id(task_id, run_key, "review_probe_nonce")
+                self.store.record_event(
+                    stable_id(task_id, run_key, "review_probe_nonce", "artifact"),
+                    run_key, task_id or None, "review_probe_nonce",
+                    {"nonce": deny_nonce, "rule_id": result.category}, False,
+                )
 
         spend: tuple[int, str, str] | None = None
         if result.category == "financial_action" and result.decision == "allow":
@@ -267,6 +307,9 @@ class FleetPolicyRuntime:
             timestamp=utc_now(),
             budget_snapshot=snapshot,
             approval_card=approval_card,
+            pattern_category=result.category,
+            call_index=max(1, int(snapshot.get("used", {}).get("tool_calls", 0))),
+            deny_nonce=deny_nonce,
         )
         notify = decision == "approval_required" or rule_id in {"secret_read_or_write", "worker_self_approval"}
         if decision == "allow" and result.effect == "read":
@@ -324,6 +367,12 @@ class FleetPolicyRuntime:
         if not success:
             normalized_error = " ".join(str(error_message or "").lower().split())[:300]
             failure_signature = stable_id(tool_name, error_type, normalized_error)
+            if (self.task_type(context)[0] or "") == "review" and error_type == "review_probe_nonce":
+                # v1.2.10 item C — the probe refusal is an expected artifact:
+                # no call ledger row and no failure-signature accounting, so
+                # reviewing gates can never escalate into same_failure_loop.
+                # Budget was already charged at pre_tool_call.
+                return None
         event_id = stable_id(task_id, context.get("tool_call_id"), call_signature, success, failure_signature)
         run_key = self._run_key(context) or None
         projection_run_key = run_key or "session"
@@ -334,6 +383,14 @@ class FleetPolicyRuntime:
         if failure_signature and self.store.count_signature(
             task_id, "failure_signature", failure_signature, run_key
         ) >= int(self.config["anti_loop"]["max_same_failure"]):
+            if self.store.has_expected_failure(task_id, failure_signature, run_key):
+                # v1.2.10 item D — blast-radius override: this exact failure
+                # signature was marked expected for this task/run by an
+                # out-of-band operator decision (audited in failure_overrides
+                # + a significant event), so the stop event must not fire.
+                # The counter keeps being observed on later failures; the
+                # override simply removes this signature from the stop class.
+                return None
             payload = {
                 "decision": "deny", "rule_id": "same_failure_loop",
                 "reason": "same failure signature reached the stop threshold",

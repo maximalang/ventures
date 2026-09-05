@@ -73,6 +73,12 @@ def parser() -> argparse.ArgumentParser:
     grant.add_argument("--kind", required=True)
     grant.add_argument("--scope", required=True)
     grant.add_argument("--by", default="user")
+    override = sub.add_parser("override-expected-failure")
+    override.add_argument("task_id")
+    override.add_argument("failure_signature")
+    override.add_argument("--run-key", default=None,
+                          help="Scope the override to one dispatch run; omit for the whole task.")
+    override.add_argument("--by", default="user")
     spend = sub.add_parser("spend-status")
     spend.add_argument("--project", required=True)
     sub.add_parser("retention")
@@ -144,6 +150,16 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "grant-capability":
         ok = runtime.store.grant_capability(args.capability_id, args.project, args.kind, args.scope, args.by)
         print(json.dumps({"ok": ok, "capability_id": args.capability_id, "project": args.project}))
+        return 0 if ok else 2
+    if args.command == "override-expected-failure":
+        if os.environ.get("HERMES_KANBAN_TASK"):
+            print(json.dumps({"ok": False, "reason": "expected-failure overrides cannot be made from a dispatcher worker context"}, ensure_ascii=False))
+            return 2
+        ok = runtime.store.mark_expected_failure(args.task_id, args.failure_signature, args.run_key)
+        payload = {"ok": ok, "task_id": args.task_id, "failure_signature": args.failure_signature, "run_key": args.run_key}
+        if not ok:
+            payload["reason"] = "override already recorded (idempotent)"
+        print(json.dumps(payload, ensure_ascii=False))
         return 0 if ok else 2
     if args.command == "spend-status":
         from datetime import datetime, timezone

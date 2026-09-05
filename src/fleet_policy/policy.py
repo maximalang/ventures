@@ -36,26 +36,31 @@ class Classification:
 
 
 def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
-    found: list[str] = []
+    """v1.2.10 item E — first-canonical-marker-only semantics.
+
+    Sources are scanned in argument order (task body, then comments, then
+    skills); within each text in positional order. The FIRST marker whose
+    value is a canonical task type decides the class and scanning stops —
+    later markers (older comments, injected text) can never poison or switch
+    it. Markers with unknown values are skipped in favour of a canonical one
+    and reported only when nothing canonical exists anywhere."""
+    first_noncanonical: str | None = None
     for value in values:
-        if isinstance(value, (list, tuple, set)):
-            items = value
-        else:
-            items = [value]
+        items = value if isinstance(value, (list, tuple, set)) else [value]
         for item in items:
             text = str(item or "")
-            found.extend(TASK_LINE.findall(text))
-            found.extend(TASK_TAG.findall(text))
-            found.extend(TASK_SKILL.findall(text))
-    normalized = {item.lower() for item in found}
-    if not normalized:
-        return None, "missing task_type marker"
-    if len(normalized) != 1:
-        return None, "conflicting task_type markers"
-    task_type = next(iter(normalized))
-    if task_type not in TASK_TYPES:
-        return None, f"unknown task_type: {task_type}"
-    return task_type, None
+            matches: list[tuple[int, str]] = []
+            for pattern in (TASK_LINE, TASK_TAG, TASK_SKILL):
+                matches.extend((match.start(1), match.group(1)) for match in pattern.finditer(text))
+            for _, raw in sorted(matches):
+                task_type = raw.lower()
+                if task_type in TASK_TYPES:
+                    return task_type, None
+                if first_noncanonical is None:
+                    first_noncanonical = raw
+    if first_noncanonical is not None:
+        return None, f"unknown task_type: {first_noncanonical}"
+    return None, "missing task_type marker"
 
 
 
@@ -98,6 +103,32 @@ def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> boo
         return False
     raw = str(arguments.get("path") or "").replace("\\", "/").lower()
     return raw == CANONICAL_PUBLIC_POLICY_DOC
+
+
+def _canonical_operational_artifact_read(tool_name: str, arguments: dict[str, Any]) -> bool:
+    """Allow direct reads of fleet artifacts without opening a search lane.
+
+    Broad protected-name patterns can match benign audit filenames.  The
+    exception is deliberately limited to a single explicit file read inside a
+    fleet-owned state, task-workspace, or attachment root.  Secret-shaped
+    basenames and directory segments remain denied even inside those roots.
+    """
+    if tool_name != "read_file":
+        return False
+    raw = str(arguments.get("path") or "").replace("\\", "/").lower()
+    if not raw:
+        return False
+    parts = [part for part in raw.split("/") if part]
+    basename = parts[-1] if parts else ""
+    hard_basename = basename.startswith(".env") or basename == "auth.json"
+    hard_segment = any(part in {"sessions", "request_dump", "dumps"} for part in parts)
+    if hard_basename or hard_segment:
+        return False
+    plugin_state = re.search(r"/profiles/[^/]+/plugins/[^/]+/\.state(?:/|$)", raw)
+    task_artifact = re.search(
+        r"/kanban/boards/[^/]+/(?:workspaces|attachments)/[^/]+(?:/|$)", raw
+    )
+    return bool(plugin_state or task_artifact)
 
 
 READ_TOOLS = {
@@ -431,7 +462,11 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     patterns = list(config["protected"]["paths"])
     for subject in _path_guard_subjects(name, arguments):
         matched = _protected_path_match(subject, patterns)
-        if not matched or _canonical_public_doc_read(name, arguments):
+        if (
+            not matched
+            or _canonical_public_doc_read(name, arguments)
+            or (effect == "read" and _canonical_operational_artifact_read(name, arguments))
+        ):
             continue
         if _is_policy_controlled(matched):
             if effect == "read":
