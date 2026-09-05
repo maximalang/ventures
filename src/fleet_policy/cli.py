@@ -88,6 +88,11 @@ def parser() -> argparse.ArgumentParser:
     bundle.add_argument("--output", required=True)
     verify = sub.add_parser("verify-bundle")
     verify.add_argument("--bundle", required=True)
+    attestation_build = sub.add_parser("build-release-attestation")
+    attestation_build.add_argument("--input", required=True, help="Evidence JSON (all fields explicit; gates are never inferred).")
+    attestation_build.add_argument("--output", required=True, help="Destination path for RELEASE-ATTESTATION.json (atomic write).")
+    attestation_verify = sub.add_parser("verify-release-attestation")
+    attestation_verify.add_argument("--input", required=True, help="Attestation artifact to verify.")
     return result
 
 
@@ -108,6 +113,27 @@ def main(argv: list[str] | None = None) -> int:
         from .release_bundle import verify_release_bundle
         files = verify_release_bundle(Path(args.bundle))
         print(json.dumps({"bundle": str(Path(args.bundle)), "files": len(files), "ok": True}, ensure_ascii=False))
+        return 0
+    if args.command == "build-release-attestation":
+        from .release_attestation import AttestationError, build_attestation_file
+        try:
+            digest = build_attestation_file(Path(args.input), Path(args.output))
+        except AttestationError as exc:
+            print(json.dumps({"ok": False, "errors": exc.errors}, ensure_ascii=False, sort_keys=True))
+            return 1
+        print(json.dumps({"ok": True, "output": str(Path(args.output)), "attestation_sha256": digest},
+                         ensure_ascii=False, sort_keys=True))
+        return 0
+    if args.command == "verify-release-attestation":
+        from .release_attestation import AttestationError, verify_attestation_file
+        try:
+            artifact = verify_attestation_file(Path(args.input))
+        except AttestationError as exc:
+            print(json.dumps({"ok": False, "errors": exc.errors}, ensure_ascii=False, sort_keys=True))
+            return 1
+        print(json.dumps({"ok": True, "input": str(Path(args.input)),
+                          "attestation_sha256": artifact["attestation_sha256"]},
+                         ensure_ascii=False, sort_keys=True))
         return 0
 
     runtime = FleetPolicyRuntime(default_root(args))
