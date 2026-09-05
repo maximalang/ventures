@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.11] - 2026-09-05
+
+### Added
+- Release attestation v1: `fleet-policy build-release-attestation --input <evidence.json> --output <path>` and `fleet-policy verify-release-attestation --input <path>`. The artifact `RELEASE-ATTESTATION.json` uses schema marker `hermes-fleet-release-attestation/v1`; canonical encoding is UTF-8 JSON with sorted keys, compact separators and exactly one trailing newline; `attestation_sha256` is the SHA-256 of the canonical object with that field omitted.
+- Fail-closed invariants enforced at both build and verify: 40-hex commit/tree SHAs, 64-hex digests, `t_`+8-hex task IDs, UTC RFC3339-Z timestamps, `ci.head_sha == source.head_sha`, `ci.conclusion == success`, every gate (`ci`/`review`/`qa`/`rollback`) exactly `status: pass` with unique (task, run, profile) identities, review and QA gate profiles independent of both `company` and the implementation profile, `decision = company/go`, `deployment.expected_payload_sha256 == bundle.payload_sha256`, and `target_profiles` equal to the ten canonical fleet profiles once each. Unknown fields, missing fields, duplicate targets, malformed IDs/hashes, inconsistent heads or payloads, non-pass gates and digest mismatches all fail. Gates are copied verbatim from the evidence object and never inferred or defaulted.
+- Both commands are offline: no network, no policy database, no state files; the output path is written atomically and nothing is written on failure. Machine JSON on stdout; exit 0 only on a valid artifact.
+
+### Changed
+- Version pinned `1.2.10 -> 1.2.11` across `pyproject.toml`, `plugin.yaml`, the integration plugin, `src/fleet_policy/__init__.py` and the pin test; `uv.lock` refreshed.
+
 ## [1.2.7] - 2026-09-03
 
 ### Security
