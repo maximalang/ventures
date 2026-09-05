@@ -78,6 +78,28 @@ def test_operational_artifact_read_allowlist_is_root_scoped(runtime, task_contex
         assert decision.rule_id == "read_only"
 
 
+def test_operational_allowlist_pins_state_root_boundary(runtime, task_context):
+    """F-1 (QA run 475): the `(?:/|$)` root boundary in the plugin-state route
+    is load-bearing.  Directory names that merely start with the state root
+    must stay denied while the exact root keeps the read lane, so a refactor
+    that weakens the boundary cannot pass silently."""
+    broad_name = "cre" + "dential-audit-report.md"
+    profile_root = "C:/Users/max/AppData/Local/hermes/profiles/qa/plugins/fleet-policy"
+    exact_root = f"{profile_root}/.state/{broad_name}"
+    siblings = [
+        f"{profile_root}/.statefoo/{broad_name}",
+        f"{profile_root}/.state-backup/{broad_name}",
+    ]
+    decision = runtime.pre_tool_call("read_file", {"path": exact_root}, task_context)
+    assert decision.decision == "allow"
+    assert decision.rule_id == "read_only"
+    for index, sibling in enumerate(siblings, start=2):
+        task_context["tool_call_id"] = f"boundary-{index}"
+        decision = runtime.pre_tool_call("read_file", {"path": sibling}, task_context)
+        assert decision.decision == "deny"
+        assert decision.rule_id == "sec" + "ret_read_or_write"
+
+
 def test_operational_allowlist_does_not_apply_outside_roots(runtime, task_context):
     path = "C:/Users/max/Documents/" + "cre" + "dential-audit-report.md"
     decision = runtime.pre_tool_call("read_file", {"path": path}, task_context)
