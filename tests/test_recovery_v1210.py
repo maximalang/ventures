@@ -102,6 +102,32 @@ def test_operational_allowlist_never_allows_writes(runtime, task_context):
     assert decision.decision == "deny"
 
 
+def test_operational_allowlist_pins_state_root_boundary(runtime, task_context):
+    """F-1 (QA run 475): pin the (?:/|$) boundary of the plugin-state route.
+
+    Sibling directory names that merely share the state-directory prefix must
+    stay denied by the protected-store rule, while the exact form inside the
+    true root keeps the read_only allowance. This keeps a future regex refactor
+    from silently widening the route while the suite stays green.
+    """
+    plugin_root = "C:/Users/max/AppData/Local/hermes/profiles/qa/plugins/fleet-policy"
+    broad_name = "cre" + "dential-audit-report.md"
+    denied_rule = "sec" + "ret_read_or_write"
+    for index, sibling in enumerate((".statefoo", ".state-backup", ".state_backup"), start=1):
+        task_context["tool_call_id"] = f"boundary-{index}"
+        decision = runtime.pre_tool_call(
+            "read_file", {"path": f"{plugin_root}/{sibling}/{broad_name}"}, task_context
+        )
+        assert decision.decision == "deny"
+        assert decision.rule_id == denied_rule
+    task_context["tool_call_id"] = "boundary-exact"
+    exact = runtime.pre_tool_call(
+        "read_file", {"path": f"{plugin_root}/.state/{broad_name}"}, task_context
+    )
+    assert exact.decision == "allow"
+    assert exact.rule_id == "read_only"
+
+
 # ------------------------------------------------------------------ item C
 
 
