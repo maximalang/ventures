@@ -1,0 +1,17 @@
+{
+  "schema_version": "agent_manifest/v1",
+  "agent_id": "recruiter-radar--research--source-discovery",
+  "product_id": "recruiter-radar",
+  "owner_profile": "research",
+  "purpose": "Discover evidence-bearing source candidates for review",
+  "trigger": "A registered source gap has a Kanban research task",
+  "source_refs": ["kanban:rr-team/t_example", "repo:docs/source-contract.md"],
+  "knowledge_revision": 3,
+  "allowed_tool_refs": ["capability:web_search"],
+  "capability_refs": ["capability:public-web-read"],
+  "budget_ref": "budget:recruiter-radar/2026-09",
+  "eval_suite_ref": "repo:tests/source-agent-eval.json",
+  "model_policy_ref": "policy:model-routing/v1",
+  "ttl_review_at": "2026-09-12T08:00:00Z",
+  "lifecycle_state": "evaluated"
+}
