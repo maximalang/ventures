@@ -7,7 +7,8 @@ import json
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
-from jsonschema import Draft202012Validator, FormatChecker, RefResolver
+from jsonschema import Draft202012Validator, FormatChecker
+from referencing import Registry, Resource
 
 BASE = Path(__file__).resolve().parent
 COMMON_ID = "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json"
@@ -32,8 +33,8 @@ def validate_document(document: Mapping[str, Any]) -> None:
         raise ContractError("unknown_schema_version")
     common = _load_json(BASE / "common.schema.json")
     schema = _load_json(BASE / SCHEMA_FILES[version])
-    resolver = RefResolver.from_schema(schema, store={COMMON_ID: common})
-    validator = Draft202012Validator(schema, resolver=resolver, format_checker=FormatChecker())
+    registry = Registry().with_resources([(COMMON_ID, Resource.from_contents(common))])
+    validator = Draft202012Validator(schema, registry=registry, format_checker=FormatChecker())
     errors = sorted(validator.iter_errors(document), key=lambda error: list(error.absolute_path))
     if errors:
         path = ".".join(str(part) for part in errors[0].absolute_path) or "$"
@@ -77,15 +78,15 @@ def validate_agent_change(
     if change["expected_revision"] != current_revision:
         raise ContractError("stale_revision")
 
+    # Fail-closed precedence: a reused key with a changed payload is always a
+    # conflict; an unknown prior outcome always requires reconciliation first,
+    # even for a byte-identical retry. "replay" is returned only when the prior
+    # request is identical AND its outcome is known (not "unknown").
     prior_requests = prior_requests or {}
     key = change["idempotency_key"]
-    if key in prior_requests:
-        old_hash = canonical_payload_hash(prior_requests[key])
-        new_hash = canonical_payload_hash(change)
-        if old_hash != new_hash:
-            raise ContractError("idempotency_conflict")
-        return "replay"
-
+    known_prior = key in prior_requests
+    if known_prior and canonical_payload_hash(prior_requests[key]) != canonical_payload_hash(change):
+        raise ContractError("idempotency_conflict")
     if prior_outcome == "unknown":
         raise ContractError("reconcile_required")
-    return "accepted"
+    return "replay" if known_prior else "accepted"

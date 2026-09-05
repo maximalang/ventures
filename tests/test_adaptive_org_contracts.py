@@ -37,11 +37,36 @@ def load_schema(name: str):
 
 @pytest.mark.parametrize(
     "fixture",
-    ["product_manifest.json", "agent_manifest.json", "bet.json", "agent_change.json"],
+    [
+        "product_manifest.json",
+        "product_manifest_seo_site.json",
+        "agent_manifest.json",
+        "bet.json",
+        "agent_change.json",
+    ],
 )
 def test_positive_fixtures(fixture: str):
     document = load("positive", fixture)
     validate_document(document)
+
+
+def test_positive_manifests_cover_two_real_products():
+    """E1 amended acceptance: contracts validate against >=2 real product fixtures (RR + SEO).
+
+    Field values mirror the canonical registry: PORTFOLIO.md#active-projects and
+    PORTFOLIO.md#primary-metrics (recruiter-radar, seo-site) as of 2026-09-05.
+    """
+    products = {
+        load("positive", name)["product_id"]
+        for name in ("product_manifest.json", "product_manifest_seo_site.json")
+    }
+    assert products == {"recruiter-radar", "seo-site"}
+    seo = load("positive", "product_manifest_seo_site.json")
+    assert seo["board"] == "seo-site"
+    assert seo["primary_metric"]["metric_id"] == "successful_organic_calculations_28d"
+    assert seo["primary_metric"]["value"] is None
+    assert seo["primary_metric"]["unknown_reason"]
+    assert "PORTFOLIO.md#active-projects" in seo["source_refs"]
 
 
 def test_unknown_requires_null_with_reason():
@@ -92,6 +117,40 @@ def test_unknown_prior_outcome_requires_reconciliation():
     change = load("positive", "agent_change.json")
     with pytest.raises(ContractError, match="reconcile_required"):
         validate_agent_change(change, current_revision=3, prior_outcome="unknown")
+
+
+def test_identical_replay_with_unknown_prior_outcome_still_requires_reconciliation():
+    """Regression for QA round-1 finding 1: fail-open replay on unknown outcome.
+
+    A byte-identical retry whose prior outcome is unknown must NOT return
+    "replay"; reconciliation is required before the request can be treated as
+    applied (crash-recovery scenario).
+    """
+    change = load("positive", "agent_change.json")
+    prior = {change["idempotency_key"]: copy.deepcopy(change)}
+    with pytest.raises(ContractError, match="reconcile_required"):
+        validate_agent_change(
+            change, current_revision=3, prior_requests=prior, prior_outcome="unknown"
+        )
+    # Same identical replay with a known prior outcome remains a replay.
+    assert (
+        validate_agent_change(
+            change, current_revision=3, prior_requests=prior, prior_outcome="applied"
+        )
+        == "replay"
+    )
+
+
+def test_changed_payload_conflict_takes_precedence_over_unknown_outcome():
+    """Reused key + changed payload is a conflict even when the prior outcome is unknown."""
+    change = load("positive", "agent_change.json")
+    prior = {change["idempotency_key"]: copy.deepcopy(change)}
+    changed = copy.deepcopy(change)
+    changed["manifest_hash"] = "sha256:" + "c" * 64
+    with pytest.raises(ContractError, match="idempotency_conflict"):
+        validate_agent_change(
+            changed, current_revision=3, prior_requests=prior, prior_outcome="unknown"
+        )
 
 
 def test_dry_run_defaults_true_and_explicit_false_is_preserved():
