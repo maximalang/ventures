@@ -40,8 +40,18 @@ def test_gate_producers_and_review_task_do_not_deadlock(runtime, task_context) -
     review = dict(task_context)
     review["task_body"] = "task_type: review"
     review["profile"] = "qa"
-    review["assignee"] = "qa"
+    review["assignee"] = "tech"
     review["tool_call_id"] = "review-call"
+    # v1.2.10 item G (F3-A): the review class no longer waives the review/qa
+    # gates — an unattested publish is denied like any other card class.
+    denied = runtime.pre_tool_call("terminal", {"command": "publish"}, review)
+    assert (denied.decision, denied.rule_id) == ("deny", "evidence_gate_missing")
+    # With the gates properly attested by an authorized non-assignee author
+    # the same review task publishes — the lifecycle does not deadlock.
+    review["comment_records"] = [
+        {"author": "qa", "body": "gate:review=pass\ngate:qa=pass"},
+    ]
+    review["tool_call_id"] = "review-call-ready"
     reviewed = runtime.pre_tool_call("terminal", {"command": "publish"}, review)
     assert (reviewed.decision, reviewed.rule_id) == ("allow", "public_product_action")
 

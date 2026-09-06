@@ -44,23 +44,39 @@ class FleetPolicyRuntime:
     }
 
     def missing_gates(self, category: str, context: dict[str, Any]) -> list[str]:
+        """v1.2.10 item G — order-sensitive gate evaluation.
+
+        The card class sets the process but never waives a real side-effect
+        gate (item F3-A). For every required gate the LAST authorized record
+        decides (item F3-B): a later fail/revocation from the gate's author
+        cancels an earlier pass, and a later pass re-arms the gate. Records
+        from authors outside the gate's role set are ignored, and review/qa
+        records authored by the card's own assignee are ignored entirely
+        (self-approval can neither attest nor revoke)."""
         required = list(self.config.get("evidence_gates", {}).get(category, []))
-        task_type, _ = self.task_type(context)
-        if task_type == "review":
-            required = [gate for gate in required if gate not in {"review", "qa"}]
         if not required:
             return []
         records = context.get("comment_records") or []
         missing: list[str] = []
+        assignee = str(context.get("assignee") or "").lower()
         for gate in required:
-            marker = "decision:company=go" if gate == "company_decision" else f"gate:{gate}=pass"
+            pass_marker = "decision:company=go" if gate == "company_decision" else f"gate:{gate}=pass"
+            fail_prefix = f"gate:{gate}=fail"
             allowed_authors = self.GATE_AUTHORS.get(gate, set())
-            if not any(
-                any(line.strip().lower() == marker for line in str(record.get("body") or "").splitlines())
-                and (not allowed_authors or str(record.get("author") or "").lower() in allowed_authors)
-                and not (gate in {"review", "qa"} and str(record.get("author") or "").lower() == str(context.get("assignee") or "").lower())
-                for record in records
-            ):
+            state: str | None = None
+            for record in records:
+                author = str(record.get("author") or "").lower()
+                if allowed_authors and author not in allowed_authors:
+                    continue
+                if gate in {"review", "qa"} and author == assignee:
+                    continue
+                lines = [line.strip().lower() for line in str(record.get("body") or "").splitlines()]
+                if any(line == fail_prefix or line.startswith(fail_prefix) for line in lines):
+                    state = "fail"
+                    continue
+                if any(line == pass_marker for line in lines):
+                    state = "pass"
+            if state != "pass":
                 missing.append(gate)
         return missing
 

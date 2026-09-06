@@ -212,9 +212,14 @@ def test_non_review_task_failure_loop_is_unchanged(runtime, task_context):
 # ------------------------------------------------------------------ item D
 
 
-def test_expected_failure_override_prevents_stop_event(runtime, task_context):
+def test_expected_failure_override_prevents_stop_event(runtime, task_context, monkeypatch):
     """A pre-marked expected failure never escalates into a stop event; the
     override itself is recorded exactly once as a significant event."""
+    # v1.2.11: override recording is operator-authority; the suite may run
+    # inside a dispatcher worker process, so the inherited variable is
+    # cleared for this operator-context test (same convention as the
+    # storage suite).
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
     from fleet_policy.redaction import stable_id
     code_ctx = dict(task_context, task_body="task_type: code", current_run_id="r1")
     args = {"command": "git push origin main"}
@@ -234,8 +239,10 @@ def test_expected_failure_override_prevents_stop_event(runtime, task_context):
         ).fetchone()[0] == 1
 
 
-def test_expected_failure_override_is_run_scoped(runtime, task_context):
+def test_expected_failure_override_is_run_scoped(runtime, task_context, monkeypatch):
     """An override for run r1 leaves other runs of the same task fail-closed."""
+    # v1.2.11: operator context required (see prevents_stop_event note).
+    monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
     from fleet_policy.redaction import stable_id
     code_ctx = dict(task_context, task_body="task_type: code", current_run_id="r1")
     args = {"command": "git push origin main"}
@@ -293,3 +300,75 @@ def test_gate_comment_self_approval_checked_against_target_card(runtime, task_co
     # Unresolvable target card fails closed.
     monkeypatch.setattr(kc, "task_assignee", lambda board, task_id, env=None: None)
     assert runtime.gate_comment_allowed(_gate("qa") + " ok", ctx, "t_missing") is False
+
+
+# ------------------------------------------------------------------ item G
+
+
+def _record(author: str, body: str) -> dict:
+    return {"author": author, "body": body}
+
+
+def test_review_class_no_longer_waives_review_qa_gates(runtime, task_context):
+    """item G (F3-A): the review card class sets the process, it does not
+    waive real side-effect gates. A review task publishing to production
+    must still present the review and qa evidence gates like any other."""
+    ctx = dict(
+        task_context,
+        task_body="task_type: review",
+        profile="qa",
+        assignee="qa",
+        comment_records=[],
+    )
+    args = {"command": "publish product launch"}
+    decision = runtime.pre_tool_call("terminal", args, ctx)
+    assert (decision.decision, decision.rule_id) == ("deny", "evidence_gate_missing")
+    gates = runtime.missing_gates("public_product_action", ctx)
+    assert set(gates) == {"review", "qa"}
+
+
+def test_late_authorized_fail_or_revocation_beats_earlier_pass(runtime, task_context):
+    """item G (F3-B): gate records are order-sensitive. The LAST authorized
+    record for a gate decides: a later FAIL/revocation from the gate's
+    author cancels an earlier pass; a later pass re-arms the gate."""
+    # qa passed review, then qa posted a follow-up FAIL for the same gate.
+    task_context["comment_records"] = [
+        _record("tech", _gate("ci")),
+        _record("qa", _gate("review")),
+        _record("operations", _gate("rollback")),
+        _record("qa", "gate:review=FAIL — regressions found in build 42"),
+    ]
+    decision = runtime.pre_tool_call(
+        "terminal", {"command": "git push origin main"}, task_context
+    )
+    assert (decision.decision, decision.rule_id) == ("deny", "evidence_gate_missing")
+    assert "review" in runtime.missing_gates("release_to_protected_branch", task_context)
+
+    # A later authorized pass re-arms the gate.
+    task_context["comment_records"] = [
+        _record("tech", _gate("ci")),
+        _record("qa", _gate("review")),
+        _record("operations", _gate("rollback")),
+        _record("qa", "gate:review=FAIL — regressions found"),
+        _record("qa", _gate("review") + "\n(re-run after fix, build 43)"),
+    ]
+    task_context["tool_call_id"] = "rearmed"
+    allowed = runtime.pre_tool_call(
+        "terminal", {"command": "git push origin main"}, task_context
+    )
+    assert (allowed.decision, allowed.rule_id) == ("allow", "release_to_protected_branch")
+
+    # A non-author's FAIL cannot cancel the pass (fail is author-checked).
+    task_context["comment_records"] = [
+        _record("tech", _gate("ci")),
+        _record("qa", _gate("review")),
+        _record("operations", _gate("rollback")),
+        _record("tech", "gate:review=FAIL not my gate"),
+    ]
+    task_context["tool_call_id"] = "foreign-fail"
+    still_allowed = runtime.pre_tool_call(
+        "terminal", {"command": "git push origin main"}, task_context
+    )
+    assert (still_allowed.decision, still_allowed.rule_id) == (
+        "allow", "release_to_protected_branch",
+    )

@@ -192,7 +192,12 @@ class PolicyStore:
         expected part of the task's QA plan. Resets the same-failure counter
         (existing ledger rows for the signature) and records a significant,
         auditable event so the notification pipeline fires exactly once.
-        Idempotent: a duplicate override returns False and emits nothing."""
+        Idempotent: a duplicate override returns False and emits nothing.
+        v1.2.11 item F2: a dispatcher worker context can never record an
+        override — the authority is structural, matching decide/revoke, so
+        a stripped shell variable cannot manufacture operator privilege."""
+        if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
         from .redaction import stable_id
         with self.connect() as connection:
             cursor = connection.execute(
@@ -412,15 +417,13 @@ class PolicyStore:
             )
             return cursor.rowcount == 1
 
-    def consume_exact_approval(self, task_id: str, action: str, target: str, hashed_args: str) -> bool:
-        if os.environ.get("HERMES_KANBAN_TASK") and os.environ.get("HERMES_KANBAN_TASK") == task_id:
-            pass
+    def consume_exact_approval(self, task_id: str, action: str, effect_path: str, hashed_args: str) -> bool:
         with self.connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
                 "SELECT rule_key,status FROM approvals WHERE task_id=? AND action=? AND target=? AND args_hash=?"
                 " ORDER BY created_at LIMIT 1",
-                (task_id, action, target, hashed_args),
+                (task_id, action, effect_path, hashed_args),
             ).fetchone()
             if row is None or row["status"] != "approved":
                 return False
