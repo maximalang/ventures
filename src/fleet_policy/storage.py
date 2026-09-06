@@ -80,6 +80,22 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def stable_override_key(task_id: str, failure_signature: str, run_key: str | None) -> str:
+    """Deterministic binding identity for an expected-failure override.
+
+    The override ledger's primary key rendered as one string, so the
+    confirmation code is derived from exactly the thing being authorized
+    (v1.2.12 C3) — the same pattern as an approval binding's rule_key.
+    """
+    return f"{task_id}:{failure_signature}:{run_key or ''}"
+
+
+def expected_failure_code(task_id: str, failure_signature: str, run_key: str | None) -> str:
+    """The confirmation code an operator presents to mark_expected_failure:
+    the last 8 characters of the binding identity (mirror of approvals)."""
+    return stable_override_key(task_id, failure_signature, run_key)[-8:]
+
+
 class PolicyStore:
     def __init__(self, path: str | Path):
         self.path = Path(path)
@@ -187,16 +203,24 @@ class PolicyStore:
             )"""
         )
 
-    def mark_expected_failure(self, task_id: str, failure_signature: str, run_key: str | None) -> bool:
+    def mark_expected_failure(self, task_id: str, failure_signature: str, run_key: str | None,
+                              confirm_code: str | None = None) -> bool:
         """Record a blast-radius override: this failure signature is an
         expected part of the task's QA plan. Resets the same-failure counter
         (existing ledger rows for the signature) and records a significant,
         auditable event so the notification pipeline fires exactly once.
         Idempotent: a duplicate override returns False and emits nothing.
         v1.2.11 item F2: a dispatcher worker context can never record an
-        override — the authority is structural, matching decide/revoke, so
-        a stripped shell variable cannot manufacture operator privilege."""
+        override. v1.2.12 C3: the authority is TWO structural factors,
+        mirroring decide/revoke — the non-worker context alone is not
+        enough; the caller must additionally present the exact confirmation
+        code derived from the binding identity (``expected_failure_code``),
+        so a stripped shell variable cannot manufacture operator privilege.
+        """
         if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
+        binding_key = stable_override_key(task_id, failure_signature, run_key)
+        if not isinstance(confirm_code, str) or confirm_code != binding_key[-8:]:
             return False
         from .redaction import stable_id
         with self.connect() as connection:

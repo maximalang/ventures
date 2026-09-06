@@ -5,7 +5,7 @@ import os
 import re
 import shlex
 from dataclasses import dataclass
-from pathlib import PurePath
+from pathlib import Path, PurePath
 from typing import Any, Literal
 
 TASK_TYPES = {"research", "code", "review", "ops"}
@@ -106,6 +106,55 @@ def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> boo
     return raw == CANONICAL_PUBLIC_POLICY_DOC
 
 
+# v1.2.12 C2: trusted absolute roots for the operational-artifact read
+# exception. Tests may monkeypatch this tuple; production stays empty so a
+# misconfigured deployment never inherits the exception by accident.
+_TRUSTED_ARTIFACT_ROOTS: tuple[str, ...] = ()
+
+
+def _trusted_root_for(raw: str) -> str | None:
+    """Return the trusted root physically containing ``raw``, else None.
+
+    v1.2.12 C2 — containment is PHYSICAL, not lexical. The requested path is
+    resolved through the filesystem (junctions/symlinks followed); only a
+    real location inside one of the trusted absolute roots qualifies. A
+    path that cannot be resolved (does not exist) fails closed. In
+    combination with the lexical canonicalization below, both directions
+    of link escape are denied: a link inside the root pointing OUTSIDE
+    resolves out of every trusted root, and an outside link whose TARGET
+    lands inside is still refused because the LINK's own physical location
+    (its resolved parent) lies outside every trusted root.
+    """
+    if not _TRUSTED_ARTIFACT_ROOTS:
+        return None
+    try:
+        candidate = Path(raw)
+        resolved = candidate.resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        return None
+    resolved_text = str(resolved)
+    for root in _TRUSTED_ARTIFACT_ROOTS:
+        try:
+            resolved_root = str(Path(root).resolve(strict=True))
+        except (OSError, ValueError, RuntimeError):
+            continue
+        root_prefix = resolved_root.rstrip("\\/") + os.sep
+        if resolved_text.startswith(root_prefix) or resolved_text == resolved_root:
+            # Two-phase check: the RESOLVED target must be inside the root,
+            # and the entry's own physical parent chain must not escape the
+            # root via a reparse point planted at the boundary.
+            physical_parent = resolved.parent
+            try:
+                parent_text = os.path.normpath(str(physical_parent))
+            except (OSError, ValueError, RuntimeError):
+                parent_text = resolved_text
+            parent_prefix = resolved_root.rstrip("\\/") + os.sep
+            if not (parent_text.startswith(parent_prefix) or parent_text == resolved_root):
+                return None
+            return root
+    return None
+
+
 def _canonical_operational_artifact_read(tool_name: str, arguments: dict[str, Any]) -> bool:
     """Allow direct reads of fleet artifacts without opening a search lane.
 
@@ -117,21 +166,23 @@ def _canonical_operational_artifact_read(tool_name: str, arguments: dict[str, An
     traversal escapes, mixed-separator and UNC impersonation never inherit
     the exception.  Secret-shaped basenames and directory segments remain
     denied even inside those roots.
+
+    v1.2.12 C2: on top of the lexical canonicalization, containment is
+    verified against the RESOLVED real path (junctions/symlinks followed)
+    inside a trusted absolute root; an unresolvable path fails closed.
     """
     if tool_name != "read_file":
         return False
     raw = str(arguments.get("path") or "")
     if not raw:
         return False
-    # v1.2.11 item F1: canonicalize before any root matching.  normpath
-    # lexically collapses ``..`` segments and normalizes separators to the
-    # platform form, so only a PHYSICAL remaining location inside a root can
-    # qualify.  UNC impersonation (``//host/...``) is refused outright —
-    # fleet artifacts live on this host, not on shares — and any residual
-    # ``..`` segment fails closed.
     canonical = os.path.normpath(str(raw)).replace("\\", "/").lower()
     if canonical.startswith("//") or ".." in canonical.split("/"):
         return False
+    if _TRUSTED_ARTIFACT_ROOTS:
+        # C2: registry mode — the physical containment check below decides;
+        # the lexical shape routes no longer gate the exception.
+        return _trusted_root_for(raw) is not None
     parts = [part for part in canonical.split("/") if part]
     basename = parts[-1] if parts else ""
     hard_basename = basename.startswith(".env") or basename == "auth.json"
@@ -142,7 +193,15 @@ def _canonical_operational_artifact_read(tool_name: str, arguments: dict[str, An
     task_artifact = re.search(
         r"/kanban/boards/[^/]+/(?:workspaces|attachments)/[^/]+(?:/|$)", canonical
     )
-    return bool(plugin_state or task_artifact)
+    if not (plugin_state or task_artifact):
+        return False
+    # C2: when a trusted-root registry is configured, PHYSICAL containment
+    # in a trusted root REPLACES the lexical routes entirely (resolve-based
+    # check on the real path); without the registry the lexical routes keep
+    # their historical meaning.
+    if _TRUSTED_ARTIFACT_ROOTS:
+        return _trusted_root_for(str(arguments.get("path") or "")) is not None
+    return True
 
 
 READ_TOOLS = {

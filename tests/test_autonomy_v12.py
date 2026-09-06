@@ -48,8 +48,11 @@ def test_gate_producers_and_review_task_do_not_deadlock(runtime, task_context) -
     assert (denied.decision, denied.rule_id) == ("deny", "evidence_gate_missing")
     # With the gates properly attested by an authorized non-assignee author
     # the same review task publishes — the lifecycle does not deadlock.
+    # v1.2.12 C1: the attestations carry the head/card-class binding.
+    head = "a" * 40
     review["comment_records"] = [
-        {"author": "qa", "body": "gate:review=pass\ngate:qa=pass"},
+        {"author": "qa", "body": f"gate:review=pass head={head} task_type: review"},
+        {"author": "qa", "body": f"gate:qa=pass head={head} task_type: review"},
     ]
     review["tool_call_id"] = "review-call-ready"
     reviewed = runtime.pre_tool_call("terminal", {"command": "publish"}, review)

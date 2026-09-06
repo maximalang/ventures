@@ -89,10 +89,18 @@ def test_worker_cannot_call_mark_expected_failure_api(config):
 
 
 def test_expected_failure_override_requires_operator_context(runtime, monkeypatch):
+    # v1.2.12 C3: non-worker context alone no longer suffices — the exact
+    # derived confirmation code is the second structural factor.
+    from fleet_policy.storage import expected_failure_code
+
+    code_1 = expected_failure_code("t_x", "sig-1", None)
     monkeypatch.setenv("HERMES_KANBAN_TASK", "t_other")
-    assert runtime.store.mark_expected_failure("t_x", "sig-1", None) is False
+    assert runtime.store.mark_expected_failure("t_x", "sig-1", None, confirm_code=code_1) is False
     monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
-    assert runtime.store.mark_expected_failure("t_x", "sig-2", None) is True
+    assert runtime.store.mark_expected_failure("t_x", "sig-1", None, confirm_code="00000000") is False
+    assert runtime.store.mark_expected_failure("t_x", "sig-2", None) is False
+    code_2 = expected_failure_code("t_x", "sig-2", None)
+    assert runtime.store.mark_expected_failure("t_x", "sig-2", None, confirm_code=code_2) is True
 
 
 # --------------------------------------------------------------------- F5
