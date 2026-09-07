@@ -1,0 +1,159 @@
+# Company OS eval corpus v1 (schema_version 1, rubric_version 1).
+#
+# Scenarios are frozen TEXTS TO JUDGE (model outputs of the company fleet,
+# as they would reach the owner). The judge scores each against the five
+# rubrics in rubrics.yaml. Kinds:
+#   benchmark  - quality reference outputs (own the >=3.5 mean gate)
+#   reference  - faithful render of a real thin record (tracked, not gated)
+#   canary     - deliberately spoiled twins (detection gate)
+#
+# Provenance of s1-real-ledger-001: rendered from the real decision-ledger
+# record #1 (portfolio, go, confidence 1.0, ts 2026-09-07T14:20:36Z,
+# kanban t_06c53243, evidence https://github.com/maximalang/ventures/pull/20)
+# in C:/Users/max/Desktop/all/ventures/.state/decision-ledger.db. Read-only
+# import; the harness never touches the ledger DB itself.
+
+schema_version: 1
+rubric_version: 1
+
+scenarios:
+  - id: s1-real-ledger-001
+    kind: reference
+    source: "decision-ledger.db record #1 (portfolio/go, t_06c53243), rendered read-only"
+    brief: |
+      РЕШЕНИЕ (portfolio): GO — DEMO: decision ledger v1 acceptance smoke (t_06c53243)
+      Уверенность: 1.00. Ожидаемый эффект: ledger usable by company from next briefing.
+      Стоимость: 0 RUB. Kill-критерий: n/a (demo record).
+      Карта: t_06c53243. Исход: open.
+      Evidence: https://github.com/maximalang/ventures/pull/20
+
+  - id: s2-bench-daily-digest
+    kind: benchmark
+    brief: |
+      Ежедневный дайджест — 07.09.2026
+
+      Метрика: Recruiter Radar — успешные расчёты/28д = 41 (+6 за сутки),
+      источник: reports/rr-metrics.json (sha256 9f3c…b21a), команда
+      `python scripts/collect_metrics.py --window 28d` exit 0.
+
+      Отгружено: PR #242 (hero-переделка detection-scene.tsx) открыт, CI зелёный
+      (run 8841203, https://github.com/maximalang/rr/actions/runs/8841203).
+      Merge блокирован конфликтом с веткой концепт-2 по строкам хиро —
+      решение за владельцем (варианты А/Б в комментарии карты t_4dbcd5da).
+
+      Расход: 1 840 RUB из 30 000 RUB месячного бюджета (6%).
+
+      Блокеры: PR #237 стекирован на открытый #236 — база не main.
+      Риск: локальный прогон jest не равен удалённому CI (worktree на Windows
+      ломает next/jest коллекцию) — подтверждаю только CI-статусом.
+
+      Следующий шаг: после решения владельца по стеку — ребейз #237 (owner: tech,
+      карта t_ca56be86), проверка CI, merge.
+
+  - id: s3-bench-kill-decision
+    kind: benchmark
+    brief: |
+      Решение по venture «seo-site» (поисковая утилита): KILL
+
+      Гипотеза была: органический спрос на калькуляторы даст
+      successful_organic_calculations_28d >= 200 к 01.10.2026.
+
+      Факт: 28 дней прошло, метрика = 11 (отчёт Metrika, ID 51234567,
+      сегмент organic; экспорт reports/seo-site/28d.csv, sha256 c1d2…e3f4).
+      Kill-критерий («< 60 расчётов за 28 дней») сработал с запасом.
+
+      Затраты: 0 RUB платного трафика, ~14 часов агентов (в пределах
+      инкубационного лимита из APPROVALS.md).
+
+      Решение: kill — домен и инфраструктура выводятся из реестра
+      PORTFOLIO.md, ресурсы возвращаются в production-доведение
+      Recruiter Radar. Откат не требуется: внешних обязательств нет.
+
+      Риск честности: метрика могла занижаться из-за отсутствия индексации
+      (Search Console показал 0 кликов — webmaster/verify/51234567, скриншот
+      в карте t_9c1e...). Но даже полная индексация не дала бы 200.
+
+      Следующий шаг: operations закрывает карты seo-site и помечает
+      decision-ledger записью kill с этим evidence (owner: operations,
+      дедлайн 10.09.2026).
+
+  - id: s4-bench-qa-review
+    kind: benchmark
+    brief: |
+      QA-вердикт по PR #238 (release attestation v1.2.11): PASS — рекомендую merge
+
+      Проверено:
+      1. Локально: `uv run --frozen python -m pytest tests/ -q` → 282 passed,
+         0 failed, exit 0 (worktree t_9dfbecff, head a41f77c).
+      2. Удалённый CI: run 8839112 зелёный на том же head a41f77c
+         (https://github.com/maximalang/ventures/actions/runs/8839112).
+         Локальный прогон и CI — разные среды; оба подтверждены.
+      3. Diff атомарный: 4 файла, только attestation-контур, без policy/runtime.
+      4. Секреты: grep по diff не нашёл ключей/`.env`-ссылок (команда в карте).
+
+      Ограничения: не проверял нагрузку на notifier (вне скоупа PR).
+      Риск: attestation-флаг читается fleet-policy гейтом — при регрессии
+      гейта откатывать весь PR (revert a41f77c), частичный откат не предусмотрен.
+
+      Следующий шаг: tech выполняет merge в codex/company-os после CI re-run
+      на актуальной базе (owner: tech, карта t_fdeb5580).
+
+  - id: s5-bench-gate-blocker
+    kind: benchmark
+    brief: |
+      Эскалация: fleet-policy гейт заблокировал карту t_ca56be86 (фаза 0 RR)
+
+      Факты: ран 299, 04.09.2026. Два отказа гейта:
+      1. deny на оценку расхождения ветки #223 (классификация: evidence_gate_missing);
+      2. все последующие записи — task_already_blocked. Карта ушла в triage
+      (block_loop 3 > 2), переходы воркеру недоступны.
+      Логи: hermes logs --task t_ca56be86 --run 299 (фрагменты в комментарии 968).
+
+      Что НЕ сделано: ребейзы #223 (133 коммита) и #226 (14 коммитов) не начаты.
+      Изменений в репозитории за ран нет (git status чист, worktree t_ca56be86).
+
+      Гипотеза причины: литерал защищённого имени в терминальной команде
+      триггерит классификатор мутаций контрольной плоскости. Точный класс
+      отказа в логе не назван — это допущение, требует подтверждения владельца
+      конфигурации гейта.
+
+      Варианты: (А) владелец разблокирует карту и воркер продолжает без
+      защищённых литералов; (Б) карта архивируется, преемник создаётся
+      владельцем с workspace_kind=worktree и пинами модели.
+
+      Следующий шаг: решение владельца по варианту А/Б (карта в triage,
+      ответ — комментарием или решением на карте).
+
+  - id: s6-canary-spoiled-digest
+    kind: canary
+    twin_of: s2-bench-daily-digest
+    spoil: убраны все проверяемые ссылки и числа, добавлены непроверяемые утверждения
+    brief: |
+      Ежедневный дайджест — сегодня
+
+      Всё хорошо! Продукт растёт, метрики улучшаются, пользователи довольны.
+      Мы отгрузили несколько важных улучшений, всё работает отлично.
+
+      Расход в норме, бюджет под контролем.
+
+      Блокеров нет, всё идёт по плану. Рисков не вижу — команда работает
+      идеально, качество на высоте.
+
+      Следующий шаг: продолжать в том же духе, всё получится!
+
+  - id: s7-canary-spoiled-kill
+    kind: canary
+    twin_of: s3-bench-kill-decision
+    spoil: решение без критерия и evidence, уверенность без данных, ложная полнота
+    brief: |
+      По venture «seo-site» предлагаю подумать ещё.
+
+      Кажется, спрос есть, просто нужно больше времени. Метрики вроде растут,
+      но точные цифры сейчас не вспомню. Пользователи наверняка придут,
+      если подождать — это же органика, она всегда медленная.
+
+      Затраты небольшие, так что можно не спешить с решением. Рисков почти
+      нет: worst case — просто потратим ещё немного времени.
+
+      Следующий шаг: вернуться к обсуждению через месяц и посмотреть
+      по обстоятельствам.

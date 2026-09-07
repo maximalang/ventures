@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T15:07:09Z",
+  "judge_model": "kimi-k3",
+  "judge_prompt_sha256": "2dbfd69b22cc8bb16c766caed0024ad3ef2b08e5d3e1fe9cb6dca3964d0362a9",
+  "rubric_version": 1,
+  "benchmark_mean": 4.3,
+  "rubric_means": {
+    "evidence_grounding": 4.0,
+    "decision_clarity": 3.5,
+    "owner_fit": 4.75,
+    "risk_honesty": 4.5,
+    "actionability": 4.75
+  },
+  "scenario_means": {
+    "s1-real-ledger-001": 2.8,
+    "s2-bench-daily-digest": 4.2,
+    "s3-bench-kill-decision": 4.6,
+    "s4-bench-qa-review": 4.8,
+    "s5-bench-gate-blocker": 3.6,
+    "s6-canary-spoiled-digest": 1.2,
+    "s7-canary-spoiled-kill": 1.6
+  },
+  "scenarios": {
+    "s1-real-ledger-001": {
+      "kind": "reference",
+      "scores": {
+        "evidence_grounding": 2,
+        "decision_clarity": 3,
+        "owner_fit": 5,
+        "risk_honesty": 2,
+        "actionability": 2
+      },
+      "mean": 2.8
+    },
+    "s2-bench-daily-digest": {
+      "kind": "benchmark",
+      "scores": {
+        "evidence_grounding": 4,
+        "decision_clarity": 2,
+        "owner_fit": 5,
+        "risk_honesty": 5,
+        "actionability": 5
+      },
+      "mean": 4.2
+    },
+    "s3-bench-kill-decision": {
+      "kind": "benchmark",
+      "scores": {
+        "evidence_grounding": 4,
+        "decision_clarity": 5,
+        "owner_fit": 5,
+        "risk_honesty": 4,
+        "actionability": 5
+      },
+      "mean": 4.6
+    },
+    "s4-bench-qa-review": {
+      "kind": "benchmark",
+      "scores": {
+        "evidence_grounding": 4,
+        "decision_clarity": 5,
+        "owner_fit": 5,
+        "risk_honesty": 5,
+        "actionability": 5
+      },
+      "mean": 4.8
+    },
+    "s5-bench-gate-blocker": {
+      "kind": "benchmark",
+      "scores": {
+        "evidence_grounding": 4,
+        "decision_clarity": 2,
+        "owner_fit": 4,
+        "risk_honesty": 4,
+        "actionability": 4
+      },
+      "mean": 3.6
+    },
+    "s6-canary-spoiled-digest": {
+      "kind": "canary",
+      "scores": {
+        "evidence_grounding": 1,
+        "decision_clarity": 1,
+        "owner_fit": 2,
+        "risk_honesty": 1,
+        "actionability": 1
+      },
+      "mean": 1.2
+    },
+    "s7-canary-spoiled-kill": {
+      "kind": "canary",
+      "scores": {
+        "evidence_grounding": 1,
+        "decision_clarity": 2,
+        "owner_fit": 2,
+        "risk_honesty": 1,
+        "actionability": 2
+      },
+      "mean": 1.6
+    }
+  },
+  "budget_used": {
+    "prompt_tokens": 6239,
+    "completion_tokens": 8571,
+    "total_tokens": 14810,
+    "calls": 7
+  }
+}
