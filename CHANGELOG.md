@@ -12,7 +12,7 @@
 
 ### Known issues (recorded by company directive; deny semantics NOT weakened in this release)
 - `worker_self_approval` is a fail-closed textual classifier: it also denies read-only commands whose arguments merely contain binding/decision literals (4 confirmed false-positive cases on 2026-09-07/08, including shell pattern-greps during this release run). Source exploration must use file read/search tools instead of shell greps carrying those literals. Classifier refinement is deferred to a scoped follow-up card.
-- Item E (12 confirmed cases): lifecycle board calls (e.g. `kanban_heartbeat`) were still denied through the failure-loop collapse in live worker runs despite the v1.2.13 M-E exemption; root cause (deployed bundle vs. code path) is not yet verified. Lifecycle calls must be immune to failure-loop collapse so workers spend budget on work, not on deny loops — tracked for the next patch release.
+- Item E (13 confirmed cases: heartbeat×3, complete×5, comment×2, show×3): lifecycle board calls (e.g. `kanban_heartbeat`) were still denied through the failure-loop collapse in live worker runs despite the v1.2.13 M-E exemption; root cause (deployed bundle vs. code path) is not yet verified. The collapsed counter also suppresses read-only post-build verification inside an already-approved scope, which is a further argument for narrowing the retry-key. Lifecycle calls must be immune to failure-loop collapse so workers spend budget on work, not on deny loops — tracked for the next patch release.
 
 ## [1.2.13] - 2026-09-07
 
