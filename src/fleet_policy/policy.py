@@ -237,6 +237,32 @@ FREE_TEXT_TOOLS = {
     "memory", "todo", "clarify", "delegate_task",
 }
 
+# v1.2.13 M-E: board lifecycle tools are a worker's ONLY coordination channel
+# (handoff, heartbeat, block, comment, review transitions). The anti-loop
+# collapse classes (identical_call_loop / same_failure_loop) must never sever
+# it: their arguments repeat by nature (the same heartbeat note, the same
+# completion summary after two executive denies), and losing the transition
+# channel strands the card exactly when the worker most needs to report.
+# Observed failures: run 655 (repeated board-read calls collapsed into
+# identical_call_loop) and the terminal-deny → block-loop class where the
+# lifecycle transition itself got counted as a repeated failing call.
+# Scope is the kanban_* namespace ONLY — executive tools (terminal,
+# write_file, patch, ...) keep full collapse guarding, and lifecycle calls
+# still charge the tool-call budget, so a runaway lifecycle loop is bounded by
+# budget_exhausted (which is NOT exempted).
+LIFECYCLE_TOOLS = {
+    "kanban_show", "kanban_list", "kanban_context", "kanban_diagnostics",
+    "kanban_attachments", "kanban_comment", "kanban_create", "kanban_complete",
+    "kanban_block", "kanban_unblock", "kanban_heartbeat", "kanban_link",
+    "kanban_edit", "kanban_attach", "kanban_attach_url",
+    "kanban_request_review", "kanban_request_changes",
+}
+
+
+def is_lifecycle_tool(tool_name: str) -> bool:
+    """v1.2.13 M-E: normalized board-lifecycle namespace membership."""
+    return _normalize_tool_name(tool_name) in LIFECYCLE_TOOLS
+
 # v1.2.7: `git clone`/`git fetch` moved out of READ_COMMAND. They are
 # network downloads into a local tree (state change), not pure reads; the
 # exact-head verifier lane never needed them. Chained `cd X && git status`
