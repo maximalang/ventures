@@ -57,8 +57,9 @@ def context(kwargs: dict[str, Any]) -> dict[str, Any]:
 
 def _message(payload: dict[str, Any]) -> str:
     return (
-        f"FLEET POLICY BLOCKED [{payload.get('rule_id')}]: {payload.get('reason')}\n"
-        f"task={payload.get('task_id') or 'none'} args_hash={payload.get('args_hash')}"
+        f"FLEET POLICY BLOCKED [{payload.get('rule_id')}] "
+        f"pattern={payload.get('pattern_category') or 'unknown'} "
+        f"call_index={payload.get('call_index') or 0}"
     )
 
 
@@ -111,6 +112,11 @@ def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[
         return {"action": "block", "message": f"FLEET POLICY FAIL-CLOSED: {type(exc).__name__}"}
     payload = decision.as_dict()
     if decision.decision in {"deny", "approval_required"}:
+        if payload.get("deny_nonce"):
+            # v1.2.10 item C — expected review-probe refusal: block the call,
+            # never project or block the card for it. The worker-visible
+            # message still carries the nonce so QA can cite the artifact.
+            return {"action": "block", "message": f"FLEET POLICY BLOCKED [review_probe_nonce] nonce={payload['deny_nonce']}"}
         payload["board"] = str(ctx.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "")
         payload["task_status"] = str(ctx.get("task_status") or "unknown")
         payload["run_key"] = str(ctx.get("current_run_id") or ctx.get("run_id") or "session")

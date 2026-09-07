@@ -80,6 +80,22 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def stable_override_key(task_id: str, failure_signature: str, run_key: str | None) -> str:
+    """Deterministic binding identity for an expected-failure override.
+
+    The override ledger's primary key rendered as one string, so the
+    confirmation code is derived from exactly the thing being authorized
+    (v1.2.12 C3) — the same pattern as an approval binding's rule_key.
+    """
+    return f"{task_id}:{failure_signature}:{run_key or ''}"
+
+
+def expected_failure_code(task_id: str, failure_signature: str, run_key: str | None) -> str:
+    """The confirmation code an operator presents to mark_expected_failure:
+    the last 8 characters of the binding identity (mirror of approvals)."""
+    return stable_override_key(task_id, failure_signature, run_key)[-8:]
+
+
 class PolicyStore:
     def __init__(self, path: str | Path):
         self.path = Path(path)
@@ -114,6 +130,7 @@ class PolicyStore:
                 self._heal_v3_tables(connection)
                 self._heal_outbox_columns(connection)
                 self._heal_approvals_v4(connection)
+                self._heal_failure_overrides(connection)
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
@@ -122,6 +139,7 @@ class PolicyStore:
             connection.executescript(SCHEMA_V3)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(3,?)", (utc_now(),))
             self._heal_approvals_v4(connection)
+            self._heal_failure_overrides(connection)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(4,?)", (utc_now(),))
 
     def _heal_v3_tables(self, connection: sqlite3.Connection) -> None:
@@ -166,6 +184,70 @@ class PolicyStore:
             connection.execute("ALTER TABLE approvals ADD COLUMN revoked_at TEXT")
         if "revoked_by" not in columns:
             connection.execute("ALTER TABLE approvals ADD COLUMN revoked_by TEXT")
+
+    @staticmethod
+    def _heal_failure_overrides(connection: sqlite3.Connection) -> None:
+        """v1.2.10 item D — blast-radius override ledger.
+
+        Idempotent CREATE IF NOT EXISTS: the same failure_signature counter
+        that stops a loop can now be marked expected for one (task, run); the
+        override itself is always separately recorded as a significant event.
+        """
+        connection.execute(
+            """CREATE TABLE IF NOT EXISTS failure_overrides(
+                task_id TEXT NOT NULL,
+                failure_signature TEXT NOT NULL,
+                run_key TEXT NOT NULL DEFAULT '',
+                overridden_at TEXT NOT NULL,
+                PRIMARY KEY(task_id, failure_signature, run_key)
+            )"""
+        )
+
+    def mark_expected_failure(self, task_id: str, failure_signature: str, run_key: str | None,
+                              confirm_code: str | None = None) -> bool:
+        """Record a blast-radius override: this failure signature is an
+        expected part of the task's QA plan. Resets the same-failure counter
+        (existing ledger rows for the signature) and records a significant,
+        auditable event so the notification pipeline fires exactly once.
+        Idempotent: a duplicate override returns False and emits nothing.
+        v1.2.11 item F2: a dispatcher worker context can never record an
+        override. v1.2.12 C3: the authority is TWO structural factors,
+        mirroring decide/revoke — the non-worker context alone is not
+        enough; the caller must additionally present the exact confirmation
+        code derived from the binding identity (``expected_failure_code``),
+        so a stripped shell variable cannot manufacture operator privilege.
+        """
+        if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
+        binding_key = stable_override_key(task_id, failure_signature, run_key)
+        if not isinstance(confirm_code, str) or confirm_code != binding_key[-8:]:
+            return False
+        from .redaction import stable_id
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "INSERT OR IGNORE INTO failure_overrides(task_id,failure_signature,run_key,overridden_at) VALUES(?,?,?,?)",
+                (task_id, failure_signature, run_key or "", utc_now()),
+            )
+            if not cursor.rowcount:
+                return False
+            connection.execute(
+                "DELETE FROM run_call_history WHERE task_id=? AND failure_signature=?",
+                (task_id, failure_signature),
+            )
+        self.record_event(
+            stable_id(task_id, failure_signature, run_key or "", "expected_failure_override"),
+            run_key or "session", task_id, "expected_failure_override",
+            {"failure_signature": failure_signature, "run_key": run_key or ""}, True,
+        )
+        return True
+
+    def has_expected_failure(self, task_id: str, failure_signature: str, run_key: str | None) -> bool:
+        with self.connect() as connection:
+            row = connection.execute(
+                "SELECT 1 FROM failure_overrides WHERE task_id=? AND failure_signature=? AND run_key=?",
+                (task_id, failure_signature, run_key or ""),
+            ).fetchone()
+            return row is not None
 
     def record_event(self, event_id: str, correlation_id: str, task_id: str | None, kind: str,
                      payload: dict[str, Any], significant: bool = False) -> bool:
@@ -359,15 +441,13 @@ class PolicyStore:
             )
             return cursor.rowcount == 1
 
-    def consume_exact_approval(self, task_id: str, action: str, target: str, hashed_args: str) -> bool:
-        if os.environ.get("HERMES_KANBAN_TASK") and os.environ.get("HERMES_KANBAN_TASK") == task_id:
-            pass
+    def consume_exact_approval(self, task_id: str, action: str, effect_path: str, hashed_args: str) -> bool:
         with self.connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
                 "SELECT rule_key,status FROM approvals WHERE task_id=? AND action=? AND target=? AND args_hash=?"
                 " ORDER BY created_at LIMIT 1",
-                (task_id, action, target, hashed_args),
+                (task_id, action, effect_path, hashed_args),
             ).fetchone()
             if row is None or row["status"] != "approved":
                 return False

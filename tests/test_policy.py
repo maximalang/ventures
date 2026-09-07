@@ -12,14 +12,31 @@ ROOT = Path(__file__).parents[1]
 
 def test_task_type_exact_sources():
     assert infer_task_type("task_type: research") == ("research", None)
-    assert infer_task_type(None, ["task_type=code"], []) == ("code", None)
-    assert infer_task_type(None, [], ["task-type-review"]) == ("review", None)
+    assert infer_task_type("task_type=code") == ("code", None)
+    assert infer_task_type("task-type-review") == ("review", None)
 
 
 def test_task_type_missing_unknown_and_conflict():
     assert infer_task_type("nothing")[0] is None
     assert infer_task_type("task_type: magic")[0] is None
-    assert infer_task_type("task_type: code", ["task_type: review"])[0] is None
+    # v1.2.10 item E: first-canonical-marker-only — a later (poisoned/injected)
+    # comment marker can never switch or null the class fixed by the body.
+    assert infer_task_type("task_type: code", ["task_type: review"]) == ("code", None)
+    assert infer_task_type("task_type: code", ["task_type: review", "task-type-ops"]) == ("code", None)
+    # v1.2.10 item F (body-first): a comment/skill marker never creates a
+    # class for an unmarked body — only the body establishes the class.
+    assert infer_task_type(None, ["task_type: research", "task_type=ops"], ["task-type-code"]) == (
+        None, "missing task_type marker",
+    )
+
+
+def test_task_type_body_first_comments_and_skills_never_create():
+    # v1.2.10 item F: the class can only be fixed by the task body. Late
+    # comments (and skill tags) may not create or switch it.
+    assert infer_task_type(None, ["task_type=code"], []) == (None, "missing task_type marker")
+    assert infer_task_type("", ["anything"], ["task-type-review"]) == (None, "missing task_type marker")
+    assert infer_task_type("no marker", ["task_type: ops"], []) == (None, "missing task_type marker")
+    assert infer_task_type("task_type: ops", ["task_type: code"], ["task-type-research"]) == ("ops", None)
 
 
 def test_redaction_and_stable_canonical_hash():

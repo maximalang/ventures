@@ -152,3 +152,28 @@ def task_status(board: str, task_id: str, env: dict[str, str] | None = None) -> 
             connection.close()
     except sqlite3.Error:
         return None
+
+
+def task_assignee(board: str, task_id: str, env: dict[str, str] | None = None) -> str | None:
+    """Read-only assignee probe for target-card gate authorization (v1.2.10 item E).
+
+    Returns None when the board, the DB, or the card cannot be resolved —
+    callers must treat that as fail-closed, never as "unauthorized-free"."""
+    if not task_id:
+        return None
+    try:
+        path = board_db(board, env)
+    except ValueError:
+        return None
+    if not path.is_file():
+        return None
+    try:
+        connection = sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True, timeout=5)
+        connection.row_factory = sqlite3.Row
+        try:
+            row = connection.execute("SELECT assignee FROM tasks WHERE id=?", (task_id,)).fetchone()
+            return str(row["assignee"]) if row and row["assignee"] else None
+        finally:
+            connection.close()
+    except sqlite3.Error:
+        return None
