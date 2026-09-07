@@ -301,7 +301,7 @@ def test_package_plugin_and_cli_versions_match():
         str(integration_plugin["version"]),
         payload["version"],
     }
-    assert versions == {"1.2.12"}
+    assert versions == {"1.2.13"}
 
 
 def test_ci_is_pinned_frozen_and_exercises_release_contract():

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.13] - 2026-09-07
+
+### Security
+- Attestation identity validators anchor at end-of-string (`\Z` instead of `$`): sha40/sha64/task-id/timestamp fields reject trailing-newline padding instead of silently accepting `"<hex>\n"`; new bounded validators cover run ids (1-12 digits) and base refs (ref-name charset, max 89 chars), so attestation evidence cannot smuggle newline-padded payloads through any identity field (M1).
+- Anti-loop collapse never severs the coordination channel: the `kanban_*` lifecycle namespace (show/list/context/diagnostics/attachments/comment/create/complete/block/unblock/heartbeat/link/edit/attach/attach_url/request_review/request_changes) is exempt from `identical_call_loop` and `same_failure_loop`. Executive tools (terminal, write_file, patch, read_file, ...) keep full collapse guarding; lifecycle calls still write call/failure ledger rows and still charge the tool-call budget, so runaway lifecycle loops remain bounded by `budget_exhausted` (M-E).
+
+### Fixed
+- Pristine-manifest determinism: `manifest-pristine-v1211.txt` recorded sha256 of Windows CRLF checkout bytes (57/57 CRLF-hashed, 0/57 canonical), so the same tree verified 0/57 on Linux CI (autocrlf=false) — non-deterministic attestation evidence. All 57 entries are regenerated as sha256 of the canonical git-blob (LF) bytes at the pinned pristine ref; a deterministic oracle test recomputes every hash from `git cat-file` (autocrlf/platform-independent), treats a CRLF blob as a hard failure, and CI checks out full history (`fetch-depth: 0`) so the pinned ref is present on ubuntu runners (M2).
+
+### Added
+- `tests/test_v1213_lifecycle_exempt.py`: 7 contract tests — namespace membership with normalization, lifecycle read/failure no-collapse replays, executive collapse controls, transition-stays-allow after two terminal-denies, budget charging and exhaustion still deny lifecycle calls.
+- `tests/test_v1213_pristine_manifest.py`: deterministic LF-blob oracle over all 57 manifest entries at the pinned pristine ref (explicit skip when git/ref unavailable; full history in CI).
+- M1 validator tests: 14 fail-closed cases (validator-level + evidence-build level). Full suite: `python -m pytest tests/ -q` → 336 passed (328 after M1, 314 at the 1.2.12 merge base).
+
 ## [1.2.12] - 2026-09-07
 
 ### Security
