@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import fnmatch
+import os
 import re
 import shlex
 from dataclasses import dataclass
-from pathlib import PurePath
+from pathlib import Path, PurePath
 from typing import Any, Literal
 
 TASK_TYPES = {"research", "code", "review", "ops"}
@@ -36,28 +37,28 @@ class Classification:
 
 
 def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
-    """v1.2.10 item E — first-canonical-marker-only semantics.
+    """v1.2.10 item F — body-first classification, first-canonical-marker-only.
 
-    Sources are scanned in argument order (task body, then comments, then
-    skills); within each text in positional order. The FIRST marker whose
-    value is a canonical task type decides the class and scanning stops —
-    later markers (older comments, injected text) can never poison or switch
-    it. Markers with unknown values are skipped in favour of a canonical one
-    and reported only when nothing canonical exists anywhere."""
+    Only the task body (the first source) can establish the class: later
+    comments and skill tags are never scanned, so a late comment can neither
+    create a class for an unmarked body nor poison or switch an existing one.
+    Within the body, the FIRST marker whose value is a canonical task type
+    decides; non-canonical markers are reported only when the body carries
+    no canonical marker at all."""
+    body = values[0] if values else None
     first_noncanonical: str | None = None
-    for value in values:
-        items = value if isinstance(value, (list, tuple, set)) else [value]
-        for item in items:
-            text = str(item or "")
-            matches: list[tuple[int, str]] = []
-            for pattern in (TASK_LINE, TASK_TAG, TASK_SKILL):
-                matches.extend((match.start(1), match.group(1)) for match in pattern.finditer(text))
-            for _, raw in sorted(matches):
-                task_type = raw.lower()
-                if task_type in TASK_TYPES:
-                    return task_type, None
-                if first_noncanonical is None:
-                    first_noncanonical = raw
+    items = body if isinstance(body, (list, tuple, set)) else [body]
+    for item in items:
+        text = str(item or "")
+        matches: list[tuple[int, str]] = []
+        for pattern in (TASK_LINE, TASK_TAG, TASK_SKILL):
+            matches.extend((match.start(1), match.group(1)) for match in pattern.finditer(text))
+        for _, raw in sorted(matches):
+            task_type = raw.lower()
+            if task_type in TASK_TYPES:
+                return task_type, None
+            if first_noncanonical is None:
+                first_noncanonical = raw
     if first_noncanonical is not None:
         return None, f"unknown task_type: {first_noncanonical}"
     return None, "missing task_type marker"
@@ -105,30 +106,102 @@ def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> boo
     return raw == CANONICAL_PUBLIC_POLICY_DOC
 
 
+# v1.2.12 C2: trusted absolute roots for the operational-artifact read
+# exception. Tests may monkeypatch this tuple; production stays empty so a
+# misconfigured deployment never inherits the exception by accident.
+_TRUSTED_ARTIFACT_ROOTS: tuple[str, ...] = ()
+
+
+def _trusted_root_for(raw: str) -> str | None:
+    """Return the trusted root physically containing ``raw``, else None.
+
+    v1.2.12 C2 — containment is PHYSICAL, not lexical. The requested path is
+    resolved through the filesystem (junctions/symlinks followed); only a
+    real location inside one of the trusted absolute roots qualifies. A
+    path that cannot be resolved (does not exist) fails closed. In
+    combination with the lexical canonicalization below, both directions
+    of link escape are denied: a link inside the root pointing OUTSIDE
+    resolves out of every trusted root, and an outside link whose TARGET
+    lands inside is still refused because the LINK's own physical location
+    (its resolved parent) lies outside every trusted root.
+    """
+    if not _TRUSTED_ARTIFACT_ROOTS:
+        return None
+    try:
+        candidate = Path(raw)
+        resolved = candidate.resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        return None
+    resolved_text = str(resolved)
+    for root in _TRUSTED_ARTIFACT_ROOTS:
+        try:
+            resolved_root = str(Path(root).resolve(strict=True))
+        except (OSError, ValueError, RuntimeError):
+            continue
+        root_prefix = resolved_root.rstrip("\\/") + os.sep
+        if resolved_text.startswith(root_prefix) or resolved_text == resolved_root:
+            # Two-phase check: the RESOLVED target must be inside the root,
+            # and the entry's own physical parent chain must not escape the
+            # root via a reparse point planted at the boundary.
+            physical_parent = resolved.parent
+            try:
+                parent_text = os.path.normpath(str(physical_parent))
+            except (OSError, ValueError, RuntimeError):
+                parent_text = resolved_text
+            parent_prefix = resolved_root.rstrip("\\/") + os.sep
+            if not (parent_text.startswith(parent_prefix) or parent_text == resolved_root):
+                return None
+            return root
+    return None
+
+
 def _canonical_operational_artifact_read(tool_name: str, arguments: dict[str, Any]) -> bool:
     """Allow direct reads of fleet artifacts without opening a search lane.
 
     Broad protected-name patterns can match benign audit filenames.  The
     exception is deliberately limited to a single explicit file read inside a
-    fleet-owned state, task-workspace, or attachment root.  Secret-shaped
-    basenames and directory segments remain denied even inside those roots.
+    fleet-owned state, task-workspace, or attachment root.  The requested
+    path is canonicalized FIRST (separators, drive/UNC prefixes, case,
+    ``..`` segments), so only PHYSICAL containment in a root qualifies:
+    traversal escapes, mixed-separator and UNC impersonation never inherit
+    the exception.  Secret-shaped basenames and directory segments remain
+    denied even inside those roots.
+
+    v1.2.12 C2: on top of the lexical canonicalization, containment is
+    verified against the RESOLVED real path (junctions/symlinks followed)
+    inside a trusted absolute root; an unresolvable path fails closed.
     """
     if tool_name != "read_file":
         return False
-    raw = str(arguments.get("path") or "").replace("\\", "/").lower()
+    raw = str(arguments.get("path") or "")
     if not raw:
         return False
-    parts = [part for part in raw.split("/") if part]
+    canonical = os.path.normpath(str(raw)).replace("\\", "/").lower()
+    if canonical.startswith("//") or ".." in canonical.split("/"):
+        return False
+    if _TRUSTED_ARTIFACT_ROOTS:
+        # C2: registry mode — the physical containment check below decides;
+        # the lexical shape routes no longer gate the exception.
+        return _trusted_root_for(raw) is not None
+    parts = [part for part in canonical.split("/") if part]
     basename = parts[-1] if parts else ""
     hard_basename = basename.startswith(".env") or basename == "auth.json"
     hard_segment = any(part in {"sessions", "request_dump", "dumps"} for part in parts)
     if hard_basename or hard_segment:
         return False
-    plugin_state = re.search(r"/profiles/[^/]+/plugins/[^/]+/\.state(?:/|$)", raw)
+    plugin_state = re.search(r"/profiles/[^/]+/plugins/[^/]+/\.state(?:/|$)", canonical)
     task_artifact = re.search(
-        r"/kanban/boards/[^/]+/(?:workspaces|attachments)/[^/]+(?:/|$)", raw
+        r"/kanban/boards/[^/]+/(?:workspaces|attachments)/[^/]+(?:/|$)", canonical
     )
-    return bool(plugin_state or task_artifact)
+    if not (plugin_state or task_artifact):
+        return False
+    # C2: when a trusted-root registry is configured, PHYSICAL containment
+    # in a trusted root REPLACES the lexical routes entirely (resolve-based
+    # check on the real path); without the registry the lexical routes keep
+    # their historical meaning.
+    if _TRUSTED_ARTIFACT_ROOTS:
+        return _trusted_root_for(str(arguments.get("path") or "")) is not None
+    return True
 
 
 READ_TOOLS = {
@@ -407,18 +480,79 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
     """F4: the path guard sees only path-like targets, never free text."""
     if name in TERMINAL_TOOLS:
         command = str(arguments.get("command") or arguments.get("cmd") or "")
-        try:
-            tokens = shlex.split(command, posix=False)
-        except ValueError:
-            tokens = command.split()
-        if tokens and PurePath(tokens[0].replace("\\", "/")).name.lower() in {
-            "grep", "rg", "findstr", "select-string",
-        }:
-            positional = [token for token in tokens[1:] if not token.startswith("-")]
-            # The first positional argument is the search expression. Only
-            # subsequent positionals are filesystem targets.
-            return [" ".join(positional[1:])] if len(positional) > 1 else []
-        return [command]
+        # v1.2.11 item F5: structurally extract path-like operands per
+        # pipeline stage.  Quoted segments are PROSE by construction (the
+        # shell never glob-expands them) and are removed BEFORE tokenizing;
+        # within each stage the leading executable is skipped, known
+        # value-taking flags (git commit -m/--message, find -name, ...) and
+        # the token after them are prose, a trailing ``--opt=`` contributes
+        # only its empty value, and the value of an unquoted ``-flag=path``
+        # token is a real filesystem operand and stays guarded.  Unquoted
+        # flag values fail CLOSED (they are inspected as operands) — the
+        # narrowing removes the whole-string prose scan, not operand checks.
+        value_flags = {
+            "-m", "--message", "--label", "-label",
+            "--format", "--output", "-name", "--name",
+        }
+        subjects: list[str] = []
+        # A code-bearing flag value (python -c "…") is executable input, not
+        # prose: its text is scanned as an operand even though it was quoted.
+        for code_match in re.finditer(
+            r"\bpython(?:\d+(?:\.\d+)?)?\s+(?:-c|--command)\s*(\"[^\"]*\"|'[^']*')", command
+        ):
+            subjects.append(code_match.group(1)[1:-1])
+        # Quote-aware tokenizer: quoted spans are single tokens (prose by
+        # construction — code values were already extracted above) and do
+        # not break tokenization the way shlex(posix=False) would.  A fused
+        # ``--flag="value"`` stays ONE token so its value can be classified
+        # by flag key: a known value-flag (git commit --message=…) is prose,
+        # an unknown one fails closed (value inspected as an operand).
+        token_re = re.compile(
+            r"-{1,2}[A-Za-z][A-Za-z-]*=(?:\"[^\"]*\"|'[^']*')|\"[^\"]*\"|'[^']*'|\S+"
+        )
+        stages: list[list[str]] = [[]]
+        for part in re.split(r"(\|\||&&|;|\|)", command):
+            if part in ("||", "&&", ";", "|"):
+                stages.append([])
+            elif part:
+                stages[-1].extend(token_re.findall(part))
+        for stage in stages:
+            # v1.2.11 F5 (search tools): the FIRST POSITIONAL operand of
+            # grep/rg/findstr/select-string is the search EXPRESSION, not a
+            # filesystem target — the original false-deny class (c2c46082);
+            # later positionals stay guarded (needle auth.json → deny).
+            head = stage[0] if stage else ""
+            search_head = PurePath(head.replace("\\", "/")).name.lower() in {
+                "grep", "rg", "findstr", "select-string",
+            }
+            pattern_seen = False
+            expect_value = False
+            for token in stage[1:]:
+                if expect_value:
+                    expect_value = False  # flag value = prose, never a target
+                    continue
+                if token in value_flags:
+                    expect_value = True
+                    continue
+                if token.startswith(('"', "'")):
+                    if search_head and not pattern_seen:
+                        pattern_seen = True  # quoted expression consumes the slot
+                    continue
+                if token.startswith("-"):
+                    if "=" in token:
+                        flag_key = token.split("=", 1)[0]
+                        if flag_key in value_flags:
+                            continue  # known value-flag: the value is prose
+                        value_part = token.split("=", 1)[1].strip("'\"")
+                        if _is_path_like(value_part):
+                            subjects.append(value_part)
+                    continue
+                if search_head and not pattern_seen:
+                    pattern_seen = True  # first positional = expression
+                    continue
+                if _is_path_like(token):
+                    subjects.append(token)
+        return subjects
     if name in FREE_TEXT_TOOLS:
         # write_file/patch still carry one real filesystem target.
         path = arguments.get("path")
@@ -480,9 +614,9 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     # Hard-deny checks inspect command/target fields only. They must never scan
     # generated code, card bodies, comments or file contents.
     if worker and (
-        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:approve|reject|revoke)\b", subject, re.I)
-        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:approve|reject|revoke)\b", subject, re.I)
-        or re.search(r"\b(?:decide_approval|consume_exact_approval|ensure_approval|revoke_approval)\b", subject, re.I)
+        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
+        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
+        or re.search(r"\b(?:decide_approval|consume_exact_approval|ensure_approval|revoke_approval|mark_expected_failure)\b", subject, re.I)
         or re.search(r"\b(?:update|insert|delete)[^\n]*\bapprovals\b", subject, re.I)
     ):
         return Classification("state_change", "worker_self_approval", "deny", "workers cannot approve their own action")

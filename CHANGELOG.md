@@ -1,14 +1,27 @@
 # Changelog
 
-## [1.2.11] - 2026-09-05
+## [1.2.12] - 2026-09-07
+
+### Security
+- Gate PASS markers are fail-closed and fully bound: a PASS arms a gate only when the same record binds the verdict to the expected head (`context["head"]`, 7-40 hex prefix match) and the card class it was issued under; an `artifact=` reference must physically exist on disk or the gate stays unarmed. PASS without head binding, on a foreign head, under a switched task class, or against a missing artifact never arms; a record carrying no head context is an unproven verdict.
+- Company no-go is last-wins: a later authorized company no-go record revokes all earlier PASS evidence for every gate in the category; a later authorized go re-arms. The last authorized record still decides per gate, and record order is significant.
+- Artifact-read containment is physical: the requested path is resolved (`Path.resolve(strict=True)`) inside trusted absolute roots with a two-phase parent check; unresolvable paths fail closed. Junction/symlink escapes are denied in both directions (a link inside the root pointing out, and a link outside the root targeting in). A configured trusted-root registry replaces the lexical shape routes; without a registry the historical lexical behavior is preserved. The lexical protections (normpath+lower, UNC refusal, residual `..` denial, secret basenames/segments) remain in force.
+- Review-waiver removal: the card class sets the process but never waives a real side-effect gate — the `review` class no longer drops required `review`/`qa` gates, and review/qa records authored by the card's own assignee are ignored entirely (self-approval can neither attest nor revoke).
+- Override authority for expected-failure overrides is two-factor: non-worker context AND the exact confirmation code derived from the binding identity (`task:sig:run`, last 8 chars, mirror of decide/revoke). The CLI `override-expected-failure` command gains `--confirm`; without the code the store refuses even on a non-worker host (rc=2). Tests derive the code from the binding itself, never manufacture authority by env removal.
 
 ### Added
-- Release attestation v1: `fleet-policy build-release-attestation --input <evidence.json> --output <path>` and `fleet-policy verify-release-attestation --input <path>`. The artifact `RELEASE-ATTESTATION.json` uses schema marker `hermes-fleet-release-attestation/v1`; canonical encoding is UTF-8 JSON with sorted keys, compact separators and exactly one trailing newline; `attestation_sha256` is the SHA-256 of the canonical object with that field omitted.
-- Fail-closed invariants enforced at both build and verify: 40-hex commit/tree SHAs, 64-hex digests, `t_`+8-hex task IDs, UTC RFC3339-Z timestamps, `ci.head_sha == source.head_sha`, `ci.conclusion == success`, every gate (`ci`/`review`/`qa`/`rollback`) exactly `status: pass` with unique (task, run, profile) identities, review and QA gate profiles independent of both `company` and the implementation profile, `decision = company/go`, `deployment.expected_payload_sha256 == bundle.payload_sha256`, and `target_profiles` equal to the ten canonical fleet profiles once each. Unknown fields, missing fields, duplicate targets, malformed IDs/hashes, inconsistent heads or payloads, non-pass gates and digest mismatches all fail. Gates are copied verbatim from the evidence object and never inferred or defaulted.
-- Both commands are offline: no network, no policy database, no state files; the output path is written atomically and nothing is written on failure. Machine JSON on stdout; exit 0 only on a valid artifact.
+- `tests/test_v1212_gate_binding.py`: 15 contract tests incl. foreign-head, unbound-PASS, post-PASS revoke, task_type switch, junction negatives, wrong confirm code, worker-context-with-code; gate fixtures and legacy contracts updated to carry the head/class binding. Full suite: `python -m pytest tests/ -q` → 178 passed (was 163).
 
-### Changed
-- Version pinned `1.2.10 -> 1.2.11` across `pyproject.toml`, `plugin.yaml`, the integration plugin, `src/fleet_policy/__init__.py` and the pin test; `uv.lock` refreshed.
+## [1.2.11] - 2026-09-07
+
+### Security
+- Artifact-read containment: the `read_file` exception canonicalizes the requested path BEFORE any root matching (separators, drive/UNC prefixes, case, `..` collapse), refuses UNC impersonation (`//host/...`) outright, and fails closed on any residual `..` segment — traversal escapes, mixed-separator and case games never inherit the exception. Secret-shaped basenames (starting with `.env`, and `auth.json`) and segments (`sessions`, `request_dump`, `dumps`) stay denied inside trusted roots.
+- Override authority: a dispatcher worker context can never record an expected-failure override — the authority is structural, matching decide/revoke, so a stripped shell variable cannot manufacture operator privilege. The second factor (exact confirm code, CLI `--confirm`) completes in 1.2.12.
+- Path-guard structured operands: the path guard tokenizes per pipeline stage with quote awareness — quoted spans are prose by construction and removed before matching; the leading executable, known value-taking flags (`-m`, `--message`, `--format`, `-name`, ...) and the token after them are prose; a trailing `--opt=` contributes only its empty value; the value of an unquoted `-flag=path` token is a real filesystem operand and stays guarded; unquoted flag values fail CLOSED (inspected as operands). Code-bearing flag values (`python -c "…"`) are still scanned as operands. The narrowing removes the whole-string prose scan, not operand checks.
+- Dead-guard removal: `consume_exact_approval` drops its no-op environment check; the approval lookup binds the effective path (`effect_path`) instead of the raw `target` argument.
+
+### Added
+- Gate evaluation is order-sensitive: for every required gate the LAST authorized record decides — a later fail/revocation from the gate's author cancels an earlier pass, a later pass re-arms; records from authors outside the gate's role set are ignored. Task-type classification is body-first: only the task body can establish the class, later comments and skill tags are never scanned, so a late comment can neither create a class for an unmarked body nor poison or switch an existing one. Regression coverage: `tests/test_v1211_gate_resolver.py`.
 
 ## [1.2.7] - 2026-09-03
 

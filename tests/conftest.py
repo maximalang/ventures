@@ -27,7 +27,7 @@ def runtime(tmp_path):
 
 @pytest.fixture
 def task_context():
-    return {
+    context = {
         "task_id": "t_test",
         "task_title": "test",
         "task_body": "task_type: code",
@@ -45,3 +45,21 @@ def task_context():
         "run_id": "r1",
         "tool_call_id": "call-1",
     }
+    # v1.2.12 C1: gate verdicts are bound to an expected head. The default
+    # context carries the branch head so gate evidence in tests can bind to
+    # it; a test can override `head` for foreign/missing-head scenarios.
+    context["head"] = "a" * 40
+    return context
+
+
+_HEAD = "a" * 40
+_TYPE = "task_type: code"
+
+
+def bound_passes(*pairs: tuple[str, str]) -> list[dict]:
+    """v1.2.12 C1 helper: authorized PASS records bound to the default
+    context head and card class, e.g. bound_passes(("tech", _gate("ci")))."""
+    return [
+        {"author": author, "body": f"{marker} head={_HEAD} {_TYPE}"}
+        for author, marker in pairs
+    ]

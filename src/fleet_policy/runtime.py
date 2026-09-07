@@ -43,25 +43,106 @@ class FleetPolicyRuntime:
         "scope": {"qa", "operations"},
     }
 
+    # v1.2.12 C1: lexical binding tokens used inside comment bodies.
+    _BINDING_HEAD = re.compile(r"(?i)\bhead[=:\s]+([0-9a-f]{7,40})\b")
+    _BINDING_TYPE = re.compile(r"(?i)\btask_type\s*[=:]\s*([a-z_-]+)")
+    _BINDING_ARTIFACT = re.compile(r"(?i)\bartifact[=:\s]+([^\s]+)")
+    _NO_GO = "decision:company=no-go"
+
     def missing_gates(self, category: str, context: dict[str, Any]) -> list[str]:
+        """v1.2.10 item G — order-sensitive gate evaluation.
+
+        The card class sets the process but never waives a real side-effect
+        gate (item F3-A). For every required gate the LAST authorized record
+        decides (item F3-B): a later fail/revocation from the gate's author
+        cancels an earlier pass, and a later pass re-arms the gate. Records
+        from authors outside the gate's role set are ignored, and review/qa
+        records authored by the card's own assignee are ignored entirely
+        (self-approval can neither attest nor revoke).
+
+        v1.2.12 C1 — verdicts are action+artifact-bound. A PASS marker arms
+        its gate only when the SAME record body binds it to the expected
+        head (``head=<sha>``), the task type the work was classified under
+        (``task_type: <type>``), and — when any artifact is referenced — an
+        artifact path that EXISTS on disk; a missing artifact fails closed.
+        A PASS without a head/type binding, or bound to a different head or
+        type than the context's expected values, is not evidence. A later
+        authorized company no-go/revocation record (author ``company``,
+        prefix ``decision:company=no-go``) overrides earlier PASS evidence
+        for every gate; a later go re-arms.
+        """
         required = list(self.config.get("evidence_gates", {}).get(category, []))
-        task_type, _ = self.task_type(context)
-        if task_type == "review":
-            required = [gate for gate in required if gate not in {"review", "qa"}]
         if not required:
             return []
         records = context.get("comment_records") or []
         missing: list[str] = []
-        for gate in required:
-            marker = "decision:company=go" if gate == "company_decision" else f"gate:{gate}=pass"
-            allowed_authors = self.GATE_AUTHORS.get(gate, set())
-            if not any(
-                any(line.strip().lower() == marker for line in str(record.get("body") or "").splitlines())
-                and (not allowed_authors or str(record.get("author") or "").lower() in allowed_authors)
-                and not (gate in {"review", "qa"} and str(record.get("author") or "").lower() == str(context.get("assignee") or "").lower())
-                for record in records
+        assignee = str(context.get("assignee") or "").lower()
+        expected_head = str(context.get("head") or "").strip().lower()
+        body_text = str(context.get("task_body") or "")
+        type_match = infer_task_type(body_text)
+        expected_type = (type_match[0] or "").lower()
+        no_go_seen = False
+        go_seen = False
+        for record in records:
+            if str(record.get("author") or "").lower() != "company":
+                continue
+            company_body = str(record.get("body") or "").strip().lower()
+            company_lines = [line.strip() for line in company_body.splitlines()]
+            if any(line.startswith(self._NO_GO) for line in company_lines):
+                no_go_seen, go_seen = True, False  # later no-go replaces a go
+            elif any(
+                line == "decision:company=go" or line.startswith("decision:company=go ")
+                for line in company_lines
             ):
+                no_go_seen, go_seen = False, True  # later go re-arms
+        if no_go_seen:
+            return required[:]
+        for gate in required:
+            pass_marker = "decision:company=go" if gate == "company_decision" else f"gate:{gate}=pass"
+            fail_prefix = f"gate:{gate}=fail"
+            go_tail = pass_marker + " "
+            allowed_authors = self.GATE_AUTHORS.get(gate, set())
+            state: str | None = None
+            for record in records:
+                author = str(record.get("author") or "").lower()
+                if allowed_authors and author not in allowed_authors:
+                    continue
+                if gate in {"review", "qa"} and author == assignee:
+                    continue
+                body = str(record.get("body") or "")
+                lines = [line.strip().lower() for line in body.splitlines()]
+                if any(line == fail_prefix or line.startswith(fail_prefix) for line in lines):
+                    state = "fail"
+                    continue
+                if any(line == pass_marker or line.startswith(go_tail) for line in lines):
+                    head_match = self._BINDING_HEAD.search(body)
+                    bound_head = head_match.group(1).lower() if head_match else ""
+                    # head binding must be present AND equal to the expected
+                    # head; when the context carries no head at all the
+                    # verdict stays unproven (fail closed).
+                    if not expected_head or not bound_head or bound_head != expected_head[:len(bound_head)]:
+                        state = None
+                        continue
+                    type_match_b = self._BINDING_TYPE.search(body)
+                    bound_type = type_match_b.group(1).lower() if type_match_b else ""
+                    if not bound_type or bound_type != expected_type:
+                        state = None
+                        continue
+                    artifact_ok = True
+                    artifact_match = self._BINDING_ARTIFACT.search(body)
+                    if artifact_match:
+                        try:
+                            artifact_ok = Path(str(artifact_match.group(1))).exists()
+                        except OSError:
+                            artifact_ok = False
+                    if not artifact_ok:
+                        state = None
+                        continue
+                    state = "pass"
+            if state != "pass":
                 missing.append(gate)
+        if no_go_seen:
+            missing = required[:]
         return missing
 
     def gate_comment_allowed(self, text: str, context: dict[str, Any],
