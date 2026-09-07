@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS task_state(
 CREATE TABLE IF NOT EXISTS approvals(
   rule_key TEXT PRIMARY KEY, task_id TEXT NOT NULL, action TEXT NOT NULL, target TEXT NOT NULL,
   args_hash TEXT NOT NULL, status TEXT NOT NULL, created_at TEXT NOT NULL,
-  decided_at TEXT, consumed_at TEXT, decided_by TEXT
+  decided_at TEXT, consumed_at TEXT, decided_by TEXT,
+  board TEXT NOT NULL DEFAULT '', expired_at TEXT, expired_by TEXT
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_approval_binding ON approvals(task_id, action, target, args_hash);
 CREATE TABLE IF NOT EXISTS notification_outbox(
@@ -178,12 +179,25 @@ class PolicyStore:
         Idempotent column checks preserve every historical approval row (the
         incident audit row must survive migration untouched); revocation data
         exists only on decisions made or revoked after v4.
+
+        v1.2.14: the same idempotent heal carries the board binding and the
+        expiry audit columns. A legacy store keeps every pending row while
+        gaining the ability to expire a binding whose card has closed — the
+        phantom approvals_pending counter (43 of 47 on 2026-09-07 belonged to
+        done/archived cards) was unresolvable because nothing recorded which
+        board a pending binding came from.
         """
         columns = {row["name"] for row in connection.execute("PRAGMA table_info(approvals)")}
         if "revoked_at" not in columns:
             connection.execute("ALTER TABLE approvals ADD COLUMN revoked_at TEXT")
         if "revoked_by" not in columns:
             connection.execute("ALTER TABLE approvals ADD COLUMN revoked_by TEXT")
+        if "board" not in columns:
+            connection.execute("ALTER TABLE approvals ADD COLUMN board TEXT NOT NULL DEFAULT ''")
+        if "expired_at" not in columns:
+            connection.execute("ALTER TABLE approvals ADD COLUMN expired_at TEXT")
+        if "expired_by" not in columns:
+            connection.execute("ALTER TABLE approvals ADD COLUMN expired_by TEXT")
 
     @staticmethod
     def _heal_failure_overrides(connection: sqlite3.Connection) -> None:
@@ -392,11 +406,42 @@ class PolicyStore:
             return int(row["idle_turns"])
 
     # --------------------------------------------------------------- approvals
-    def ensure_approval(self, rule_key: str, task_id: str, action: str, target: str, hashed_args: str) -> bool:
+    def ensure_approval(self, rule_key: str, task_id: str, action: str, target: str, hashed_args: str,
+                        board: str = "") -> bool:
         with self.connect() as connection:
             cursor = connection.execute(
-                "INSERT OR IGNORE INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at) VALUES(?,?,?,?,?,'pending',?)",
-                (rule_key, task_id, action, target, hashed_args, utc_now()),
+                "INSERT OR IGNORE INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at,board)"
+                " VALUES(?,?,?,?,?,'pending',?,?)",
+                (rule_key, task_id, action, target, hashed_args, utc_now(), board),
+            )
+            return cursor.rowcount == 1
+
+    def pending_approval_bindings(self) -> list[sqlite3.Row]:
+        """v1.2.14: every still-pending binding with its board/task for the
+        live-status expiry sweep. Read-only; the projector decides."""
+        with self.connect() as connection:
+            return connection.execute(
+                "SELECT rule_key,task_id,board FROM approvals WHERE status='pending' ORDER BY created_at"
+            ).fetchall()
+
+    def expire_approval(self, rule_key: str, expired_by: str, reason: str) -> bool:
+        """v1.2.14: resolve a pending binding whose card is provably closed.
+
+        Expiry is NOT an owner decision: it never touches the approved/
+        rejected states (a decided row is immutable audit), never grants
+        consumption (the filter stays ``status='approved'``), and only moves
+        a still-pending row out of the counter with an auditable reason. The
+        caller must supply live board evidence; the store itself makes no
+        CLI calls. A re-opened card simply re-creates its binding on the next
+        gated call (ensure_approval is idempotent per binding).
+        """
+        if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE approvals SET status='expired',expired_at=?,expired_by=?,decided_at=?,decided_by=?"
+                " WHERE rule_key=? AND status='pending'",
+                (utc_now(), expired_by, utc_now(), f"expired:{reason}", rule_key),
             )
             return cursor.rowcount == 1
 

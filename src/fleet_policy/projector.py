@@ -4,6 +4,7 @@ import json
 import subprocess
 import tempfile
 from collections.abc import Callable, Sequence
+from html import escape as _escape
 from pathlib import Path
 
 from .storage import PolicyStore
@@ -75,18 +76,80 @@ class HermesProjector:
 
     @staticmethod
     def approval_text(payload: dict) -> str:
+        """v1.2.14: compact Russian HTML card (b/i/code, emoji icons) instead
+        of raw field dumps. Every dynamic value is HTML-escaped because the
+        TG adapter sends the text with ParseMode.HTML."""
         card = payload.get("approval_card") or {}
+        esc = _escape
+        action = card.get("action") or payload.get("action") or "unknown"
+        risk = card.get("risk") or payload.get("reason") or "unknown"
         return "\n".join([
-            "APPROVAL REQUIRED",
-            f"Проект/задача: {card.get('project_task', 'unknown')}",
-            f"Действие: {card.get('action', payload.get('action', 'unknown'))}",
-            f"Зачем: {card.get('why', 'policy gate')}",
-            f"Evidence: {card.get('evidence', 'unavailable')}",
-            f"Риск: {card.get('risk', payload.get('reason', 'unknown'))}",
-            f"Rollback: {card.get('rollback', 'stop before execution')}",
-            f"Binding: {card.get('rule_key', 'unknown')}",
-            "Выбор: APPROVE | REJECT | CHANGE <условие>",
+            "🔴 <b>APPROVAL REQUIRED</b>",
+            f"👁 <b>Проект/задача:</b> {esc(card.get('project_task') or 'unknown')}",
+            f"<b>Действие:</b> <code>{esc(action)}</code>",
+            f"<b>Зачем:</b> {esc(card.get('why') or 'policy gate')}",
+            f"<b>Evidence:</b> <code>{esc(card.get('evidence') or 'unavailable')}</code>",
+            f"<b>Риск:</b> {esc(risk)}",
+            f"<b>Rollback:</b> {esc(card.get('rollback') or 'stop before execution')}",
+            f"<b>Binding:</b> <code>{esc(card.get('rule_key') or 'unknown')}</code>",
+            "<i>Выбор: APPROVE | REJECT | CHANGE &lt;условие&gt;</i>",
         ])
+
+    @staticmethod
+    def event_text(payload: dict) -> str:
+        """v1.2.14: non-approval significant events (deny/loop/rollback) as a
+        compact HTML card. The former json.dumps(indent=2) dump was unreadable
+        in TG and repeated identical noise per counter change."""
+        esc = _escape
+        decision = str(payload.get("decision") or "deny")
+        icon = "🚫" if decision == "deny" else "🟠"
+        lines = [
+            f"{icon} <b>{esc(str(payload.get('rule_id') or decision).upper())}</b>",
+            f"👁 <b>Задача:</b> <code>{esc(str(payload.get('task_id') or 'unknown'))}</code>"
+            + (f" · доска <code>{esc(str(payload['board']))}</code>" if payload.get("board") else ""),
+        ]
+        reason = payload.get("reason")
+        if reason:
+            lines.append(f"<b>Причина:</b> {esc(str(reason))}")
+        action = payload.get("action")
+        if action:
+            lines.append(f"<b>Действие:</b> <code>{esc(str(action))}</code>")
+        snapshot = payload.get("budget_snapshot") or {}
+        used, limits = snapshot.get("used") or {}, snapshot.get("limits") or {}
+        if used and limits:
+            spent = ", ".join(
+                f"{esc(str(metric))} {int(used.get(metric, 0))}/{int(limits[metric])}"
+                for metric in sorted(limits)
+                if isinstance(limits.get(metric), int)
+            )
+            if spent:
+                lines.append(f"📊 <b>Бюджет:</b> <i>{spent}</i>")
+        return "\n".join(lines)
+
+    def expire_closed_approvals(self, store: PolicyStore, *, limit: int = 50) -> int:
+        """v1.2.14: sweep pending approval bindings through the live board.
+
+        A binding whose card is provably CLOSED (done/archived/superseded)
+        can never be consumed again, so it is written off as ``expired`` —
+        never approved/rejected (that stays the owner's decision) and never
+        silently deleted (the row keeps its audit trail). Unresolvable or
+        board-less legacy rows are left pending: without live evidence a row
+        must not be expired. Bounded by ``limit`` per drain tick."""
+        expired = 0
+        status_cache: dict[tuple[str, str], str | None] = {}
+        for row in store.pending_approval_bindings()[:limit]:
+            board = str(row["board"] or "")
+            task_id = str(row["task_id"] or "")
+            if not board or not task_id:
+                continue
+            binding = (board, task_id)
+            if binding not in status_cache:
+                status_cache[binding] = self.live_task_status(board, task_id)
+            status = status_cache[binding]
+            if status is not None and status in self.CLOSED_TASK_STATUSES:
+                if store.expire_approval(str(row["rule_key"]), "drain", f"task_status:{status}"):
+                    expired += 1
+        return expired
 
     def drain_company(self, store: PolicyStore, *, profile: str = "company", batch_limit: int = 20) -> int:
         """Deliver active task-bound alerts in one bounded bot turn.
@@ -131,7 +194,8 @@ class HermesProjector:
             if payload.get("decision") == "approval_required":
                 sections.append(self.approval_text(payload))
             else:
-                sections.append(json.dumps(payload, ensure_ascii=False, indent=2))
+                # v1.2.14: compact HTML card instead of a raw json.dumps dump.
+                sections.append(self.event_text(payload))
             active_event_ids.append(event_id)
         if not active_event_ids:
             return 0
