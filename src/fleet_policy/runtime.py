@@ -8,7 +8,7 @@ from typing import Any
 
 from .config import load_config
 from .models import PolicyDecision
-from .policy import Classification, classify, infer_task_type
+from .policy import Classification, classify, infer_task_type, is_lifecycle_tool
 from .redaction import args_hash, redact, stable_id
 from .storage import PolicyStore, utc_now
 
@@ -330,9 +330,13 @@ class FleetPolicyRuntime:
         blocked_read = context.get("task_status") == "blocked" and result.effect == "read"
         if exhausted and not blocked_read:
             result = Classification(result.effect, "budget_exhausted", "deny", f"hard budget exhausted: {exhausted}")
-        elif worker and not blocked_read and self.store.count_signature(
+        elif worker and not blocked_read and not is_lifecycle_tool(tool_name) and self.store.count_signature(
             task_id, "call_signature", call_signature, self._run_key(context) or None
         ) >= int(self.config["anti_loop"]["max_identical_calls"]):
+            # v1.2.13 M-E: board lifecycle tools never collapse — the call
+            # ledger still records every repeat (audit intact) and the budget
+            # below still charges it, so runaway loops remain bounded by
+            # budget_exhausted; only the transition-severing deny is skipped.
             result = Classification(result.effect, "identical_call_loop", "deny", "maximum identical calls reached")
 
         if worker and task_type:
@@ -461,9 +465,15 @@ class FleetPolicyRuntime:
         tool_call_id = str(context.get("tool_call_id") or "")
         if tool_call_id:
             self.store.settle_spend(stable_id(task_id, tool_call_id, "spend"), success)
-        if failure_signature and self.store.count_signature(
+        if failure_signature and not is_lifecycle_tool(tool_name) and self.store.count_signature(
             task_id, "failure_signature", failure_signature, run_key
         ) >= int(self.config["anti_loop"]["max_same_failure"]):
+            # v1.2.13 M-E: a failing board lifecycle call (handoff, heartbeat,
+            # block, review transition) must never fire same_failure_loop — the
+            # ledger row above already records the failure for audit, but the
+            # stop event would sever the worker's only coordination channel
+            # exactly when it is trying to report. Executive-tool failures stay
+            # fully guarded.
             if self.store.has_expected_failure(task_id, failure_signature, run_key):
                 # v1.2.10 item D — blast-radius override: this exact failure
                 # signature was marked expected for this task/run by an

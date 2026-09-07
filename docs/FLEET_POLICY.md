@@ -80,6 +80,17 @@ Known limits:
 - existing sessions require restart after plugin updates;
 - intentionally hostile obfuscated arbitrary code needs OS-account/container isolation.
 
+## Release attestation
+
+Release decisions are bound to a signed evidence artifact. `RELEASE-ATTESTATION.json` (schema `hermes-fleet-release-attestation/v1`) is built offline from an explicit evidence object — gates are copied verbatim and never inferred or defaulted — and re-checked fail-closed at verify time.
+
+```bash
+uv run --frozen fleet-policy build-release-attestation --input <evidence.json> --output <path>
+uv run --frozen fleet-policy verify-release-attestation --input <path>
+```
+
+Canonical encoding: UTF-8 JSON, sorted keys, compact separators, exactly one trailing newline. `attestation_sha256` is the SHA-256 of the canonical object with that field omitted. Invariants: 40-hex commit/tree SHAs, 64-hex digests, `t_`+8-hex task IDs, UTC RFC3339-Z timestamps, `ci.head_sha == source.head_sha`, `ci.conclusion == success`, gates `ci`/`review`/`qa`/`rollback` all `status: pass` with unique identities and review/QA profiles independent of `company` and the implementation profile, `decision = company/go`, `deployment.expected_payload_sha256 == bundle.payload_sha256`, and `target_profiles` exactly the ten canonical profiles once each. Any violation, unknown field, or digest mismatch fails the build/verify with a non-zero exit and machine JSON. The output file is written atomically; nothing is written on failure. Both commands run without network or policy database access.
+
 ## Rollback
 
 ```bash
