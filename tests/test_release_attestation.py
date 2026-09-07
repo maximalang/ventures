@@ -609,3 +609,74 @@ def test_cli_build_missing_input_file_exits_nonzero(tmp_path):
     assert result.returncode != 0
     payload = json.loads(result.stdout)
     assert payload["ok"] is False
+
+
+# ------------------------------------------------- v1.2.13 M1: end-of-string
+# Regex validators historically used re.match with $, which in Python also
+# matches just before a final newline, so "abc...\n" (trailing LF) was
+# accepted as a 40-hex sha. v1.2.13 anchors with \Z so the whole string must
+# match exactly; these tests pin that for every strict validator.
+
+
+@pytest.mark.parametrize(
+    "validator_name",
+    ["source.head_sha", "source.tree_sha", "ci.head_sha", "source.base_ref_id",
+     "ci.run_id", "gates.*.task_id", "gates.*.run_id", "gates.*.evidence_sha256",
+     "task_id", "created_at_utc"],
+)
+def test_strict_validators_reject_trailing_newline_and_ws(validator_name):
+    from fleet_policy import release_attestation as ra
+
+    shims = {
+        "source.head_sha": (ra._sha40, "abc"),
+        "source.tree_sha": (ra._sha40, "abc"),
+        "ci.head_sha": (ra._sha40, "abc"),
+        "gates.*.evidence_sha256": (ra._sha64, "abc"),
+        "task_id": (ra._task_id, "t_0123abcd"),
+        "created_at_utc": (ra._timestamp, "2026-09-05T04:30:00Z"),
+        "ci.run_id": (ra._digits, "0430"),
+        "gates.*.run_id": (ra._digits, "0430"),
+        "gates.*.task_id": (ra._task_id, "t_0123abcd"),
+        "source.base_ref_id": (ra._base_ref_id, "codex/company-os"),
+    }
+    validator, sample = shims[validator_name]
+    for bad in (sample + "\n", sample + "\r\n", sample + " ", sample + "\t"):
+        errors: list[str] = []
+        validator(bad, "probe", errors)
+        assert errors, f"{validator_name} accepted {bad!r}"
+
+
+def test_strict_validators_still_accept_exact_values():
+    from fleet_policy import release_attestation as ra
+
+    errors: list[str] = []
+    ra._sha40("a" * 40, "probe", errors)
+    ra._sha64("b" * 64, "probe", errors)
+    ra._task_id("t_0123abcd", "probe", errors)
+    ra._digits("0430", "probe", errors)
+    ra._base_ref_id("codex/company-os", "probe", errors)
+    ra._timestamp("2026-09-05T04:30:00Z", "probe", errors)
+    assert errors == []
+
+
+def test_evidence_with_trailing_newline_in_head_sha_fails_build():
+    evidence = valid_evidence()
+    evidence["source"]["head_sha"] += "\n"
+    evidence["ci"]["head_sha"] = evidence["source"]["head_sha"]
+    with pytest.raises(AttestationError) as excinfo:
+        build_attestation(evidence)
+    assert any("head_sha" in message for message in excinfo.value.errors)
+
+
+def test_evidence_with_trailing_newline_in_gate_evidence_fails_build():
+    evidence = valid_evidence()
+    evidence["gates"]["ci"]["evidence_sha256"] += "\n"
+    with pytest.raises(AttestationError):
+        build_attestation(evidence)
+
+
+def test_evidence_with_trailing_newline_in_task_id_fails_build():
+    evidence = valid_evidence()
+    evidence["task_id"] += "\n"
+    with pytest.raises(AttestationError):
+        build_attestation(evidence)

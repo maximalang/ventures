@@ -67,10 +67,18 @@ _DECISION_FIELDS = ("task_id", "profile", "status")
 _BUNDLE_FIELDS = ("release_manifest_sha256", "payload_sha256", "file_count")
 _DEPLOYMENT_FIELDS = ("target_profiles", "expected_payload_sha256")
 
-_SHA40_RE = re.compile(r"^[0-9a-f]{40}$")
-_SHA64_RE = re.compile(r"^[0-9a-f]{64}$")
-_TASK_ID_RE = re.compile(r"^t_[0-9a-f]{8}$")
-_TIMESTAMP_RE = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+_SHA40_RE = re.compile(r"[0-9a-f]{40}\Z")
+_SHA64_RE = re.compile(r"[0-9a-f]{64}\Z")
+_TASK_ID_RE = re.compile(r"t_[0-9a-f]{8}\Z")
+_TIMESTAMP_RE = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\Z")
+# v1.2.13 (M1): strict end-of-string anchors. Python's `$` also matches just
+# before a final "\n", so a value like "<64 hex>\n" silently passed .match();
+# `\Z` requires the whole string to match exactly. Run ids are bounded digit
+# strings and base refs are bounded ref-name strings (no whitespace, no
+# control characters), so attestation evidence cannot smuggle newline-padded
+# payloads through any identity field.
+_DIGITS_RE = re.compile(r"[0-9]{1,12}\Z")
+_BASE_REF_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._/-]{0,88}\Z")
 
 
 class AttestationError(ValueError):
@@ -127,6 +135,18 @@ def _sha64(value, path: str, errors: list[str]) -> None:
         errors.append(f"{path} must be a lowercase 64-character hex sha256 digest")
 
 
+def _digits(value, path: str, errors: list[str]) -> None:
+    """v1.2.13 (M1): run ids must be plain bounded digit strings."""
+    if not (isinstance(value, str) and _DIGITS_RE.match(value)):
+        errors.append(f"{path} must be a run id of 1-12 digits")
+
+
+def _base_ref_id(value, path: str, errors: list[str]) -> None:
+    """v1.2.13 (M1): base refs must be bounded ref-name strings (no whitespace/control chars)."""
+    if not (isinstance(value, str) and _BASE_REF_ID_RE.match(value)):
+        errors.append(f"{path} must be a git ref name without whitespace or control characters")
+
+
 def _task_id(value, path: str, errors: list[str]) -> None:
     if not (isinstance(value, str) and _TASK_ID_RE.match(value)):
         errors.append(f"{path} must be a Kanban task id of the form t_<8 hex>")
@@ -164,11 +184,13 @@ def validate_evidence(evidence, *, expect_digest: bool) -> list[str]:
         _sha40(source["head_sha"], "source.head_sha", errors)
         _sha40(source["tree_sha"], "source.tree_sha", errors)
         _nonempty_str(source["base_ref"], "source.base_ref", errors)
+        _base_ref_id(source["base_ref"], "source.base_ref", errors)
 
     ci = evidence["ci"]
     if _exact_keys(ci, _CI_FIELDS, "ci", errors):
         _nonempty_str(ci["provider"], "ci.provider", errors)
         _nonempty_str(ci["run_id"], "ci.run_id", errors)
+        _digits(ci["run_id"], "ci.run_id", errors)
         _nonempty_str(ci["workflow"], "ci.workflow", errors)
         _sha40(ci["head_sha"], "ci.head_sha", errors)
         if ci["conclusion"] != "success":
@@ -188,6 +210,7 @@ def validate_evidence(evidence, *, expect_digest: bool) -> list[str]:
                 continue
             _task_id(gate["task_id"], f"{gate_path}.task_id", errors)
             _nonempty_str(gate["run_id"], f"{gate_path}.run_id", errors)
+            _digits(gate["run_id"], f"{gate_path}.run_id", errors)
             _nonempty_str(gate["profile"], f"{gate_path}.profile", errors)
             if gate["status"] != "pass":
                 errors.append(f"{gate_path}.status must be exactly 'pass'")
