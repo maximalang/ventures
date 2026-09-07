@@ -14,6 +14,8 @@ C3: expected-failure overrides carry a structural second authority factor
 """
 from __future__ import annotations
 
+import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -144,13 +146,25 @@ def test_company_go_after_no_go_re_arms(runtime, task_context):
 
 
 def _junction(parent: Path, name: str, target: Path) -> Path:
-    import subprocess
+    """Create a directory link (portable).
 
+    win32: keep the original junction behaviour via the built-in shell
+    linker (no privileges required for junctions).
+    posix: an unprivileged directory symlink is the Linux equivalent —
+    the containment code under test resolves both junctions and symlinks
+    through Path.resolve(strict=True), so the escape/deny semantics of the
+    C2 tests are reproduced exactly (no skip degradation).
+    """
     link = parent / name
-    subprocess.run(
-        ["cmd", "/c", "mklink", "/J", str(link), str(target)],
-        check=True, capture_output=True,
-    )
+    if sys.platform == "win32":
+        import subprocess
+
+        subprocess.run(
+            ["cmd", "/c", "mklink", "/J", str(link), str(target)],
+            check=True, capture_output=True,
+        )
+    else:
+        os.symlink(str(target), str(link), target_is_directory=True)
     return link
 
 
