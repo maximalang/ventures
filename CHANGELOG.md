@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.15] - 2026-09-08
+
+### Changed
+- Per-task token hard caps raised by owner decision (2026-09-08, GO recorded on card t_cad66697): `research` 120,000 -> 250,000, `code` 180,000 -> 400,000, `review` 60,000 -> 150,000, `ops` 50,000 -> 150,000 tokens per run. `wall_clock_minutes`, `tool_calls` and `retries` are unchanged — the mortality was tokens-only (63 budget_exhausted denies in 7 days; cards burned their full cap across 3-5 runs and died at the same point each time). The budget values in the config were applied by the owner in the live tree and are committed here as-is. Regression pins move with the contract: `test_all_budget_types_present` asserts the new values, and `test_token_budget_and_idle_stop` now derives its boundary from config instead of pinning a literal. No classifier, gate, protected-store, or enforcement logic is touched. Kill criterion: monthly fleet token spend x2+ without growth in card completion-rate -> budget values return to the 1.2.14 level (one revert PR).
+
 ## [1.2.14] - 2026-09-08
 
 ### Fixed

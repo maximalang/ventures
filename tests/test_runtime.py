@@ -123,7 +123,10 @@ def test_tool_call_budget_exhaustion(runtime, task_context):
 
 
 def test_token_budget_and_idle_stop(runtime, task_context):
-    runtime.store.add_budget("t_test", "tokens", 179999, "seed", "r1")
+    # v1.2.15: token caps are config data; derive the boundary instead of
+    # pinning a literal so cap changes do not silently break this test.
+    token_limit = runtime.config["budgets"]["code"]["tokens"]
+    runtime.store.add_budget("t_test", "tokens", token_limit - 1, "seed", "r1")
     task_context["api_request_id"] = "api-1"
     payload = runtime.post_api_request(task_context, {"input_tokens": 1, "output_tokens": 1}, 1)
     assert payload["rule_id"] == "budget_exhausted"
