@@ -357,7 +357,8 @@ class FleetPolicyRuntime:
                 decision, rule_id, reason = "allow", "approved_once", "exact one-time approval consumed"
             else:
                 rule_key = stable_id(task_id, tool_name, target, hashed)
-                self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed)
+                self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed,
+                                           str(context.get("board") or ""))
                 approval_card = self._approval_card(context, result.category, target, hashed, rule_key)
 
         if decision == "allow" and spend and task_id:
@@ -376,7 +377,8 @@ class FleetPolicyRuntime:
                     decision = "approval_required"
                     reason = f"financial mandate blocked action: {status}"
                     rule_key = stable_id(task_id, tool_name, target, hashed)
-                    self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed)
+                    self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed,
+                                               str(context.get("board") or ""))
                     approval_card = self._approval_card(context, rule_id, target, hashed, rule_key)
 
         policy_decision = PolicyDecision(
@@ -545,6 +547,12 @@ class FleetPolicyRuntime:
             "project": context.get("project", ""), "profile": context.get("profile", ""),
             "action": "llm_request", "target": request_id, "args_hash": stable_id(request_id),
             "timestamp": utc_now(), "budget_snapshot": snapshot, "approval_card": None,
+            # v1.2.14: the run-context board binding. Without it these rows are
+            # unresolvable for notification_binding() and cycle claim→release→
+            # pending forever (39 of 83 outbox events on 2026-09-07).
+            "board": str(context.get("board") or ""),
+            "task_status": str(context.get("task_status") or "unknown"),
+            "run_key": self._run_key(context) or "session",
         }
         inserted = self.store.record_event(
             stable_id(task_id, rule, exhausted or idle), str(context.get("run_id") or task_id),

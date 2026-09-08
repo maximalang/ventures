@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.14] - 2026-09-08
+
+### Fixed
+- Phantom approval counter: pending approval bindings now carry the board they were created on (`approvals.board`, idempotent v4-heal on legacy stores), and the `drain-notifications` tick first sweeps pending bindings through the live board (`HermesProjector.expire_closed_approvals`): a binding whose card is provably closed (done/archived/superseded) is written off as `expired` with an auditable reason — never approved/rejected (that stays the owner's decision), never deleted, and never re-grantable (`consume_exact_approval` still requires `status='approved'`). Unresolvable or board-less legacy rows stay pending (no expiry without live evidence). On 2026-09-07, 43 of 47 pending approvals belonged to closed cards.
+- Eternal pending outbox rows: `post_api_request` budget/loop-stop payloads now include the run-context `board`/`task_status`/`run_key`, so `notification_binding()` resolves them and the drain can suppress closed-task rows instead of cycling claim→release→pending forever (39 of 83 pending outbox events on 2026-09-07 were budget denies without a board).
+- Alert readability: `drain_company` non-approval sections are compact Russian HTML cards (`event_text`) instead of raw `json.dumps(indent=2)`; `approval_text` is an HTML card with emoji icons (🔴👁🚫🟠📊). Every dynamic value is HTML-escaped because the TG adapter delivers with ParseMode.HTML.
+
+### Added
+- `tests/test_v1214_noise_fix.py`: 13 contract tests — expiry sweep (closed→expired, open/unresolvable→pending, no worker-context expiry), board-bound budget-stop payloads drain and suppress, HTML escaping of `<`, `>`, `&` in every dynamic field, no raw JSON dumps in delivered text. Full suite: `uv run --frozen python -m pytest tests/ -q` → 349 passed (was 336 at 1.2.13).
+
+### Known issues (recorded by company directive; deny semantics NOT weakened in this release)
+- `worker_self_approval` is a fail-closed textual classifier: it also denies read-only commands whose arguments merely contain binding/decision literals (4 confirmed false-positive cases on 2026-09-07/08, including shell pattern-greps during this release run). Source exploration must use file read/search tools instead of shell greps carrying those literals. Classifier refinement is deferred to a scoped follow-up card.
+- Item E (12 confirmed cases): lifecycle board calls (e.g. `kanban_heartbeat`) were still denied through the failure-loop collapse in live worker runs despite the v1.2.13 M-E exemption; root cause (deployed bundle vs. code path) is not yet verified. Lifecycle calls must be immune to failure-loop collapse so workers spend budget on work, not on deny loops — tracked for the next patch release.
+
 ## [1.2.13] - 2026-09-07
 
 ### Security

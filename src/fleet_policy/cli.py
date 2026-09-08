@@ -165,8 +165,17 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(payload, ensure_ascii=False))
         return 0 if ok else 2
     if args.command == "drain-notifications":
-        sent = HermesProjector().drain_company(runtime.store, profile=runtime.config["notifications"]["profile"])
-        print(json.dumps({"sent": sent}))
+        projector = HermesProjector()
+        # v1.2.14: expire approval bindings whose cards are provably closed
+        # BEFORE draining, so the delivered counters and the owner's inbox
+        # only ever describe live work. Failures here are non-fatal: the
+        # drain below still runs on the untouched store.
+        try:
+            expired = projector.expire_closed_approvals(runtime.store)
+        except Exception:
+            expired = 0
+        sent = projector.drain_company(runtime.store, profile=runtime.config["notifications"]["profile"])
+        print(json.dumps({"sent": sent, "approvals_expired": expired}))
         return 0
     if args.command == "fail-notifications":
         if getattr(args, "all_pending", False):
