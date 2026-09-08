@@ -169,6 +169,43 @@ def test_binding_order():
         assert ei.validate_evidence_v1(seal(e),context(),now=NOW).codes == (code,)
 
 
+def test_stale_valid_evidence_after_decision_revocation():
+    e = envelope()
+    snapshot = copy.deepcopy(e)
+    c = context()
+    assert ei.validate_evidence_v1(e, c, now=NOW).valid
+    # Same unexpired envelope and digest: only trusted decision state changes.
+    revoked = replace(c, decision_active=False)
+    result = ei.validate_evidence_v1(e, revoked, now=NOW)
+    assert not result.valid
+    assert result.codes == ('DECISION_REVOKED',)
+    assert e == snapshot
+
+
+def test_unexpected_field_cannot_be_made_valid_by_resealing():
+    e = envelope()
+    assert ei.validate_evidence_v1(e, context(), now=NOW).valid
+    e['unexpected'] = 'mutated'
+    assert ei.validate_evidence_v1(e, context(), now=NOW).codes == ('SCHEMA_INVALID',)
+    old_digest = e['evidence_sha256']
+    seal(e)
+    assert e['evidence_sha256'] != old_digest
+    assert ei.validate_evidence_v1(e, context(), now=NOW).codes == ('SCHEMA_INVALID',)
+
+
+def test_optional_field_mutation_invalidates_original_digest():
+    e = envelope()
+    e['note'] = 'original'
+    seal(e)
+    assert ei.validate_evidence_v1(e, context(), now=NOW).valid
+    old_digest = e['evidence_sha256']
+    e['note'] = 'unexpected mutation'
+    assert ei.validate_evidence_v1(e, context(), now=NOW).codes == ('EVIDENCE_DIGEST_MISMATCH',)
+    seal(e)
+    assert e['evidence_sha256'] != old_digest
+    assert ei.validate_evidence_v1(e, context(), now=NOW).valid
+
+
 def test_context_is_not_inferred_and_remains_unchanged():
     c = context()
     snapshot = copy.deepcopy(c)

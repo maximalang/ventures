@@ -2,6 +2,14 @@
 
 Only JSON primitives are accepted. The caller supplies trusted context and time.
 Artifact metadata is compared; bytes, Git, clocks and stores are never read.
+
+Canonical digest contract (release_attestation.canonical_bytes): UTF-8 JSON,
+sort_keys=True, ensure_ascii=False, compact separators (',', ':'), exactly
+one trailing LF. SHA-256 covers the entire envelope except evidence_sha256,
+including optional fields. No Unicode normalization is performed. Parsing
+rejects duplicate keys; this validator rejects floats/nonfinite numbers and
+invalid Unicode before canonicalization. canonical_bytes itself is an encoder,
+not a strict parser or schema validator. The digest is not a signature.
 """
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
