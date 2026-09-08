@@ -1,0 +1,21 @@
+{
+  "schema_version": "product_manifest/v1",
+  "product_id": "seo-site",
+  "board": "seo-site",
+  "repo": "https://github.com/maximalang/mvp-peni-site",
+  "lead_profile": "company",
+  "lifecycle_state": "validation",
+  "primary_metric": {
+    "metric_id": "successful_organic_calculations_28d",
+    "value": null,
+    "unit": null,
+    "unknown_reason": "Pre-launch local MVP; measurement starts only after the source-integrity blocker is removed and independent QA passes (PORTFOLIO.md gate)",
+    "evidence_ref": null
+  },
+  "quality_metrics": [],
+  "financial_metrics": [],
+  "budget_ref": "APPROVALS.md#autonomous-authority",
+  "source_refs": ["PORTFOLIO.md#active-projects", "PORTFOLIO.md#primary-metrics", "kanban:seo-site"],
+  "observed_at": "2026-09-05T18:00:00Z",
+  "next_review_at": "2026-09-12T18:00:00Z"
+}

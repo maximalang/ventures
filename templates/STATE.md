@@ -3,6 +3,12 @@
 ## Last verified
 <ISO timestamp + evidence reference>
 
+## Provenance
+- Observed at: <UTC ISO8601 timestamp>
+- Next review at: <UTC ISO8601 timestamp>
+- Source refs: <Kanban task / decision / measurement links>
+- Unknown values: <null + reason; never substitute zero or an estimate>
+
 ## Phase
 <Discovery / Validating / Building / Launching / Growing / Paused / Stopped>
 
@@ -10,7 +16,7 @@
 <One outcome>
 
 ## Metrics
-| Metric | Baseline | Current | Target | Evidence |
+| Metric | Baseline | Current | Target | Evidence / observed at |
 |---|---:|---:|---:|---|
 
 ## Decisions in force

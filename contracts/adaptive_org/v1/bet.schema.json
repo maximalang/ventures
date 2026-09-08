@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/bet.schema.json",
+  "title": "Product bet v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bet_id", "product_id", "owner_profile", "hypothesis", "baseline_ref", "target", "horizon_end", "confidence", "cost_cap_ref", "kill_criterion", "rollback_ref", "evidence_refs", "decision_ref", "state"],
+  "properties": {
+    "schema_version": {"const": "bet/v1"},
+    "bet_id": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/stable_id"},
+    "product_id": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/slug"},
+    "owner_profile": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/stable_id"},
+    "hypothesis": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "baseline_ref": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"},
+    "target": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/metric_target"},
+    "horizon_end": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/utc_timestamp"},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "cost_cap_ref": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"},
+    "kill_criterion": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "rollback_ref": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"},
+    "evidence_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"}},
+    "decision_ref": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"},
+    "state": {"enum": ["proposed", "active", "achieved", "killed", "expired"]}
+  }
+}

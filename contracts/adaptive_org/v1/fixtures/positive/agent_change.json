@@ -1,0 +1,13 @@
+{
+  "schema_version": "agent_change/v1",
+  "change_id": "chg-rr-source-discovery-r4",
+  "product_id": "recruiter-radar",
+  "agent_id": "recruiter-radar--research--source-discovery",
+  "requested_transition": {"operation": "apply", "from_state": "evaluated", "to_state": "pilot"},
+  "manifest_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "expected_revision": 3,
+  "idempotency_key": "rr-source-discovery-r4",
+  "decision_ref": "kanban:rr-team/t_decision#decision-company-go",
+  "evaluation_ref": "kanban:rr-team/t_eval#gate-qa-pass",
+  "capability_refs": ["capability:public-web-read"]
+}

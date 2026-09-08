@@ -1,0 +1,17 @@
+{
+  "schema_version": "agent_manifest/v1",
+  "agent_id": "other-product--research--source-discovery",
+  "product_id": "recruiter-radar",
+  "owner_profile": "research",
+  "purpose": "Invalid cross-product identity",
+  "trigger": "fixture",
+  "source_refs": ["kanban:rr-team/t_example"],
+  "knowledge_revision": 3,
+  "allowed_tool_refs": [],
+  "capability_refs": [],
+  "budget_ref": "budget:rr",
+  "eval_suite_ref": "repo:test",
+  "model_policy_ref": "policy:model",
+  "ttl_review_at": "2026-09-12T08:00:00Z",
+  "lifecycle_state": "evaluated"
+}

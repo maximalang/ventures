@@ -1,0 +1,36 @@
+[
+  {
+    "schema_version": "bet/v1",
+    "bet_id": "bet-a",
+    "product_id": "recruiter-radar",
+    "owner_profile": "product",
+    "hypothesis": "First active bet",
+    "baseline_ref": "evidence:a",
+    "target": {"metric_id": "accepted_leads", "operator": "gte", "value": 20, "unit": "leads"},
+    "horizon_end": "2026-10-01T00:00:00Z",
+    "confidence": 0.5,
+    "cost_cap_ref": "budget:a",
+    "kill_criterion": "Stop on regression",
+    "rollback_ref": "rollback:a",
+    "evidence_refs": [],
+    "decision_ref": "decision:a",
+    "state": "active"
+  },
+  {
+    "schema_version": "bet/v1",
+    "bet_id": "bet-b",
+    "product_id": "recruiter-radar",
+    "owner_profile": "product",
+    "hypothesis": "Second active bet",
+    "baseline_ref": "evidence:b",
+    "target": {"metric_id": "accepted_leads", "operator": "gte", "value": 30, "unit": "leads"},
+    "horizon_end": "2026-10-02T00:00:00Z",
+    "confidence": 0.4,
+    "cost_cap_ref": "budget:b",
+    "kill_criterion": "Stop on regression",
+    "rollback_ref": "rollback:b",
+    "evidence_refs": [],
+    "decision_ref": "decision:b",
+    "state": "active"
+  }
+]
