@@ -461,9 +461,13 @@ class FleetPolicyRuntime:
         hashed = args_hash(arguments)
         call_signature = stable_id(tool_name, hashed, self._target(tool_name, arguments))
         failure_signature = None
+        legacy_failure_signature = None
         if not success:
             normalized_error = " ".join(str(error_message or "").lower().split())[:300]
-            failure_signature = stable_id(tool_name, error_type, normalized_error)
+            # Generic provider errors (for example just "exit 1") are not a
+            # repeated failure when they come from different invocations.
+            legacy_failure_signature = stable_id(tool_name, error_type, normalized_error)
+            failure_signature = stable_id(tool_name, hashed, error_type, normalized_error)
             if (self.task_type(context)[0] or "") == "review" and error_type == "review_probe_nonce":
                 # v1.2.10 item C — the probe refusal is an expected artifact:
                 # no call ledger row and no failure-signature accounting, so
@@ -486,7 +490,13 @@ class FleetPolicyRuntime:
             # stop event would sever the worker's only coordination channel
             # exactly when it is trying to report. Executive-tool failures stay
             # fully guarded.
-            if self.store.has_expected_failure(task_id, failure_signature, run_key):
+            if (
+                self.store.has_expected_failure(task_id, failure_signature, run_key)
+                or (
+                    legacy_failure_signature is not None
+                    and self.store.has_expected_failure(task_id, legacy_failure_signature, run_key)
+                )
+            ):
                 # v1.2.10 item D — blast-radius override: this exact failure
                 # signature was marked expected for this task/run by an
                 # out-of-band operator decision (audited in failure_overrides

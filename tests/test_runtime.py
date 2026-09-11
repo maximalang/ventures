@@ -77,6 +77,21 @@ def test_same_failure_signature_stops(runtime, task_context):
     assert event["rule_id"] == "same_failure_loop"
 
 
+def test_different_calls_with_same_generic_error_do_not_stop(runtime, task_context):
+    events = []
+    for index, command in enumerate(("python build.py", "python test.py")):
+        task_context["tool_call_id"] = f"distinct-fail-{index}"
+        events.append(runtime.post_tool_call(
+            "terminal",
+            {"command": command},
+            task_context,
+            success=False,
+            error_type="tool_error",
+            error_message="exit 1",
+        ))
+    assert events == [None, None]
+
+
 def test_same_failure_stop_is_scoped_to_each_dispatch_run(runtime, task_context):
     # Run 206's stop class: a terminal Git-object check fails twice with the
     # same normalized error. A later genuine dispatch must get a fresh stop,
