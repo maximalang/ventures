@@ -306,12 +306,12 @@ def test_gate_comment_self_approval_checked_against_target_card(runtime, task_co
     # On qa's OWN card the same attestation is self-approval → denied.
     assert runtime.gate_comment_allowed(_gate("review") + " ok", dict(ctx, assignee="qa")) is False
     # Explicit foreign target: the TARGET card's assignee decides.
-    monkeypatch.setattr(kc, "task_assignee", lambda board, task_id, env=None: "qa")
+    monkeypatch.setattr(kc, "task_assignee_resolved", lambda board, task_id, env=None: ("qa", ""))
     assert runtime.gate_comment_allowed(_gate("qa") + " ok", ctx, "t_foreign") is False
-    monkeypatch.setattr(kc, "task_assignee", lambda board, task_id, env=None: "tech")
+    monkeypatch.setattr(kc, "task_assignee_resolved", lambda board, task_id, env=None: ("tech", ""))
     assert runtime.gate_comment_allowed(_gate("qa") + " ok", ctx, "t_foreign") is True
     # Unresolvable target card fails closed.
-    monkeypatch.setattr(kc, "task_assignee", lambda board, task_id, env=None: None)
+    monkeypatch.setattr(kc, "task_assignee_resolved", lambda board, task_id, env=None: (None, ""))
     assert runtime.gate_comment_allowed(_gate("qa") + " ok", ctx, "t_missing") is False
 
 
