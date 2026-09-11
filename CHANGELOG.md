@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.2.16] - 2026-09-11
+
+### Fixed
+- Board resolution in gate-attestation authorization (t_1b74f401): the review/qa
+  self-approval guard authorized the target card through
+  `task_assignee(context.board, target)` only, so a worker whose context board
+  differed from the target card's board got a fail-closed `gate_forgery` deny
+  even for a legitimate attestation (live incident 2026-09-07, policy events
+  for t_b817cf9b: two review-marker denies 20:33:53Z/20:38:18Z while the
+  ci-gate marker — no target lookup — landed at 20:38:09Z). The guard now reads
+  the call's own `board` argument first, then the worker-context board, then
+  falls through to every sibling board registry via the new
+  `task_assignee_resolved(board, task_id)`; a card that exists in no registry
+  still fails closed, self-approval on the target card (own or foreign) is
+  still denied, and an explicit HERMES_KANBAN_DB pin keeps single-store
+  semantics. Contract tests: `tests/test_v1216_gate_board_resolve.py` (11).
+
+### Not-a-defect (reconstruction outcome)
+- The 2026-09-07 denies themselves ran on the v1.2.6 deployed bundle, whose
+  `gate_comment_allowed` compared the profile against the WORKER's own-card
+  assignee with no target lookup at all: both attempts targeted the worker's
+  own qa card t_b817cf9b (confirmed by the qa worker's comment 2693 and the
+  operations verdict), so both denies were correct self-approval rejections.
+  The cross-board gap fixed above is the latent trunk defect the incident
+  surfaced; it was closed by v1.2.14 deployment for the same-context-board
+  shape, and by this release for the cross-board shape.
+
 ## [1.2.14] - 2026-09-08
 
 ### Fixed
