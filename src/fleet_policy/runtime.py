@@ -146,7 +146,8 @@ class FleetPolicyRuntime:
         return missing
 
     def gate_comment_allowed(self, text: str, context: dict[str, Any],
-                             target_task_id: str | None = None) -> bool:
+                             target_task_id: str | None = None,
+                             explicit_board: str | None = None) -> bool:
         """v1.2.10 item E — write-guard for gate attestations.
 
         Every marker in the comment body is evaluated (a comment carrying an
@@ -154,7 +155,7 @@ class FleetPolicyRuntime:
         self-approval is checked against the TARGET card's assignee, because
         the poison-marker attack lands the comment on someone else's card.
         An explicit target card that cannot be resolved fails closed."""
-        from .kanban_context import task_assignee
+        from .kanban_context import task_assignee_resolved
         lowered = text.lower()
         gates = [match.group(1) for match in re.finditer(r"gate:([a-z_]+)=pass", lowered)]
         if "decision:company=go" in lowered:
@@ -169,7 +170,13 @@ class FleetPolicyRuntime:
                 return False
             if gate in {"review", "qa"}:
                 if target != task_id:
-                    target_assignee = task_assignee(str(context.get("board") or "default"), target)
+                    # v1.2.16: the call's own board argument wins, then the
+                    # worker-context board, then sibling board registries —
+                    # the target card is authorized on the board where it
+                    # actually lives (t_1b74f401 incident reconstruction).
+                    # A card that exists in no registry still fails closed.
+                    probe_board = str(explicit_board or context.get("board") or "default")
+                    target_assignee = task_assignee_resolved(probe_board, target)[0]
                     if target_assignee is None:
                         return False
                 else:
@@ -276,7 +283,10 @@ class FleetPolicyRuntime:
             elif tool_name.lower() == "kanban_comment":
                 text = str(arguments.get("text") or arguments.get("body") or arguments.get("comment") or "")
                 target_task_id = str(arguments.get("task_id") or "") or None
-                if not self.gate_comment_allowed(text, context, target_task_id):
+                explicit_board = str(arguments.get("board") or "") or None
+                if not self.gate_comment_allowed(
+                    text, context, target_task_id, explicit_board=explicit_board
+                ):
                     result = Classification("state_change", "gate_forgery", "deny", "current profile cannot attest this gate")
 
         # Evidence gates protect consequential transitions, not the ordinary
