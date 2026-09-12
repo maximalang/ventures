@@ -1,0 +1,13 @@
+{
+  "schema_version": "agent_change/v1",
+  "change_id": "chg-forbidden",
+  "product_id": "recruiter-radar",
+  "agent_id": "recruiter-radar--research--source-discovery",
+  "requested_transition": {"operation": "apply", "from_state": "active", "to_state": "sandbox", "dry_run": false},
+  "manifest_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "expected_revision": 3,
+  "idempotency_key": "forbidden-transition-1",
+  "decision_ref": "kanban:rr-team/t_decision",
+  "evaluation_ref": "kanban:rr-team/t_eval",
+  "capability_refs": []
+}

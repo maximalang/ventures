@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/product_manifest.schema.json",
+  "title": "Product manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "product_id", "board", "repo", "lead_profile", "lifecycle_state", "primary_metric", "quality_metrics", "financial_metrics", "budget_ref", "source_refs", "observed_at", "next_review_at"],
+  "properties": {
+    "schema_version": {"const": "product_manifest/v1"},
+    "product_id": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/slug"},
+    "board": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/stable_id"},
+    "repo": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"},
+    "lead_profile": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/stable_id"},
+    "lifecycle_state": {"enum": ["discovery", "validation", "operating", "paused", "retired"]},
+    "primary_metric": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/metric_observation"},
+    "quality_metrics": {"type": "array", "items": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/metric_observation"}},
+    "financial_metrics": {"type": "array", "items": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/metric_observation"}},
+    "budget_ref": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"},
+    "source_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/reference"}},
+    "observed_at": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/utc_timestamp"},
+    "next_review_at": {"$ref": "https://maximalang.github.io/ventures/contracts/adaptive_org/v1/common.schema.json#/$defs/utc_timestamp"}
+  }
+}

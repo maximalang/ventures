@@ -1,0 +1,15 @@
+{
+  "schema_version": "product_manifest/v1",
+  "product_id": "recruiter-radar",
+  "board": "rr-team",
+  "repo": "https://github.com/maximalang/recruiter-radar",
+  "lead_profile": "company",
+  "lifecycle_state": "operating",
+  "primary_metric": {"metric_id": "accepted_leads", "value": 1, "unit": "leads", "unknown_reason": null, "evidence_ref": "kanban:rr-team/t_evidence"},
+  "quality_metrics": [],
+  "financial_metrics": [{"metric_id": "spend", "value": {"minor_units": 10.5, "currency": "RUB"}, "unit": "rubles", "unknown_reason": null, "evidence_ref": "ledger:1"}],
+  "budget_ref": "budget:rr",
+  "source_refs": ["kanban:rr-team"],
+  "observed_at": "2026-09-05T08:00:00Z",
+  "next_review_at": "2026-09-12T08:00:00Z"
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "agent_change/v1",
+  "change_id": "chg-stale",
+  "product_id": "recruiter-radar",
+  "agent_id": "recruiter-radar--research--source-discovery",
+  "requested_transition": {"operation": "apply", "from_state": "evaluated", "to_state": "pilot"},
+  "manifest_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "expected_revision": 2,
+  "idempotency_key": "stale-revision-1",
+  "decision_ref": "kanban:rr-team/t_decision",
+  "evaluation_ref": "kanban:rr-team/t_eval",
+  "capability_refs": []
+}

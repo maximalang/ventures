@@ -1,0 +1,33 @@
+{
+  "schema_version": "product_manifest/v1",
+  "product_id": "recruiter-radar",
+  "board": "rr-team",
+  "repo": "https://github.com/maximalang/recruiter-radar",
+  "lead_profile": "company",
+  "lifecycle_state": "operating",
+  "primary_metric": {
+    "metric_id": "accepted_evidence_backed_leads_28d",
+    "value": null,
+    "unit": null,
+    "unknown_reason": "No attested 28-day production window yet",
+    "evidence_ref": null
+  },
+  "quality_metrics": [{
+    "metric_id": "source_acceptance_rate",
+    "value": 0.91,
+    "unit": "ratio",
+    "unknown_reason": null,
+    "evidence_ref": "kanban:rr-team/t_example#qa"
+  }],
+  "financial_metrics": [{
+    "metric_id": "monthly_cost_cap",
+    "value": {"minor_units": 3000000, "currency": "RUB"},
+    "unit": "minor_units",
+    "unknown_reason": null,
+    "evidence_ref": "APPROVALS.md#autonomous-authority"
+  }],
+  "budget_ref": "APPROVALS.md#autonomous-authority",
+  "source_refs": ["PORTFOLIO.md#active-projects", "kanban:rr-team"],
+  "observed_at": "2026-09-05T08:00:00Z",
+  "next_review_at": "2026-09-12T08:00:00Z"
+}
