@@ -8,7 +8,7 @@ from typing import Any
 
 from .config import load_config
 from .models import PolicyDecision
-from .policy import Classification, classify, infer_task_type
+from .policy import Classification, classify, infer_task_type, is_lifecycle_tool
 from .redaction import args_hash, redact, stable_id
 from .storage import PolicyStore, utc_now
 
@@ -43,37 +43,147 @@ class FleetPolicyRuntime:
         "scope": {"qa", "operations"},
     }
 
+    # v1.2.12 C1: lexical binding tokens used inside comment bodies.
+    _BINDING_HEAD = re.compile(r"(?i)\bhead[=:\s]+([0-9a-f]{7,40})\b")
+    _BINDING_TYPE = re.compile(r"(?i)\btask_type\s*[=:]\s*([a-z_-]+)")
+    _BINDING_ARTIFACT = re.compile(r"(?i)\bartifact[=:\s]+([^\s]+)")
+    _NO_GO = "decision:company=no-go"
+
     def missing_gates(self, category: str, context: dict[str, Any]) -> list[str]:
+        """v1.2.10 item G — order-sensitive gate evaluation.
+
+        The card class sets the process but never waives a real side-effect
+        gate (item F3-A). For every required gate the LAST authorized record
+        decides (item F3-B): a later fail/revocation from the gate's author
+        cancels an earlier pass, and a later pass re-arms the gate. Records
+        from authors outside the gate's role set are ignored, and review/qa
+        records authored by the card's own assignee are ignored entirely
+        (self-approval can neither attest nor revoke).
+
+        v1.2.12 C1 — verdicts are action+artifact-bound. A PASS marker arms
+        its gate only when the SAME record body binds it to the expected
+        head (``head=<sha>``), the task type the work was classified under
+        (``task_type: <type>``), and — when any artifact is referenced — an
+        artifact path that EXISTS on disk; a missing artifact fails closed.
+        A PASS without a head/type binding, or bound to a different head or
+        type than the context's expected values, is not evidence. A later
+        authorized company no-go/revocation record (author ``company``,
+        prefix ``decision:company=no-go``) overrides earlier PASS evidence
+        for every gate; a later go re-arms.
+        """
         required = list(self.config.get("evidence_gates", {}).get(category, []))
-        task_type, _ = self.task_type(context)
-        if task_type == "review":
-            required = [gate for gate in required if gate not in {"review", "qa"}]
         if not required:
             return []
         records = context.get("comment_records") or []
         missing: list[str] = []
-        for gate in required:
-            marker = "decision:company=go" if gate == "company_decision" else f"gate:{gate}=pass"
-            allowed_authors = self.GATE_AUTHORS.get(gate, set())
-            if not any(
-                any(line.strip().lower() == marker for line in str(record.get("body") or "").splitlines())
-                and (not allowed_authors or str(record.get("author") or "").lower() in allowed_authors)
-                and not (gate in {"review", "qa"} and str(record.get("author") or "").lower() == str(context.get("assignee") or "").lower())
-                for record in records
+        assignee = str(context.get("assignee") or "").lower()
+        expected_head = str(context.get("head") or "").strip().lower()
+        body_text = str(context.get("task_body") or "")
+        type_match = infer_task_type(body_text)
+        expected_type = (type_match[0] or "").lower()
+        no_go_seen = False
+        go_seen = False
+        for record in records:
+            if str(record.get("author") or "").lower() != "company":
+                continue
+            company_body = str(record.get("body") or "").strip().lower()
+            company_lines = [line.strip() for line in company_body.splitlines()]
+            if any(line.startswith(self._NO_GO) for line in company_lines):
+                no_go_seen, go_seen = True, False  # later no-go replaces a go
+            elif any(
+                line == "decision:company=go" or line.startswith("decision:company=go ")
+                for line in company_lines
             ):
+                no_go_seen, go_seen = False, True  # later go re-arms
+        if no_go_seen:
+            return required[:]
+        for gate in required:
+            pass_marker = "decision:company=go" if gate == "company_decision" else f"gate:{gate}=pass"
+            fail_prefix = f"gate:{gate}=fail"
+            go_tail = pass_marker + " "
+            allowed_authors = self.GATE_AUTHORS.get(gate, set())
+            state: str | None = None
+            for record in records:
+                author = str(record.get("author") or "").lower()
+                if allowed_authors and author not in allowed_authors:
+                    continue
+                if gate in {"review", "qa"} and author == assignee:
+                    continue
+                body = str(record.get("body") or "")
+                lines = [line.strip().lower() for line in body.splitlines()]
+                if any(line == fail_prefix or line.startswith(fail_prefix) for line in lines):
+                    state = "fail"
+                    continue
+                if any(line == pass_marker or line.startswith(go_tail) for line in lines):
+                    head_match = self._BINDING_HEAD.search(body)
+                    bound_head = head_match.group(1).lower() if head_match else ""
+                    # head binding must be present AND equal to the expected
+                    # head; when the context carries no head at all the
+                    # verdict stays unproven (fail closed).
+                    if not expected_head or not bound_head or bound_head != expected_head[:len(bound_head)]:
+                        state = None
+                        continue
+                    type_match_b = self._BINDING_TYPE.search(body)
+                    bound_type = type_match_b.group(1).lower() if type_match_b else ""
+                    if not bound_type or bound_type != expected_type:
+                        state = None
+                        continue
+                    artifact_ok = True
+                    artifact_match = self._BINDING_ARTIFACT.search(body)
+                    if artifact_match:
+                        try:
+                            artifact_ok = Path(str(artifact_match.group(1))).exists()
+                        except OSError:
+                            artifact_ok = False
+                    if not artifact_ok:
+                        state = None
+                        continue
+                    state = "pass"
+            if state != "pass":
                 missing.append(gate)
+        if no_go_seen:
+            missing = required[:]
         return missing
 
-    def gate_comment_allowed(self, text: str, context: dict[str, Any]) -> bool:
+    def gate_comment_allowed(self, text: str, context: dict[str, Any],
+                             target_task_id: str | None = None,
+                             explicit_board: str | None = None) -> bool:
+        """v1.2.10 item E — write-guard for gate attestations.
+
+        Every marker in the comment body is evaluated (a comment carrying an
+        authorized and an unauthorized marker together is denied); review/qa
+        self-approval is checked against the TARGET card's assignee, because
+        the poison-marker attack lands the comment on someone else's card.
+        An explicit target card that cannot be resolved fails closed."""
+        from .kanban_context import task_assignee_resolved
         lowered = text.lower()
-        marker = re.search(r"gate:([a-z_]+)=pass", lowered)
-        gate = marker.group(1) if marker else ("company_decision" if "decision:company=go" in lowered else "")
-        if not gate:
+        gates = [match.group(1) for match in re.finditer(r"gate:([a-z_]+)=pass", lowered)]
+        if "decision:company=go" in lowered:
+            gates.append("company_decision")
+        if not gates:
             return True
         profile = str(context.get("profile") or "").lower()
-        if profile not in self.GATE_AUTHORS.get(gate, set()):
-            return False
-        return not (gate in {"review", "qa"} and profile == str(context.get("assignee") or "").lower())
+        task_id = str(context.get("task_id") or "")
+        target = str(target_task_id or task_id)
+        for gate in gates:
+            if profile not in self.GATE_AUTHORS.get(gate, set()):
+                return False
+            if gate in {"review", "qa"}:
+                if target != task_id:
+                    # v1.2.16: the call's own board argument wins, then the
+                    # worker-context board, then sibling board registries —
+                    # the target card is authorized on the board where it
+                    # actually lives (t_1b74f401 incident reconstruction).
+                    # A card that exists in no registry still fails closed.
+                    probe_board = str(explicit_board or context.get("board") or "default")
+                    target_assignee = task_assignee_resolved(probe_board, target)[0]
+                    if target_assignee is None:
+                        return False
+                else:
+                    target_assignee = str(context.get("assignee") or "")
+                if profile == str(target_assignee or "").lower():
+                    return False
+        return True
 
     @staticmethod
     def _amount_rub(arguments: dict[str, Any]) -> int | None:
@@ -172,7 +282,11 @@ class FleetPolicyRuntime:
                 result = Classification("state_change", "gate_forgery", "deny", "role gates must be written through kanban_comment by the current profile")
             elif tool_name.lower() == "kanban_comment":
                 text = str(arguments.get("text") or arguments.get("body") or arguments.get("comment") or "")
-                if not self.gate_comment_allowed(text, context):
+                target_task_id = str(arguments.get("task_id") or "") or None
+                explicit_board = str(arguments.get("board") or "") or None
+                if not self.gate_comment_allowed(
+                    text, context, target_task_id, explicit_board=explicit_board
+                ):
                     result = Classification("state_change", "gate_forgery", "deny", "current profile cannot attest this gate")
 
         # Evidence gates protect consequential transitions, not the ordinary
@@ -186,11 +300,28 @@ class FleetPolicyRuntime:
             and result.category in self.EVIDENCE_GATED_CATEGORIES
             else []
         )
+        deny_nonce: str | None = None
         if missing:
             result = Classification(
                 result.effect, "evidence_gate_missing", "deny",
                 "fleet must satisfy gates before execution: " + ", ".join(missing),
             )
+            if worker and (self.task_type(context)[0] or "") == "review":
+                # v1.2.10 item C — review-probe nonce lane. A review task
+                # probing a gated transition is an expected QA probe, not a
+                # worker failure: the refusal stays fail-closed but carries a
+                # stable per-run nonce and records exactly one artifact per
+                # run. It must not grow loop counters (post_tool_call skips
+                # probe failures) and the plugin must not project/block the
+                # card on it; the tool-call budget above still charges every
+                # probe so runaway review runs keep their stop class.
+                run_key = self._run_key(context) or "session"
+                deny_nonce = stable_id(task_id, run_key, "review_probe_nonce")
+                self.store.record_event(
+                    stable_id(task_id, run_key, "review_probe_nonce", "artifact"),
+                    run_key, task_id or None, "review_probe_nonce",
+                    {"nonce": deny_nonce, "rule_id": result.category}, False,
+                )
 
         spend: tuple[int, str, str] | None = None
         if result.category == "financial_action" and result.decision == "allow":
@@ -209,9 +340,13 @@ class FleetPolicyRuntime:
         blocked_read = context.get("task_status") == "blocked" and result.effect == "read"
         if exhausted and not blocked_read:
             result = Classification(result.effect, "budget_exhausted", "deny", f"hard budget exhausted: {exhausted}")
-        elif worker and not blocked_read and self.store.count_signature(
+        elif worker and not blocked_read and not is_lifecycle_tool(tool_name) and self.store.count_signature(
             task_id, "call_signature", call_signature, self._run_key(context) or None
         ) >= int(self.config["anti_loop"]["max_identical_calls"]):
+            # v1.2.13 M-E: board lifecycle tools never collapse — the call
+            # ledger still records every repeat (audit intact) and the budget
+            # below still charges it, so runaway loops remain bounded by
+            # budget_exhausted; only the transition-severing deny is skipped.
             result = Classification(result.effect, "identical_call_loop", "deny", "maximum identical calls reached")
 
         if worker and task_type:
@@ -232,7 +367,8 @@ class FleetPolicyRuntime:
                 decision, rule_id, reason = "allow", "approved_once", "exact one-time approval consumed"
             else:
                 rule_key = stable_id(task_id, tool_name, target, hashed)
-                self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed)
+                self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed,
+                                           str(context.get("board") or ""))
                 approval_card = self._approval_card(context, result.category, target, hashed, rule_key)
 
         if decision == "allow" and spend and task_id:
@@ -251,7 +387,8 @@ class FleetPolicyRuntime:
                     decision = "approval_required"
                     reason = f"financial mandate blocked action: {status}"
                     rule_key = stable_id(task_id, tool_name, target, hashed)
-                    self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed)
+                    self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed,
+                                               str(context.get("board") or ""))
                     approval_card = self._approval_card(context, rule_id, target, hashed, rule_key)
 
         policy_decision = PolicyDecision(
@@ -267,6 +404,9 @@ class FleetPolicyRuntime:
             timestamp=utc_now(),
             budget_snapshot=snapshot,
             approval_card=approval_card,
+            pattern_category=result.category,
+            call_index=max(1, int(snapshot.get("used", {}).get("tool_calls", 0))),
+            deny_nonce=deny_nonce,
         )
         notify = decision == "approval_required" or rule_id in {"secret_read_or_write", "worker_self_approval"}
         if decision == "allow" and result.effect == "read":
@@ -324,6 +464,12 @@ class FleetPolicyRuntime:
         if not success:
             normalized_error = " ".join(str(error_message or "").lower().split())[:300]
             failure_signature = stable_id(tool_name, error_type, normalized_error)
+            if (self.task_type(context)[0] or "") == "review" and error_type == "review_probe_nonce":
+                # v1.2.10 item C — the probe refusal is an expected artifact:
+                # no call ledger row and no failure-signature accounting, so
+                # reviewing gates can never escalate into same_failure_loop.
+                # Budget was already charged at pre_tool_call.
+                return None
         event_id = stable_id(task_id, context.get("tool_call_id"), call_signature, success, failure_signature)
         run_key = self._run_key(context) or None
         projection_run_key = run_key or "session"
@@ -331,9 +477,23 @@ class FleetPolicyRuntime:
         tool_call_id = str(context.get("tool_call_id") or "")
         if tool_call_id:
             self.store.settle_spend(stable_id(task_id, tool_call_id, "spend"), success)
-        if failure_signature and self.store.count_signature(
+        if failure_signature and not is_lifecycle_tool(tool_name) and self.store.count_signature(
             task_id, "failure_signature", failure_signature, run_key
         ) >= int(self.config["anti_loop"]["max_same_failure"]):
+            # v1.2.13 M-E: a failing board lifecycle call (handoff, heartbeat,
+            # block, review transition) must never fire same_failure_loop — the
+            # ledger row above already records the failure for audit, but the
+            # stop event would sever the worker's only coordination channel
+            # exactly when it is trying to report. Executive-tool failures stay
+            # fully guarded.
+            if self.store.has_expected_failure(task_id, failure_signature, run_key):
+                # v1.2.10 item D — blast-radius override: this exact failure
+                # signature was marked expected for this task/run by an
+                # out-of-band operator decision (audited in failure_overrides
+                # + a significant event), so the stop event must not fire.
+                # The counter keeps being observed on later failures; the
+                # override simply removes this signature from the stop class.
+                return None
             payload = {
                 "decision": "deny", "rule_id": "same_failure_loop",
                 "reason": "same failure signature reached the stop threshold",
@@ -397,6 +557,12 @@ class FleetPolicyRuntime:
             "project": context.get("project", ""), "profile": context.get("profile", ""),
             "action": "llm_request", "target": request_id, "args_hash": stable_id(request_id),
             "timestamp": utc_now(), "budget_snapshot": snapshot, "approval_card": None,
+            # v1.2.14: the run-context board binding. Without it these rows are
+            # unresolvable for notification_binding() and cycle claim→release→
+            # pending forever (39 of 83 outbox events on 2026-09-07).
+            "board": str(context.get("board") or ""),
+            "task_status": str(context.get("task_status") or "unknown"),
+            "run_key": self._run_key(context) or "session",
         }
         inserted = self.store.record_event(
             stable_id(task_id, rule, exhausted or idle), str(context.get("run_id") or task_id),

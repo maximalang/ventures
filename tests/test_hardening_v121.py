@@ -18,6 +18,17 @@ from fleet_policy.policy import classify
 ROOT = Path(__file__).parents[1]
 
 
+def _subprocess_env() -> dict[str, str]:
+    """Portable CLI-oracle environment (v1.2.10): subprocesses launched as
+    ``python -m fleet_policy.cli`` must not depend on the package being
+    installed in the outer interpreter; pytest's ``pythonpath = ["src"]``
+    ini option only affects pytest itself, not child processes."""
+    env = dict(os.environ)
+    src = str(ROOT / "src")
+    env["PYTHONPATH"] = src + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
+    return env
+
+
 def test_worker_execute_code_requires_exact_one_time_approval(runtime, task_context, monkeypatch):
     args = {"code": "print('bounded diagnostic')"}
     first = runtime.pre_tool_call("execute_code", args, task_context)
@@ -134,6 +145,7 @@ def test_default_bundle_is_self_contained_for_drift_and_rr_guidance(tmp_path, mo
     drift = subprocess.run(
         [sys.executable, "-m", "fleet_policy.cli", "--root", str(bundle), "drift-check"],
         cwd=bundle,
+        env=_subprocess_env(),
         capture_output=True,
         text=True,
     )
@@ -258,6 +270,7 @@ def test_bundle_cli_does_not_initialize_policy_state(tmp_path):
             "--output",
             str(destination),
         ],
+        env=_subprocess_env(),
         cwd=ROOT,
         check=True,
         capture_output=True,
@@ -276,6 +289,7 @@ def test_package_plugin_and_cli_versions_match():
     result = subprocess.run(
         [sys.executable, "-m", "fleet_policy.cli", "--version"],
         cwd=ROOT,
+        env=_subprocess_env(),
         check=True,
         capture_output=True,
         text=True,
@@ -287,7 +301,7 @@ def test_package_plugin_and_cli_versions_match():
         str(integration_plugin["version"]),
         payload["version"],
     }
-    assert versions == {"1.2.7"}
+    assert versions == {"1.2.16"}
 
 
 def test_ci_is_pinned_frozen_and_exercises_release_contract():
@@ -295,6 +309,9 @@ def test_ci_is_pinned_frozen_and_exercises_release_contract():
     workflow = path.read_text(encoding="utf-8")
     assert "permissions:\n  contents: read" in workflow
     assert "actions/checkout@11d5960a326750d5838078e36cf38b85af677262" in workflow
+    # v1.2.13 M2: full history is required so the pristine-manifest oracle can
+    # read the pinned pristine commit's blobs instead of skipping.
+    assert "fetch-depth: 0" in workflow
     assert "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065" in workflow
     setup_uv = "astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86"
     assert setup_uv in workflow
