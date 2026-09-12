@@ -1,0 +1,68 @@
+# Frozen rubric/gate configuration for Company OS evals v1.
+# rubric_version bumps require: judge prompt change + re-recorded baseline.json
+# + updated pin in tests/test_evals_harness.py. Owner decision 07.09.2026.
+schema_version: 1
+rubric_version: 1
+
+judge:
+  # Fleet rail of the qa profile (judge must not be the text author).
+  profile: qa
+  model: kimi-k3
+  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  key_env: HERMES_CUSTOM_CUSTOM_API_KEY
+  prompt_sha256: 2dbfd69b22cc8bb16c766caed0024ad3ef2b08e5d3e1fe9cb6dca3964d0362a9
+  temperature: 0.0
+
+budget:
+  max_total_tokens: 200000
+
+gate:
+  # Mean over benchmark scenarios, all rubrics (card t_b8a7c165 acceptance).
+  benchmark_min_mean: 3.5
+  # No rubric mean may fall more than this fraction vs baseline.
+  rubric_max_relative_drop: 0.10
+  # Canary (deliberately spoiled brief) must be detected as bad:
+  canary_max_mean: 2.5
+  canary_min_evidence_drop_vs_twin: 1.0
+
+# Scenario kinds:
+#   benchmark  - quality reference briefs; included in the >=3.5 mean gate
+#                and in per-rubric baseline regression.
+#   reference  - faithful render of a real thin record (demo acceptance);
+#                tracked per-scenario in baseline, excluded from the mean
+#                gate (it is not a model of a good brief by design).
+#   canary     - deliberately spoiled twin of a benchmark brief; excluded
+#                from means; gate asserts the judge scores it low.
+
+rubrics:
+  - id: evidence_grounding
+    name_ru: Обоснованность доказательствами
+    scale: 1-5
+    definition: >-
+      Каждое содержательное утверждение подкреплено проверяемой ссылкой
+      (URL, SHA, путь к файлу, команда с exit code) или явно помечено как
+      допущение.
+  - id: decision_clarity
+    name_ru: Ясность решения
+    scale: 1-5
+    definition: >-
+      Ровно одно решение сформулировано явно (go/no-go/iterate/kill),
+      названы метрика, kill-критерий и следующий шаг.
+  - id: owner_fit
+    name_ru: Соответствие владельцу
+    scale: 1-5
+    definition: >-
+      Кратко, на русском, executive-стиль: факты и выводы без рутины;
+      собственник понимает суть за 30 секунд.
+  - id: risk_honesty
+    name_ru: Честность о рисках
+    scale: 1-5
+    definition: >-
+      Лимиты, гейты, неопределённости и проваленные проверки названы явно;
+      локальные проверки отделены от живых/удалённых.
+  - id: actionability
+    name_ru: Исполнимость
+    scale: 1-5
+    definition: >-
+      Следующий шаг измерим (конкретный результат или проверка) и назначен
+      (роль/владелец/карта).
