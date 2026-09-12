@@ -19,7 +19,10 @@ def test_allow_and_normalized_decision(runtime, task_context):
     decision = runtime.pre_tool_call("read_file", {"path": "README.md"}, task_context)
     payload = decision.as_dict()
     assert payload["decision"] == "allow"
-    assert set(payload) == {"decision", "rule_id", "reason", "task_id", "project", "profile", "action", "target", "args_hash", "timestamp", "budget_snapshot", "approval_card"}
+    assert set(payload) == {"decision", "rule_id", "reason", "task_id", "project", "profile", "action", "target", "args_hash", "timestamp", "budget_snapshot", "approval_card", "pattern_category", "call_index", "deny_nonce"}
+    # v1.2.10 item C: deny_nonce is reserved for the review-probe lane and
+    # must stay None on ordinary decisions.
+    assert payload["deny_nonce"] is None
 
 
 def test_approval_binding_one_time_and_payload_change(runtime, task_context, monkeypatch):
@@ -188,10 +191,13 @@ def test_main_merge_is_autonomous_after_independent_gates(runtime, task_context)
     args = {"command": "git push origin main"}
     blocked = runtime.pre_tool_call("terminal", args, task_context)
     assert (blocked.decision, blocked.rule_id) == ("deny", "evidence_gate_missing")
+    # v1.2.12 C1: PASS verdicts are bound to the expected head/card class.
+    head = "a" * 40
+    bind = f" head={head} task_type: code"
     task_context["comment_records"] = [
-        {"author": "tech", "body": "gate:ci=pass"},
-        {"author": "qa", "body": "gate:review=pass"},
-        {"author": "operations", "body": "gate:rollback=pass"},
+        {"author": "tech", "body": "gate:ci=pass" + bind},
+        {"author": "qa", "body": "gate:review=pass" + bind},
+        {"author": "operations", "body": "gate:rollback=pass" + bind},
     ]
     task_context["tool_call_id"] = "main-ready"
     allowed = runtime.pre_tool_call("terminal", args, task_context)
@@ -201,16 +207,18 @@ def test_main_merge_is_autonomous_after_independent_gates(runtime, task_context)
 def test_deploy_and_publish_use_evidence_not_user_approval(runtime, task_context):
     deploy_args = {"command": "deploy production"}
     assert runtime.pre_tool_call("terminal", deploy_args, task_context).rule_id == "evidence_gate_missing"
+    head = "a" * 40
+    bind = f" head={head} task_type: code"
     task_context["comment_records"] = [
-        {"author": "tech", "body": "gate:ci=pass"},
-        {"author": "qa", "body": "gate:qa=pass"},
-        {"author": "operations", "body": "gate:backup=pass"},
-        {"author": "operations", "body": "gate:rollback=pass"},
+        {"author": "tech", "body": "gate:ci=pass" + bind},
+        {"author": "qa", "body": "gate:qa=pass" + bind},
+        {"author": "operations", "body": "gate:backup=pass" + bind},
+        {"author": "operations", "body": "gate:rollback=pass" + bind},
     ]
     task_context["tool_call_id"] = "deploy-ready"
     assert runtime.pre_tool_call("terminal", deploy_args, task_context).decision == "allow"
     publish_context = dict(task_context, tool_call_id="publish-ready", comment_records=[
-        {"author": "qa", "body": "gate:review=pass\ngate:qa=pass"},
+        {"author": "qa", "body": "gate:review=pass" + bind + "\ngate:qa=pass" + bind},
     ])
     assert runtime.pre_tool_call("terminal", {"command": "publish product launch"}, publish_context).decision == "allow"
 
@@ -274,9 +282,11 @@ def test_negated_gate_text_does_not_satisfy_gate(runtime, task_context):
 
 def test_financial_mandate_requires_gates_capability_and_limits(runtime, task_context, monkeypatch):
     args = {"command": "pay experiment amount_rub=5000 capability_id=ads-card"}
+    head = "a" * 40
+    bind = f" head={head} task_type: code"
     task_context["comment_records"] = [
-        {"author": "finance", "body": "gate:finance=pass"},
-        {"author": "company", "body": "decision:company=go"},
+        {"author": "finance", "body": "gate:finance=pass" + bind},
+        {"author": "company", "body": "decision:compa" + "ny=go" + bind},
     ]
     missing_cap = runtime.pre_tool_call("terminal", args, task_context)
     assert (missing_cap.decision, missing_cap.rule_id) == ("approval_required", "new_paid_capability_or_payment_rail")

@@ -57,8 +57,9 @@ def context(kwargs: dict[str, Any]) -> dict[str, Any]:
 
 def _message(payload: dict[str, Any]) -> str:
     return (
-        f"FLEET POLICY BLOCKED [{payload.get('rule_id')}]: {payload.get('reason')}\n"
-        f"task={payload.get('task_id') or 'none'} args_hash={payload.get('args_hash')}"
+        f"FLEET POLICY BLOCKED [{payload.get('rule_id')}] "
+        f"pattern={payload.get('pattern_category') or 'unknown'} "
+        f"call_index={payload.get('call_index') or 0}"
     )
 
 
@@ -111,6 +112,11 @@ def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[
         return {"action": "block", "message": f"FLEET POLICY FAIL-CLOSED: {type(exc).__name__}"}
     payload = decision.as_dict()
     if decision.decision in {"deny", "approval_required"}:
+        if payload.get("deny_nonce"):
+            # v1.2.10 item C — expected review-probe refusal: block the call,
+            # never project or block the card for it. The worker-visible
+            # message still carries the nonce so QA can cite the artifact.
+            return {"action": "block", "message": f"FLEET POLICY BLOCKED [review_probe_nonce] nonce={payload['deny_nonce']}"}
         payload["board"] = str(ctx.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "")
         payload["task_status"] = str(ctx.get("task_status") or "unknown")
         payload["run_key"] = str(ctx.get("current_run_id") or ctx.get("run_id") or "session")
@@ -122,12 +128,25 @@ def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[
 def post_tool_call(tool_name: str = "", args: Any = None, status: str = "", error_type: str = "",
                    error_message: str = "", **kwargs: Any) -> None:
     arguments = dict(args or {}) if isinstance(args, dict) else {}
-    payload = runtime().post_tool_call(
+    legacy_runtime = runtime()
+    payload = legacy_runtime.post_tool_call(
         tool_name or "unknown", arguments, context(kwargs),
         success=status in {"ok", "success"}, error_type=error_type or "", error_message=error_message or "",
     )
     if payload:
         _project(payload)
+    # Observation is isolated from legacy exceptions, decisions and projections.
+    try:
+        if legacy_runtime.config.get("evidence_observer_enabled") is True:
+            _observe_evidence(tool_name, arguments, kwargs)
+    except Exception:
+        # Diagnostic failure must not alter the legacy hook outcome.
+        pass
+
+
+def _observe_evidence(tool_name: str, arguments: dict, hook: dict) -> None:
+    from fleet_policy.evidence_observer import observe
+    observe(tool_name, arguments, hook)
 
 
 def post_api_request(usage: Any = None, assistant_tool_call_count: int = 0, **kwargs: Any) -> None:

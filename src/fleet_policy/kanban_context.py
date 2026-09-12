@@ -152,3 +152,68 @@ def task_status(board: str, task_id: str, env: dict[str, str] | None = None) -> 
             connection.close()
     except sqlite3.Error:
         return None
+
+
+def _assignee_in(path: Path, task_id: str) -> str | None:
+    """Single-store assignee probe. None = board db missing/unreadable/card miss."""
+    if not path.is_file():
+        return None
+    try:
+        connection = sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True, timeout=5)
+    except sqlite3.Error:
+        return None
+    connection.row_factory = sqlite3.Row
+    try:
+        row = connection.execute("SELECT assignee FROM tasks WHERE id=?", (task_id,)).fetchone()
+        return str(row["assignee"]) if row and row["assignee"] else None
+    except sqlite3.Error:
+        return None
+    finally:
+        connection.close()
+
+
+def task_assignee(board: str, task_id: str, env: dict[str, str] | None = None) -> str | None:
+    """Read-only assignee probe for target-card gate authorization (v1.2.10 item E).
+
+    Returns None when the board, the DB, or the card cannot be resolved —
+    callers must treat that as fail-closed, never as "unauthorized-free"."""
+    if not task_id:
+        return None
+    try:
+        path = board_db(board, env)
+    except ValueError:
+        return None
+    return _assignee_in(path, task_id)
+
+
+def task_assignee_resolved(
+    board: str, task_id: str, env: dict[str, str] | None = None
+) -> tuple[str | None, str]:
+    """v1.2.16 — cross-board assignee resolution for target-card authorization.
+
+    Probes the worker-context board first, then every sibling board registry
+    under the Hermes home (same fail-closed scan order as load_task_context).
+    Returns (assignee, resolved_board); assignee None means the card exists in
+    no registry — callers must keep failing closed. An explicit
+    HERMES_KANBAN_DB pin keeps single-store semantics: one probe, no sibling
+    scan, resolved_board "" on hit."""
+    if not task_id:
+        return None, ""
+    environ = env or os.environ
+    try:
+        path = board_db(board, environ)
+    except ValueError:
+        return None, ""
+    if environ.get("HERMES_KANBAN_DB"):
+        return _assignee_in(path, task_id), ""
+    found = _assignee_in(path, task_id)
+    if found:
+        return found, board
+    home = _home_dir(environ)
+    for candidate in _candidate_board_dbs(home):
+        if candidate == path:
+            continue
+        found = _assignee_in(candidate, task_id)
+        if found:
+            return found, _slug_for(candidate, environ)
+    return None, ""
