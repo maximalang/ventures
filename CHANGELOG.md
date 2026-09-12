@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.17] - 2026-09-12
+
+### Fixed
+- `same_failure_loop` now binds the normalized failure to the exact tool
+  argument hash. Distinct commands that only share a generic provider error
+  such as `exit 1` no longer collapse into one false repeated-failure class;
+  genuinely identical failing calls still stop at the configured threshold.
+- Existing expected-failure overrides remain valid through a legacy-signature
+  read path, while all new failure-ledger rows use the argument-bound signature.
+
 ## [1.2.16] - 2026-09-11
 
 ### Fixed

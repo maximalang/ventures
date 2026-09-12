@@ -31,7 +31,7 @@ def _signature_count(runtime, task_context, column, tool_name, arguments, *, fai
         value = stable_id(tool_name, args_hash(arguments), target)
     else:
         normalized = " ".join(str(failure or "").lower().split())[:300]
-        value = stable_id(tool_name, "tool_error", normalized)
+        value = stable_id(tool_name, args_hash(arguments), "tool_error", normalized)
     run_key = runtime._run_key(task_context) or None
     return runtime.store.count_signature(task_context["task_id"], column, value, run_key)
 
