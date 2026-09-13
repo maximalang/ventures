@@ -8,6 +8,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from .redaction import stable_id
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS schema_migrations(version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS events(
@@ -33,7 +35,9 @@ CREATE TABLE IF NOT EXISTS approvals(
   rule_key TEXT PRIMARY KEY, task_id TEXT NOT NULL, action TEXT NOT NULL, target TEXT NOT NULL,
   args_hash TEXT NOT NULL, status TEXT NOT NULL, created_at TEXT NOT NULL,
   decided_at TEXT, consumed_at TEXT, decided_by TEXT,
-  board TEXT NOT NULL DEFAULT '', expired_at TEXT, expired_by TEXT
+  board TEXT NOT NULL DEFAULT '', expired_at TEXT, expired_by TEXT,
+  nonce TEXT, expires_at TEXT, principal_ref TEXT, channel TEXT,
+  amount_rub INTEGER, scope TEXT, notified_event_id TEXT
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_approval_binding ON approvals(task_id, action, target, args_hash);
 CREATE TABLE IF NOT EXISTS notification_outbox(
@@ -79,6 +83,17 @@ CREATE INDEX IF NOT EXISTS idx_run_calls_failure ON run_call_history(task_id,run
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+#: v1.2.18 (ADR-001 v2): hard-gate bindings expire 24 hours after creation
+#: unless the owner approves; expiry is enforced at consumption time.
+BINDING_TTL_HOURS = 24
+
+
+def iso_later_hours(hours: int, *, base: datetime | None = None) -> str:
+    """UTC RFC3339 timestamp ``hours`` from ``base`` (default: now)."""
+    moment = base or datetime.now(timezone.utc)
+    return (moment + timedelta(hours=hours)).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def stable_override_key(task_id: str, failure_signature: str, run_key: str | None) -> str:
@@ -198,6 +213,20 @@ class PolicyStore:
             connection.execute("ALTER TABLE approvals ADD COLUMN expired_at TEXT")
         if "expired_by" not in columns:
             connection.execute("ALTER TABLE approvals ADD COLUMN expired_by TEXT")
+        # v1.2.18 (ADR-001 v2 section 5): hard-gate binding fields. Legacy
+        # rows keep NULL — expiry-at-consume treats NULL expires_at as
+        # never-expiring so historical bindings keep their pre-v2 semantics.
+        for column, ddl in (
+            ("nonce", "TEXT"),
+            ("expires_at", "TEXT"),
+            ("principal_ref", "TEXT"),
+            ("channel", "TEXT"),
+            ("amount_rub", "INTEGER"),
+            ("scope", "TEXT"),
+            ("notified_event_id", "TEXT"),
+        ):
+            if column not in columns:
+                connection.execute(f"ALTER TABLE approvals ADD COLUMN {column} {ddl}")
 
     @staticmethod
     def _heal_failure_overrides(connection: sqlite3.Connection) -> None:
@@ -406,13 +435,32 @@ class PolicyStore:
             return int(row["idle_turns"])
 
     # --------------------------------------------------------------- approvals
+    @staticmethod
+    def principal_ref(owner_user_id: str, direct_chat_id: str) -> str:
+        """ADR-001 v2 section 5: identity fingerprint of the Telegram owner
+        principal — sha256 over ``user|chat``. The mapping itself lives only
+        in the gateway configuration; audit rows never store raw identifiers."""
+        return stable_id("principal", owner_user_id, direct_chat_id)
+
     def ensure_approval(self, rule_key: str, task_id: str, action: str, target: str, hashed_args: str,
-                        board: str = "") -> bool:
+                        board: str = "", *, nonce: str = "", expires_at: str = "",
+                        principal_ref: str = "", channel: str = "",
+                        amount_rub: int | None = None, scope: str = "") -> bool:
+        """Idempotently create the pending binding for a hard-gated action.
+
+        v1.2.18 (ADR-001 v2 section 2): the binding carries the full tuple —
+        nonce, expiry, principal fingerprint, decision channel, amount and
+        scope — so the owner approves exactly what is shown on the card.
+        Legacy callers omit the extras; their rows keep v1 semantics (NULL
+        expiry = never expires)."""
         with self.connect() as connection:
             cursor = connection.execute(
-                "INSERT OR IGNORE INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at,board)"
-                " VALUES(?,?,?,?,?,'pending',?,?)",
-                (rule_key, task_id, action, target, hashed_args, utc_now(), board),
+                "INSERT OR IGNORE INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at,board,"
+                "nonce,expires_at,principal_ref,channel,amount_rub,scope)"
+                " VALUES(?,?,?,?,?,'pending',?,?,?,?,?,?,?,?)",
+                (rule_key, task_id, action, target, hashed_args, utc_now(), board,
+                 nonce or None, expires_at or None, principal_ref or None,
+                 channel or None, amount_rub, scope or None),
             )
             return cursor.rowcount == 1
 
@@ -446,7 +494,7 @@ class PolicyStore:
             return cursor.rowcount == 1
 
     def decide_approval(self, rule_key: str, approved: bool, decided_by: str,
-                        confirm_code: str | None = None) -> bool:
+                        confirm_code: str | None = None, *, channel: str = "tty") -> bool:
         # Defense in depth: dispatcher workers cannot approve through a direct
         # Python import even if the terminal command evades the textual policy.
         # The authoritative operator CLI runs outside HERMES_KANBAN_TASK and
@@ -460,10 +508,19 @@ class PolicyStore:
         status = "approved" if approved else "rejected"
         with self.connect() as connection:
             cursor = connection.execute(
-                "UPDATE approvals SET status=?,decided_at=?,decided_by=? WHERE rule_key=? AND status='pending'",
-                (status, utc_now(), decided_by, rule_key),
+                "UPDATE approvals SET status=?,decided_at=?,decided_by=?,channel=? WHERE rule_key=? AND status='pending'",
+                (status, utc_now(), decided_by, channel, rule_key),
             )
-            return cursor.rowcount == 1
+            if cursor.rowcount != 1:
+                return False
+            if approved:
+                # v1.2.18 (ADR-001 v2 section 2): issue the one-time nonce of
+                # the granted binding. Replay-safety is the consume-once
+                # transition; the nonce additionally binds the approval to a
+                # secret shown only inside the authenticated principal chat.
+                nonce = stable_id("nonce", rule_key, utc_now(), os.urandom(16).hex())[:32]
+                connection.execute("UPDATE approvals SET nonce=? WHERE rule_key=?", (nonce, rule_key))
+            return True
 
     def revoke_approval(self, rule_key: str, revoked_by: str,
                         confirm_code: str | None = None) -> bool:
@@ -487,18 +544,59 @@ class PolicyStore:
             return cursor.rowcount == 1
 
     def consume_exact_approval(self, task_id: str, action: str, effect_path: str, hashed_args: str) -> bool:
+        now = utc_now()
         with self.connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
             row = connection.execute(
-                "SELECT rule_key,status FROM approvals WHERE task_id=? AND action=? AND target=? AND args_hash=?"
+                "SELECT rule_key,status,expires_at FROM approvals WHERE task_id=? AND action=? AND target=? AND args_hash=?"
                 " ORDER BY created_at LIMIT 1",
                 (task_id, action, effect_path, hashed_args),
             ).fetchone()
             if row is None or row["status"] != "approved":
                 return False
+            expires_at = row["expires_at"]
+            if expires_at and str(expires_at) <= now:
+                # v1.2.18 (ADR-001 v2 section 2): a granted-but-expired
+                # binding is refused at consumption time, surfaced as expired
+                # in the row's audit columns, and re-armed as a fresh pending
+                # cycle (new nonce/expiry) so a stale grant can never fire
+                # later. The conditional UPDATE keeps concurrent consumers and
+                # late decides single-winner.
+                rotated = stable_id("nonce", row["rule_key"], now, os.urandom(16).hex())[:32]
+                connection.execute(
+                    "UPDATE approvals SET status='pending',expired_at=?,expired_by='consume-expired',"
+                    "nonce=?,expires_at=?,consumed_at=NULL WHERE rule_key=? AND status='approved'",
+                    (now, rotated, iso_later_hours(BINDING_TTL_HOURS), row["rule_key"]),
+                )
+                return False
             cursor = connection.execute(
                 "UPDATE approvals SET status='consumed',consumed_at=? WHERE rule_key=? AND status='approved'",
-                (utc_now(), row["rule_key"]),
+                (now, row["rule_key"]),
+            )
+            return cursor.rowcount == 1
+
+    def link_approval_notice(self, rule_key: str, event_id: str) -> bool:
+        """v1.2.18 (ADR-001 v2 section 5): connect the approval card in
+        notification_outbox to its binding (notice linkage, audit only)."""
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE approvals SET notified_event_id=? WHERE rule_key=?",
+                (event_id, rule_key),
+            )
+            return cursor.rowcount == 1
+
+    def rebind_pending_binding(self, rule_key: str, *, nonce: str = "", expires_at: str = "",
+                               principal_ref: str = "", channel: str = "",
+                               amount_rub: int | None = None, scope: str = "") -> bool:
+        """v1.2.18: refresh card fields on the CURRENT pending cycle of an
+        existing binding (post-expiry re-arm under the same rule_key).
+        Only a still-pending row is touched — a decided/consumed/revoked row
+        is immutable audit history and is never rewritten."""
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE approvals SET expires_at=?,principal_ref=?,channel=?,amount_rub=?,scope=?"
+                " WHERE rule_key=? AND status='pending'",
+                (expires_at, principal_ref, channel, amount_rub, scope, rule_key),
             )
             return cursor.rowcount == 1
 
