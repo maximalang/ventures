@@ -267,14 +267,34 @@ def is_lifecycle_tool(tool_name: str) -> bool:
 # network downloads into a local tree (state change), not pure reads; the
 # exact-head verifier lane never needed them. Chained `cd X && git status`
 # still classifies as a read via the per-stage rules below.
+# v1.2.19: the git verb list accepts the common `git -C <path>` wrapper
+# (case-sensitive `-C`: lowercase `-c` injects per-invocation config such as
+# core.pager and must NOT buy the read lane). Mutating verbs are not
+# whitelisted here; MUTATOR below carries the same `-C` tolerance so
+# `git -C repo push/commit/merge/...` stays a state change.
+# Read-only git inspection added: `config --get*/--list` and bare
+# `config [--scope] <key>` with NO value (query form; a value argument makes
+# it a write and falls through to state_change), `worktree list`, and
+# `merge-base` (MUTATOR's `merge` no longer matches `merge-base`).
+# `cat` joins the read utilities (stdout only — redirects and in-place forms
+# are still caught by the write-marker scan). Deliberately NOT allowed:
+# bare `VAR=value ...` env prefixes — PATH=/evil or LD_PRELOAD=evil.so in
+# front of `python -m pytest` rebinds the executed binary, so assignment
+# prefixes stay fail-closed.
 READ_COMMAND = re.compile(
-    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree)\b|"
-    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
+    r"^\s*(?:git(?:\s+(?-i:-C)\s+\S+)?\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|"
+    r"config\s+(?:--(?:global|local|system|worktree)\s+)*(?:--get(?:-all|-regex)?|--list|-l|--get-url|--get-regexp|[A-Za-z0-9][A-Za-z0-9._-]*\s*$)|"
+    r"worktree\s+list\b|merge-base\b)|"
+    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
 MUTATOR = re.compile(
+    # v1.2.19: the git verbs tolerate the `git -C <path>` wrapper (otherwise
+    # `git -C repo push` would dodge MUTATOR and inherit the read lane from
+    # READ_COMMAND's -C-aware verb list) and `merge` no longer matches
+    # `merge-base` (a pure inspection subcommand).
     r"(?:^|[;&|]\s*|\b)(?:rm|del|remove-item|mv|move-item|cp|copy-item|set-content|add-content|"
-    r"git\s+(?:commit|push|merge|rebase|reset|checkout|switch)|hermes\s+(?:config\s+set|plugins\s+(?:enable|disable|install|remove)|kanban\s+(?:create|comment|block|unblock|archive|assign|reassign|reclaim))|"
+    r"git(?:\s+(?-i:-C)\s+\S+)?\s+(?:commit|push|merge(?!-base)|rebase|reset|checkout|switch)|hermes\s+(?:config\s+set|plugins\s+(?:enable|disable|install|remove)|kanban\s+(?:create|comment|block|unblock|archive|assign|reassign|reclaim))|"
     r"fleet-policy\s+approve|deploy|publish)\b",
     re.I,
 )
@@ -360,7 +380,15 @@ _GH_API_METHOD_FLAGS = ("--method", "-x")
 # `=` spellings (`--hostname=evil`) and unambiguous prefix abbreviations
 # (`--hostn evil`), so a blocklist on exact flag names can be bypassed. Only
 # these read-safe option forms are accepted; every other option fails closed.
+# v1.2.19: `--jq`/`-q` (output formatting) joins the allowlist. It cannot
+# change the HTTP method or carry a payload — it only projects the JSON
+# response — but it consumes a value, so both the space form (`--jq .sha`)
+# and the fused form (`--jq=.sha`) must skip their argument. Workers rely on
+# it for exact-head probes (`gh api ... --jq .sha`); the v1.2.7 fail-closed
+# behavior made every such probe a state change, burning runs (incident
+# 13.09.2026, t_6f335dd6 case 4).
 _GH_API_SAFE_FLAGS = {"--paginate", "--include", "-i"}
+_GH_API_VALUE_FLAGS = ("--jq", "-q")
 # F-02: a read-only endpoint must be a relative GitHub REST path — lowercase
 # alphanumeric segments joined by slashes (optionally with a leading slash).
 # Schemes (`https://...`), hosts, and any other character fail closed.
@@ -410,6 +438,15 @@ def _gh_api_is_read_only(args: list[str]) -> bool:
             index += 2
             continue
         if raw in _GH_API_SAFE_FLAGS or lowered in _GH_API_SAFE_FLAGS:
+            index += 1
+            continue
+        # v1.2.19: output-formatting flags consume their value; the value is
+        # a jq expression, never a request payload. Fused `--jq=...` forms
+        # carry the value inline and are handled here too.
+        if lowered in _GH_API_VALUE_FLAGS:
+            index += 2
+            continue
+        if any(lowered.startswith(flag + "=") for flag in _GH_API_VALUE_FLAGS):
             index += 1
             continue
         if raw.startswith("-"):
@@ -672,7 +709,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
-        (rf"(?:\b(?:push|merge)[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
+        (rf"(?:\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),
@@ -684,7 +721,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             reason = f"{category} requires serious-risk approval" if decision == "approval_required" else f"{category} is autonomous after evidence gates"
             return Classification(effect, category, decision, reason)
 
-    if re.search(r"\bgit\s+(?:commit|push|merge)\b", lower):
+    if re.search(r"\bgit\s+(?:commit|push|merge(?!-base))\b", lower):
         return Classification(effect, "repository_change", "allow", "repository changes are autonomous within project rules")
     return Classification(effect, "scoped_state_change", "allow", "scoped state change is autonomous")
 
