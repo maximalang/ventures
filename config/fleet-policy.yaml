@@ -11,22 +11,22 @@ safe_defaults:
   monetary_cost_when_unreported: unavailable
 budgets:
   research:
-    tokens: 120000
+    tokens: 250000
     wall_clock_minutes: 90
     tool_calls: 80
     retries: 2
   code:
-    tokens: 180000
+    tokens: 400000
     wall_clock_minutes: 120
     tool_calls: 140
     retries: 2
   review:
-    tokens: 60000
+    tokens: 150000
     wall_clock_minutes: 45
     tool_calls: 50
     retries: 2
   ops:
-    tokens: 50000
+    tokens: 150000
     wall_clock_minutes: 30
     tool_calls: 40
     retries: 2
