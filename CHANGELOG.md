@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.2.19] - 2026-09-13
+
+### Fixed
+- Read-only terminal commands no longer fall into fail-closed state-change
+  classes (incident 13.09.2026, t_6f335dd6 — 40+ false denies burning runs):
+  - `git config` query forms (`--get*`, `--list`, bare `key` with no value),
+    `git worktree list`, and `git merge-base` classify as reads; MUTATOR's
+    `merge` no longer matches `merge-base`. A `git config` write (value
+    argument, `--unset`) stays a state change.
+  - `git -C <path>` wrapper is accepted on read verbs (status/diff/log/...)
+    and — symmetrically — on MUTATOR's git verbs, so `git -C repo push`
+    cannot dodge the mutator scan into the read lane. The wrapper match is
+    case-sensitive (`-c` injects per-invocation config and stays fail-closed).
+  - `cat` joins the stdout-only read utilities; redirect/tee forms are still
+    caught by the write-marker scan.
+  - `gh api --jq/-q` (space and fused `=` forms) joins the read-safe option
+    allowlist: it only projects the JSON response and cannot change the
+    method or carry a payload. Method writes, hostname overrides, absolute
+    URLs, and unknown options still fail closed. The v1.2.7 F-01 test case
+    that pinned `--jq` as fail-closed is replaced by `--permissive`.
+  - Deliberately NOT relaxed: bare `VAR=value` env prefixes in front of
+    `python -m pytest` stay fail-closed (PATH/LD_PRELOAD rebind the binary).
+- Contract tests: `tests/test_v1219_read_classifier.py` (42 cases across the
+  four incident families plus adversarial variants).
+
 ## [1.2.17] - 2026-09-12
 
 ### Fixed

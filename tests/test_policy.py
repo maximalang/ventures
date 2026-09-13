@@ -414,7 +414,9 @@ def test_v127_gh_hostname_equals_and_absolute_url_fail_closed(config):
         # F-01: cobra prefix abbreviation of the hostname override.
         "gh api --hostn evil.example repos/o/r",
         # F-01: an unknown/foreign option must not be treated as a read.
-        "gh api --jq '.items' repos/o/r",
+        # (v1.2.19: `--jq` moved to the read-safe allowlist; any other
+        # non-allowlisted option still fails closed.)
+        "gh api --permissive repos/o/r",
         # F-02: absolute URL endpoint stays fail closed.
         "gh api https://evil.example/repos/o/r",
         "gh api http://api.github.com/repos/o/r",
