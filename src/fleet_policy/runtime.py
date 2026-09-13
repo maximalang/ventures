@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+import os
 import time
 import re
 from pathlib import Path
@@ -8,9 +9,28 @@ from typing import Any
 
 from .config import load_config
 from .models import PolicyDecision
-from .policy import Classification, classify, infer_task_type, is_lifecycle_tool
+from .policy import Classification, _normalize_tool_name, _is_updater_call, classify, infer_task_type, is_lifecycle_tool
 from .redaction import args_hash, redact, stable_id
-from .storage import PolicyStore, utc_now
+from .storage import BINDING_TTL_HOURS, PolicyStore, iso_later_hours, utc_now
+
+# ADR-001 v2 section 4 — ordinary product/UX/brand risk (class A4) lexicon.
+# Exact word-bounded vocabulary; an unclassifiable call stays on the default
+# path (fail-closed classification upstream), and NO A6 class is implied.
+_A4_REVIEW_RE = re.compile(
+    r"\b(?:brand (?:refresh|update)|ui copy|visual style|logo variant|marketing copy|"
+    r"wording change|layout tweak|color palette)\b",
+    re.I,
+)
+
+
+def _risk_subject_for(tool_name: str, arguments: dict[str, Any]) -> str:
+    """Subject text for the A4 lexicon scan: commands, targets and free-text
+    payloads (brand copy travels in write bodies, not only in commands)."""
+    if tool_name in {"terminal", "shell", "bash", "exec"}:
+        values = [arguments.get("command") or arguments.get("cmd") or ""]
+    else:
+        values = list(arguments.values())
+    return " ".join(str(value) for value in values if value)
 
 
 class FleetPolicyRuntime:
@@ -28,6 +48,19 @@ class FleetPolicyRuntime:
         self.config = load_config(config_path or self.root / "config" / "fleet-policy.yaml")
         self.store = PolicyStore(db_path or self.root / ".state" / "fleet-policy.db")
         self.store.migrate()
+
+    def _owner_principal_ref(self) -> str:
+        """ADR-001 v2 section 2: fingerprint of the configured Telegram owner
+        principal (gateway-mapped user + direct chat). The mapping itself
+        lives only in the gateway configuration, never in audit rows; an
+        unset mapping yields an empty fingerprint (binding stays grantable
+        via the TTY break-glass path, which decides channel='tty')."""
+        principal = self.config.get("owner_principal") or {}
+        if not isinstance(principal, dict):
+            return ""
+        user = str(principal.get("owner_user_id") or "")
+        chat = str(principal.get("direct_chat_id") or "")
+        return PolicyStore.principal_ref(user, chat) if user and chat else ""
 
     def task_type(self, context: dict[str, Any]) -> tuple[str | None, str | None]:
         return infer_task_type(context.get("task_body"), context.get("comments"), context.get("skills"))
@@ -272,7 +305,16 @@ class FleetPolicyRuntime:
         elif worker and task_error:
             result = Classification("state_change", "missing_or_unknown_task_type", "deny", task_error)
         else:
-            result = classify(tool_name, arguments, self.config, worker=worker)
+            # ADR-001 v2 section 6 — class X1: the external auto-updater is
+            # out of fleet scope. Invocation, inspection, planning, and
+            # dependency are all denied before any other classification runs.
+            if _is_updater_call(_normalize_tool_name(tool_name), arguments):
+                result = Classification(
+                    "state_change", "updater_dependency", "deny",
+                    "the external auto-updater is out of fleet scope (class X1)",
+                )
+            else:
+                result = classify(tool_name, arguments, self.config, worker=worker)
             if worker and context.get("task_status") == "blocked" and result.effect != "read":
                 result = Classification("state_change", "task_already_blocked", "deny", "Kanban task is blocked")
 
@@ -366,10 +408,64 @@ class FleetPolicyRuntime:
             elif self.store.consume_exact_approval(task_id, tool_name, target, hashed):
                 decision, rule_id, reason = "allow", "approved_once", "exact one-time approval consumed"
             else:
+                # ADR-001 v2 section 2: hard-gate binding carries the full
+                # tuple (nonce, expiry, principal fingerprint, channel,
+                # amount, scope). The nonce is issued by decide_approval on
+                # the approved transition; expiry is enforced at consumption
+                # and a stale grant rotates into a fresh pending cycle.
+                amount = self._amount_rub(arguments) if self._amount_rub(arguments) else None
+                binding_extras = dict(
+                    nonce="",
+                    expires_at=iso_later_hours(BINDING_TTL_HOURS),
+                    principal_ref=self._owner_principal_ref(),
+                    channel="telegram",
+                    amount_rub=amount,
+                    scope=stable_id(result.category, task_id)[:32],
+                )
                 rule_key = stable_id(task_id, tool_name, target, hashed)
-                self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed,
-                                           str(context.get("board") or ""))
+                if self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed,
+                                              str(context.get("board") or ""), **binding_extras):
+                    event_id = stable_id(task_id, tool_name, target, hashed, rule_id, "policy")
+                    self.store.link_approval_notice(rule_key, event_id)
+                else:
+                    # Binding exists already. If it was re-armed after an
+                    # expiry-at-consume rotation (new pending row under the
+                    # same key), re-bind the card fields; the stale approved
+                    # row can never be consumed again, so keep surfacing the
+                    # pending cycle to the owner instead of a silent loop.
+                    self.store.rebind_pending_binding(rule_key, **binding_extras)
                 approval_card = self._approval_card(context, result.category, target, hashed, rule_key)
+
+        # ADR-001 v2 section 4 — ordinary product/UX/brand risk is NOT a hard
+        # gate: one non-blocking review notice is queued, the call proceeds,
+        # and the owner may veto within the review window (kill criterion:
+        # this path must never block execution). No A6 class exists; the
+        # classification is an exact lexical match on the A4 vocabulary.
+        if (
+            decision == "allow"
+            and result.effect == "state_change"
+            and _A4_REVIEW_RE.search(_risk_subject_for(tool_name, arguments))
+            and not is_lifecycle_tool(tool_name)
+        ):
+            notice_id = stable_id(task_id, tool_name, target, hashed, "a4_review_notice")
+            self.store.record_event(
+                notice_id,
+                str(context.get("run_id") or context.get("session_id") or notice_id),
+                task_id or None,
+                "a4_review_notice",
+                {
+                    "decision": "allow", "rule_id": "a4_product_review_notice",
+                    "reason": "ordinary product risk: non-blocking owner review notice",
+                    "task_id": task_id, "project": context.get("project", ""),
+                    "profile": context.get("profile", ""), "action": tool_name,
+                    "target": target, "args_hash": hashed, "timestamp": utc_now(),
+                    "budget_snapshot": snapshot,
+                    "task_status": str(context.get("task_status") or "unknown"),
+                    "board": str(context.get("board") or ""),
+                    "run_key": self._run_key(context) or "session",
+                },
+                True,
+            )
 
         if decision == "allow" and spend and task_id:
             amount, capability_id, project = spend
