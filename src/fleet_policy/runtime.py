@@ -156,9 +156,16 @@ class FleetPolicyRuntime:
         the poison-marker attack lands the comment on someone else's card.
         An explicit target card that cannot be resolved fails closed."""
         from .kanban_context import task_assignee_resolved
-        lowered = text.lower()
-        gates = [match.group(1) for match in re.finditer(r"gate:([a-z_]+)=pass", lowered)]
-        if "decision:company=go" in lowered:
+        # Match the line-level attestation syntax consumed by missing_gates.
+        # A marker quoted in ordinary prose cannot arm a gate and must not
+        # prevent a worker from reporting which independent verdict it needs.
+        lines = [line.strip().lower() for line in text.splitlines()]
+        gates = [
+            match.group(1)
+            for line in lines
+            if (match := re.match(r"^gate:([a-z_]+)=pass(?:$| )", line))
+        ]
+        if any(line == "decision:company=go" or line.startswith("decision:company=go ") for line in lines):
             gates.append("company_decision")
         if not gates:
             return True
