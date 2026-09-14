@@ -280,7 +280,12 @@ class FleetPolicyRuntime:
             result = Classification("state_change", "missing_or_unknown_task_type", "deny", task_error)
         else:
             result = classify(tool_name, arguments, self.config, worker=worker)
-            if worker and context.get("task_status") == "blocked" and result.effect != "read":
+            if (
+                worker
+                and context.get("task_status") == "blocked"
+                and result.effect != "read"
+                and not is_lifecycle_tool(tool_name)
+            ):
                 result = Classification("state_change", "task_already_blocked", "deny", "Kanban task is blocked")
 
         if worker:

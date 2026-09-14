@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.21] - 2026-09-15
+
+### Fixed
+- A policy-projected blocked task can still use Kanban lifecycle tools to
+  report, hand off, block, or complete. Executive state changes remain denied
+  and lifecycle calls remain bounded by the hard tool budget.
+
 ## [1.2.20] - 2026-09-15
 
 ### Fixed
