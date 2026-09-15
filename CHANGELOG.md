@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.2.21] - 2026-09-15
+
+### Fixed
+- Shell tilde spellings (`~`, `~/...`, `~user`) are rejected from the bounded
+  workspace-cleanup lane so home-directory expansion remains fail-closed.
+- A policy-projected blocked task can still use Kanban lifecycle tools to
+  report, hand off, block, or complete. Executive state changes remain denied
+  and lifecycle calls remain bounded by the hard tool budget.
+
+## [1.2.20] - 2026-09-15
+
+### Fixed
+- A pure `rm -rf` of child artifacts inside the current Hermes task workspace
+  now classifies as bounded `ephemeral_workspace_cleanup` instead of serious
+  `irreversible_data_loss`. This unblocks reproducible scratch refreshes without
+  weakening protection for workspace-root deletion, parent traversal, globbing,
+  command chains, or cleanup outside a task workspace.
+- Added regression coverage for relative and absolute in-scope cleanup plus
+  fail-closed traversal, root, chained-command, and foreign-workdir cases.
+
 ## [1.2.19] - 2026-09-13
 
 ### Fixed

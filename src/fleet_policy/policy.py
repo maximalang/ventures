@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import fnmatch
 import os
+import posixpath
 import re
 import shlex
 from dataclasses import dataclass
@@ -641,6 +642,103 @@ def _risk_subject(name: str, arguments: dict[str, Any]) -> str:
     return str(url) if url else ""
 
 
+def _task_workspace_root(raw_workdir: str) -> str | None:
+    """Return the lexical root of a Hermes task workspace, if present."""
+    normalized = posixpath.normpath(raw_workdir.replace("\\", "/"))
+    parts = [part for part in normalized.split("/") if part]
+    lowered = [part.lower() for part in parts]
+    for index in range(len(parts) - 5):
+        if (
+            lowered[index] in {"hermes", ".hermes"}
+            and lowered[index + 1] == "kanban"
+            and lowered[index + 2] == "boards"
+            and parts[index + 3]
+            and lowered[index + 4] == "workspaces"
+            and parts[index + 5]
+        ):
+            prefix = "/" if normalized.startswith("/") else ""
+            return prefix + "/".join(parts[: index + 6])
+    return None
+
+
+def _is_ephemeral_workspace_cleanup(name: str, arguments: dict[str, Any]) -> bool:
+    """Allow one pure ``rm -rf`` of child paths inside the current task workspace.
+
+    Scratch artifacts are reproducible and task-scoped. Deleting a child there
+    is neither irreversible business-data loss nor a release action. The lane
+    is deliberately narrow: no command chaining, globbing, parent traversal,
+    workspace-root deletion, or workdir outside a Hermes task workspace.
+    """
+    if name not in TERMINAL_TOOLS:
+        return False
+    command = str(arguments.get("command") or arguments.get("cmd") or "").strip()
+    workdir = str(arguments.get("workdir") or "").strip()
+    workspace_root = _task_workspace_root(workdir)
+    if not command or not workspace_root or _SHELL_METACHARACTERS.search(command):
+        return False
+    if len(_simple_commands(command)) != 1 or re.search(r"&&|\|\||;|\|", command):
+        return False
+    tokens = [_clean_shell_token(token) for token in _stage_tokens(command)]
+    if not tokens or _program_name(tokens[0]) != "rm":
+        return False
+
+    recursive = False
+    force = False
+    targets: list[str] = []
+    after_separator = False
+    for token in tokens[1:]:
+        if token == "--" and not after_separator:
+            after_separator = True
+            continue
+        if token.startswith("-") and not after_separator:
+            if token in {"--recursive", "--force"}:
+                recursive = recursive or token == "--recursive"
+                force = force or token == "--force"
+                continue
+            if not re.fullmatch(r"-[rf]+", token, re.I):
+                return False
+            letters = token[1:].lower()
+            recursive = recursive or "r" in letters
+            force = force or "f" in letters
+            continue
+        targets.append(token)
+    if not (recursive and force and targets):
+        return False
+
+    normalized_workdir = posixpath.normpath(workdir.replace("\\", "/"))
+    root_casefold = workspace_root.casefold()
+    workdir_casefold = normalized_workdir.casefold()
+    try:
+        physical_root = Path(workspace_root).resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        return False
+    for raw_target in targets:
+        target = raw_target.replace("\\", "/")
+        if (
+            not target
+            or target.startswith("~")
+            or target in {".", "..", "/"}
+            or ".." in target.split("/")
+            or re.search(r"[*?\[\]$`{}]", target)
+        ):
+            return False
+        absolute = target.startswith("/") or re.match(r"^[A-Za-z]:/", target)
+        candidate = posixpath.normpath(target if absolute else normalized_workdir + "/" + target)
+        candidate_casefold = candidate.casefold()
+        if candidate_casefold == workdir_casefold:
+            return False
+        if not candidate_casefold.startswith(root_casefold.rstrip("/") + "/"):
+            return False
+        try:
+            physical_candidate = Path(candidate).resolve(strict=False)
+            physical_candidate.relative_to(physical_root)
+        except (OSError, ValueError, RuntimeError):
+            return False
+        if physical_candidate == physical_root:
+            return False
+    return True
+
+
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
     name = _normalize_tool_name(tool_name)
     effect = _effect_for(name, arguments)
@@ -697,6 +795,17 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
 
     if effect == "read":
         return Classification(effect, "read_only", "allow", "read-only action")
+
+    # A pure child cleanup inside the worker's own task workspace is bounded,
+    # reproducible scratch maintenance. Keep broad rm -rf escalation everywhere
+    # else, including the workspace root itself.
+    if _is_ephemeral_workspace_cleanup(name, arguments):
+        return Classification(
+            effect,
+            "ephemeral_workspace_cleanup",
+            "allow",
+            "ephemeral task-workspace child cleanup is autonomous",
+        )
 
     branches = "|".join(re.escape(branch) for branch in config["protected"]["branches"])
     rules = [

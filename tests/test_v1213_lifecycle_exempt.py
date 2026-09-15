@@ -131,9 +131,29 @@ def test_lifecycle_transition_stays_allow_after_executive_denies(runtime, task_c
         assert decision.decision == "allow", (tool, decision.rule_id, decision.reason)
 
 
+def test_blocked_projection_cannot_sever_lifecycle_handoff(runtime, task_context):
+    """A projected block must not turn the next handoff into task_already_blocked."""
+    task_context["task_status"] = "blocked"
+    calls = (
+        ("kanban_comment", {"task_id": task_context["task_id"], "body": "handoff evidence"}),
+        ("kanban_block", {"reason": "already projected"}),
+        ("kanban_complete", {"summary": "done"}),
+        ("kanban_heartbeat", {"note": "alive"}),
+    )
+    for index, (tool, arguments) in enumerate(calls):
+        task_context["tool_call_id"] = f"blocked-lifecycle-{index}"
+        decision = runtime.pre_tool_call(tool, arguments, task_context)
+        assert decision.decision == "allow", (tool, decision.rule_id)
+
+
+def test_blocked_task_still_denies_executive_changes(runtime, task_context):
+    task_context["task_status"] = "blocked"
+    task_context["tool_call_id"] = "blocked-exec"
+    decision = runtime.pre_tool_call("terminal", {"command": "python build.py"}, task_context)
+    assert (decision.decision, decision.rule_id) == ("deny", "task_already_blocked")
+
+
 def test_lifecycle_calls_still_charge_budget_and_respect_exhaustion(runtime, task_context):
-    # The exemption is anti-collapse only: the tool-call ledger still charges
-    # every lifecycle call, and a hard-exhausted budget still denies it.
     args = {"note": "alive"}
     task_context["tool_call_id"] = "hb-budget-1"
     runtime.pre_tool_call("kanban_heartbeat", args, task_context)

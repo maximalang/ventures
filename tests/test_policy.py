@@ -150,6 +150,84 @@ def test_destructive_git_variants_split_by_reversibility(config):
     assert (irreversible.decision, irreversible.category) == ("approval_required", "irreversible_data_loss")
 
 
+def test_ephemeral_workspace_child_cleanup_is_autonomous(config, tmp_path):
+    workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    (workdir_path / "repo").mkdir(parents=True)
+    workdir = str(workdir_path)
+    for command in (
+        "rm -rf repo",
+        f"rm -rf {workdir_path / 'repo'}",
+    ):
+        result = classify(
+            "terminal",
+            {"command": command, "workdir": workdir},
+            config,
+            worker=True,
+        )
+        assert (result.decision, result.category) == (
+            "allow",
+            "ephemeral_workspace_cleanup",
+        ), (command, result)
+
+
+def test_ephemeral_workspace_cleanup_fails_closed_outside_child_scope(config, tmp_path):
+    workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    workdir_path.mkdir(parents=True)
+    foreign = tmp_path / "project"
+    foreign.mkdir()
+    workdir = str(workdir_path)
+    cases = (
+        ({"command": "rm -rf ..", "workdir": workdir}, "parent traversal"),
+        ({"command": "rm -rf .", "workdir": workdir}, "workspace root"),
+        ({"command": "rm -rf repo && git clone https://example.com/repo.git repo", "workdir": workdir}, "command chain"),
+        ({"command": "rm -rf repo", "workdir": str(foreign)}, "outside workspace"),
+    )
+    for arguments, label in cases:
+        result = classify("terminal", arguments, config, worker=True)
+        assert result.category != "ephemeral_workspace_cleanup", (label, result)
+
+
+def test_ephemeral_workspace_cleanup_rejects_tilde_expansion(config, tmp_path):
+    workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    workdir_path.mkdir(parents=True)
+    workdir = str(workdir_path)
+    for command in (
+        "rm -rf ~",
+        "rm -rf ~/x",
+        "rm -rf ~user",
+        "rm -rf child ~",
+    ):
+        result = classify(
+            "terminal",
+            {"command": command, "workdir": workdir},
+            config,
+            worker=True,
+        )
+        assert (result.decision, result.category) == (
+            "approval_required",
+            "irreversible_data_loss",
+        ), (command, result)
+
+
+def test_ephemeral_workspace_cleanup_refuses_link_escape(config, tmp_path):
+    workdir = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    outside = tmp_path / "outside"
+    workdir.mkdir(parents=True)
+    outside.mkdir()
+    link = workdir / "escape"
+    try:
+        link.symlink_to(outside, target_is_directory=True)
+    except OSError:
+        pytest.skip("directory symlink creation is unavailable")
+    result = classify(
+        "terminal",
+        {"command": "rm -rf escape", "workdir": str(workdir)},
+        config,
+        worker=True,
+    )
+    assert result.category != "ephemeral_workspace_cleanup", result
+
+
 def test_bare_secret_filenames_denied(config):
     # Filenames are assembled from parts so this test file itself stays
     # clean for plugin security scanners while exercising the same matcher.
