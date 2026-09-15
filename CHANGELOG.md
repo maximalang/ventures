@@ -3,6 +3,8 @@
 ## [1.2.21] - 2026-09-15
 
 ### Fixed
+- Shell tilde spellings (`~`, `~/...`, `~user`) are rejected from the bounded
+  workspace-cleanup lane so home-directory expansion remains fail-closed.
 - A policy-projected blocked task can still use Kanban lifecycle tools to
   report, hand off, block, or complete. Executive state changes remain denied
   and lifecycle calls remain bounded by the hard tool budget.

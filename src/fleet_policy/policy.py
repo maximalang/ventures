@@ -716,6 +716,7 @@ def _is_ephemeral_workspace_cleanup(name: str, arguments: dict[str, Any]) -> boo
         target = raw_target.replace("\\", "/")
         if (
             not target
+            or target.startswith("~")
             or target in {".", "..", "/"}
             or ".." in target.split("/")
             or re.search(r"[*?\[\]$`{}]", target)

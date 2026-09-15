@@ -187,6 +187,28 @@ def test_ephemeral_workspace_cleanup_fails_closed_outside_child_scope(config, tm
         assert result.category != "ephemeral_workspace_cleanup", (label, result)
 
 
+def test_ephemeral_workspace_cleanup_rejects_tilde_expansion(config, tmp_path):
+    workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    workdir_path.mkdir(parents=True)
+    workdir = str(workdir_path)
+    for command in (
+        "rm -rf ~",
+        "rm -rf ~/x",
+        "rm -rf ~user",
+        "rm -rf child ~",
+    ):
+        result = classify(
+            "terminal",
+            {"command": command, "workdir": workdir},
+            config,
+            worker=True,
+        )
+        assert (result.decision, result.category) == (
+            "approval_required",
+            "irreversible_data_loss",
+        ), (command, result)
+
+
 def test_ephemeral_workspace_cleanup_refuses_link_escape(config, tmp_path):
     workdir = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
     outside = tmp_path / "outside"
