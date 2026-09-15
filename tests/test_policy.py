@@ -48,10 +48,10 @@ def test_redaction_and_stable_canonical_hash():
 
 def test_all_budget_types_present(config):
     assert set(config["budgets"]) == {"research", "code", "review", "ops"}
-    assert config["budgets"]["research"]["tokens"] == 120000
-    assert config["budgets"]["code"]["tool_calls"] == 140
-    assert config["budgets"]["review"]["wall_clock_minutes"] == 45
-    assert config["budgets"]["ops"]["tokens"] == 50000
+    assert config["budgets"]["research"]["tokens"] == 250000
+    assert config["budgets"]["code"]["tool_calls"] == 400
+    assert config["budgets"]["review"]["wall_clock_minutes"] == 120
+    assert config["budgets"]["ops"]["tokens"] == 150000
 
 
 def test_read_allow_and_secret_deny(config):

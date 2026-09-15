@@ -202,7 +202,7 @@ def test_non_review_task_failure_loop_is_unchanged(runtime, task_context):
     code_ctx = dict(task_context, task_body="task_type: code", current_run_id="r1")
     args = {"command": "git push origin main"}
     events = []
-    for index in range(2):
+    for index in range(int(runtime.config["anti_loop"]["max_same_failure"])):
         code_ctx["tool_call_id"] = f"code-fail-{index}"
         events.append(runtime.post_tool_call(
             "terminal", args, code_ctx, success=False,
@@ -263,7 +263,7 @@ def test_expected_failure_override_is_run_scoped(runtime, task_context, monkeypa
     assert runtime.store.mark_expected_failure(code_ctx["task_id"], signature, "r1", confirm_code=code) is True
     fresh = dict(code_ctx, current_run_id="r2")
     event = None
-    for index in range(2):
+    for index in range(int(runtime.config["anti_loop"]["max_same_failure"])):
         fresh["tool_call_id"] = f"other-run-{index}"
         event = runtime.post_tool_call(
             "terminal", args, fresh, success=False,

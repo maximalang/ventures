@@ -66,11 +66,12 @@ def test_identical_lifecycle_reads_never_collapse(runtime, task_context):
 def test_identical_executive_calls_still_collapse(runtime, task_context):
     # Control: the exemption does not leak to executive/read tooling.
     args = {"path": "README.md"}
-    for index in range(3):
+    limit = int(runtime.config["anti_loop"]["max_identical_calls"])
+    for index in range(limit):
         task_context["tool_call_id"] = f"read-{index}"
         assert runtime.pre_tool_call("read_file", args, task_context).decision == "allow"
         runtime.post_tool_call("read_file", args, task_context, success=True)
-    task_context["tool_call_id"] = "read-4"
+    task_context["tool_call_id"] = f"read-{limit + 1}"
     stopped = runtime.pre_tool_call("read_file", args, task_context)
     assert (stopped.decision, stopped.rule_id) == ("deny", "identical_call_loop")
 
@@ -98,7 +99,7 @@ def test_lifecycle_failures_never_fire_same_failure_loop(runtime, task_context):
 
 def test_executive_failures_still_fire_same_failure_loop(runtime, task_context):
     args = {"command": "python build.py"}
-    for index in range(2):
+    for index in range(int(runtime.config["anti_loop"]["max_same_failure"])):
         task_context["tool_call_id"] = f"fail-{index}"
         event = runtime.post_tool_call(
             "terminal", args, task_context, success=False,
@@ -108,11 +109,11 @@ def test_executive_failures_still_fire_same_failure_loop(runtime, task_context):
 
 
 def test_lifecycle_transition_stays_allow_after_executive_denies(runtime, task_context):
-    # The production stranding class: two identical terminal failures fire the
-    # executive stop; the worker must STILL be able to hand off via lifecycle
-    # transitions afterwards.
+    # The production stranding class: repeated identical terminal failures fire
+    # the executive stop; the worker must STILL be able to hand off via
+    # lifecycle transitions afterwards.
     args = {"command": "git cat-file -e deadbeef^{commit}"}
-    for index in range(2):
+    for index in range(int(runtime.config["anti_loop"]["max_same_failure"])):
         task_context["tool_call_id"] = f"term-{index}"
         event = runtime.post_tool_call(
             "terminal", args, task_context, success=False,

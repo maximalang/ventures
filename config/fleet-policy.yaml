@@ -11,30 +11,30 @@ safe_defaults:
   monetary_cost_when_unreported: unavailable
 budgets:
   research:
-    tokens: 120000
-    wall_clock_minutes: 90
-    tool_calls: 80
-    retries: 2
+    tokens: 250000
+    wall_clock_minutes: 240
+    tool_calls: 250
+    retries: 3
   code:
-    tokens: 180000
-    wall_clock_minutes: 120
-    tool_calls: 140
-    retries: 2
+    tokens: 400000
+    wall_clock_minutes: 300
+    tool_calls: 400
+    retries: 3
   review:
-    tokens: 60000
-    wall_clock_minutes: 45
-    tool_calls: 50
-    retries: 2
+    tokens: 150000
+    wall_clock_minutes: 120
+    tool_calls: 150
+    retries: 3
   ops:
-    tokens: 50000
-    wall_clock_minutes: 30
-    tool_calls: 40
-    retries: 2
+    tokens: 150000
+    wall_clock_minutes: 180
+    tool_calls: 150
+    retries: 3
 anti_loop:
-  max_identical_calls: 3
-  max_same_failure: 2
-  max_idle_turns: 3
-  max_retries: 2
+  max_identical_calls: 5
+  max_same_failure: 3
+  max_idle_turns: 4
+  max_retries: 3
 financial_mandate:
   currency: RUB
   max_transaction: 10000
