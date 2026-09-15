@@ -60,18 +60,20 @@ def test_rejected_approval_never_allows(runtime, task_context, monkeypatch):
 
 def test_identical_call_loop(runtime, task_context):
     args = {"path": "README.md"}
-    for index in range(3):
+    limit = int(runtime.config["anti_loop"]["max_identical_calls"])
+    for index in range(limit):
         task_context["tool_call_id"] = f"read-{index}"
         assert runtime.pre_tool_call("read_file", args, task_context).decision == "allow"
         runtime.post_tool_call("read_file", args, task_context, success=True)
-    task_context["tool_call_id"] = "read-4"
+    task_context["tool_call_id"] = f"read-{limit + 1}"
     stopped = runtime.pre_tool_call("read_file", args, task_context)
     assert (stopped.decision, stopped.rule_id) == ("deny", "identical_call_loop")
 
 
 def test_same_failure_signature_stops(runtime, task_context):
     args = {"command": "python build.py"}
-    for index in range(2):
+    limit = int(runtime.config["anti_loop"]["max_same_failure"])
+    for index in range(limit):
         task_context["tool_call_id"] = f"fail-{index}"
         event = runtime.post_tool_call("terminal", args, task_context, success=False, error_type="tool_error", error_message="boom 42")
     assert event["rule_id"] == "same_failure_loop"
@@ -93,12 +95,14 @@ def test_different_calls_with_same_generic_error_do_not_stop(runtime, task_conte
 
 
 def test_same_failure_stop_is_scoped_to_each_dispatch_run(runtime, task_context):
-    # Run 206's stop class: a terminal Git-object check fails twice with the
-    # same normalized error. A later genuine dispatch must get a fresh stop,
-    # while a third failure in that same run must not emit a second event.
+    # Run 206's stop class: a terminal Git-object check fails max_same_failure
+    # times with the same normalized error. A later genuine dispatch must get a
+    # fresh stop, while an extra failure in that same run must not emit a
+    # second event.
     args = {"command": "git cat-file -e ee3448f4^{commit}"}
+    limit = int(runtime.config["anti_loop"]["max_same_failure"])
     first_run = dict(task_context, current_run_id="206")
-    for index in range(2):
+    for index in range(limit):
         first_run["tool_call_id"] = f"run-206-fail-{index}"
         first = runtime.post_tool_call(
             "terminal", args, first_run, success=False,
@@ -108,7 +112,7 @@ def test_same_failure_stop_is_scoped_to_each_dispatch_run(runtime, task_context)
     assert first["run_key"] == "206"
 
     new_run = dict(task_context, current_run_id="207")
-    for index in range(2):
+    for index in range(limit):
         new_run["tool_call_id"] = f"run-207-fail-{index}"
         second = runtime.post_tool_call(
             "terminal", args, new_run, success=False,
@@ -117,7 +121,7 @@ def test_same_failure_stop_is_scoped_to_each_dispatch_run(runtime, task_context)
     assert second["rule_id"] == "same_failure_loop"
     assert second["run_key"] == "207"
 
-    new_run["tool_call_id"] = "run-207-fail-2"
+    new_run["tool_call_id"] = f"run-207-fail-{limit}"
     assert runtime.post_tool_call(
         "terminal", args, new_run, success=False,
         error_type="tool_error", error_message="fatal: Not a valid object name 'ee3448f4^{commit}'",
@@ -138,13 +142,14 @@ def test_tool_call_budget_exhaustion(runtime, task_context):
 
 
 def test_token_budget_and_idle_stop(runtime, task_context):
-    runtime.store.add_budget("t_test", "tokens", 179999, "seed", "r1")
+    limit = int(runtime.config["budgets"]["code"]["tokens"])
+    runtime.store.add_budget("t_test", "tokens", limit - 1, "seed", "r1")
     task_context["api_request_id"] = "api-1"
     payload = runtime.post_api_request(task_context, {"input_tokens": 1, "output_tokens": 1}, 1)
     assert payload["rule_id"] == "budget_exhausted"
 
     fresh = dict(task_context, task_id="t_idle", task_body="task_type: review")
-    for index in range(3):
+    for index in range(int(runtime.config["anti_loop"]["max_idle_turns"])):
         fresh["api_request_id"] = f"idle-{index}"
         idle_payload = runtime.post_api_request(fresh, {}, 0)
     assert idle_payload["rule_id"] == "idle_turn_loop"

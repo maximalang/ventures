@@ -147,17 +147,20 @@ def test_consume_exact_approval_has_no_silent_env_branch():
 
 def test_untranslated_plugin_blocks_keep_loop_accounting(runtime, task_context):
     args = {"command": "flaky-probe"}
+    limit = int(runtime.config["anti_loop"]["max_same_failure"])
     task_context["tool_call_id"] = "pb-1"
     first = runtime.post_tool_call(
         "terminal", args, task_context, success=False,
         error_type="plugin_block", error_message="FLEET POLICY FAIL-CLOSED: X",
     )
     assert first is None, first
-    task_context["tool_call_id"] = "pb-2"
-    second = runtime.post_tool_call(
-        "terminal", args, task_context, success=False,
-        error_type="plugin_block", error_message="FLEET POLICY FAIL-CLOSED: X",
-    )
+    second = None
+    for index in range(1, limit):
+        task_context["tool_call_id"] = f"pb-{index + 1}"
+        second = runtime.post_tool_call(
+            "terminal", args, task_context, success=False,
+            error_type="plugin_block", error_message="FLEET POLICY FAIL-CLOSED: X",
+        )
     assert second is not None and second.get("rule_id") == "same_failure_loop", second
 
 
