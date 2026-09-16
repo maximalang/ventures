@@ -305,10 +305,15 @@ class FleetPolicyRuntime:
         # implementation/review work that produces their evidence. Applying
         # gates to every configured category creates a lifecycle deadlock: a
         # worker cannot edit or test before it has backup/scope/review output.
+        # v1.2.22 invariant: reads NEVER require evidence gates — gated
+        # categories imply effect=state_change, so this clause is
+        # defense-in-depth that keeps that guarantee explicit even if a
+        # category/effect pairing drifts later.
         missing = (
             self.missing_gates(result.category, context)
             if worker
             and result.decision == "allow"
+            and result.effect != "read"
             and result.category in self.EVIDENCE_GATED_CATEGORIES
             else []
         )

@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.22] - 2026-09-16
+
+### Fixed
+- Read-only terminal commands no longer fall into evidence-gated state-change
+  classes because of words INSIDE quoted argument literals: MUTATOR now scans
+  the command with quoted spans stripped (same unquote regex as the
+  write-marker scan), so `grep -rn "deploy" scripts/` is a read again. The
+  RAW text still feeds the write-marker scan — redirects and mutating flags
+  outside quotes stay fail-closed.
+- `find` joins the read utilities for read-only forms; path/pattern prose
+  like `find . -path "*cleanup*"` no longer lands in destructive_change.
+  Its mutating primaries (-delete, -exec/-execdir, -ok/-okdir, -fls/-fprint)
+  are excluded from the read lane by lookahead AND join the token-based
+  write-marker scan as a second fail-closed layer.
+- Invariant made explicit at the runtime layer: reads never require evidence
+  gates (gated categories imply effect=state_change).
+
 ## [1.2.21] - 2026-09-15
 
 ### Fixed

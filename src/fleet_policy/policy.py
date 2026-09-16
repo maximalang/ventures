@@ -286,6 +286,11 @@ READ_COMMAND = re.compile(
     r"^\s*(?:git(?:\s+(?-i:-C)\s+\S+)?\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|"
     r"config\s+(?:--(?:global|local|system|worktree)\s+)*(?:--get(?:-all|-regex)?|--list|-l|--get-url|--get-regexp|[A-Za-z0-9][A-Za-z0-9._-]*\s*$)|"
     r"worktree\s+list\b|merge-base\b)|"
+    # v1.2.22: `find` joins the read utilities for read-only forms. The
+    # lookahead keeps every mutating primary option (-delete, -exec/-execdir,
+    # -ok/-okdir, -fls/-fprint) out of the read lane; the token-based
+    # write-marker scan below is the second, fail-closed layer for them.
+    r"find\b(?!.*\s-(?:delete|exec|execdir|ok|okdir|fls|fprint)\b)|"
     r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
@@ -308,6 +313,10 @@ MUTATOR = re.compile(
 # read-whitelisted utility can be classified as a read. Fail-closed by design:
 # anything unrecognized as a write keeps the stricter classification.
 _SHORT_OPTION_CLUSTER = re.compile(r"^-[A-Za-z]+$")
+# v1.2.22: find primaries that write, mutate, or execute.
+_FIND_WRITE_OPTIONS = {
+    "-delete", "-exec", "-execdir", "-ok", "-okdir", "-fls", "-fprint",
+}
 _FD_DUP_REDIRECT = re.compile(r"\d*>&\d+")
 _OUTPUT_REDIRECT = re.compile(r"&>>|&>|>>|>")
 
@@ -351,6 +360,14 @@ def _has_write_marker(command: str) -> bool:
             continue
         program = PurePath(tokens[0].replace("\\", "/")).name.lower()
         if program == "tee" or _writes_via_option(program, tokens[1:]):
+            return True
+        # v1.2.22: mutating find primaries are writes (same token-based
+        # family as sed -i / sort -o); find never reaches this scan from
+        # READ_COMMAND without them, but fail closed if it does.
+        if program == "find" and any(
+            _clean_shell_token(token).lower() in _FIND_WRITE_OPTIONS
+            for token in tokens[1:]
+        ):
             return True
         # Shell output redirects write regardless of the program. Quoted
         # payload text is ignored; `2>&1`-style fd duplication is not a write.
@@ -512,7 +529,14 @@ def _terminal_is_read_only(command: str) -> bool:
     # excluded because every stage is still classified independently below.
     if _SHELL_METACHARACTERS.search(command):
         return False
-    if MUTATOR.search(command) or _has_write_marker(command):
+    # v1.2.22: quoted spans are search patterns / path prose, not verbs.
+    # MUTATOR previously matched words INSIDE quotes, so `grep -rn "deploy"`
+    # flipped a pure read into state_change and then into an evidence-gated
+    # category. The unquote regex is the same one _has_write_marker already
+    # uses; the RAW text still feeds the write-marker scan below, so
+    # redirects and mutating flags outside quotes stay fail-closed.
+    mutator_view = re.sub(r"\"[^\"]*\"|'[^']*'", " ", command)
+    if MUTATOR.search(mutator_view) or _has_write_marker(command):
         return False
     segments = _simple_commands(command)
     # v1.2.7: every pipeline stage is classified independently. Remote exact-
