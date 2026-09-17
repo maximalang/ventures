@@ -392,11 +392,13 @@ class FleetPolicyRuntime:
             rule, reason = "budget_exhausted", f"hard budget exhausted: {exhausted}"
         if not rule:
             return None
+        from fleet_policy.models import remediation_for
         payload = {
             "decision": "deny", "rule_id": rule, "reason": reason, "task_id": task_id,
             "project": context.get("project", ""), "profile": context.get("profile", ""),
             "action": "llm_request", "target": request_id, "args_hash": stable_id(request_id),
             "timestamp": utc_now(), "budget_snapshot": snapshot, "approval_card": None,
+            "remediation": remediation_for(rule),
         }
         inserted = self.store.record_event(
             stable_id(task_id, rule, exhausted or idle), str(context.get("run_id") or task_id),
