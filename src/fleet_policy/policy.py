@@ -282,6 +282,20 @@ def is_lifecycle_tool(tool_name: str) -> bool:
 # bare `VAR=value ...` env prefixes — PATH=/evil or LD_PRELOAD=evil.so in
 # front of `python -m pytest` rebinds the executed binary, so assignment
 # prefixes stay fail-closed.
+# v1.2.23: stdout-only `echo`/`printf` and `true` join the read utilities.
+# Incident 17.09.2026: pure-read diagnostics chained with section markers
+# (`grep … fleet-policy.yaml; echo "==="; grep … policy.py`,
+# `git merge-base --is-ancestor X Y && echo OK || echo NO`) were classified
+# state_change solely because of the echo stage, so the path guard then
+# hard-denied them as policy_control_plane_mutation ("policy-controlled
+# files are immutable") although nothing wrote anything — the dominant
+# false-positive first-pass failure family (F1, shadow baseline). Safety is
+# unchanged: heredocs (`<<`), command substitution ($(), backticks) and
+# process substitution fail closed via _SHELL_METACHARACTERS; redirects and
+# `tee` fail closed via the write-marker scan; `date` stays fail-closed
+# (clock-setting -s/--set forms are hard to bound lexically); a quoted
+# payload never buys the read lane for its stage because only the PROGRAM
+# is allowlisted here.
 READ_COMMAND = re.compile(
     r"^\s*(?:git(?:\s+(?-i:-C)\s+\S+)?\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|"
     r"config\s+(?:--(?:global|local|system|worktree)\s+)*(?:--get(?:-all|-regex)?|--list|-l|--get-url|--get-regexp|[A-Za-z0-9][A-Za-z0-9._-]*\s*$)|"
@@ -291,7 +305,12 @@ READ_COMMAND = re.compile(
     # -ok/-okdir, -fls/-fprint) out of the read lane; the token-based
     # write-marker scan below is the second, fail-closed layer for them.
     r"find\b(?!.*\s-(?:delete|exec|execdir|ok|okdir|fls|fprint)\b)|"
-    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
+    # v1.2.23: stdout-only `echo`/`printf` and `true` join the read utilities.
+    # `date` deliberately does NOT: its `-s`/`--set` clock-setting forms are
+    # hard to bound lexically (-us/-ns/-Iseconds all cluster with 's'), so it
+    # stays fail-closed. echo/printf never read or write files; redirects,
+    # tee, command substitution and backticks still fail closed elsewhere.
+    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
 MUTATOR = re.compile(
