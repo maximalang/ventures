@@ -39,8 +39,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_approval_binding ON approvals(task_id, act
 CREATE TABLE IF NOT EXISTS notification_outbox(
   event_id TEXT PRIMARY KEY, payload_json TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending',
   created_at TEXT NOT NULL, sent_at TEXT, claim_token TEXT, claimed_at TEXT,
-  suppression_reason TEXT, resolved_at TEXT
+  suppression_reason TEXT, resolved_at TEXT, attempt_count INTEGER NOT NULL DEFAULT 0,
+  next_retry_at TEXT, last_error TEXT
 );
+CREATE INDEX IF NOT EXISTS idx_notification_status_next_retry ON notification_outbox(status,next_retry_at);
 CREATE TABLE IF NOT EXISTS capabilities(
   capability_id TEXT PRIMARY KEY, project TEXT NOT NULL, kind TEXT NOT NULL,
   scope TEXT NOT NULL, status TEXT NOT NULL, granted_by TEXT NOT NULL, created_at TEXT NOT NULL
@@ -171,6 +173,15 @@ class PolicyStore:
             connection.execute("ALTER TABLE notification_outbox ADD COLUMN suppression_reason TEXT")
         if "resolved_at" not in columns:
             connection.execute("ALTER TABLE notification_outbox ADD COLUMN resolved_at TEXT")
+        if "attempt_count" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN attempt_count INTEGER NOT NULL DEFAULT 0")
+        if "next_retry_at" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN next_retry_at TEXT")
+        if "last_error" not in columns:
+            connection.execute("ALTER TABLE notification_outbox ADD COLUMN last_error TEXT")
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS idx_notification_status_next_retry ON notification_outbox(status,next_retry_at)"
+        )
 
     @staticmethod
     def _heal_approvals_v4(connection: sqlite3.Connection) -> None:
@@ -510,6 +521,103 @@ class PolicyStore:
         with self.connect() as connection:
             return list(connection.execute("SELECT * FROM notification_outbox WHERE status='pending' ORDER BY created_at,event_id"))
 
+    # Outbox retry accounting: a delivery attempt is counted when a transport
+    # was actually exercised and failed. Bounded exponential backoff keeps a
+    # failed row ineligible until its window passes; a row that exceeds the
+    # attempt budget or its delivery deadline dead-letters instead of retrying
+    # forever.
+    MAX_NOTIFICATION_ATTEMPTS = 4
+    NOTIFICATION_BACKOFF_BASE_SECONDS = 30
+    NOTIFICATION_BACKOFF_CAP_SECONDS = 3600
+    NOTIFICATION_MAX_AGE_SECONDS = 7 * 24 * 3600
+
+    @classmethod
+    def notification_backoff_seconds(cls, attempt_count: int) -> int:
+        """Bounded exponential backoff after the Nth failed attempt."""
+        delay = cls.NOTIFICATION_BACKOFF_BASE_SECONDS * (2 ** (attempt_count - 1))
+        return min(delay, cls.NOTIFICATION_BACKOFF_CAP_SECONDS)
+
+    @staticmethod
+    def _notification_cutoff(now: datetime, seconds: int) -> str:
+        return (now - timedelta(seconds=seconds)).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+    def expire_stale_notifications(self) -> int:
+        """Dead-letter expired pending/dispatching rows in one transaction.
+
+        Rows that exceeded their delivery deadline (age from created_at past
+        NOTIFICATION_MAX_AGE_SECONDS) never become synthetic deliveries: they
+        resolve as ``dead`` with an auditable reason. Stale dispatching rows
+        (crashed worker) are reclaimed inside the same transaction.
+        """
+        now = datetime.now(timezone.utc)
+        stale_before = self._notification_cutoff(now, 5 * 60)
+        age_cutoff = self._notification_cutoff(now, self.NOTIFICATION_MAX_AGE_SECONDS)
+        with self.connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            connection.execute(
+                "UPDATE notification_outbox SET status='pending',claim_token=NULL,claimed_at=NULL "
+                "WHERE status='dispatching' AND claimed_at < ?",
+                (stale_before,),
+            )
+            cursor = connection.execute(
+                "UPDATE notification_outbox "
+                "SET status='dead',resolved_at=?,suppression_reason='expired',claim_token=NULL,claimed_at=NULL "
+                "WHERE status IN ('pending','dispatching') AND created_at < ?",
+                (utc_now(), age_cutoff),
+            )
+            return int(cursor.rowcount)
+
+    def notification_counts(self) -> dict[str, int]:
+        """Delivery accounting: queued/delivered/dead/suppressed are separate counters."""
+        with self.connect() as connection:
+            rows = connection.execute(
+                "SELECT status, COUNT(*) AS total FROM notification_outbox GROUP BY status"
+            ).fetchall()
+        known = {"pending": 0, "dispatching": 0, "sent": 0, "dead": 0, "suppressed": 0}
+        for row in rows:
+            known[str(row["status"])] = int(row["total"])
+        return {
+            "queued": known["pending"] + known["dispatching"],
+            "delivered": known["sent"],
+            "dead": known["dead"],
+            "suppressed": known["suppressed"],
+        }
+
+    def fail_claimed_notification(self, claim_token: str, event_id: str, error: str) -> bool:
+        """Record one failed delivery attempt on a claimed row.
+
+        Within the attempt budget: back to pending with a bounded backoff
+        window. Beyond it: terminal ``dead`` with the last transport error.
+        """
+        now = datetime.now(timezone.utc)
+        with self.connect() as connection:
+            row = connection.execute(
+                "SELECT attempt_count FROM notification_outbox WHERE status='dispatching' AND claim_token=? AND event_id=?",
+                (claim_token, event_id),
+            ).fetchone()
+            if row is None:
+                return False
+            attempts = int(row["attempt_count"]) + 1
+            normalized_error = " ".join(str(error).split())[:300]
+            if attempts >= self.MAX_NOTIFICATION_ATTEMPTS:
+                cursor = connection.execute(
+                    "UPDATE notification_outbox "
+                    "SET status='dead',resolved_at=?,last_error=?,claim_token=NULL,claimed_at=NULL,next_retry_at=NULL "
+                    "WHERE status='dispatching' AND claim_token=? AND event_id=?",
+                    (utc_now(), normalized_error, claim_token, event_id),
+                )
+                return cursor.rowcount == 1
+            next_retry = (now + timedelta(seconds=self.notification_backoff_seconds(attempts))).isoformat(
+                timespec="seconds"
+            ).replace("+00:00", "Z")
+            cursor = connection.execute(
+                "UPDATE notification_outbox "
+                "SET status='pending',attempt_count=?,last_error=?,next_retry_at=?,claim_token=NULL,claimed_at=NULL "
+                "where status='dispatching' AND claim_token=? AND event_id=?",
+                (attempts, normalized_error, next_retry, claim_token, event_id),
+            )
+            return cursor.rowcount == 1
+
     def claim_pending_notifications(self, limit: int) -> tuple[str, list[sqlite3.Row]] | None:
         """Atomically reserve one bounded batch so concurrent drains cannot duplicate it."""
         if limit <= 0:
@@ -517,7 +625,8 @@ class PolicyStore:
         from uuid import uuid4
 
         claim_token = uuid4().hex
-        stale_before = (datetime.now(timezone.utc) - timedelta(minutes=5)).isoformat(timespec="seconds").replace("+00:00", "Z")
+        now = datetime.now(timezone.utc)
+        stale_before = self._notification_cutoff(now, 5 * 60)
         with self.connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
             connection.execute(
@@ -526,7 +635,9 @@ class PolicyStore:
                 (stale_before,),
             )
             rows = list(connection.execute(
-                "SELECT * FROM notification_outbox WHERE status='pending' ORDER BY created_at,event_id LIMIT ?", (limit,)
+                "SELECT * FROM notification_outbox "
+                "WHERE status='pending' AND (next_retry_at IS NULL OR next_retry_at <= ?) "
+                "ORDER BY created_at,event_id LIMIT ?", (utc_now(), limit),
             ))
             if not rows:
                 return None
