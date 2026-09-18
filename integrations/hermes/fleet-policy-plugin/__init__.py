@@ -56,11 +56,21 @@ def context(kwargs: dict[str, Any]) -> dict[str, Any]:
 
 
 def _message(payload: dict[str, Any]) -> str:
-    return (
+    base = (
         f"FLEET POLICY BLOCKED [{payload.get('rule_id')}] "
         f"pattern={payload.get('pattern_category') or 'unknown'} "
         f"call_index={payload.get('call_index') or 0}"
     )
+    # Deny = pause with a route: the canonical remediation rides the decision
+    # payload (PolicyDecision.remediation) and must reach the blocked-card
+    # reason so the next worker knows WHO fixes WHAT before any retry.
+    rem = payload.get("remediation") or {}
+    who, how = rem.get("who"), rem.get("how")
+    if who and how:
+        base += f" | remediation: who={who} how={how}"
+    elif how:
+        base += f" | remediation: {how}"
+    return base
 
 
 def _project(payload: dict[str, Any]) -> None:

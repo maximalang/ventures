@@ -64,7 +64,8 @@ class HermesProjector:
         result: dict[str, int] = {}
         if block:
             blocked = self.runner(
-                ["hermes", "kanban", "--board", board, "block", task_id, message, "--kind", "needs_input"], 20
+                ["hermes", "kanban", "--board", board, "block", task_id, message,
+                 "--kind", "policy_denied"], 20
             )
             result["block"] = int(blocked.returncode)
         else:
