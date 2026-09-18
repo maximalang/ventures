@@ -3,7 +3,13 @@ from __future__ import annotations
 from fleet_policy.redaction import args_hash
 
 
-def test_missing_task_type_denies(runtime, task_context):
+def test_remediation_is_only_on_known_denials(runtime, task_context):
+    allowed = runtime.pre_tool_call("read_file", {"path": "README.md"}, task_context)
+    assert "remediation" not in allowed.as_dict()
+    task_context["task_body"] = "no marker"
+    denied = runtime.pre_tool_call("read_file", {"path": "README.md"}, task_context)
+    assert denied.as_dict()["remediation"]["who"] == "company"
+
     task_context["task_body"] = "no marker"
     decision = runtime.pre_tool_call("read_file", {"path": "README.md"}, task_context)
     assert (decision.decision, decision.rule_id) == ("deny", "missing_or_unknown_task_type")
