@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.24] - 2026-09-19
+
+### Changed
+- Unified the two divergent remediation branches: canonical
+  `fix/company-policy-remediation` (4297b44 — `remediation_for` route table,
+  `PolicyDecision.remediation`, projector emits typed `--kind policy_denied`
+  with the route in the block reason) merged onto the live v1.2.23 base
+  (4ba0ca1). The stale working-tree iteration on
+  `fix/deny-remediation-routes` is superseded and dropped.
+- Full suite green on the merge: 659 passed.
+
 ## [1.2.23] - 2026-09-17
 
 ### Fixed
