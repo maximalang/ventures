@@ -32,6 +32,23 @@ STATE_PATH = pathlib.Path(
 CLI = os.environ.get("HERMES_CLI", "hermes")
 ACTION_LIMIT = 5
 RETRY_COOLDOWN_SECONDS = 6 * 3600
+SPAWN_RETRIES = 3
+SPAWN_FLAKE_RCS = {3221225794}
+STALE_BLOCK_DAYS = 7.0
+HEARTBEAT_STALL_SECONDS = 2 * 3600
+DELEGATION_ENV_KEYS = (
+    "HERMES_DELEGATED_CHILD_CONTEXT",
+    "HERMES_KANBAN_DB",
+    "HERMES_KANBAN_BOARD",
+)
+
+
+def _scrubbed_env(base: dict[str, str] | None = None) -> dict[str, str]:
+    """Worker-runnable CLI environment: drop delegation/board pinning vars."""
+    env = dict(os.environ if base is None else base)
+    for key in DELEGATION_ENV_KEYS:
+        env.pop(key, None)
+    return env
 
 SAFETY_RULES = {
     "secret_read_or_write",
@@ -123,13 +140,29 @@ def run_cli(board: str, args: list[str], timeout: int = 45) -> Any:
     expects_json = bool(args and args[0] in {"list", "show", "create", "promote"})
     if expects_json:
         cmd.append("--json")
-    proc = subprocess.run(
-        cmd,
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-        stdin=subprocess.DEVNULL,
-    )
+    proc = None
+    last_error: Exception | None = None
+    for attempt in range(SPAWN_RETRIES):
+        try:
+            proc = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                stdin=subprocess.DEVNULL,
+                env=_scrubbed_env(),
+            )
+            break
+        except OSError as exc:
+            last_error = exc
+            rc = getattr(exc, "winerror", None)
+            if rc is None:
+                rc = getattr(exc, "errno", None)
+            if rc in SPAWN_FLAKE_RCS and attempt + 1 < SPAWN_RETRIES:
+                continue
+            raise RuntimeError(f"CLI spawn failed rc={rc}: {exc}") from exc
+    if proc is None:
+        raise RuntimeError(f"CLI spawn failed after {SPAWN_RETRIES} attempts: {last_error}")
     if proc.returncode != 0:
         raise RuntimeError(f"CLI rc={proc.returncode}: {' '.join(cmd)}\n{proc.stderr[-1200:]}")
     text = proc.stdout.strip()
@@ -209,6 +242,32 @@ def _company_resume(show: dict[str, Any]) -> bool:
     return False
 
 
+def is_recovery_card(task: dict[str, Any]) -> bool:
+    title = str(task.get("title") or "").strip().lower()
+    return title.startswith("recover ")
+
+
+def detect_heartbeat_stall(
+    task: dict[str, Any],
+    show: dict[str, Any],
+    *,
+    now: int | None = None,
+    stall_seconds: int = HEARTBEAT_STALL_SECONDS,
+) -> bool:
+    """True iff a non-running card's most recent heartbeat is stale by ``stall_seconds``."""
+    if str(task.get("status") or "") == "running":
+        return False
+    stamps = [
+        int(event.get("created_at") or 0)
+        for event in (show.get("events") or [])
+        if str(event.get("kind") or "") == "heartbeat"
+    ]
+    if not stamps:
+        return False
+    current = now if now is not None else _now_epoch()
+    return (current - max(stamps)) > stall_seconds
+
+
 def _has_completed_evidence(task: dict[str, Any], show: dict[str, Any]) -> bool:
     text = _all_text(task, show)
     return any(term in text for term in COMPLETION_TERMS)
@@ -229,11 +288,18 @@ def classify(
     task: dict[str, Any],
     show: dict[str, Any],
     parent_status: Callable[[str], str | None] | None = None,
+    *,
+    now: int | None = None,
+    stale_after_days: float | None = None,
 ) -> Decision:
     parent_status = parent_status or (lambda _task_id: None)
-    rule, reason, _ = latest_block_reason(show)
+    rule, reason, blocked_at = latest_block_reason(show)
     text = _all_text(task, show)
     block_kind = str(task.get("block_kind") or "")
+    if stale_after_days is None:
+        stale_after_days = 0.0
+    if stale_after_days < 0:
+        stale_after_days = 0.0
 
     open_parents = [
         parent for parent in (show.get("parents") or [])
@@ -248,6 +314,9 @@ def classify(
     if any(term in text for term in OWNER_TERMS) and block_kind not in {"transient", "dependency"}:
         return Decision("owner_only", "owner", "escalate", "human-bound capability or ownership boundary")
 
+    if is_recovery_card(task) and not _company_resume(show):
+        return Decision("nested_recovery", "company", "hold", "recovery card must not trigger further recovery")
+
     if rule == "missing_or_unknown_task_type":
         return Decision("malformed_card", "company", "route_repair", "required first-line work marker missing")
 
@@ -261,6 +330,14 @@ def classify(
         if str(task.get("status") or "") == "triage":
             return Decision("triage_resume", "company", "route_review", "triage requires specification/review, not unblock")
         return Decision("approved_resume", str(task.get("assignee") or "company"), "unblock", "company resume decision present", True)
+
+    if detect_heartbeat_stall(task, show, now=now):
+        return Decision("heartbeat_stall", str(task.get("assignee") or "company"), "unblock", "worker heartbeat stalled, bounded requeue", True)
+
+    if rule != "" and stale_after_days > 0:
+        current = now if now is not None else _now_epoch()
+        if (current - blocked_at) > int(stale_after_days * 86400):
+            return Decision("stale_archive_review", "company", "route_archive_review", "typed block is stale; archive review instead of recovery")
 
     if rule == "policy_control_plane_mutation":
         read_only = any(token in reason.lower() for token in ("read_file", "search_files", "web_search", "list"))
@@ -359,7 +436,7 @@ class Controller:
         )
         args = [
             "create",
-            "--title", title,
+            title,
             "--body", body,
             "--assignee", d.owner,
             "--priority", str(int(candidate.task.get("priority") or 0) + 1),
@@ -384,6 +461,8 @@ class Controller:
                 raise RuntimeError(f"readback failed for {candidate.board}/{candidate.task_id}: {before}->{after}")
             result = {"outcome": "unblocked", "before": before, "after": after}
         elif d.action.startswith("route_"):
+            if not d.safe_to_apply:
+                return {"outcome": "dry_run", "proposed": d.action}
             created = self._route_task(candidate)
             result = {"outcome": "routed", "created": created}
         else:
