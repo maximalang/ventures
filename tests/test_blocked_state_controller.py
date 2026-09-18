@@ -156,5 +156,182 @@ class ApplyTests(unittest.TestCase):
         self.assertEqual(c.apply_candidate(cand), {"outcome": "dry_run", "proposed": "route_repair"})
 
 
+class RecursionGuardTests(unittest.TestCase):
+    def test_recovery_card_title_is_never_re_recovered(self):
+        t = task(id="t_nested", title="Recover t_x: whatever")
+        d = mod.classify(t, show("FLEET POLICY BLOCKED [same_failure_loop]"))
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("nested_recovery", "hold", False))
+
+    def test_recursion_guard_bypassed_by_company_resume(self):
+        t = task(id="t_nested", title="Recover t_x: whatever")
+        s = show("generic", comments=[{"author": "company", "body": "decision:company=go"}])
+        d = mod.classify(t, s)
+        self.assertEqual((d.classification, d.action), ("approved_resume", "unblock"))
+
+
+class PositionalTitleTests(unittest.TestCase):
+    def test_create_uses_positional_title_before_flags(self):
+        calls = []
+        def fake_cli(board, args, timeout):
+            calls.append((board, args))
+            return {"id": "t_new"}
+        c = mod.Controller(apply=True, state_path=pathlib.Path(tempfile.mkdtemp()) / "s.json", cli=fake_cli)
+        cand = mod.Candidate("fleet-ops", task(), show(), mod.Decision(
+            "malformed_card", "company", "route_repair", "missing marker", True
+        ), 50)
+        result = c.apply_candidate(cand)
+        self.assertEqual(result["outcome"], "routed")
+        args = calls[0][1]
+        self.assertEqual(args[0], "create")
+        self.assertEqual(args[1], "Recover t_x: Example")  # positional, no --title
+        self.assertNotIn("--title", args)
+
+
+class EnvHygieneTests(unittest.TestCase):
+    def test_scrubbed_env_drops_delegation_and_board_vars(self):
+        base = {"PATH": r"C:\\Windows", "LANG": "C"}
+        dirty = dict(base)
+        dirty.update({
+            "HERMES_DELEGATED_CHILD_CONTEXT": "1",
+            "HERMES_KANBAN_DB": "C:/elsewhere/kanban.db",
+            "HERMES_KANBAN_BOARD": "other",
+        })
+        env = mod._scrubbed_env(base)
+        self.assertIn("PATH", env)
+        for key in ("HERMES_DELEGATED_CHILD_CONTEXT", "HERMES_KANBAN_DB", "HERMES_KANBAN_BOARD"):
+            self.assertNotIn(key, env)
+
+    def test_run_cli_strips_inherited_env(self):
+        import os as _os
+        _os.environ["HERMES_KANBAN_DB"] = "C:/pinned.db"
+        try:
+            c = mod.Controller(apply=False, cli=mod.run_cli)
+            seen = {}
+            real_run = __import__("subprocess").run
+            def spy_run(cmd, **kwargs):
+                seen.update(kwargs.get("env") or {})
+                raise RuntimeError("stop")
+            mod.subprocess.run = spy_run
+            try:
+                with self.assertRaises(RuntimeError):
+                    c.cli("fleet-ops", ["list"], 5)
+            finally:
+                mod.subprocess.run = real_run
+            self.assertNotIn("HERMES_KANBAN_DB", seen)
+            self.assertIn("PATH", seen)
+        finally:
+            del _os.environ["HERMES_KANBAN_DB"]
+
+    def test_run_cli_retries_windows_spawn_flake_then_succeeds(self):
+        attempts = []
+        real_run = mod.subprocess.run
+        def flaky_run(cmd, **kwargs):
+            attempts.append(cmd)
+            if len(attempts) < 3:
+                raise OSError(3221225794, "GetExitCodeProcess")
+            class P:  # minimal CompletedProcess stand-in
+                returncode = 0
+                stdout = "[]"
+                stderr = ""
+            return P()
+        mod.subprocess.run = flaky_run
+        try:
+            value = mod.run_cli("fleet-ops", ["list"], 5)
+            self.assertEqual(value, [])
+            self.assertEqual(len(attempts), 3)
+        finally:
+            mod.subprocess.run = real_run
+
+    def test_run_cli_exhausts_retries(self):
+        real_run = mod.subprocess.run
+        def always_flaky(cmd, **kwargs):
+            raise OSError(3221225794, "GetExitCodeProcess")
+        mod.subprocess.run = always_flaky
+        try:
+            with self.assertRaises(RuntimeError):
+                mod.run_cli("fleet-ops", ["list"], 5)
+        finally:
+            mod.subprocess.run = real_run
+
+    def test_run_spawns_with_scrubbed_env(self):
+        c = mod.Controller(apply=False, cli=mod.run_cli)
+        seen = {}
+        real_run = mod.subprocess.run
+        def spy_run(cmd, **kwargs):
+            seen.update(kwargs.get("env") or {})
+            raise RuntimeError("stop")
+        mod.subprocess.run = spy_run
+        try:
+            with self.assertRaises(RuntimeError):
+                c.run(["fleet-ops"])
+        finally:
+            mod.subprocess.run = real_run
+        self.assertIn("PATH", seen)
+        self.assertNotIn("HERMES_DELEGATED_CHILD_CONTEXT", seen)
+
+
+class StalenessGateTests(unittest.TestCase):
+    def test_fresh_block_routes_recovery(self):
+        d = mod.classify(task(), show("FLEET POLICY BLOCKED [evidence_gate_missing]"), None, now=100)
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("evidence_gap", "route_evidence", False))
+
+    def test_stale_block_suggests_archive_review_not_recovery(self):
+        now = 100 + int(mod.STALE_BLOCK_DAYS * 86400) + 3600
+        d = mod.classify(task(), show("FLEET POLICY BLOCKED [evidence_gate_missing]"), None, now=now, stale_after_days=7.0)
+        self.assertEqual((d.classification, d.action), ("stale_archive_review", "route_archive_review"))
+
+    def test_staleness_uses_blocked_at_not_created_at(self):
+        now = 100 + int(mod.STALE_BLOCK_DAYS * 86400) + 3600
+        s = show("FLEET POLICY BLOCKED [evidence_gate_missing]")
+        s["events"][0]["created_at"] = now - 60  # blocked recently
+        d = mod.classify(task(), s, None, now=now, stale_after_days=7.0)
+        self.assertEqual((d.classification, d.action), ("evidence_gap", "route_evidence"))
+
+    def test_staleness_disabled_by_default_in_classify(self):
+        d = mod.classify(task(), show("FLEET POLICY BLOCKED [evidence_gate_missing]"))
+        self.assertEqual((d.classification, d.action), ("evidence_gap", "route_evidence"))
+
+    def test_stale_archive_review_is_dry_run_only(self):
+        c = mod.Controller(apply=True, state_path=pathlib.Path(tempfile.mkdtemp()) / "s.json",
+                           cli=lambda *_a: (_ for _ in ()).throw(AssertionError("no CLI mutation")))
+        now = int(mod._now_epoch()) + int(mod.STALE_BLOCK_DAYS * 86400)
+        cand = mod.Candidate("fleet-ops", task(), show(), mod.Decision(
+            "stale_archive_review", "company", "route_archive_review", "stale", False
+        ), now)
+        result = c.apply_candidate(cand)
+        self.assertEqual(result, {"outcome": "dry_run", "proposed": "route_archive_review"})
+
+
+class HeartbeatStallTests(unittest.TestCase):
+    def test_detects_stalled_worker(self):
+        now = int(mod._now_epoch())
+        s = show("network timeout")
+        s["events"].append({"kind": "heartbeat", "created_at": now - 8000})
+        self.assertTrue(mod.detect_heartbeat_stall(task(), s, now=now))
+
+    def test_alive_worker_not_stalled(self):
+        now = int(mod._now_epoch())
+        s = show("network timeout")
+        s["events"].append({"kind": "heartbeat", "created_at": now - 60})
+        self.assertFalse(mod.detect_heartbeat_stall(task(), s, now=now))
+
+    def test_running_worker_is_out_of_scope(self):
+        now = int(mod._now_epoch())
+        s = show("network timeout")
+        s["events"].append({"kind": "heartbeat", "created_at": now - 3600})
+        self.assertFalse(mod.detect_heartbeat_stall(task(status="running"), s, now=now))
+
+    def test_no_heartbeat_events_is_not_stall(self):
+        now = int(mod._now_epoch())
+        self.assertFalse(mod.detect_heartbeat_stall(task(), show("network timeout"), now=now))
+
+    def test_stalled_worker_classifies_as_bounded_unblock(self):
+        now = int(mod._now_epoch())
+        s = show("network timeout")
+        s["events"].append({"kind": "heartbeat", "created_at": now - 8000})
+        d = mod.classify(task(), s, None, now=now)
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("heartbeat_stall", "unblock", True))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.23] - 2026-09-17
+
+### Fixed
+- F1 (shadow baseline t_64099bc7, incidents t_e7a0a31f/t_d654a389): stdout-only
+  `echo`/`printf` and `true` join the read utilities, so pure-read diagnostics
+  chained with section markers (`grep … fleet-policy.yaml; echo "==="; grep …`,
+  `git merge-base --is-ancestor X Y && echo OK || echo NO`) classify read_only
+  again instead of being hard-denied as `policy_control_plane_mutation` by the
+  echo stage alone. This was the dominant false-positive first-pass failure
+  family. Safety unchanged: redirects/`tee` still fail closed via the
+  write-marker scan; command substitution, backticks and heredocs via
+  `_SHELL_METACHARACTERS`; `date` deliberately stays fail-closed (clock-setting
+  `-s`/`--set` forms are hard to bound lexically); env prefixes stay fail-closed.
+- Regression suite `tests/test_v1223_echo_read_stages.py`: 9 read-only incident
+  commands GREEN, 8 adversarial variants confirmed out of the read lane, and
+  policy-controlled `write_file` still hard-denied.
+
 ## [1.2.22] - 2026-09-16
 
 ### Fixed
