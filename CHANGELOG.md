@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.2.24] - 2026-09-19
+
+### Added
+- Unified remediation branches: the canonical typed `policy_denied` projection
+  and machine-readable remediation routes (`remediation_for`, from
+  fix/company-policy-remediation 4297b44) merged onto the live pinned base
+  (156ce1b / v1.2.23). One branch, one code path — the divergent manual
+  iteration (fix/deny-remediation-routes) is superseded.
+
+
 ## [1.2.23] - 2026-09-17
 
 ### Fixed
