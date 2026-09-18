@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import load_config
-from .models import PolicyDecision
+from .models import PolicyDecision, remediation_for
 from .policy import Classification, classify, infer_task_type, is_lifecycle_tool
 from .redaction import args_hash, redact, stable_id
 from .storage import PolicyStore, utc_now
@@ -416,6 +416,7 @@ class FleetPolicyRuntime:
             timestamp=utc_now(),
             budget_snapshot=snapshot,
             approval_card=approval_card,
+            remediation=remediation_for(rule_id),
             pattern_category=result.category,
             call_index=max(1, int(snapshot.get("used", {}).get("tool_calls", 0))),
             deny_nonce=deny_nonce,
