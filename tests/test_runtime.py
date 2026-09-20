@@ -311,7 +311,12 @@ def test_financial_mandate_requires_gates_capability_and_limits(runtime, task_co
     missing_cap = runtime.pre_tool_call("terminal", args, task_context)
     assert (missing_cap.decision, missing_cap.rule_id) == ("approval_required", "new_paid_capability_or_payment_rail")
     monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
-    assert runtime.store.grant_capability("ads-card", "recruiter-radar", "payment", "ads-only", "user")
+    # v1.2.25: capability grants require the owner confirmation code.
+    from fleet_policy.storage import capability_grant_code
+    assert runtime.store.grant_capability(
+        "ads-card", "recruiter-radar", "payment", "ads-only", "user",
+        confirm_code=capability_grant_code("ads-card", "recruiter-radar", "payment", "ads-only"),
+    )
     task_context["tool_call_id"] = "spend-1"
     allowed = runtime.pre_tool_call("terminal", args, task_context)
     assert allowed.decision == "allow"

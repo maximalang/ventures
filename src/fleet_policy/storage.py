@@ -99,6 +99,73 @@ def expected_failure_code(task_id: str, failure_signature: str, run_key: str | N
     return stable_override_key(task_id, failure_signature, run_key)[-8:]
 
 
+#: v1.2.25 (t_3ecb778d): a reserved financial_ledger row whose run died
+#: before post_tool_call could settle it is a zombie hold on the monthly
+#: mandate — it silently eats budget until the 365-day retention horizon.
+#: Deterministic crash-safe recovery: any row still 'reserved' at an age
+#: beyond this TTL is flipped to 'expired' (audit event, row never
+#: deleted). 24h dwarfs the longest task budget (code: 300 min), so a
+#: live in-flight reservation can never be swept by age alone.
+SPEND_RESERVATION_TTL_SECONDS = 24 * 60 * 60
+
+
+def capability_grant_code(capability_id: str, project: str, kind: str, scope: str) -> str:
+    """The confirmation code an owner presents to grant_capability: the last
+    8 characters of the sha256 binding identity (capability, project, kind,
+    scope). Same derive-from-the-thing-being-authorized pattern as approval
+    rule_keys (v1.2.12 C3) and expected-failure overrides — an
+    unauthenticated non-worker caller cannot mint user authority without
+    presenting the exact binding suffix (v1.2.25)."""
+    from .redaction import stable_id
+
+    return stable_id(capability_id, project, kind, scope)[-8:]
+
+
+def _expire_stale_reservations_in(connection: sqlite3.Connection, stamp: str, cutoff: str,
+                                  exclude: tuple[str, ...] = ()) -> list[dict[str, Any]]:
+    """Flip TTL-expired 'reserved' ledger rows to 'expired' on an open write
+    transaction, writing one audit event per release (rows are never
+    deleted). Shared by expire_stale_reservations (drain sweep) and
+    authorize_and_reserve_spend (same-transaction correction), so both
+    recovery points are byte-identical. v1.2.25."""
+    from .redaction import stable_id, stable_json
+
+    query = (
+        "SELECT event_id, task_id, project, amount_rub, capability_id, created_at "
+        "FROM financial_ledger WHERE status='reserved' AND created_at < ?"
+    )
+    params: list[Any] = [cutoff]
+    if exclude:
+        query += f" AND event_id NOT IN ({','.join('?' for _ in exclude)})"
+        params.extend(exclude)
+    rows = [dict(row) for row in connection.execute(query, params)]
+    for row in rows:
+        connection.execute(
+            "UPDATE financial_ledger SET status='expired',updated_at=? "
+            "WHERE event_id=? AND status='reserved'",
+            (stamp, row["event_id"]),
+        )
+        audit_id = stable_id(row["event_id"], "spend_reservation_expired")
+        payload = {
+            "event_id": row["event_id"],
+            "task_id": row["task_id"],
+            "project": row["project"],
+            "amount_rub": int(row["amount_rub"]),
+            "capability_id": row["capability_id"],
+            "reserved_at": row["created_at"],
+            "ttl_seconds": SPEND_RESERVATION_TTL_SECONDS,
+            "reason": "reserved spend outlived the crash-recovery TTL and was expired",
+        }
+        connection.execute(
+            "INSERT OR IGNORE INTO events"
+            "(event_id,correlation_id,task_id,kind,significant,payload_json,created_at) "
+            "VALUES(?,?,?,?,?,?,?)",
+            (audit_id, audit_id, row["task_id"], "spend_reservation_expired", 0,
+             stable_json(payload), stamp),
+        )
+    return rows
+
+
 class PolicyStore:
     def __init__(self, path: str | Path):
         self.path = Path(path)
@@ -686,8 +753,41 @@ class PolicyStore:
                 (claim_token, *event_ids),
             )
             return cursor.rowcount
-    def grant_capability(self, capability_id: str, project: str, kind: str, scope: str, granted_by: str) -> bool:
+    def expire_stale_reservations(self, *, now: datetime | None = None,
+                                  exclude_event_ids: tuple[str, ...] = ()) -> list[dict[str, Any]]:
+        """v1.2.25 (t_3ecb778d): deterministic zombie-reservation recovery.
+
+        A run that dies between pre_tool_call reserve and post_tool_call
+        settle leaves its financial_ledger row 'reserved' forever — a hold
+        on the project's monthly mandate that no settle path can ever
+        reach. Sweep every row older than SPEND_RESERVATION_TTL_SECONDS to
+        'expired' (audit event per row, never deleted), so monthly_spend
+        self-corrects via its ('reserved','settled') status filter.
+
+        The TTL (24h) dwarfs the longest task budget (code: 300 min), so a
+        live in-flight reservation is structurally younger than the cutoff;
+        exclude_event_ids additionally lets a caller protect known-live
+        rows. Returns the released row dicts (deterministic audit)."""
+        moment = now or datetime.now(timezone.utc)
+        stamp = moment.isoformat(timespec="seconds").replace("+00:00", "Z")
+        cutoff = (moment - timedelta(seconds=SPEND_RESERVATION_TTL_SECONDS))\
+            .isoformat(timespec="seconds").replace("+00:00", "Z")
+        with self.connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            return _expire_stale_reservations_in(connection, stamp, cutoff, exclude_event_ids)
+
+    def grant_capability(self, capability_id: str, project: str, kind: str, scope: str,
+                         granted_by: str, *, confirm_code: str | None = None) -> bool:
+        # v1.2.25 (t_3ecb778d): the worker guard is preserved AND extended —
+        # an unauthenticated non-worker call can no longer mint user
+        # authority. The caller must present the exact binding-suffix
+        # confirmation code (mirror of approvals/overrides); anything else
+        # fails closed without touching the table.
         if os.environ.get("HERMES_KANBAN_TASK"):
+            return False
+        if not isinstance(confirm_code, str) or confirm_code != capability_grant_code(
+            capability_id, project, kind, scope
+        ):
             return False
         with self.connect() as connection:
             cursor = connection.execute(
@@ -723,9 +823,19 @@ class PolicyStore:
 
     def authorize_and_reserve_spend(self, event_id: str, task_id: str, project: str,
                                     amount_rub: int, capability_id: str,
-                                    max_transaction: int, max_monthly: int) -> str:
-        """Atomically validate capability/limits and reserve spend."""
-        now = utc_now()
+                                    max_transaction: int, max_monthly: int,
+                                    *, now: datetime | None = None) -> str:
+        """Atomically validate capability/limits and reserve spend.
+
+        v1.2.25 (t_3ecb778d): TTL-expired zombie reservations are swept to
+        'expired' INSIDE this same write transaction before the monthly
+        total is computed, so a crashed run's stale hold can never wedge
+        the mandate against a live reservation. `now` is injectable for
+        deterministic tests; production callers omit it."""
+        moment = now or datetime.now(timezone.utc)
+        now = moment.isoformat(timespec="seconds").replace("+00:00", "Z")
+        cutoff = (moment - timedelta(seconds=SPEND_RESERVATION_TTL_SECONDS))\
+            .isoformat(timespec="seconds").replace("+00:00", "Z")
         month = now[:7]
         with self.connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
@@ -734,6 +844,9 @@ class PolicyStore:
                 (capability_id, project),
             ).fetchone() is None:
                 return "capability_missing"
+            # The fresh reservation this call is about to create cannot be
+            # swept by its own correction pass; exclude it explicitly.
+            _expire_stale_reservations_in(connection, now, cutoff, (event_id,))
             total = int(connection.execute(
                 "SELECT COALESCE(SUM(amount_rub),0) FROM financial_ledger "
                 "WHERE project=? AND created_at LIKE ? AND status IN ('reserved','settled')",

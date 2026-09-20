@@ -42,14 +42,14 @@ Missing gates block the task with actionable diagnostics; they do not create a u
 
 ## Finance and capabilities
 
-A financial tool call must provide `amount_rub` and `capability_id`. Capabilities are one-time owner grants:
+A financial tool call must provide `amount_rub` and `capability_id`. `amount_rub` is an integer-whole-ruble contract: only unambiguous whole-ruble forms are accepted (real ints or digit-only strings); decimals, floats, digit-group separators and bools are rejected and the call fails closed as `financial_metadata_missing` — never silently truncated. Capabilities are one-time owner grants, authenticated like approvals (v1.2.25): the CLI requires an interactive owner terminal and the exact confirmation code — the last 8 characters of the sha256 binding identity of (capability, project, kind, scope):
 
 ```bash
-fleet-policy grant-capability <id> --project <slug> --kind <kind> --scope <scope> --by user
+fleet-policy grant-capability <id> --project <slug> --kind <kind> --scope <scope> --by user --confirm <last-8-of-binding-sha256>
 fleet-policy spend-status --project <slug>
 ```
 
-Workers cannot grant capabilities or approve themselves, including through direct Python storage APIs. Spend is reserved before execution and settled/released from `post_tool_call`. Monetary API cost remains `unavailable` when the provider does not report it.
+Workers cannot grant capabilities or approve themselves, including through direct Python storage APIs. Spend is reserved before execution and settled/released from `post_tool_call`. Reserved rows whose run died before settle are recovered deterministically: `drain-notifications` and every new reservation expire holds older than the 24h TTL (`SPEND_RESERVATION_TTL_SECONDS`) to `expired` with an audit event, correcting the monthly total. Monetary API cost remains `unavailable` when the provider does not report it.
 
 ## Task budgets and progress guard
 

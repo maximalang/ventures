@@ -73,6 +73,9 @@ def parser() -> argparse.ArgumentParser:
     grant.add_argument("--kind", required=True)
     grant.add_argument("--scope", required=True)
     grant.add_argument("--by", default="user")
+    grant.add_argument("--confirm", default=None,
+                         help="Owner confirmation: the last 8 characters of the "
+                              "sha256 binding identity (capability, project, kind, scope).")
     override = sub.add_parser("override-expected-failure")
     override.add_argument("task_id")
     override.add_argument("failure_signature")
@@ -174,8 +177,18 @@ def main(argv: list[str] | None = None) -> int:
             expired = projector.expire_closed_approvals(runtime.store)
         except Exception:
             expired = 0
+        # v1.2.25 (t_3ecb778d): the drain is the deterministic TTL recovery
+        # point for zombie spend reservations — runs that died between
+        # reserve and settle. Idempotent, audit-logged, never touches rows
+        # younger than SPEND_RESERVATION_TTL_SECONDS. Non-fatal like the
+        # approval sweep above.
+        try:
+            spend_expired = len(runtime.store.expire_stale_reservations())
+        except Exception:
+            spend_expired = 0
         sent = projector.drain_company(runtime.store, profile=runtime.config["notifications"]["profile"])
-        print(json.dumps({"sent": sent, "approvals_expired": expired}))
+        print(json.dumps({"sent": sent, "approvals_expired": expired,
+                          "spend_reservations_expired": spend_expired}))
         return 0
     if args.command == "fail-notifications":
         if getattr(args, "all_pending", False):
@@ -185,8 +198,24 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"ok": False, "reason": "pass --all-pending"}))
         return 2
     if args.command == "grant-capability":
-        ok = runtime.store.grant_capability(args.capability_id, args.project, args.kind, args.scope, args.by)
-        print(json.dumps({"ok": ok, "capability_id": args.capability_id, "project": args.project}))
+        # v1.2.25 (t_3ecb778d): a capability is real user authority — same
+        # boundary as approve/reject/revoke. Non-worker callers must be an
+        # interactive owner terminal AND present the exact binding-suffix
+        # confirmation code; the store enforces the code, the CLI enforces
+        # the TTY, and the worker-context guard stays in both layers.
+        if not sys.stdin.isatty():
+            print(json.dumps({"ok": False, "capability_id": args.capability_id,
+                              "reason": "capability grants require an interactive owner terminal (no TTY)"},
+                             ensure_ascii=False))
+            return 2
+        ok = runtime.store.grant_capability(args.capability_id, args.project, args.kind,
+                                            args.scope, args.by, confirm_code=args.confirm)
+        payload = {"ok": ok, "capability_id": args.capability_id, "project": args.project}
+        if not ok:
+            payload["reason"] = ("worker context, or confirmation code invalid "
+                                 "(expected the last 8 characters of the sha256 binding identity "
+                                 "of capability/project/kind/scope)")
+        print(json.dumps(payload, ensure_ascii=False))
         return 0 if ok else 2
     if args.command == "override-expected-failure":
         if os.environ.get("HERMES_KANBAN_TASK"):

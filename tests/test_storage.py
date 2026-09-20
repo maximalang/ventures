@@ -139,10 +139,16 @@ def test_budget_recording_idempotent(tmp_path):
 
 
 def test_financial_monthly_limit_is_atomic(tmp_path, monkeypatch):
+    from fleet_policy.storage import capability_grant_code
+
     store = PolicyStore(tmp_path / "policy.db")
     store.migrate()
     monkeypatch.delenv("HERMES_KANBAN_TASK", raising=False)
-    assert store.grant_capability("cap", "project", "payment", "ads", "user")
+    # v1.2.25: grants are owner-authorized — present the binding code.
+    assert store.grant_capability(
+        "cap", "project", "payment", "ads", "user",
+        confirm_code=capability_grant_code("cap", "project", "payment", "ads"),
+    )
 
     def reserve(index):
         return store.authorize_and_reserve_spend(

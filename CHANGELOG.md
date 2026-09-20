@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.2.25] - 2026-09-20
+
+### Fixed
+- Stale spend recovery (t_3ecb778d, spec carried from t_c2301060): a run
+  that died between the pre_tool_call reserve and the post_tool_call settle
+  left its `financial_ledger` row `reserved` forever — a zombie hold on the
+  project's monthly mandate with no settle path. `expire_stale_reservations`
+  deterministically flips rows older than `SPEND_RESERVATION_TTL_SECONDS`
+  (24h — far beyond the longest task budget, 300 min) to `expired`: one
+  audit event per release, rows never deleted, idempotent on re-runs,
+  `monthly_spend` self-corrects via its (`reserved`,`settled`) status
+  filter. The sweep also runs INSIDE `authorize_and_reserve_spend`'s write
+  transaction (so a stale hold can never wedge a live reservation) and on
+  every `drain-notifications` tick (`spend_reservations_expired` counter).
+- `grant-capability` no longer hands out user authority from an
+  unauthenticated non-worker call: the CLI requires an interactive owner
+  terminal (TTY) like approve/reject/revoke, and the store requires the
+  exact binding-suffix confirmation code — the last 8 chars of the sha256
+  of (capability, project, kind, scope), the same derive-from-the-binding
+  pattern as approvals (v1.2.12 C3) and failure overrides. The worker
+  guard is unchanged.
+- `amount_rub` is now a strict integer-whole-ruble contract (the ledger
+  column is INTEGER rubles): real ints and digit-only strings only. Floats,
+  decimals, digit-group separators (`_`, `,`, space) and bools are rejected
+  (`None` → fail-closed `financial_metadata_missing` deny) instead of
+  being silently truncated — `"5000.50"` used to charge 5000 and
+  `"12 345"` used to charge 12.
+
 ## [1.2.23] - 2026-09-17
 
 ### Fixed

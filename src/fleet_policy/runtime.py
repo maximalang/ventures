@@ -194,14 +194,34 @@ class FleetPolicyRuntime:
 
     @staticmethod
     def _amount_rub(arguments: dict[str, Any]) -> int | None:
+        """v1.2.25 (t_3ecb778d): strict integer-whole-ruble contract.
+
+        The ledger column is INTEGER rubles, so the parser accepts ONLY
+        unambiguous whole-ruble forms: a real int (bools rejected —
+        ``int(True) == 1`` was a silent alias) or a digit-only string
+        (``^\\d+$`` after strip). Floats, decimals, digit-group separators
+        (``_``, ``,``, space) and any other form return None, which the
+        financial path turns into a fail-closed ``financial_metadata_missing``
+        deny — never a silently truncated reservation (the former
+        ``int(raw)``/``(\\d+)`` pair charged "5000.50" and "12 345" as 5000
+        and 12). The command-text extraction carries a lookahead so a digit
+        run followed by a decimal point, separator or another digit group is
+        rejected instead of prefix-truncated.
+        """
         raw = arguments.get("amount_rub")
         if raw is None:
-            match = re.search(r"(?i)amount_rub\s*[=:]\s*(\d+)", str(arguments))
+            match = re.search(
+                r"(?i)amount_rub\s*[=:]\s*(\d+)(?![._\d])(?!\s+\d)", str(arguments)
+            )
             raw = match.group(1) if match else None
-        try:
-            return int(raw) if raw is not None else None
-        except (TypeError, ValueError):
+        if isinstance(raw, bool):
             return None
+        if isinstance(raw, int):
+            return raw
+        if isinstance(raw, str):
+            stripped = raw.strip()
+            return int(stripped) if re.fullmatch(r"\d+", stripped) else None
+        return None
 
     @staticmethod
     def _capability_id(arguments: dict[str, Any]) -> str:
