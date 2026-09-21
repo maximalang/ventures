@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.2.25] - 2026-09-21
+
+### Fixed
+- **Worker-deny = пауза, не парковка карты** (канон 17.09): deny-классы с
+  маршрутом `who=worker` (`evidence_gate_missing`, `same_failure_loop`,
+  `identical_call_loop`, `worker_code_execution`) больше не проецируют
+  `kanban block` — воркер получает `next_step=… [continues: worker]` в
+  сообщении и продолжает в этом же ране. company/owner-классы паркуют карту
+  как раньше, с машиночитаемым `CONTINUATION[who=…]` контрактом.
+- **Read-lane false positives (живой инцидент 21.09, компания-профиль):**
+  - `git --no-pager …` теперь read-форма (флаг не ломал git-ветку READ_COMMAND);
+  - стадия `VAR=value` — shell-binding, не мутация (аналог `cd <dir>` no-op;
+    `$(`/backtick в значении по-прежнему fail-closed через метасимволы);
+  - редирект в `/dev/null` (stderr/stdout discard) больше не считается записью;
+    редиректы в реальные пути и `/dev/null.txt`-подобные цели остались записью;
+  - process substitution `<(git show ref:path)` с read-only внутренним
+    содержимым — read-паттерн; мутирующее/вложенное/неизвестное содержимое и
+    output-substitution `>(…)` fail-closed;
+  - `diff` добавлен в read-утилиты.
+- Богатая русская таблица remediation-маршрутов (REMEDIATIONS) покрывает все
+  известные rule_id; каждый маршрут несёт who=worker|company|owner.
+
+### Added
+- Опциональный пин модели доставки нотификаций: `FP_DELIVERY_MODEL` /
+  `FP_DELIVERY_PROVIDER` (инцидент 21.09 — восстановленная тяжёлая сессия с
+  исчерпанной моделью глушила все delivery-батчи по таймауту). Без env
+  поведение прежнее.
+- Тесты: `tests/test_v1225_readlane.py` (15 парных сценариев allow/deny),
+  `tests/test_v1225_worker_route.py` (worker-no-park, company-park, owner-park,
+  формат сообщения/контракта).
+
 ## [1.2.24] - 2026-09-19
 
 ### Added
