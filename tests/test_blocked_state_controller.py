@@ -162,11 +162,12 @@ class RecursionGuardTests(unittest.TestCase):
         d = mod.classify(t, show("FLEET POLICY BLOCKED [same_failure_loop]"))
         self.assertEqual((d.classification, d.action, d.safe_to_apply), ("nested_recovery", "hold", False))
 
-    def test_recursion_guard_bypassed_by_company_resume(self):
+    def test_recursion_guard_not_bypassed_by_company_resume_v3(self):
+        # P3 depth=0: even a company resume must not re-recover a recovery card.
         t = task(id="t_nested", title="Recover t_x: whatever")
         s = show("generic", comments=[{"author": "company", "body": "decision:company=go"}])
         d = mod.classify(t, s)
-        self.assertEqual((d.classification, d.action), ("approved_resume", "unblock"))
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("nested_recovery", "hold", False))
 
 
 class PositionalTitleTests(unittest.TestCase):
@@ -174,6 +175,10 @@ class PositionalTitleTests(unittest.TestCase):
         calls = []
         def fake_cli(board, args, timeout):
             calls.append((board, args))
+            if args[0] == "list":
+                return []  # no open recovery children
+            if args[0] == "show":
+                return {"task": {"id": args[1], "status": "blocked"}}  # live status
             return {"id": "t_new"}
         c = mod.Controller(apply=True, state_path=pathlib.Path(tempfile.mkdtemp()) / "s.json", cli=fake_cli)
         cand = mod.Candidate("fleet-ops", task(), show(), mod.Decision(
@@ -181,8 +186,9 @@ class PositionalTitleTests(unittest.TestCase):
         ), 50)
         result = c.apply_candidate(cand)
         self.assertEqual(result["outcome"], "routed")
-        args = calls[0][1]
-        self.assertEqual(args[0], "create")
+        create_calls = [a for (_b, a) in calls if a[0] == "create"]
+        self.assertTrue(create_calls, "expected a create CLI call")
+        args = create_calls[0]
         self.assertEqual(args[1], "Recover t_x: Example")  # positional, no --title
         self.assertNotIn("--title", args)
 
@@ -331,6 +337,173 @@ class HeartbeatStallTests(unittest.TestCase):
         s["events"].append({"kind": "heartbeat", "created_at": now - 8000})
         d = mod.classify(task(), s, None, now=now)
         self.assertEqual((d.classification, d.action, d.safe_to_apply), ("heartbeat_stall", "unblock", True))
+
+
+# ---------------------------------------------------------------------------
+# P3 / RC4 additions: trust boundary, depth=0, word-boundary, dedup, cascade.
+# ---------------------------------------------------------------------------
+
+class TrustBoundaryTests(unittest.TestCase):
+    def test_worker_authored_resume_is_ignored(self):
+        # Spoofed worker resume must NOT unblock.
+        s = show("generic", comments=[{"author": "worker", "body": "resume: please"}])
+        d = mod.classify(task(), s)
+        self.assertNotEqual(d.action, "unblock")
+        self.assertFalse(d.safe_to_apply)
+
+    def test_worker_authored_decision_go_is_ignored(self):
+        s = show("generic", comments=[{"author": "worker", "body": "decision:company=go"}])
+        d = mod.classify(task(), s)
+        self.assertNotEqual(d.classification, "approved_resume")
+
+    def test_company_authored_resume_still_accepted(self):
+        s = show("generic", comments=[{"author": "company", "body": "resume: proceed"}])
+        d = mod.classify(task(), s)
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("approved_resume", "unblock", True))
+
+
+class DepthZeroTests(unittest.TestCase):
+    def test_recovery_card_never_recovered_even_with_company_resume(self):
+        # Recover(Recover(...)) forbidden unconditionally (depth=0).
+        t = task(id="t_rec", title="Recover t_x: thing")
+        s = show("generic", comments=[{"author": "company", "body": "decision:company=go"}])
+        d = mod.classify(t, s)
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("nested_recovery", "hold", False))
+
+    def test_safety_block_kind_never_resumed(self):
+        t = task(block_kind="safety")
+        s = show("generic", comments=[{"author": "company", "body": "resume: go"}])
+        d = mod.classify(t, s)
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("depth_zero_hold", "hold", False))
+
+    def test_worker_code_execution_block_kind_never_resumed(self):
+        t = task(block_kind="worker_code_execution")
+        s = show("generic", comments=[{"author": "company", "body": "resume: go"}])
+        d = mod.classify(t, s)
+        self.assertEqual((d.classification, d.action, d.safe_to_apply), ("depth_zero_hold", "hold", False))
+
+
+class WordBoundaryTests(unittest.TestCase):
+    def test_passport_does_not_count_as_completion(self):
+        s = show("some block", comments=[{"author": "qa", "body": "checked passport control"}])
+        d = mod.classify(task(body="task_type: ops\nreview the passport page"), s)
+        self.assertNotEqual(d.classification, "completed_artifact")
+
+    def test_unverified_does_not_count_as_completion(self):
+        s = show("some block", comments=[{"author": "qa", "body": "still unverified"}])
+        d = mod.classify(task(), s)
+        self.assertNotEqual(d.classification, "completed_artifact")
+
+    def test_bypass_does_not_count_as_completion(self):
+        s = show("some block", comments=[{"author": "qa", "body": "add a bypass"}])
+        d = mod.classify(task(), s)
+        self.assertNotEqual(d.classification, "completed_artifact")
+
+    def test_exact_head_phrase_still_counts(self):
+        s = show("some block", comments=[{"author": "qa", "body": "exact head verified; PASS"}])
+        d = mod.classify(task(), s)
+        self.assertEqual(d.classification, "completed_artifact")
+
+    def test_owner_term_substring_does_not_trigger(self):
+        # 'владение' as substring inside a longer word must not escalate.
+        t = task(body="task_type: ops\nобновить привладение данных", block_kind="needs_input")
+        d = mod.classify(t, show("some reason"))
+        self.assertNotEqual(d.classification, "owner_only")
+
+
+class RecoveryDedupTests(unittest.TestCase):
+    def _mk_controller(self, fake_cli):
+        return mod.Controller(apply=True, state_path=pathlib.Path(tempfile.mkdtemp()) / "s.json", cli=fake_cli)
+
+    def test_idempotency_key_excludes_classification(self):
+        captured = {}
+        def fake_cli(board, args, timeout):
+            captured["args"] = args
+            return {"id": "t_new"}
+        c = self._mk_controller(fake_cli)
+        cand = mod.Candidate("fleet-ops", task(), show(), mod.Decision(
+            "malformed_card", "company", "route_repair", "m", True), 50)
+        c._route_task(cand)
+        key = captured["args"][captured["args"].index("--idempotency-key") + 1]
+        self.assertEqual(key, "blocked-recovery:fleet-ops:t_x")
+        self.assertNotIn("malformed_card", key)
+
+    def test_open_recovery_child_blocks_second(self):
+        existing = {"id": "t_r1", "title": "Recover t_x: prior", "status": "todo"}
+        def fake_cli(board, args, timeout):
+            if args[0] == "list":
+                status = args[args.index("--status") + 1]
+                return [existing] if status == "todo" else []
+            if args[0] == "show":
+                return {"task": {"id": args[1], "status": "blocked"}}
+            raise AssertionError(args)
+        c = self._mk_controller(fake_cli)
+        cand = mod.Candidate("fleet-ops", task(), show(), mod.Decision(
+            "malformed_card", "company", "route_repair", "m", True), 50)
+        out = c._route_task(cand)
+        self.assertEqual(out["outcome"], "skipped")
+        self.assertEqual(out["reason"], "open recovery child exists")
+
+    def test_terminal_original_skips_recovery(self):
+        def fake_cli(board, args, timeout):
+            if args[0] == "list":
+                return []
+            if args[0] == "show":
+                return {"task": {"id": args[1], "status": "done"}}
+            raise AssertionError(args)
+        c = self._mk_controller(fake_cli)
+        cand = mod.Candidate("fleet-ops", task(), show(), mod.Decision(
+            "malformed_card", "company", "route_repair", "m", True), 50)
+        out = c._route_task(cand)
+        self.assertEqual(out["outcome"], "skipped")
+        self.assertIn("terminal", out["reason"])
+
+
+class CascadeDispositionTests(unittest.TestCase):
+    def test_terminal_root_disposes_open_descendants(self):
+        root = {"id": "t_root", "status": "archived"}
+        desc = [
+            {"id": "t_a", "status": "todo", "created_at": 0},
+            {"id": "t_b", "status": "blocked", "created_at": 0},
+            {"id": "t_c", "status": "done", "created_at": 0},
+        ]
+        rep = mod.compute_cascade_disposition(root, desc, now=10 * 86400, stale_after_days=7.0)
+        self.assertTrue(rep["terminal_root"])
+        self.assertEqual(rep["open_descendants"], 2)
+        self.assertFalse(rep["phase_closeable"])  # open descendants remain
+        dispositions = {r["task_id"]: r["disposition"] for r in rep["rows"]}
+        self.assertEqual(dispositions["t_c"], "already_terminal")
+        self.assertEqual(dispositions["t_a"], "superseded_by_root")  # stale
+        self.assertIn("age_days_p50", rep)
+        self.assertIn("age_days_p90", rep)
+
+    def test_live_root_marks_pending(self):
+        root = {"id": "t_root", "status": "running"}
+        desc = [{"id": "t_a", "status": "todo", "created_at": 0}]
+        rep = mod.compute_cascade_disposition(root, desc, now=86400)
+        self.assertFalse(rep["terminal_root"])
+        self.assertEqual(rep["rows"][0]["disposition"], "pending_root_disposition")
+
+    def test_phase_closeable_when_no_open_descendants(self):
+        root = {"id": "t_root", "status": "archived"}
+        desc = [{"id": "t_a", "status": "done", "created_at": 0}]
+        rep = mod.compute_cascade_disposition(root, desc, now=86400)
+        self.assertTrue(rep["phase_closeable"])
+
+
+class SloReportTests(unittest.TestCase):
+    def test_slo_report_shape(self):
+        cands = [
+            mod.Candidate("b", task(status="blocked"), show(), mod.Decision("unclassified", "company", "route_review", "r"), 7200),
+            mod.Candidate("b", task(id="t_r", title="Recover t_x: y", status="blocked"), show(), mod.Decision("nested_recovery", "company", "hold", "r"), 3600),
+        ]
+        rep = mod.slo_report(cands, 1)
+        self.assertEqual(rep["candidates"], 2)
+        self.assertEqual(rep["recovery_cards_open"], 1)
+        self.assertIn("preventable_block_rate", rep)
+        self.assertIn("blocked_age_h_p50", rep)
+        self.assertIn("blocked_age_h_p90", rep)
+        self.assertEqual(rep["recovery_duplicate_count"], 0)
 
 
 if __name__ == "__main__":
