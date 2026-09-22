@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.2.30] - 2026-09-22
+
+### Fixed
+- CRITICAL head-binding deadlock: v1.2.12 C1 made `missing_gates()` require
+  `context["head"]`, but `kanban_context.py` never produced it — expected_head
+  was always empty and the fail-closed branch killed every PASS marker. All
+  five evidence-gated categories (deploy_external_runtime,
+  release_to_protected_branch, public_product_action, financial_action,
+  destructive_change) were permanently unsatisfiable for workers regardless of
+  correct markers. Reproduced on live v1.2.24: activation card t_498a2d8f died
+  4 times identically (runs 1497/1502/1600/1604, evidence_gate_missing with all
+  five markers present and head-bound). Commit tests passed because they inject
+  `context["head"]` manually — no production producer existed.
+- Fix: when `context["head"]` is absent, derive the expected head from the
+  authorized `decision:company=go` marker's own `head=` binding (company-go is
+  the deploy anchor). Every gate PASS must still be head-bound (prefix match)
+  to that anchor; foreign-head / unbound / stale markers stay fail-closed;
+  explicit `context["head"]` wins when supplied (back-compat). Security intent
+  of v1.2.12 C1 fully preserved (15 contract tests green).
+
+### Added
+- `tests/test_head_binding_deadlock.py` — 8 regression tests (fail pre-fix,
+  pass post-fix), incl. blast-radius guard over all gated categories.
+
+Owner GO: 22.09.2026 (вариант 1). Live hotfix applied to all 10 profiles
+(runtime.py sha256 86cc4ac2…) before this durable integration; versions of
+live pins intentionally NOT stamped (release discipline: version is assigned
+only via trunk). Diagnosis:
+Documents/autocompany-remediation-2026-09-19/DEFECT-head-binding-deadlock.md
+
 ## [1.2.29] - 2026-09-22
 
 ### Added
