@@ -78,6 +78,31 @@ class FleetPolicyRuntime:
         missing: list[str] = []
         assignee = str(context.get("assignee") or "").lower()
         expected_head = str(context.get("head") or "").strip().lower()
+        if not expected_head:
+            # v1.2.29 HOTFIX (head-binding deadlock): kanban_context.py never
+            # produced context["head"] — v1.2.12 C1 added the consumer but no
+            # producer, so expected_head was ALWAYS empty and the fail-closed
+            # branch (state=None) fired for EVERY PASS marker. Result: every
+            # evidence-gated category (deploy/merge/publish/spend/destructive)
+            # was permanently unsatisfiable for workers, regardless of correct
+            # markers. Derive the expected head from the authorized company go
+            # marker instead: decision:company=go is the deploy anchor, so its
+            # head= binding is the canonical expected head. Security intent is
+            # preserved — each gate PASS must still be head-bound (prefix match)
+            # to THIS anchor; foreign-head, unbound, or stale markers stay
+            # fail-closed exactly as v1.2.12 intended. If context["head"] is
+            # supplied in future (a real producer), it wins (back-compat).
+            for record in records:
+                if str(record.get("author") or "").lower() != "company":
+                    continue
+                rec_body = str(record.get("body") or "")
+                rec_lines = [ln.strip().lower() for ln in rec_body.splitlines()]
+                if not any(ln == "decision:company=go" or ln.startswith("decision:company=go ")
+                           for ln in rec_lines):
+                    continue
+                hm = self._BINDING_HEAD.search(rec_body)
+                if hm:
+                    expected_head = hm.group(1).lower()
         body_text = str(context.get("task_body") or "")
         type_match = infer_task_type(body_text)
         expected_type = (type_match[0] or "").lower()
