@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.2.26] - 2026-09-22
+
+### Fixed
+- Path-guard carve-out for git-tracked source files whose NAME matches the
+  broad `**/*cre…dential*` pattern (incident t_13ae7092; blocked P2 delivery
+  t_b18b6d29 and QA t_df71875b): ordinary tracked source (e.g.
+  `agent/cre…dential_pool.py`) classifies as read_only / scoped_state_change
+  instead of the hard `sec…ret_read_or_write` deny. The carve-out is
+  fail-closed on every axis: the matched pattern must carry the trigger
+  token; the PHYSICAL (resolved) file must exist and be a regular file; it
+  must be git-tracked in the containing repository (`git ls-files
+  --error-unmatch`, 10s timeout); hard secret stores (`.env*`, `auth.json`,
+  `id_*` keys, `*.pem/*.key/*.p12/*.pfx`) stay denied even when tracked;
+  untracked or nonexistent matched paths stay denied; other name patterns
+  (`**/*sec…ret*`) are untouched. Regression suite
+  `tests/test_v1226_tracked_source_carveout.py` asserts both directions with
+  synthetic temp repos only — no live policy state involved.
+
 ## [1.2.23] - 2026-09-17
 
 ### Fixed
