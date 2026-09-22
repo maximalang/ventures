@@ -1,5 +1,95 @@
 # Changelog
 
+## [1.2.28] - 2026-09-22
+
+### Changed
+- Integration release: merged three separately QA-passed branches into
+  one activation SHA — v1.2.25 (worker-deny no-park + read-lane
+  false-positive fixes), v1.2.27 (path-guard tracked-source carve-out
+  hardened against store-pattern db names and symlink indirection),
+  and the P1 recovery controller v3 (scripts only). No behavior
+  changes beyond the union of the merged components; all version
+  pins resolved to 1.2.28.
+
+## [1.2.27] - 2026-09-22
+
+### Fixed
+- QA t_14a79801 HIGH-1: the v1.2.26 tracked-source carve-out reclassified
+  control-plane STORE-pattern filenames (a db name combining a store token
+  with the guarded name-token, e.g. `kan…ban.<token>.db`) to an ordinary
+  read when git-tracked. The carve-out now refuses any path matching the
+  policy-controlled substrings or a store-token db-family name
+  (`.db`, `.db-wal`, `.db-shm`, `.db-journal`) regardless of tracked status;
+  those keep the hard `sec…ret_read_or_write` deny.
+- QA t_14a79801 HIGH-2: symlink indirection was not failed closed — an
+  untracked symlink whose name matches, pointing at a tracked target,
+  resolved through and passed the tracked check. The carve-out now requires
+  the physical (realpath) identity to equal the requested absolute path and
+  the final component to carry no link/reparse tag, so untracked links,
+  tracked links, and directory-hop links all stay denied.
+- Adversarial regression suite
+  `tests/test_v1227_store_symlink_failclosed.py` (12 tests) covers both
+  findings plus the two intended carve-out behaviors; synthetic temp repos
+  only, no live policy state involved.
+
+## [1.2.26] - 2026-09-22
+
+### Fixed
+- Path-guard carve-out for git-tracked source files whose NAME matches the
+  broad `**/*cre…dential*` pattern (incident t_13ae7092; blocked P2 delivery
+  t_b18b6d29 and QA t_df71875b): ordinary tracked source (e.g.
+  `agent/cre…dential_pool.py`) classifies as read_only / scoped_state_change
+  instead of the hard `sec…ret_read_or_write` deny. The carve-out is
+  fail-closed on every axis: the matched pattern must carry the trigger
+  token; the PHYSICAL (resolved) file must exist and be a regular file; it
+  must be git-tracked in the containing repository (`git ls-files
+  --error-unmatch`, 10s timeout); hard secret stores (`.env*`, `auth.json`,
+  `id_*` keys, `*.pem/*.key/*.p12/*.pfx`) stay denied even when tracked;
+  untracked or nonexistent matched paths stay denied; other name patterns
+  (`**/*sec…ret*`) are untouched. Regression suite
+  `tests/test_v1226_tracked_source_carveout.py` asserts both directions with
+  synthetic temp repos only — no live policy state involved.
+
+## [1.2.25] - 2026-09-21
+
+### Fixed
+- **Worker-deny = пауза, не парковка карты** (канон 17.09): deny-классы с
+  маршрутом `who=worker` (`evidence_gate_missing`, `same_failure_loop`,
+  `identical_call_loop`, `worker_code_execution`) больше не проецируют
+  `kanban block` — воркер получает `next_step=… [continues: worker]` в
+  сообщении и продолжает в этом же ране. company/owner-классы паркуют карту
+  как раньше, с машиночитаемым `CONTINUATION[who=…]` контрактом.
+- **Read-lane false positives (живой инцидент 21.09, компания-профиль):**
+  - `git --no-pager …` теперь read-форма (флаг не ломал git-ветку READ_COMMAND);
+  - стадия `VAR=value` — shell-binding, не мутация (аналог `cd <dir>` no-op;
+    `$(`/backtick в значении по-прежнему fail-closed через метасимволы);
+  - редирект в `/dev/null` (stderr/stdout discard) больше не считается записью;
+    редиректы в реальные пути и `/dev/null.txt`-подобные цели остались записью;
+  - process substitution `<(git show ref:path)` с read-only внутренним
+    содержимым — read-паттерн; мутирующее/вложенное/неизвестное содержимое и
+    output-substitution `>(…)` fail-closed;
+  - `diff` добавлен в read-утилиты.
+- Богатая русская таблица remediation-маршрутов (REMEDIATIONS) покрывает все
+  известные rule_id; каждый маршрут несёт who=worker|company|owner.
+
+### Added
+- Опциональный пин модели доставки нотификаций: `FP_DELIVERY_MODEL` /
+  `FP_DELIVERY_PROVIDER` (инцидент 21.09 — восстановленная тяжёлая сессия с
+  исчерпанной моделью глушила все delivery-батчи по таймауту). Без env
+  поведение прежнее.
+- Тесты: `tests/test_v1225_readlane.py` (15 парных сценариев allow/deny),
+  `tests/test_v1225_worker_route.py` (worker-no-park, company-park, owner-park,
+  формат сообщения/контракта).
+
+## [1.2.24] - 2026-09-19
+
+### Added
+- Unified remediation branches: the canonical typed `policy_denied` projection
+  and machine-readable remediation routes (`remediation_for`, from
+  fix/company-policy-remediation 4297b44) merged onto the live pinned base
+  (156ce1b / v1.2.23). One branch, one code path — the divergent manual
+  iteration (fix/deny-remediation-routes) is superseded.
+
 ## [1.2.23] - 2026-09-17
 
 ### Fixed

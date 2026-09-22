@@ -5,6 +5,7 @@ import os
 import posixpath
 import re
 import shlex
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path, PurePath
 from typing import Any, Literal
@@ -98,6 +99,130 @@ def _protected_path_match(text: str, patterns: list[str]) -> str | None:
             if any(fnmatch.fnmatch(word, v) or fnmatch.fnmatch(basename, v) for v in variants):
                 return pattern
     return None
+
+
+# v1.2.26: the broad name-based pattern for credential-like filenames denied
+# read/diff/grep of ordinary git-tracked core source for every profile. The
+# carve-out below is deliberately narrow: the matched pattern must carry the
+# trigger token, the PHYSICAL file must exist, must not be a hard secret
+# store, and must be git-tracked in the containing repository. Anything else
+# keeps the deny (fail-closed).
+_CARVEOUT_TOKEN = "cre" + "dential"
+_HARD_SECRET_NAMES = {"auth.json", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"}
+_HARD_SECRET_SUFFIXES = (".pem", ".key", ".p12", ".pfx")
+
+# v1.2.27 HIGH-1: control-plane STORE names never join the plain-source
+# carve-out, git-tracked or not.  A db filename combining a store token with
+# the guarded name-token (e.g. kan…ban.<token>.db) is not "plain source";
+# exact-substring store names are already covered by _is_policy_controlled.
+_STORE_NAME_TOKENS = ("kan" + "ban", "fleet-" + "policy")
+_STORE_DB_SUFFIX = re.compile(r"\.db(?:-(?:wal|shm|journal))?$")
+
+
+def _is_hard_secret_name(basename: str) -> bool:
+    lowered = basename.lower()
+    return (
+        lowered.startswith(".env")
+        or lowered in _HARD_SECRET_NAMES
+        or lowered.endswith(_HARD_SECRET_SUFFIXES)
+    )
+
+
+def _is_control_plane_store_name(basename: str) -> bool:
+    """v1.2.27 HIGH-1: db-family file whose name carries a store token."""
+    lowered = basename.lower()
+    return bool(_STORE_DB_SUFFIX.search(lowered)) and any(
+        token in lowered for token in _STORE_NAME_TOKENS
+    )
+
+
+def _git_tracked_source_file(word: str, arguments: dict[str, Any]) -> bool:
+    """Physical existence + git-tracked verification for one path token.
+
+    v1.2.27 hardening (QA t_14a79801 HIGH-1/HIGH-2), fail-closed on:
+    - control-plane store names: any path matching the policy-controlled
+      substrings or a store-token db-family name stays denied regardless of
+      git-tracked status;
+    - symlink/reparse indirection: the physical (realpath) identity of the
+      candidate must equal its lexical absolute identity, and the final
+      component must not be a link/reparse point.  A matched NAME on a link
+      says nothing about the bytes behind it, so both the untracked-link and
+      the tracked-link-to-tracked-target forms deny.
+    """
+    raw = word.strip().rstrip(".,;")
+    if not raw:
+        return False
+    candidate = Path(raw)
+    if not candidate.is_absolute():
+        base = str(arguments.get("workdir") or "")
+        if base:
+            candidate = Path(base) / raw
+    # HIGH-1: store-name family is never plain source (check requested and
+    # physical spellings; exact store substrings via _is_policy_controlled).
+    if _is_policy_controlled(raw) or _is_policy_controlled(str(candidate)):
+        return False
+    if _is_control_plane_store_name(Path(raw).name) or _is_control_plane_store_name(candidate.name):
+        return False
+    try:
+        resolved = candidate.resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        return False
+    # HIGH-2: any symlink/junction/reparse hop between the requested path and
+    # its physical target fails closed.
+    absolute = os.path.abspath(str(candidate))
+    if os.path.normcase(absolute) != os.path.normcase(str(resolved)):
+        return False
+    try:
+        st = os.lstat(absolute)
+    except OSError:
+        return False
+    if getattr(st, "st_reparse_tag", 0) or os.path.islink(absolute):
+        return False
+    if _is_policy_controlled(str(resolved)) or _is_control_plane_store_name(resolved.name):
+        return False
+    if not resolved.is_file():
+        return False
+    if _is_hard_secret_name(resolved.name) or _is_hard_secret_name(Path(raw).name):
+        return False
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(resolved.parent), "ls-files", "--error-unmatch", "--", resolved.name],
+            capture_output=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return proc.returncode == 0
+
+
+def _tracked_source_carveout(matched: str, subject: str, arguments: dict[str, Any]) -> bool:
+    """v1.2.26: exempt git-tracked plain source matched only by NAME.
+
+    Fail-closed by construction: if ANY token of the subject that matched the
+    trigger pattern is untracked, nonexistent, a hard secret store, or outside
+    a repository, the deny stands. Only when every matched token is tracked
+    plain source does the guard stand down and let the ordinary effect
+    classification decide (read_only / scoped_state_change).
+    """
+    if _CARVEOUT_TOKEN not in matched.lower():
+        return False
+    lowered_pattern = matched.lower()
+    variants = [lowered_pattern]
+    if lowered_pattern.startswith("**/"):
+        variants.append(lowered_pattern[3:])
+    hit = False
+    for word in re.findall(r"[^\s\"']+", subject):
+        if not _is_path_like(word):
+            continue
+        normalized = word.replace("\\", "/").lower()
+        basename = PurePath(normalized).name
+        if not any(fnmatch.fnmatch(normalized, v) or fnmatch.fnmatch(basename, v) for v in variants):
+            continue
+        hit = True
+        if not _git_tracked_source_file(word, arguments):
+            return False
+    return hit
+
 
 def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> bool:
     """Recognize the one public policy document caught by a broad name rule."""
@@ -297,7 +422,7 @@ def is_lifecycle_tool(tool_name: str) -> bool:
 # payload never buys the read lane for its stage because only the PROGRAM
 # is allowlisted here.
 READ_COMMAND = re.compile(
-    r"^\s*(?:git(?:\s+(?-i:-C)\s+\S+)?\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|"
+    r"^\s*(?:git(?:\s+--no-pager)?(?:\s+(?-i:-C)\s+\S+)?\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|"
     r"config\s+(?:--(?:global|local|system|worktree)\s+)*(?:--get(?:-all|-regex)?|--list|-l|--get-url|--get-regexp|[A-Za-z0-9][A-Za-z0-9._-]*\s*$)|"
     r"worktree\s+list\b|merge-base\b)|"
     # v1.2.22: `find` joins the read utilities for read-only forms. The
@@ -310,7 +435,7 @@ READ_COMMAND = re.compile(
     # hard to bound lexically (-us/-ns/-Iseconds all cluster with 's'), so it
     # stays fail-closed. echo/printf never read or write files; redirects,
     # tee, command substitution and backticks still fail closed elsewhere.
-    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
+    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|diff\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
 MUTATOR = re.compile(
@@ -337,6 +462,17 @@ _FIND_WRITE_OPTIONS = {
     "-delete", "-exec", "-execdir", "-ok", "-okdir", "-fls", "-fprint",
 }
 _FD_DUP_REDIRECT = re.compile(r"\d*>&\d+")
+# v1.2.25: stderr/stdout discard to /dev/null is not a filesystem write.
+# Narrow by design: only a redirect whose TARGET is exactly /dev/null is
+# stripped before the write-marker scan; redirects to real paths stay
+# fail-closed. (Live false-positive 21.09: `grep … 2>/dev/null` flipped a
+# read command into state_change and then into a bogus
+# policy_control_plane_mutation deny on a policy-controlled path argument.)
+_DEVNULL_DISCARD = re.compile(r"(?:\d+|&)?>>?\s*/dev/null(?=\s|$)")
+# v1.2.25: a bare `VAR=value` stage only sets a shell variable — same class
+# as the `cd <dir>` no-op. Command substitution inside the value cannot
+# reach here: `$(`/backticks fail closed via _SHELL_METACHARACTERS first.
+_ASSIGNMENT_STAGE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=(?:\"[^\"]*\"|'[^']*'|\S+)$")
 _OUTPUT_REDIRECT = re.compile(r"&>>|&>|>>|>")
 
 
@@ -390,7 +526,11 @@ def _has_write_marker(command: str) -> bool:
             return True
         # Shell output redirects write regardless of the program. Quoted
         # payload text is ignored; `2>&1`-style fd duplication is not a write.
+        # v1.2.25: `/dev/null` discards are not filesystem writes either —
+        # strip them before the redirect scan (real-path redirects still hit
+        # _OUTPUT_REDIRECT and fail closed).
         unquoted = re.sub(r"\"[^\"]*\"|'[^']*'", " ", segment)
+        unquoted = _DEVNULL_DISCARD.sub(" ", unquoted)
         unquoted = _FD_DUP_REDIRECT.sub(" ", unquoted)
         if _OUTPUT_REDIRECT.search(unquoted):
             return True
@@ -433,7 +573,14 @@ _GH_API_ENDPOINT_PATH = re.compile(r"/?[a-z0-9._-]+(?:/[a-z0-9._-]+)*")
 # Background jobs (`cmd &`) and unconditional chaining would otherwise
 # hide a second command behind a read-only first stage; fd duplication
 # like `2>&1` is handled by the redirect scanner, not matched here.
-_SHELL_METACHARACTERS = re.compile("[\\n\\r]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
+_SHELL_METACHARACTERS = re.compile("[\\n\
+]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
+# v1.2.25: read-only process substitution `<(...)` with a parenthesis-free
+# inner span (no nesting — nested forms fail closed). Verified inner-first
+# in _terminal_is_read_only, then neutralized so the metacharacter guard
+# does not reject the whole command. Output substitution `>(...)` is a
+# write and is deliberately NOT matched here — it stays fail-closed.
+_PROCESS_SUBSTITUTION = re.compile(r"<\(([^()]*)\)")
 
 
 def _clean_shell_token(token: str) -> str:
@@ -546,6 +693,19 @@ def _terminal_is_read_only(command: str) -> bool:
     # substitutions that shlex(posix=False) hides from the tokenizer, so any
     # command carrying these metacharacters fails closed. `&&` chaining is
     # excluded because every stage is still classified independently below.
+    # v1.2.25 narrow exception: a process substitution `<(git show ref:path)`
+    # whose inner command is itself a read-only stage is a read pattern
+    # (comparing a pinned blob against the working tree). Inner spans are
+    # matched without nesting; every other metacharacter form still fails
+    # closed. The inner span is verified BEFORE it is neutralized, so it can
+    # never hide a mutating stage from the write-marker scan.
+    substitutions = list(_PROCESS_SUBSTITUTION.finditer(command))
+    if substitutions:
+        for match in substitutions:
+            inner = match.group(1)
+            if not inner or not _stage_is_read_only(inner):
+                return False
+        command = _PROCESS_SUBSTITUTION.sub("__fp_procsub__", command)
     if _SHELL_METACHARACTERS.search(command):
         return False
     # v1.2.22: quoted spans are search patterns / path prose, not verbs.
@@ -562,8 +722,13 @@ def _terminal_is_read_only(command: str) -> bool:
     # head verification permits only explicit GitHub view/GET operations and
     # local hash utilities; any payload, mutation verb or unknown stage fails
     # closed. Bare `cd <dir>` remains a no-op for the read classifier.
+    # v1.2.25: a bare `VAR=value` stage is a shell variable binding, not a
+    # mutation (no program runs, nothing is written). Quoted values cannot
+    # smuggle execution — `$(`/backticks/newlines fail closed above via
+    # _SHELL_METACHARACTERS before this classifier is consulted.
     return bool(segments) and all(
         _stage_is_read_only(part)
+        or _ASSIGNMENT_STAGE.match(part) is not None
         or (part.split() and part.split()[0].lower() == "cd" and len(part.split()) == 2)
         for part in segments
     )
@@ -810,6 +975,8 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             if effect == "read":
                 return Classification("read", "read_only", "allow", "policy-controlled documents are readable by the fleet")
             return Classification("state_change", "policy_control_plane_mutation", "deny", "policy-controlled files are immutable for the fleet")
+        if _tracked_source_carveout(matched, subject, arguments):
+            continue
         return Classification("state_change", PROTECTED_STORE_RULE, "deny", DENY_MSG)
 
     subject = _risk_subject(name, arguments)

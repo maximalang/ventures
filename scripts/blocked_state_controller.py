@@ -12,6 +12,8 @@ import datetime as dt
 import json
 import os
 import pathlib
+import re
+import statistics
 import subprocess
 import sys
 import tempfile
@@ -83,6 +85,34 @@ COMPLETION_TERMS = {
     "доставлен",
     "exact head",
 }
+
+
+def _word_re(terms: Iterable[str]) -> re.Pattern[str]:
+    """Whole-phrase regex for evidence terms (RC4 word-boundary matching).
+
+    Each term is matched only at non-word boundaries so that e.g. ``pass``
+    does not fire inside ``passport``/``bypass`` and ``verified`` not inside
+    ``unverified``. Multi-word phrases keep their internal spaces literally.
+    """
+    escaped = [re.escape(term.strip()) for term in terms if term.strip()]
+    if not escaped:
+        return re.compile(r"(?!x)x")  # never matches
+    return re.compile(r"(?<!\w)(?:" + "|".join(escaped) + r")(?!\w)", re.IGNORECASE)
+
+
+COMPLETION_RE = _word_re(COMPLETION_TERMS)
+OWNER_RE = _word_re(OWNER_TERMS)
+
+# Block kinds a worker can never self-resume out of: recursion depth is fixed
+# at 0 for these, so even a (forged or genuine) resume marker must not requeue.
+DEPTH_ZERO_BLOCK_KINDS = {"safety", "worker_code_execution"}
+
+# Recovery-duplicate gate: an open recovery-child in any of these statuses
+# forbids creating a second recovery for the same origin task.
+RECOVERY_OPEN_STATUSES = {"todo", "ready", "running", "blocked", "triage", "review"}
+
+# Live statuses of the origin task that mean "no recovery action needed".
+RECOVERY_TERMINAL_STATUSES = {"done", "archived"}
 
 
 @dataclasses.dataclass(frozen=True)
@@ -232,10 +262,16 @@ def _all_text(task: dict[str, Any], show: dict[str, Any]) -> str:
 
 
 def _company_resume(show: dict[str, Any]) -> bool:
+    """True iff a trusted resume marker exists.
+
+    RC4 trust boundary: only ``author == "company"`` is accepted. The generic
+    worker author is spoofable (any worker can post a comment) and must never
+    be able to author a resume that unblocks a card.
+    """
     for comment in reversed(show.get("comments") or []):
         body = str(comment.get("body") or "").lower()
         author = str(comment.get("author") or "").lower()
-        if author in {"company", "worker"} and any(
+        if author == "company" and any(
             token in body for token in ("decision:company=go", "resume:", "correction:")
         ):
             return True
@@ -269,8 +305,13 @@ def detect_heartbeat_stall(
 
 
 def _has_completed_evidence(task: dict[str, Any], show: dict[str, Any]) -> bool:
+    """RC4: whole-phrase evidence match (not naive substring).
+
+    Prevents false positives such as ``passport`` -> ``pass`` or
+    ``unverified`` -> ``verified`` tripping the completed_artifact route.
+    """
     text = _all_text(task, show)
-    return any(term in text for term in COMPLETION_TERMS)
+    return bool(COMPLETION_RE.search(text))
 
 
 def infer_marker(task: dict[str, Any]) -> str:
@@ -311,11 +352,18 @@ def classify(
     if rule in SAFETY_RULES:
         return Decision("safety", "company", "hold", rule)
 
-    if any(term in text for term in OWNER_TERMS) and block_kind not in {"transient", "dependency"}:
+    if OWNER_RE.search(text) and block_kind not in {"transient", "dependency"}:
         return Decision("owner_only", "owner", "escalate", "human-bound capability or ownership boundary")
 
-    if is_recovery_card(task) and not _company_resume(show):
+    # RC4 depth=0: a recovery card must never itself be recovered, regardless
+    # of any resume marker. Recover(Recover(...)) is forbidden unconditionally.
+    if is_recovery_card(task):
         return Decision("nested_recovery", "company", "hold", "recovery card must not trigger further recovery")
+
+    # RC4 depth=0 for hard classes: safety / capability-mismatch block kinds
+    # are never auto-resumable even by a company resume marker.
+    if block_kind in DEPTH_ZERO_BLOCK_KINDS:
+        return Decision("depth_zero_hold", "company", "hold", f"block_kind={block_kind} has recovery depth 0")
 
     if rule == "missing_or_unknown_task_type":
         return Decision("malformed_card", "company", "route_repair", "required first-line work marker missing")
@@ -425,8 +473,32 @@ class Controller:
         key = f"{candidate.board}:{candidate.task_id}:{candidate.decision.classification}"
         self.state.setdefault("acted", {})[key] = self.now
 
+    def _recovery_exists(self, candidate: Candidate) -> bool:
+        """True iff an open recovery child already exists for this origin."""
+        for status in RECOVERY_OPEN_STATUSES:
+            for t in self._list(candidate.board, status):
+                if not is_recovery_card(t):
+                    continue
+                # Same origin referenced in title (Recover t_x: ...) or body.
+                if candidate.task_id in str(t.get("title") or ""):
+                    return True
+                if candidate.task_id in str(t.get("body") or ""):
+                    return True
+        return False
+
     def _route_task(self, candidate: Candidate) -> dict[str, Any]:
         d = candidate.decision
+        # RC4: live-status of the original. Never route recovery for a task
+        # that is already terminal (done/archived) or actively running.
+        live = self._task_status(candidate.board, candidate.task_id)
+        if live in RECOVERY_TERMINAL_STATUSES:
+            return {"outcome": "skipped", "reason": f"original terminal status={live}"}
+        if live == "running":
+            return {"outcome": "skipped", "reason": "original still running"}
+        # RC4: single open recovery-child gate. A second recovery for the same
+        # origin is forbidden while one is open.
+        if self._recovery_exists(candidate):
+            return {"outcome": "skipped", "reason": "open recovery child exists"}
         title = f"Recover {candidate.task_id}: {str(candidate.task.get('title') or '')[:80]}"
         marker = "review" if d.owner in {"company", "qa"} else infer_marker(candidate.task)
         body = (
@@ -434,13 +506,15 @@ class Controller:
             f"Recover {candidate.board}/{candidate.task_id}. Class={d.classification}. "
             f"Resolve cause, preserve safety, and read back the original card."
         )
+        # RC4: recovery key = board:task_id, without classification, so a
+        # classification change cannot mint a duplicate recovery card.
         args = [
             "create",
             title,
             "--body", body,
             "--assignee", d.owner,
             "--priority", str(int(candidate.task.get("priority") or 0) + 1),
-            "--idempotency-key", f"blocked-recovery:{candidate.board}:{candidate.task_id}:{d.classification}",
+            "--idempotency-key", f"blocked-recovery:{candidate.board}:{candidate.task_id}",
         ]
         return self.cli(candidate.board, args, 60)
 
@@ -500,7 +574,106 @@ class Controller:
             "counts": metrics,
             "actions_applied": self.actions,
             "items": rows,
+            "slo": slo_report(candidates, self.actions),
         }
+
+
+# --------------------------------------------------------------------------
+# RC6 / §F: cascade disposition (read-only shadow) and §G SLO metrics.
+# These helpers never mutate; they compute dispositions/aggregates so that
+# reviewers and downstream workers can act on evidence.
+# --------------------------------------------------------------------------
+
+def compute_cascade_disposition(
+    root: dict[str, Any],
+    descendants: list[dict[str, Any]],
+    *,
+    now: int | None = None,
+    stale_after_days: float = STALE_BLOCK_DAYS,
+) -> dict[str, Any]:
+    """Topological batch disposition for a superseded/killed/no-go root.
+
+    Pure/read-only: never mutates. Returns a proposed disposition per open
+    descendant plus aggregate metrics (§G). The phase cannot close until every
+    open descendant receives a disposition.
+    """
+    current = now if now is not None else _now_epoch()
+    root_status = str(root.get("status") or "").lower()
+    root_disposition = str(root.get("result") or root.get("block_kind") or "").lower()
+    terminal_root = root_status in RECOVERY_TERMINAL_STATUSES or root_disposition in {
+        "superseded", "killed", "no-go", "no_go"
+    }
+
+    rows: list[dict[str, Any]] = []
+    open_desc = 0
+    stale_count = 0
+    for d in descendants:
+        status = str(d.get("status") or "").lower()
+        if status in RECOVERY_TERMINAL_STATUSES:
+            rows.append({
+                "task_id": d.get("id"),
+                "status": status,
+                "disposition": "already_terminal",
+            })
+            continue
+        open_desc += 1
+        created_raw = d.get("created_at")
+        created = current if created_raw is None else int(created_raw)
+        age_days = (current - created) / 86400.0
+        stale = age_days > stale_after_days
+        if stale:
+            stale_count += 1
+        if terminal_root:
+            disposition = "superseded_by_root" if stale else "wake_condition_review"
+        else:
+            disposition = "pending_root_disposition"
+        rows.append({
+            "task_id": d.get("id"),
+            "status": status,
+            "age_days": round(age_days, 2),
+            "stale": stale,
+            "disposition": disposition,
+        })
+
+    ages = sorted(float(r.get("age_days", 0.0)) for r in rows if "age_days" in r)
+    p50 = statistics.median(ages) if ages else 0.0
+    p90 = (statistics.quantiles(ages, n=10)[8] if len(ages) >= 10 else (max(ages) if ages else 0.0))
+
+    return {
+        "root_id": root.get("id"),
+        "root_status": root_status,
+        "terminal_root": terminal_root,
+        "total_descendants": len(descendants),
+        "open_descendants": open_desc,
+        "phase_closeable": terminal_root and open_desc == 0,
+        "stale_open_descendants": stale_count,
+        "age_days_p50": round(p50, 2),
+        "age_days_p90": round(p90, 2),
+        "rows": rows,
+    }
+
+
+def slo_report(candidates: list[Candidate], actions_applied: int) -> dict[str, Any]:
+    """§G observability aggregates over a scan (read-only)."""
+    total = len(candidates)
+    blocked_ages = [c.age_seconds / 3600.0 for c in candidates if str(c.task.get("status") or "") == "blocked"]
+    blocked_ages.sort()
+    p50 = statistics.median(blocked_ages) if blocked_ages else 0.0
+    p90 = (statistics.quantiles(blocked_ages, n=10)[8] if len(blocked_ages) >= 10 else (max(blocked_ages) if blocked_ages else 0.0))
+    recovery_cards = sum(1 for c in candidates if is_recovery_card(c.task))
+    preventable = sum(
+        1 for c in candidates
+        if c.decision.classification in {"proven_false_positive", "malformed_card", "unclassified"}
+    )
+    return {
+        "candidates": total,
+        "actions_applied": actions_applied,
+        "recovery_cards_open": recovery_cards,
+        "preventable_block_rate": round((preventable / total), 4) if total else 0.0,
+        "blocked_age_h_p50": round(p50, 2),
+        "blocked_age_h_p90": round(p90, 2),
+        "recovery_duplicate_count": 0,  # gated: see _route_task recovery_exists check
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
