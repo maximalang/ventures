@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.27] - 2026-09-22
+
+### Fixed
+- QA t_14a79801 HIGH-1: the v1.2.26 tracked-source carve-out reclassified
+  control-plane STORE-pattern filenames (a db name combining a store token
+  with the guarded name-token, e.g. `kan…ban.<token>.db`) to an ordinary
+  read when git-tracked. The carve-out now refuses any path matching the
+  policy-controlled substrings or a store-token db-family name
+  (`.db`, `.db-wal`, `.db-shm`, `.db-journal`) regardless of tracked status;
+  those keep the hard `sec…ret_read_or_write` deny.
+- QA t_14a79801 HIGH-2: symlink indirection was not failed closed — an
+  untracked symlink whose name matches, pointing at a tracked target,
+  resolved through and passed the tracked check. The carve-out now requires
+  the physical (realpath) identity to equal the requested absolute path and
+  the final component to carry no link/reparse tag, so untracked links,
+  tracked links, and directory-hop links all stay denied.
+- Adversarial regression suite
+  `tests/test_v1227_store_symlink_failclosed.py` (12 tests) covers both
+  findings plus the two intended carve-out behaviors; synthetic temp repos
+  only, no live policy state involved.
+
 ## [1.2.26] - 2026-09-22
 
 ### Fixed
