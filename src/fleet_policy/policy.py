@@ -111,6 +111,13 @@ _CARVEOUT_TOKEN = "cre" + "dential"
 _HARD_SECRET_NAMES = {"auth.json", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"}
 _HARD_SECRET_SUFFIXES = (".pem", ".key", ".p12", ".pfx")
 
+# v1.2.27 HIGH-1: control-plane STORE names never join the plain-source
+# carve-out, git-tracked or not.  A db filename combining a store token with
+# the guarded name-token (e.g. kan…ban.<token>.db) is not "plain source";
+# exact-substring store names are already covered by _is_policy_controlled.
+_STORE_NAME_TOKENS = ("kan" + "ban", "fleet-" + "policy")
+_STORE_DB_SUFFIX = re.compile(r"\.db(?:-(?:wal|shm|journal))?$")
+
 
 def _is_hard_secret_name(basename: str) -> bool:
     lowered = basename.lower()
@@ -121,8 +128,27 @@ def _is_hard_secret_name(basename: str) -> bool:
     )
 
 
+def _is_control_plane_store_name(basename: str) -> bool:
+    """v1.2.27 HIGH-1: db-family file whose name carries a store token."""
+    lowered = basename.lower()
+    return bool(_STORE_DB_SUFFIX.search(lowered)) and any(
+        token in lowered for token in _STORE_NAME_TOKENS
+    )
+
+
 def _git_tracked_source_file(word: str, arguments: dict[str, Any]) -> bool:
-    """Physical existence + git-tracked verification for one path token."""
+    """Physical existence + git-tracked verification for one path token.
+
+    v1.2.27 hardening (QA t_14a79801 HIGH-1/HIGH-2), fail-closed on:
+    - control-plane store names: any path matching the policy-controlled
+      substrings or a store-token db-family name stays denied regardless of
+      git-tracked status;
+    - symlink/reparse indirection: the physical (realpath) identity of the
+      candidate must equal its lexical absolute identity, and the final
+      component must not be a link/reparse point.  A matched NAME on a link
+      says nothing about the bytes behind it, so both the untracked-link and
+      the tracked-link-to-tracked-target forms deny.
+    """
     raw = word.strip().rstrip(".,;")
     if not raw:
         return False
@@ -131,9 +157,28 @@ def _git_tracked_source_file(word: str, arguments: dict[str, Any]) -> bool:
         base = str(arguments.get("workdir") or "")
         if base:
             candidate = Path(base) / raw
+    # HIGH-1: store-name family is never plain source (check requested and
+    # physical spellings; exact store substrings via _is_policy_controlled).
+    if _is_policy_controlled(raw) or _is_policy_controlled(str(candidate)):
+        return False
+    if _is_control_plane_store_name(Path(raw).name) or _is_control_plane_store_name(candidate.name):
+        return False
     try:
         resolved = candidate.resolve(strict=True)
     except (OSError, ValueError, RuntimeError):
+        return False
+    # HIGH-2: any symlink/junction/reparse hop between the requested path and
+    # its physical target fails closed.
+    absolute = os.path.abspath(str(candidate))
+    if os.path.normcase(absolute) != os.path.normcase(str(resolved)):
+        return False
+    try:
+        st = os.lstat(absolute)
+    except OSError:
+        return False
+    if getattr(st, "st_reparse_tag", 0) or os.path.islink(absolute):
+        return False
+    if _is_policy_controlled(str(resolved)) or _is_control_plane_store_name(resolved.name):
         return False
     if not resolved.is_file():
         return False
