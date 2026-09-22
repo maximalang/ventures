@@ -132,7 +132,10 @@ def gh_open_prs() -> list[dict]:
         )
         if api.returncode == 0:
             try:
-                raw = base64.b64decode(api.stdout, validate=True).decode("utf-8")
+                # gh --jq emits wrapped base64 (embedded newlines); strip
+                # whitespace before strict decoding.
+                compact = re.sub(r"\s+", "", api.stdout)
+                raw = base64.b64decode(compact, validate=True).decode("utf-8")
                 entry["version"] = parse_plugin_version(raw)
                 continue
             except Exception:
@@ -142,15 +145,34 @@ def gh_open_prs() -> list[dict]:
 
 
 def git_fallback_prs(root: Path) -> list[dict]:
-    """gh absent: enumerate remote heads read-only; versions stay unresolved."""
+    """gh absent: enumerate remote heads read-only and resolve each head's
+    plugin.yaml version by fetching ONLY those refs (shallow), per the card
+    contract. A head that cannot be fetched/shown stays version=None and is
+    reported as unverified rather than guessed."""
     proc = _run(["git", "ls-remote", "--heads", "origin"], cwd=root)
     if proc.returncode != 0:
         raise RuntimeError(f"git ls-remote failed: {proc.stderr.strip()[:200]}")
     entries = []
     for line in proc.stdout.splitlines():
         sha, _, ref = line.partition("\t")
+        sha = sha.strip()
         name = ref.removeprefix("refs/heads/")
-        entries.append({"headRefName": name, "headRefOid": sha.strip(), "version": None})
+        entry: dict = {"headRefName": name, "headRefOid": sha, "version": None}
+        if not re.fullmatch(r"[0-9a-f]{40}", sha):
+            entries.append(entry)
+            continue
+        have = _run(["git", "cat-file", "-e", f"{sha}^{{commit}}"], cwd=root)
+        if have.returncode != 0:
+            fetched = _run(
+                ["git", "fetch", "--depth", "1", "origin", name], cwd=root
+            )
+            if fetched.returncode != 0:
+                entries.append(entry)
+                continue
+        shown = _run(["git", "show", f"{sha}:{PLUGIN_REL}"], cwd=root)
+        if shown.returncode == 0:
+            entry["version"] = parse_plugin_version(shown.stdout)
+        entries.append(entry)
     return entries
 
 
@@ -197,6 +219,11 @@ def main(argv: list[str] | None = None) -> int:
                         help="offline override: changelog file for the released set")
     parser.add_argument("--offline-prs", default=None,
                         help="offline override: JSON file [{headRefName, headRefOid, version}]")
+    parser.add_argument("--own-ref", default=None,
+                        help="override the git-derived branch ref used for own-PR "
+                             "exemption (CI checks out a detached merge commit)")
+    parser.add_argument("--own-head", default=None,
+                        help="override the git-derived HEAD sha used for own-PR exemption")
     args = parser.parse_args(argv)
 
     root = Path(args.root).resolve()
@@ -211,16 +238,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.offline_prs:
         prs = json.loads(Path(args.offline_prs).read_text(encoding="utf-8"))
-        head = own_head(root)
-        ref = own_ref(root)
     else:
         try:
             prs, _source = collect_prs(root)
         except RuntimeError as exc:
             print(json.dumps({"error": str(exc)}), file=sys.stderr)
             return 2
-        head = own_head(root)
-        ref = own_ref(root)
+    head = args.own_head or own_head(root)
+    ref = args.own_ref or own_ref(root)
 
     verdict = evaluate(
         version=version,
