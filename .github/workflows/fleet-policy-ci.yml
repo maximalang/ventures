@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
   group: fleet-policy-${{ github.workflow }}-${{ github.ref }}
@@ -42,6 +43,14 @@ jobs:
         env:
           HERMES_KANBAN_TASK: t_ci_simulated
         run: uv run --frozen python -m pytest tests/ -q
+      - name: Version-collision guard
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          uv run --frozen python scripts/check_version_uniqueness.py \
+            --root . --own-ref "$HEAD_REF" --own-head "$HEAD_SHA"
       - name: Static and drift checks
         run: |
           uv lock --check
