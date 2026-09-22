@@ -71,6 +71,9 @@ def test_projector_uses_real_cli_syntax_and_exactly_once_outbox(tmp_path):
     assert result == {"block": 0}
     assert len(calls) == 1
     assert calls[0][:5] == ["hermes", "kanban", "--board", "rr-team", "block"]
+    # Typed disposition contract: a deny lands as policy_denied, not needs_input,
+    # so Kanban records receipt.status == "policy_denied" (no-blind-retry).
+    assert calls[0][-2:] == ["--kind", "policy_denied"]
 
     store = PolicyStore(tmp_path / "policy.db")
     store.migrate()
