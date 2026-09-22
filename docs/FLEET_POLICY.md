@@ -99,3 +99,31 @@ uv run python scripts/fleet_migration.py rollback
 ```
 
 Rollback verifies `snapshot.sha256`, restores owners/blocked states and the exact prior Kanban routing values, including nullable `max_in_progress`. Old cron jobs are never automatically re-enabled.
+
+## Version reservation
+
+Versions are reserved deterministically, never picked by eye (root cause of
+the 1.2.25 duplicate: two branches claimed the same next version and the
+second merge had to re-pin).
+
+Rule: **next version = max(released set from trunk `CHANGELOG.md`) + 1 patch
+step**, and the claim is checked at branch creation AND enforced by CI:
+
+- At branch creation, run
+  `python scripts/check_version_uniqueness.py --root .` from the workspace
+  checkout before choosing the pin set. Exit code 0 with
+  `collision: false` is the claim receipt; exit 1 means another branch or
+  trunk already holds the version — take the next free one and re-pin.
+- The `Version-collision guard` CI step re-runs the same script on every PR
+  and push to the trunk, so a stale claim cannot merge. The guard compares
+  the branch's repo-root `plugin.yaml` version against the released set
+  (trunk `CHANGELOG.md`) and every other open PR head (resolved through the
+  PR list plus per-head `plugin.yaml` reads; a read-only remote fallback
+  enumerates branch heads when the PR API is unavailable). The PR's own
+  head is exempted. A head whose version cannot be resolved is reported as
+  `unverified_refs` — informational, not a collision (fail-closed on
+  conflicts, never on unknowns).
+- The bump itself covers the full pin set atomically (package metadata,
+  both plugin manifests, package `__version__`, lockfile, version-match
+  test, `CHANGELOG.md` entry); a partial bump fails the pinned
+  version-match test and CI.

@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.29] - 2026-09-22
+
+### Added
+- Version-collision guard `scripts/check_version_uniqueness.py` (root cause
+  of the 1.2.25 duplicate): deterministic JSON verdict comparing the branch
+  `plugin.yaml` version against the released set (trunk `CHANGELOG.md`) and
+  every other open PR head (PR API resolution with a read-only remote
+  fallback; own head exempted); non-zero exit on collision. Wired into
+  `fleet-policy-ci.yml` as the `Version-collision guard` step before the
+  static/drift checks, with `pull-requests: read` permission added.
+- Pin-convergence check `scripts/check_pin_convergence.py`: verifies every
+  deployed `<profiles-root>/*/plugins/fleet-policy` checkout sits on one
+  expected sha (argv[1]); fail-closed — unresolvable entries are divergent,
+  never skipped. Fixture-only unit tests; the live scan is a Phase-R
+  runtime concern, not part of this release.
+- `docs/FLEET_POLICY.md` "Version reservation" section: next version =
+  released_max(trunk CHANGELOG) + 1, claimed at branch creation and
+  enforced by CI; never pick a version by eye.
+- Test suites `tests/test_version_guard.py` (12 tests) and
+  `tests/test_pin_convergence.py` (8 tests), fixture-based, no network.
+
 ## [1.2.28] - 2026-09-22
 
 ### Changed
