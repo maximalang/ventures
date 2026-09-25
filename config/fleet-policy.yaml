@@ -21,14 +21,14 @@ budgets:
     tool_calls: 400
     retries: 3
   review:
-    tokens: 150000
-    wall_clock_minutes: 120
-    tool_calls: 150
+    tokens: 250000
+    wall_clock_minutes: 180
+    tool_calls: 250
     retries: 3
   ops:
-    tokens: 150000
-    wall_clock_minutes: 180
-    tool_calls: 150
+    tokens: 250000
+    wall_clock_minutes: 240
+    tool_calls: 250
     retries: 3
 anti_loop:
   max_identical_calls: 5
