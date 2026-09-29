@@ -1,5 +1,63 @@
 # Changelog
 
+## [1.2.31] - 2026-09-25
+
+### Changed
+- §2.1 budgets: `review` 150k/120min/150calls → 250k/180min/250calls;
+  `ops` 150k/180min/150calls → 250k/240min/250calls. Evidence (fleet-policy
+  event store, 14-day window): review/ops are the only classes where
+  budget_exhausted denies censor at the limit (review max 151 tool_calls =
+  101% of limit; ops max 152 calls / 187 min = 101%/104%; 11 denies total).
+  New ceilings are ≥1.6× the censored observed max and ≤4× P90, so runaway
+  stays excluded; retries=3 unchanged. research/code untouched (P90 59–81%,
+  zero denies).
+
+### Added
+- §2.2 scratch-root exemption for the literal recursive+force delete rule
+  (`_rm_rf_targets` shared parser + `_safe_rm_targets`): a single pure rm
+  shape whose targets ALL normalize — env-expanded $TMPDIR/$TEMP/$TMP,
+  `..`-free, physically resolved so symlink escapes fail — strictly inside
+  an allowed ephemeral root (temp env roots, `<hermes_profiles>/*/cache/
+  scratch/**`, the current task workspace and its tmp/cache/temp children)
+  classifies as autonomous `ephemeral_workspace_cleanup` (allow) instead of
+  `irreversible_data_loss` (approval_required). Note: the SPEC suggested the
+  `destructive_change` label; that category is evidence-gated (backup+scope),
+  so workers would be re-denied at runtime as evidence_gate_missing — the
+  very hang this exemption removes. The ungated v1.2.28 ephemeral cleanup
+  category preserves the SPEC's observable contract (safe → allow, unsafe/
+  escape → approval_required). Every other trigger of the same rule
+  (`reset --hard`, force-push, `drop table`, `truncate`) is untouched.
+  Motivation: 45 denies / 41 cards in 14 days, mostly workers deleting their
+  own scratch.
+- Read lane for single-statement read-only `sqlite3` calls (allowlisted
+  flags; db + ONE `SELECT`/`WITH`/`VALUES`/`EXPLAIN` or assignment-free
+  `PRAGMA` statement; no `;` splicing, no dot-commands, no interactive
+  sessions): a read diagnostic is a read; mutating and unbounded shapes
+  stay state_change.
+
+### Fixed
+- Protected-store denies now carry the TRUE effect: a read-only probe
+  (cat/head/grep/sqlite-SELECT) of a secret-pattern path is still denied
+  (`secret_read_or_write`) but with effect=read instead of a hard-coded
+  state_change. The mislabel made the blocked-task override mask such denies
+  as `task_already_blocked`, which produced a deny death spiral for
+  read-only diagnostics on blocked cards (t_82941e23 run evidence).
+  Read-only shell on a blocked card is now allowed end-to-end; mutations on
+  a blocked card stay denied.
+
+### Tests
+- `tests/test_v1231_limits.py` — red/green regressions for every branch
+  above: safe → allow; unsafe path, `..` escape, symlink-out, mixed targets,
+  env root itself, globs, unset env reference → approval_required;
+  policy-controlled read pins (ls/cat/grep/head/tail/sed -n/du/wc/stat);
+  blocked-task runtime matrix; §2.1 budget assertions.
+- v1.2.23 adversary pin update: `sqlite3 <db> "SELECT ..."` moved out of
+  `test_echo_read_lane_adversaries_stay_out` into a boundary test
+  (`test_sqlite_read_lane_boundary_v1231`) per the company re-scope; the
+  in-process `python -c` sqlite form stays denied. The v1.2.28 workspace
+  lane tests are env-isolated (pytest tmp_path lives under the real %TEMP%,
+  whose children §2.2 now treats as disposable scratch).
+
 ## [1.2.30] - 2026-09-22
 
 ### Fixed

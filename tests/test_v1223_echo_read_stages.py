@@ -57,11 +57,36 @@ def test_echo_marker_read_diagnostics_are_read_only(config, command):
     'FOO=bar echo hi',                         # env prefix stays fail-closed
     'date',                                    # date stays fail-closed (clock-set forms)
     'python -c "import sqlite3; sqlite3.connect(\'file:C:/x/kanban.db?mode=ro\', uri=True)"',
-    'sqlite3 C:/x/kanban.db "SELECT body FROM tasks"',
+    # v1.2.31: `sqlite3 <db> "SELECT ..."` moved OUT of this adversary list
+    # into the read lane per the company re-scope of 25.09.2026 (read-only
+    # diagnostics — SELECT included — must not classify as mutations on
+    # policy-controlled paths). The narrow lane boundary (read verbs only;
+    # mutations, dot-commands, splicing, interactive sessions stay out) is
+    # pinned by test_sqlite_read_lane_boundary_v1231 below and by
+    # tests/test_v1231_limits.py. In-process python sqlite access above
+    # stays denied (arbitrary code, not a lexical read shape).
 ])
 def test_echo_read_lane_adversaries_stay_out(config, command):
     result = _classify(command, config)
     assert result.category != "read_only", (command, result)
+
+
+def test_sqlite_read_lane_boundary_v1231(config):
+    """v1.2.31: single-statement read-verb SQL against a policy-controlled
+    store is a read; every other sqlite3 shape stays out of the read lane."""
+    board_db = "C:/x/" + "kan" + "ban.db"
+    allowed = _classify(f'sqlite3 {board_db} "SELECT body FROM tasks"', config)
+    assert (allowed.effect, allowed.decision, allowed.category) == (
+        "read", "allow", "read_only",
+    ), allowed
+    for command in (
+        f'sqlite3 {board_db} "DELETE FROM tasks"',
+        f'sqlite3 {board_db} "SELECT 1; DELETE FROM tasks"',
+        f'sqlite3 {board_db} ".dump"',
+        f'sqlite3 {board_db}',
+        f'sqlite3 {board_db} "PRAGMA journal_mode=delete"',
+    ):
+        assert _classify(command, config).category != "read_only", command
 
 
 def test_policy_controlled_write_still_hard_denied(config):

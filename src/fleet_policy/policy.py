@@ -681,11 +681,56 @@ def _hash_stage_is_read_only(tokens: list[str]) -> bool:
     return program == "certutil" and len(tokens) > 1 and _clean_shell_token(tokens[1]).lower() == "-hashfile"
 
 
+# v1.2.31: single-statement read-only SQL via the sqlite3 CLI joins the read
+# lane (owner re-scope: read-only diagnostics — SELECT included — must never
+# be classified as mutations). Mirrors the gh-api lane's allowlist discipline:
+# known read-safe flags only, exactly two positionals (db + ONE statement),
+# read-verb prefix, and no `;` statement splicing, dot-commands, or PRAGMA
+# assignments. Everything else fails closed to the stricter state_change
+# classification. Accepted residual risk (same class as the other lexical
+# lanes): the engine may CREATE an empty database file when the db path does
+# not exist; a SELECT-family statement cannot mutate rows, and -readonly
+# removes even the creation risk.
+_SQLITE_SAFE_FLAGS = frozenset({
+    "-readonly", "-batch", "-noheader", "-header", "-csv", "-json",
+    "-line", "-list", "-column", "-ascii",
+})
+_SQLITE_READ_STATEMENT = re.compile(r"^(?:select|with|values|explain)\b", re.IGNORECASE)
+_SQLITE_READ_PRAGMA = re.compile(r"^pragma\b[^=]*$", re.IGNORECASE)
+
+
+def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
+    if not tokens or _program_name(tokens[0]) != "sqlite3":
+        return False
+    positionals: list[str] = []
+    for raw in tokens[1:]:
+        token = _clean_shell_token(raw)
+        if token.startswith("-"):
+            if token.lower() in _SQLITE_SAFE_FLAGS:
+                continue
+            return False
+        positionals.append(token)
+    # One positional is an interactive/stdin-driven session: unbounded, so
+    # never read-only. More than two is a usage the CLI does not define.
+    if len(positionals) != 2:
+        return False
+    statement = positionals[1].strip()
+    if not statement or statement.startswith(".") or ";" in statement:
+        return False
+    return bool(
+        _SQLITE_READ_STATEMENT.match(statement) or _SQLITE_READ_PRAGMA.match(statement)
+    )
+
+
 def _stage_is_read_only(segment: str) -> bool:
     if READ_COMMAND.match(segment):
         return True
     tokens = _stage_tokens(segment)
-    return _gh_stage_is_read_only(tokens) or _hash_stage_is_read_only(tokens)
+    return (
+        _gh_stage_is_read_only(tokens)
+        or _hash_stage_is_read_only(tokens)
+        or _sqlite_stage_is_read_only(tokens)
+    )
 
 
 def _terminal_is_read_only(command: str) -> bool:
@@ -869,26 +914,24 @@ def _task_workspace_root(raw_workdir: str) -> str | None:
     return None
 
 
-def _is_ephemeral_workspace_cleanup(name: str, arguments: dict[str, Any]) -> bool:
-    """Allow one pure ``rm -rf`` of child paths inside the current task workspace.
+def _rm_rf_targets(command: str) -> list[str] | None:
+    """Parse ONE pure recursive+force ``rm`` invocation into its targets.
 
-    Scratch artifacts are reproducible and task-scoped. Deleting a child there
-    is neither irreversible business-data loss nor a release action. The lane
-    is deliberately narrow: no command chaining, globbing, parent traversal,
-    workspace-root deletion, or workdir outside a Hermes task workspace.
+    Returns None for anything that is not a single unchained ``rm -rf``
+    stage (shell metacharacters, chains, pipes, other programs, a missing
+    -r/-f, unknown options): every non-trivial shape fails closed to the
+    caller's stricter classification. Shared by the v1.2.28 workspace
+    cleanup lane and the v1.2.31 scratch-root exemption so both see
+    byte-identical parsing.
     """
-    if name not in TERMINAL_TOOLS:
-        return False
-    command = str(arguments.get("command") or arguments.get("cmd") or "").strip()
-    workdir = str(arguments.get("workdir") or "").strip()
-    workspace_root = _task_workspace_root(workdir)
-    if not command or not workspace_root or _SHELL_METACHARACTERS.search(command):
-        return False
+    command = command.strip()
+    if not command or _SHELL_METACHARACTERS.search(command):
+        return None
     if len(_simple_commands(command)) != 1 or re.search(r"&&|\|\||;|\|", command):
-        return False
+        return None
     tokens = [_clean_shell_token(token) for token in _stage_tokens(command)]
     if not tokens or _program_name(tokens[0]) != "rm":
-        return False
+        return None
 
     recursive = False
     force = False
@@ -904,13 +947,37 @@ def _is_ephemeral_workspace_cleanup(name: str, arguments: dict[str, Any]) -> boo
                 force = force or token == "--force"
                 continue
             if not re.fullmatch(r"-[rf]+", token, re.I):
-                return False
+                return None
             letters = token[1:].lower()
             recursive = recursive or "r" in letters
             force = force or "f" in letters
             continue
         targets.append(token)
     if not (recursive and force and targets):
+        return None
+    return targets
+
+
+def _is_ephemeral_workspace_cleanup(name: str, arguments: dict[str, Any]) -> bool:
+    """Allow one pure ``rm -rf`` of child paths inside the current task workspace.
+
+    Scratch artifacts are reproducible and task-scoped. Deleting a child there
+    is neither irreversible business-data loss nor a release action. The lane
+    is deliberately narrow: no command chaining, globbing, parent traversal,
+    workspace-root deletion, or workdir outside a Hermes task workspace.
+    """
+    if name not in TERMINAL_TOOLS:
+        return False
+    command = str(arguments.get("command") or arguments.get("cmd") or "").strip()
+    workdir = str(arguments.get("workdir") or "").strip()
+    workspace_root = _task_workspace_root(workdir)
+    if not command or not workspace_root:
+        return False
+    # v1.2.31: shared parser — the v1.2.28 workspace lane and the v1.2.31
+    # scratch-root exemption must see byte-identical rm shapes, so both go
+    # through _rm_rf_targets (metacharacters, chaining, options, `--`).
+    targets = _rm_rf_targets(command)
+    if not targets:
         return False
 
     normalized_workdir = posixpath.normpath(workdir.replace("\\", "/"))
@@ -947,6 +1014,186 @@ def _is_ephemeral_workspace_cleanup(name: str, arguments: dict[str, Any]) -> boo
     return True
 
 
+# v1.2.31 SPEC §2.2 — scratch-root exemption for the literal recursive+force
+# rm shape. Roots whose CHILDREN are disposable:
+#   - $TMPDIR / $TEMP / $TMP (when set and non-empty);
+#   - the current task workspace (from the tool binding's workdir/workspace_path
+#     or the dispatcher-provided HERMES_KANBAN_WORKSPACE) and its tmp/cache/temp
+#     children;
+#   - any ``<hermes_profiles>/*/cache/scratch`` directory, recognized by the
+#     resolved path's segment sequence so it works without env on every host.
+# The ephemeral roots themselves, ``..`` escapes, globs, tilde paths, unknown
+# $-references, symlink escapes (checked on the physically resolved path) and
+# mixed target sets with even one unsafe path all fail closed, keeping the
+# irreversible_data_loss approval requirement of the rule table intact.
+_SAFE_TEMP_ENV_NAMES = ("TMPDIR", "TEMP", "TMP")
+# Only bare/braced references to the three ephemeral-root variables expand.
+# Shell expansion is case-sensitive, so spellings must match the conventional
+# upper-case names, and a reference whose variable is unset fails closed
+# instead of expanding to an empty string.
+_SAFE_ENV_REF = re.compile(r"\$(?:\{(TMPDIR|TEMP|TMP)\}|(TMPDIR|TEMP|TMP))(?![A-Za-z0-9_])")
+# A target must stay a plain path: globs, quotes, redirects, separators and
+# residual $-references are refused before any path math happens.
+_SAFE_RM_FORBIDDEN = re.compile(r"""[*?`\[\]{}<>&|;"'$]""")
+
+
+def _expand_safe_env_reference(target: str) -> str | None:
+    """Expand $TMPDIR/$TEMP/$TMP references; None when a variable is unset or
+    any other ``$`` reference would remain unexpanded."""
+    missing: list[str] = []
+
+    def replace(match: re.Match[str]) -> str:
+        name = match.group(1) or match.group(2)
+        value = os.environ.get(name) or ""
+        if not value:
+            missing.append(name)
+        return value
+
+    expanded = _SAFE_ENV_REF.sub(replace, target)
+    if missing or "$" in expanded:
+        return None
+    return expanded
+
+
+def _safe_rm_candidate(target: str, workdir: str | None) -> Path | None:
+    """Normalize one rm target to an absolute path, failing closed on any
+    non-plain shape (empty, tilde, globs, quotes, ``..`` segments, unknown
+    env references, relative without a workdir binding)."""
+    if not target or target.startswith("~"):
+        return None
+    expanded = _expand_safe_env_reference(target)
+    if expanded is None or _SAFE_RM_FORBIDDEN.search(expanded):
+        return None
+    normalized = expanded.replace("\\", "/")
+    if any(part == ".." for part in normalized.split("/")):
+        return None
+    candidate = Path(normalized)
+    if not candidate.is_absolute():
+        if not workdir:
+            return None
+        candidate = Path(workdir.replace("\\", "/")) / candidate
+    return candidate
+
+
+def _safe_rm_roots(binding: dict[str, Any] | None) -> tuple[Path | None, str, list[Path]]:
+    """Ephemeral roots whose children may be deleted autonomously (SPEC §2.2).
+
+    Returns ``(workspace_resolved, workspace_root_raw, temp_roots)``. The task
+    workspace (from the tool binding's workspace_path/workdir or the
+    dispatcher-provided HERMES_KANBAN_WORKSPACE) is tracked separately because
+    it DOMINATES: a target lexically bound to the workspace is judged only by
+    workspace semantics (strict physical child), never by the broader
+    temp-env containment — otherwise a workspace nested under %TEMP% would
+    inherit the looser temp-root rules and the v1.2.28 workspace contract
+    (no root deletion, no symlink escape) would leak.
+    """
+    temp_roots: list[Path] = []
+    for name in _SAFE_TEMP_ENV_NAMES:
+        value = (os.environ.get(name) or "").strip()
+        if not value:
+            continue
+        try:
+            if Path(value).is_dir():
+                temp_roots.append(Path(value).resolve())
+        except OSError:
+            continue
+    arguments = binding or {}
+    workspace_root = str(arguments.get("workspace_path") or "").strip()
+    if not workspace_root:
+        workspace_root = _task_workspace_root(str(arguments.get("workdir") or "")) or ""
+    if not workspace_root:
+        workspace_root = (os.environ.get("HERMES_KANBAN_WORKSPACE") or "").strip()
+    workspace_resolved: Path | None = None
+    if workspace_root:
+        try:
+            if Path(workspace_root).is_dir():
+                workspace_resolved = Path(workspace_root).resolve()
+        except OSError:
+            workspace_resolved = None
+    return workspace_resolved, workspace_root, temp_roots
+
+
+def _under_profile_scratch(resolved: Path) -> bool:
+    """True when *resolved* is a strict descendant of a
+    ``<hermes_profiles>/*/cache/scratch`` directory."""
+    parts = [part.casefold() for part in resolved.parts]
+    for index, part in enumerate(parts):
+        if (
+            part == "profiles"
+            and index + 4 < len(parts)
+            and parts[index + 2] == "cache"
+            and parts[index + 3] == "scratch"
+        ):
+            return True
+    return False
+
+
+def _safe_rm_contained(candidate: str, root: str) -> bool:
+    try:
+        relative = posixpath.relpath(candidate, root)
+    except ValueError:
+        return False
+    return not (relative == ".." or relative.startswith("../") or Path(relative).is_absolute())
+
+
+def _safe_rm_targets(command: str, binding: dict[str, Any] | None = None) -> bool:
+    """SPEC §2.2 helper: True only when *command* is a single pure
+    recursive+force rm (via _rm_rf_targets) whose targets ALL normalize —
+    env-expanded, ``..``-free, physically resolved so symlink escapes fail —
+    strictly inside an allowed ephemeral root. A target lexically bound to the
+    task workspace is judged ONLY by workspace semantics (dominance: strict
+    physical child of the workspace, never the workspace root itself); every
+    other target must sit strictly inside a temp-env root or a profile scratch
+    directory. Any other shape returns False and the caller's approval
+    requirement stands."""
+    targets = _rm_rf_targets(command)
+    if not targets:
+        return False
+    arguments = binding or {}
+    workdir = str(arguments.get("workdir") or "").strip() or None
+    workspace_resolved, workspace_root, temp_roots = _safe_rm_roots(arguments)
+    workspace_lexical = (
+        Path(workspace_root).as_posix().casefold() if workspace_resolved is not None else ""
+    )
+    workspace_physical = (
+        workspace_resolved.as_posix().casefold() if workspace_resolved is not None else ""
+    )
+    for raw_target in targets:
+        candidate = _safe_rm_candidate(raw_target, workdir)
+        if candidate is None:
+            return False
+        try:
+            resolved = candidate.resolve(strict=False)
+        except (OSError, ValueError, RuntimeError):
+            return False
+        if workspace_lexical:
+            lexical = candidate.as_posix().casefold()
+            if lexical == workspace_lexical:
+                return False  # the workspace root itself is never deletable
+            if _safe_rm_contained(lexical, workspace_lexical):
+                # Workspace-bound target: workspace semantics only, no
+                # temp-root fallback (v1.2.28 contract: no link escapes).
+                physical = resolved.as_posix().casefold()
+                if physical == workspace_physical:
+                    return False
+                if not _safe_rm_contained(physical, workspace_physical):
+                    return False
+                continue
+        normalized = resolved.as_posix().casefold()
+        contained = False
+        for root in temp_roots:
+            root_normalized = root.as_posix().casefold()
+            if normalized == root_normalized:
+                continue  # an ephemeral root itself is never a deletable target
+            if _safe_rm_contained(normalized, root_normalized):
+                contained = True
+                break
+        if contained or _under_profile_scratch(resolved):
+            continue
+        return False
+    return True
+
+
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
     name = _normalize_tool_name(tool_name)
     effect = _effect_for(name, arguments)
@@ -977,7 +1224,11 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             return Classification("state_change", "policy_control_plane_mutation", "deny", "policy-controlled files are immutable for the fleet")
         if _tracked_source_carveout(matched, subject, arguments):
             continue
-        return Classification("state_change", PROTECTED_STORE_RULE, "deny", DENY_MSG)
+        # v1.2.31: the deny carries the TRUE effect. A read-only probe of a
+        # protected store stays a denied READ — relabeling it as a mutation
+        # made the blocked-task override mask the real category as
+        # task_already_blocked and starved read-only diagnostics.
+        return Classification(effect, PROTECTED_STORE_RULE, "deny", DENY_MSG)
 
     subject = _risk_subject(name, arguments)
     lower = f"{name} {subject}".lower()
@@ -1015,6 +1266,26 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             "ephemeral_workspace_cleanup",
             "allow",
             "ephemeral task-workspace child cleanup is autonomous",
+        )
+
+    # v1.2.31 SPEC §2.2: scratch-root exemption for the literal recursive+force
+    # rm shape whose targets ALL sit inside an allowed ephemeral root ($TMPDIR/
+    # $TEMP/$TMP, <hermes_profiles>/*/cache/scratch/**, the task workspace and
+    # its tmp/cache/temp children). Routed through the ungated ephemeral
+    # cleanup category instead of the SPEC's destructive_change label because
+    # destructive_change is evidence-gated (backup+scope): an allow there would
+    # be re-denied at runtime as evidence_gate_missing, recreating the very
+    # worker hang this exemption removes. Approval_required for every unsafe
+    # shape — repos, state, home, ventures, escapes — is unchanged.
+    if name in TERMINAL_TOOLS and _safe_rm_targets(
+        str(arguments.get("command") or arguments.get("cmd") or ""),
+        arguments,
+    ):
+        return Classification(
+            effect,
+            "ephemeral_workspace_cleanup",
+            "allow",
+            "ephemeral scratch-root cleanup is autonomous",
         )
 
     branches = "|".join(re.escape(branch) for branch in config["protected"]["branches"])

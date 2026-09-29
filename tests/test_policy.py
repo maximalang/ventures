@@ -50,8 +50,8 @@ def test_all_budget_types_present(config):
     assert set(config["budgets"]) == {"research", "code", "review", "ops"}
     assert config["budgets"]["research"]["tokens"] == 250000
     assert config["budgets"]["code"]["tool_calls"] == 400
-    assert config["budgets"]["review"]["wall_clock_minutes"] == 120
-    assert config["budgets"]["ops"]["tokens"] == 150000
+    assert config["budgets"]["review"]["wall_clock_minutes"] == 180
+    assert config["budgets"]["ops"]["tokens"] == 250000
 
 
 def test_read_allow_and_secret_deny(config):
@@ -170,7 +170,14 @@ def test_ephemeral_workspace_child_cleanup_is_autonomous(config, tmp_path):
         ), (command, result)
 
 
-def test_ephemeral_workspace_cleanup_fails_closed_outside_child_scope(config, tmp_path):
+def test_ephemeral_workspace_cleanup_fails_closed_outside_child_scope(config, tmp_path, monkeypatch):
+    # v1.2.31: isolate the ambient temp/workspace env roots. pytest's tmp_path
+    # lives under the real %TEMP%, whose children SPEC §2.2 now treats as
+    # disposable scratch; this test pins the WORKSPACE lane contract, so the
+    # scratch-root lane must see no roots here (its own semantics are covered
+    # by tests/test_v1231_limits.py).
+    for _env_name in ("TMPDIR", "TEMP", "TMP", "HERMES_KANBAN_WORKSPACE"):
+        monkeypatch.delenv(_env_name, raising=False)
     workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
     workdir_path.mkdir(parents=True)
     foreign = tmp_path / "project"
@@ -209,7 +216,12 @@ def test_ephemeral_workspace_cleanup_rejects_tilde_expansion(config, tmp_path):
         ), (command, result)
 
 
-def test_ephemeral_workspace_cleanup_refuses_link_escape(config, tmp_path):
+def test_ephemeral_workspace_cleanup_refuses_link_escape(config, tmp_path, monkeypatch):
+    # v1.2.31: env-isolated like the sibling scope test — the scratch-root
+    # lane (SPEC §2.2) must not contribute roots while the workspace lane's
+    # link-escape contract is pinned here.
+    for _env_name in ("TMPDIR", "TEMP", "TMP", "HERMES_KANBAN_WORKSPACE"):
+        monkeypatch.delenv(_env_name, raising=False)
     workdir = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
     outside = tmp_path / "outside"
     workdir.mkdir(parents=True)
