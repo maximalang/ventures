@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.32] - 2026-09-29
+
+### Added
+- `docs/FLEET_POLICY.md` §Task budgets: canonical kill criterion for the
+  task-type budget ceilings — if estimated monthly usage cost more than
+  doubles without task-completion-rate growth over the measurement window,
+  the ceilings are reduced or reverted. Monetary usage-cost figures stay
+  `unavailable` (NULL) until provider-reported usage telemetry exists; the
+  criterion is evaluated from fleet-policy event-store telemetry. Previously
+  recorded only in PR bodies (#31, #37).
+
+### Docs
+- Budget-caps refresh audit (t_27fb939d): the owner-approved token hard caps
+  of 2026-09-08 (research 120k→250k, code 180k→400k, review 60k→150k,
+  ops 50k→150k) are already on trunk — persisted by `ca173fe` (PR #37,
+  merged 2026-09-15) after the owner's live 10/10-profile rollout; review and
+  ops were superseded upward by v1.2.31 (PR #50; independent QA PASS; company
+  go at head `4908dd4d`) to 250k on deny-censoring evidence. The stale rebase
+  artifact PR #31 (pin 1.2.18, base `7538369b`) remains CLOSED as superseded.
+  This release changes no budget values; `config/` is untouched.
+
 ## [1.2.31] - 2026-09-25
 
 ### Changed

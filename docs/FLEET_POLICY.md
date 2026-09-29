@@ -55,6 +55,8 @@ Workers cannot grant capabilities or approve themselves, including through direc
 
 Task-type budgets cover generated tokens only, wall clock and tool calls. Prompt tokens are not repeatedly charged as work. Retry enforcement belongs to Hermes Kanban (`failure_limit` / per-task `max_retries`), because provider fallback errors are not task retries. Identical-call, same-failure and idle-turn guards use the shared SQLite state.
 
+Budget ceilings carry a standing owner kill criterion: if estimated monthly usage cost more than doubles without task-completion-rate growth over the measurement window, the ceilings are reduced or reverted. Monetary usage-cost figures remain `unavailable` (NULL) until provider-reported usage telemetry exists; until then the criterion is evaluated from fleet-policy event-store telemetry.
+
 ## Boards and project context
 
 - `portfolio`: cross-project strategy, capital allocation, venture incubation;
