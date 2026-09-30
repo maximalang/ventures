@@ -100,6 +100,42 @@ uv run python scripts/fleet_migration.py rollback
 
 Rollback verifies `snapshot.sha256`, restores owners/blocked states and the exact prior Kanban routing values, including nullable `max_in_progress`. Old cron jobs are never automatically re-enabled.
 
+## Stale queue GC (v1.2.33)
+
+The approval and notification queues self-clean at ensure/drain time. The
+GC (`src/fleet_policy/queue_gc.py`) garbage-collects exactly three classes
+of dead queue rows and nothing else:
+
+1. `stale_terminal_task` — pending approval bindings whose bound task
+   resolves live to a terminal status (done/archived/superseded) are
+   auto-rejected with `gc:` attribution. Board-less or unresolvable
+   bindings are preserved (fail closed, the v1.2.14 doctrine).
+2. `duplicate_binding` — the same (task, action, target) pending more than
+   once: keep the newest (`created_at`, then insertion `rowid`), reject the
+   older siblings.
+3. Dead notifications — pending outbox rows with malformed or unbound
+   payloads (pre-v1.2.14 format), and rows bound to terminal cards,
+   dead-letter through the outbox machinery (`status='dead'`,
+   `suppression_reason='gc:<reason>'`, `resolved_at`).
+
+The feature is config-gated and **default OFF**:
+
+    queue_gc:
+      enabled: false          # master switch
+      mode: dry_run           # dry_run logs intended actions, writes nothing
+      max_actions_per_run: 25 # one shared cap per run, hard-clamped to 200
+
+Missing or invalid config falls back to disabled + dry-run + default cap.
+Every action — including dry-run intentions — is audited as a
+`queue_gc_action` event, plus one `queue_gc_run` summary per pass that
+found anything. Explicit probe: `fleet-policy queue-gc --mode dry_run
+[--db <store-copy>]` works on a disabled gate and never writes queue rows;
+`--mode enforce` additionally requires `enabled: true` and is refused from
+a dispatcher worker context. Live activation is a separate downstream
+gated card (blocked-state-controller pattern: dry-run evidence first,
+activation after independent QA). Rollback: `enabled: false` (no live
+state is touched by the merged default).
+
 ## Version reservation
 
 Versions are reserved deterministically, never picked by eye (root cause of

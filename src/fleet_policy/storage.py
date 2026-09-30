@@ -435,6 +435,39 @@ class PolicyStore:
                 "SELECT rule_key,task_id,board FROM approvals WHERE status='pending' ORDER BY created_at"
             ).fetchall()
 
+    # ------------------------------------------------------------------
+    # v1.2.33 automatic stale queue GC (spec v1224-gc-spec-20260918, read
+    # lane). The rules live in queue_gc.py; the store only exposes a
+    # deterministic pending-row read and strictly pending-only transitions,
+    # so a rule defect can never rewrite a decided audit row. These methods
+    # are plugin-owned automation (hook/CLI internals), so unlike
+    # expire_approval/decide_approval they carry no env guard; the CLI
+    # enforce entry point refuses worker context on its own.
+    # ------------------------------------------------------------------
+
+    def pending_approval_gc_rows(self) -> list[sqlite3.Row]:
+        """Every pending binding with its full GC projection, deterministic.
+
+        ``rowid`` is the insertion order within one ``created_at`` second, so
+        "keep newest" stays deterministic even for same-timestamp groups."""
+        with self.connect() as connection:
+            return connection.execute(
+                "SELECT rowid,rule_key,task_id,action,target,args_hash,board,created_at"
+                " FROM approvals WHERE status='pending' ORDER BY created_at,rowid"
+            ).fetchall()
+
+    def gc_reject_approval(self, rule_key: str, rule: str, reason: str) -> bool:
+        """GC transition: pending → rejected with a ``gc:<rule>:<reason>``
+        attribution. Only a still-pending row moves; approved/rejected/
+        consumed/expired/revoked rows stay immutable audit."""
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE approvals SET status='rejected',decided_at=?,decided_by=?"
+                " WHERE rule_key=? AND status='pending'",
+                (utc_now(), f"gc:{rule}:{reason}", rule_key),
+            )
+            return cursor.rowcount == 1
+
     def expire_approval(self, rule_key: str, expired_by: str, reason: str) -> bool:
         """v1.2.14: resolve a pending binding whose card is provably closed.
 
@@ -566,6 +599,30 @@ class PolicyStore:
                 (utc_now(), age_cutoff),
             )
             return int(cursor.rowcount)
+
+    def pending_notification_gc_rows(self) -> list[sqlite3.Row]:
+        """v1.2.33: every pending outbox row for the stale queue GC scan in
+        deterministic order. Dispatching rows are owned by a live drain claim
+        and are never listed; sent/dead/suppressed are terminal audit."""
+        with self.connect() as connection:
+            return connection.execute(
+                "SELECT event_id,payload_json,created_at FROM notification_outbox"
+                " WHERE status='pending' ORDER BY created_at,event_id"
+            ).fetchall()
+
+    def gc_dead_notification(self, event_id: str, reason: str) -> bool:
+        """v1.2.33: GC dead-letter for a still-pending row, reusing the outbox
+        dead-letter machinery (``status='dead'`` + auditable
+        ``suppression_reason='gc:<reason>'`` + ``resolved_at``). Claim/retry
+        fields are released; only a pending row moves."""
+        with self.connect() as connection:
+            cursor = connection.execute(
+                "UPDATE notification_outbox SET status='dead',resolved_at=?,"
+                "suppression_reason=?,claim_token=NULL,claimed_at=NULL,next_retry_at=NULL "
+                "WHERE event_id=? AND status='pending'",
+                (utc_now(), f"gc:{reason}", event_id),
+            )
+            return cursor.rowcount == 1
 
     def notification_counts(self) -> dict[str, int]:
         """Delivery accounting: queued/delivered/dead/suppressed are separate counters."""
