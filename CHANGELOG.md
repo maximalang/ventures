@@ -1,5 +1,70 @@
 # Changelog
 
+## [1.2.33] - 2026-09-30
+
+### Added
+- Automatic stale queue GC (`src/fleet_policy/queue_gc.py`; spec
+  `v1224-gc-spec-20260918`, renumbered per the version-reservation rule —
+  1.2.24–1.2.31 are released on trunk and 1.2.32 is claimed by open PR
+  #51). Garbage-collects exactly the dead queue classes found by the
+  2026-09-16 company queue audit (61 pending approvals = 42
+  stale_terminal_task + 6 duplicate_binding + 13 fresh; 14 pending
+  notifications = 12 pre-v1.2.14 unresolvable bindings + 2 terminal-task):
+  - `stale_terminal_task`: pending approval bindings whose bound task
+    resolves live to a terminal status (done/archived/superseded) are
+    auto-rejected with a `gc:<rule>:<reason>` decided_by attribution.
+    Board-less bindings and unresolvable statuses (transport error, unknown
+    card) are PRESERVED — fail closed, the v1.2.14 doctrine.
+  - `duplicate_binding`: the same (task, action, target) pending more than
+    once → keep the newest (`created_at`, then insertion `rowid`), reject
+    the older siblings.
+  - `dead_notification_unresolvable` / `dead_notification_terminal_task`:
+    pending outbox rows with malformed or unbound payloads (pre-v1.2.14
+    format) and rows bound to terminal cards dead-letter through the PR40
+    outbox machinery (`status='dead'`, `suppression_reason='gc:<reason>'`,
+    `resolved_at`, claim/retry fields released).
+- Wiring: the ensure side (`pre_tool_call` approval-binding creation) runs
+  the pure-store duplicate rule only — no live board lookups on the worker
+  hot path; the drain side (`drain-notifications` plus the new explicit
+  `queue-gc` CLI probe) runs every rule with an injected
+  `HermesProjector.live_task_status` resolver. GC failures are non-fatal:
+  they can never change a gate verdict or break a drain.
+- `fleet-policy queue-gc [--mode dry_run|enforce] [--limit N] [--db PATH]`
+  with a machine-readable JSON report. Enforce is refused from a dispatcher
+  worker context (override-expected-failure doctrine); a dry-run probe
+  works on a disabled config gate and never writes queue rows; enforce
+  never bypasses the config gate.
+- Audit trail: every action (including dry-run intentions) is logged as a
+  `queue_gc_action` event (deduplicated by rule+key+mode); a pass with at
+  least one action adds one `queue_gc_run` summary event with counts.
+- Config gate, default OFF (absent/invalid section falls back to disabled
+  + dry-run + default cap): `queue_gc: {enabled: false, mode: dry_run,
+  max_actions_per_run: 25}` — one shared cap bounds every write per run,
+  hard-clamped to 200. Live activation is a separate downstream gated card
+  (blocked-state-controller pattern: merge dry-run-capable code first,
+  activate after independent QA). Rollback = `enabled: false` + git revert;
+  this release touches no live state.
+
+### Changed
+- `PolicyStore`: bounded GC reads (`pending_approval_gc_rows`,
+  `pending_notification_gc_rows`) and strictly pending-only transitions
+  (`gc_reject_approval`, `gc_dead_notification`); decided/sent rows remain
+  immutable audit. `drain-notifications` JSON output gains a `queue_gc`
+  report key.
+
+### Tests
+- `tests/test_v1233_stale_queue_gc.py` — 21 red/green regressions: default
+  OFF is a full no-op; fresh-binding preservation by fixture (active,
+  blocked, unresolvable, board-less, transport-error rows never move);
+  terminal-only selection (approved/rejected/consumed/expired/revoked rows
+  immutable); duplicate keep-newest with deterministic tie-break; exact
+  group matches only; shared per-run cap with resumable progress; dry-run
+  logs without writing; explicit probes on a disabled config; every action
+  and run logged; runtime ensure-wiring end-to-end; CLI report, worker-env
+  enforce guard, drain wiring, and non-fatal GC failure. RED on base
+  287e86c (`ModuleNotFoundError: fleet_policy.queue_gc`), GREEN full suite
+  851 passed on both the plain and worker-env legs.
+
 ## [1.2.31] - 2026-09-25
 
 ### Changed

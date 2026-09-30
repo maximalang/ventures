@@ -9,6 +9,7 @@ from typing import Any
 from .config import load_config
 from .models import PolicyDecision, remediation_for
 from .policy import Classification, classify, infer_task_type, is_lifecycle_tool
+from .queue_gc import GcSettings, QueueGarbageCollector
 from .redaction import args_hash, redact, stable_id
 from .storage import PolicyStore, utc_now
 
@@ -290,6 +291,20 @@ class FleetPolicyRuntime:
             "rule_key": rule_key,
         }
 
+    def maybe_queue_gc(self, *, scope: str = "drain", resolver: Any = None,
+                       mode: str | None = None, limit: int | None = None) -> dict[str, Any]:
+        """v1.2.33: config-gated stale queue GC pass (default OFF).
+
+        Reads the ``queue_gc`` config section fresh on every call, so the
+        gate can flip without a restart. With the gate off and no explicit
+        ``mode`` probe this is a full no-op. Returns the machine-readable
+        GC report; hook-path callers wrap it so a GC failure can never
+        change a gate verdict.
+        """
+        settings = GcSettings.from_config(self.config)
+        collector = QueueGarbageCollector(self.store, settings=settings, resolver=resolver)
+        return collector.run(scope=scope, mode=mode, limit=limit)
+
     def pre_tool_call(self, tool_name: str, arguments: dict[str, Any], context: dict[str, Any]) -> PolicyDecision:
         task_id = str(context.get("task_id") or "")
         task_type, task_error = self.task_type(context)
@@ -432,6 +447,16 @@ class FleetPolicyRuntime:
                     self.store.ensure_approval(rule_key, task_id, tool_name, target, hashed,
                                                str(context.get("board") or ""))
                     approval_card = self._approval_card(context, rule_id, target, hashed, rule_key)
+
+        if approval_card is not None:
+            # v1.2.33: ensure-side queue hygiene — pure-store duplicate rule
+            # only (no live board lookups on the worker hot path), config
+            # gated and default OFF. A GC failure must never change the gate
+            # verdict for the call being classified.
+            try:
+                self.maybe_queue_gc(scope="ensure")
+            except Exception:
+                pass
 
         policy_decision = PolicyDecision(
             decision=decision,

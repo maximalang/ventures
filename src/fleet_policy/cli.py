@@ -65,6 +65,13 @@ def parser() -> argparse.ArgumentParser:
     revoke.add_argument("--confirm", default=None,
                         help="Interactive owner confirmation: the last 8 characters of the binding's rule_key.")
     sub.add_parser("drain-notifications")
+    gc = sub.add_parser("queue-gc")
+    gc.add_argument("--mode", choices=["dry_run", "enforce"], default=None,
+                    help="Explicit probe mode; enforce still requires the queue_gc.enabled config gate.")
+    gc.add_argument("--limit", type=int, default=None,
+                    help="Override max_actions_per_run for this pass.")
+    gc.add_argument("--db", default=None,
+                    help="Alternate policy store path (e.g. a copy of the live store for dry-run probes).")
     suppress = sub.add_parser("fail-notifications")
     suppress.add_argument("--all-pending", action="store_true")
     grant = sub.add_parser("grant-capability")
@@ -138,6 +145,25 @@ def main(argv: list[str] | None = None) -> int:
                          ensure_ascii=False, sort_keys=True))
         return 0
 
+    if args.command == "queue-gc":
+        # v1.2.33: explicit GC pass over the pending approval/notification
+        # queues. Enforce is refused from a dispatcher worker context (same
+        # doctrine as override-expected-failure); dry-run probes stay
+        # available everywhere and never write queue rows. The config gate
+        # is never bypassed: writes require queue_gc.enabled AND mode
+        # enforce (see queue_gc.QueueGarbageCollector.run).
+        if args.mode == "enforce" and os.environ.get("HERMES_KANBAN_TASK"):
+            print(json.dumps({"ok": False,
+                              "reason": "queue GC enforce cannot run from a dispatcher worker context"},
+                             ensure_ascii=False))
+            return 2
+        runtime = FleetPolicyRuntime(default_root(args), db_path=args.db)
+        projector = HermesProjector()
+        report = runtime.maybe_queue_gc(scope="drain", resolver=projector.live_task_status,
+                                        mode=args.mode, limit=args.limit)
+        print(json.dumps({"ok": True, "report": report}, ensure_ascii=False, sort_keys=True))
+        return 0
+
     runtime = FleetPolicyRuntime(default_root(args))
     if args.command in {"approve", "reject"}:
         if not sys.stdin.isatty():
@@ -174,8 +200,16 @@ def main(argv: list[str] | None = None) -> int:
             expired = projector.expire_closed_approvals(runtime.store)
         except Exception:
             expired = 0
+        # v1.2.33: drain-side stale queue GC (config gated, default OFF).
+        # Failures are non-fatal like the expiry sweep above: the drain
+        # still runs on the untouched store.
+        try:
+            gc_report = runtime.maybe_queue_gc(scope="drain",
+                                               resolver=projector.live_task_status)
+        except Exception:
+            gc_report = {}
         sent = projector.drain_company(runtime.store, profile=runtime.config["notifications"]["profile"])
-        print(json.dumps({"sent": sent, "approvals_expired": expired}))
+        print(json.dumps({"sent": sent, "approvals_expired": expired, "queue_gc": gc_report}))
         return 0
     if args.command == "fail-notifications":
         if getattr(args, "all_pending", False):
