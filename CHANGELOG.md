@@ -1,5 +1,104 @@
 # Changelog
 
+## [1.2.34] - 2026-10-02
+
+Card t_d94dde9d (fleet-ops). Live evidence: run 2125 of this card produced
+16 `policy_denied` events / 5 rule_ids across 4 distinct root-cause classes
+while doing READ-ONLY diagnostics; the runtime then collapsed every follow-up
+call into `task_already_blocked` and auto-triaged. Company unblocked on
+02.10.2026 17:55 with the instruction to implement the W1–W5 design from
+comment 5367 on this version.
+
+### Fixed
+- W1 (FP case 4): the `secret_read_or_write` name-guard carve-out for
+  git-tracked plain source (v1.2.26) now also triggers on the sec+ret token
+  family — a tracked product file such as `agent/sec…ret_scope.py` matched
+  `**/*sec…ret*` and was denied for every profile, while the identical
+  credential-named case was carved out. The fail-closed chain is unchanged:
+  untracked, nonexistent, symlink/reparse, hard-secret (`.env*`, `auth.json`,
+  key material) and control-plane STORE names keep their deny. Relative
+  operands of tools without a `workdir` binding now resolve against an
+  explicit base (`arguments.workdir` else `os.getcwd()` — the plugin runs
+  in-process with the worker, so CWD is the task workspace).
+- W2(a) (FP cases 1/5): bare version probes joined the read lane as a
+  per-program flag map (`python -V/--version`, `py`, `node -v/--version`,
+  `npm`, `uv -V`, `git --version`, `sqlite3`, `gh`, `jq`) — exactly a
+  two-token stage, nothing else. A diagnostics chain ending in
+  `python --version` no longer flips the whole command to state_change and
+  into a `policy_control_plane_mutation` hard deny. `python -v` (the
+  verbose-import REPL) deliberately does NOT buy the lane.
+- W2(b) (FP cases 2/3): narrow lexical lane for in-process `python -c`
+  read probes, plus quote-aware stage splitting (`_simple_commands` no
+  longer shreds `;`/`|` inside balanced quotes; unbalanced quoting falls
+  back to the historical blind split). Two templates, everything else fails
+  closed: T-sqlite — `import sqlite3`; conn assignment via a `file:` URI
+  carrying `mode=ro` with `uri=True`; read-verb `execute(...).fetchall()/
+  fetchone()` (every `.execute(` must carry a quoted SELECT/WITH/VALUES/
+  EXPLAIN or assignment-free PRAGMA literal); `print(...)`; `close()`;
+  global deny-token scan (SQL mutation verbs, executescript/executemany,
+  commit/rollback, `open(`, `os.`, subprocess, eval/exec, `__import__`,
+  socket/urllib/requests, shutil/pathlib, write, `system(`, popen,
+  `shell=true`, `input(`). T-gh — imports limited to {subprocess, json,
+  sys}; exactly one `subprocess.run([...string literals...], kwargs)` with
+  `capture_output`/`text`/`timeout` only, argv[0] == `gh` and the argv
+  passing the existing gh read-verb/GET allowlist; `json.loads(x.stdout)`;
+  `print(...)`. SUPERSEDES the v1.2.31 re-scope note "in-process
+  `python -c` sqlite form stays denied" (see [1.2.31] Tests) per the
+  company decision of 02.10.2026 on t_d94dde9d: the card's deliverable (1)
+  explicitly lists `python -c` mode=ro among read-only shapes that must not
+  deny. The v1.2.23 adversary shape (bare `sqlite3.connect(...)` without
+  assignment) stays denied; without `mode=ro` the control-plane deny on
+  store literals stands.
+- W2(c): the `policy_control_plane_mutation` remediation text now states the
+  truth: the worker HAS read access to the control plane (read_file; single
+  sqlite3 -readonly SELECT; gh api GET; version probes; complex probes via
+  script files) — the old text implied none. Route owner stays `company`.
+- W3: `_BINDING_HEAD` hex budget widened `{7,40}` → `{7,64}` so sha256
+  artifact heads bind for work that has no git head (verbal company
+  decisions, doc/bundle artifacts — deliverable (5)). The prefix-equality
+  check in `missing_gates()` is unchanged: a 7..64-char bound head must be
+  an exact prefix of the company-go anchor; foreign, unbound, stale and
+  self-attested markers stay fail-closed; 40-hex git flows are bit-identical.
+- W4 (FP case 2b): risk-regex span exemption. The hard-deny and rule-table
+  scans see the raw command, so deny phrases QUOTED AS DATA (echo/grep
+  arguments, `git commit -m` prose, `gh --body` text, heredoc report lines)
+  triggered evidence-gated categories or hard denies for commands that
+  execute nothing. A match lying entirely inside a shell-quoted span is now
+  exempt UNLESS the span is executable input: the token before the opening
+  quote is a code-flag form (-c/--command/-e/--eval or a cluster ending in
+  c/e), or the span shares its line with an interpreter/executor program
+  (bash/python/sh/perl/node/…, eval, awk/sed, ssh, xargs, sqlite3/psql,
+  docker/kubectl, …). Quoted URL spans stay scanned (real targets).
+  Unbalanced quoting disables every exemption (fail-closed). Untouched: the
+  path guard and its `python -c` code extraction (F5), MUTATOR/write-marker
+  effect scans, and the runtime gate-forgery checks.
+
+### Tests
+- `tests/test_v1234_fp_corpus.py` — the FP corpus from comment 5367 (all 5
+  classes → allow, including the verbatim run-2125 chain) and TP controls
+  (python -c negatives incl. no-mode=ro board-DB probe → control-plane deny;
+  gh write forms; executable-span approval mutators incl. heredoc bare
+  names; real rm/force-push/control-plane writes/secret reads; version-lane
+  narrowness; W3 64-hex exact/prefix arming and foreign/unbound/self-attest
+  fail-closed; W2(c) route text).
+- `tests/test_v1226_tracked_source_carveout.py` — the
+  `test_other_name_patterns_are_not_carved_out` pin is INVERTED per W1 into
+  `test_secret_named_tracked_source_is_carved_out_v1234` (tracked → allow,
+  untracked twin → deny); all other v1.2.26 controls unchanged.
+
+### Residual risks (documented)
+- The python lane and the span exemption are LEXICAL: string-concatenation
+  obfuscation inside an otherwise template-shaped probe, or a deny phrase
+  assembled at runtime inside an executed span, remains the pre-existing
+  scanner-gap class (the F4 free-text note). Executing `python` at all is a
+  scoped state change the fleet accepts for workers; the lane only decides
+  read-vs-mutation labeling.
+- `ssh host "cmd"` spans stay scanned via the same-line interpreter rule,
+  but remote-side composition (quoted payload split across args) is outside
+  lexical reach — same class as above.
+- `grep -c`-style clusters ending in c/e keep their quoted pattern scanned
+  (fail-closed); a rare prose FP there is accepted over a code-execution hole.
+
 ## [1.2.31] - 2026-09-25
 
 ### Changed

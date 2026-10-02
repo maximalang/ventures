@@ -73,7 +73,9 @@ REMEDIATIONS: dict[str, tuple[str, str]] = {
         "worker",
     ),
     "policy_control_plane_mutation": (
-        "правка самой политики запрещена; оформи отдельную tech-карту с диагнозом",
+        "правка самой политики запрещена; READ-доступ к control-plane у воркера есть "
+        "(read_file; одиночный SELECT через sqlite3 -readonly; gh api GET; version-пробы; "
+        "сложные пробы — скрипт-файлом, не python -c); на диагностику/правки оформи отдельную tech-карту",
         "company",
     ),
     "worker_self_approval": (

@@ -5,14 +5,16 @@ ordinary git-tracked source (``agent/cre…dential_pool.py``) for every
 profile including company — a confirmed false-positive class that blocked
 P2 delivery and QA.  The carve-out reclassifies ONLY paths that:
 
-(a) matched a NAME-BASED pattern carrying the trigger token,
+(a) matched a NAME-BASED pattern carrying a trigger token,
 (b) are not hard secret stores (``.env*``, ``auth.json``, key material),
 (c) physically exist AND are git-tracked in the containing repository.
 
 Everything else stays denied: untracked matched files, nonexistent paths,
-hard secret stores (even when tracked), and other name patterns such as
-``**/*sec…ret*``.  Fixtures are synthetic temp repos; no live policy
-state is touched.
+hard secret stores (even when tracked) and control-plane STORE names.
+v1.2.34 W1: the ``**/*sec…ret*`` token family joins the triggers (card
+t_d94dde9d FP case 4) — see
+``test_secret_named_tracked_source_is_carved_out_v1234``.  Fixtures are
+synthetic temp repos; no live policy state is touched.
 """
 from __future__ import annotations
 
@@ -111,16 +113,23 @@ def test_nonexistent_matched_path_stays_denied(tmp_path, config):
     assert (result.decision, result.category) == ("deny", RULE), result
 
 
-def test_other_name_patterns_are_not_carved_out(tmp_path, config):
-    # the carve-out is bound to the trigger token; a git-tracked file
-    # matched by **/*sec…ret* keeps its deny
+def test_secret_named_tracked_source_is_carved_out_v1234(tmp_path, config):
+    # v1.2.34 W1 (card t_d94dde9d FP case 4): the sec+ret token family joins
+    # the carve-out triggers — a git-TRACKED product source file whose name
+    # merely contains the token is plain source, same as the credential-named
+    # case since v1.2.26. The untracked matched twin keeps its deny.
     other = "sec" + "ret"
     root = tmp_path / "repo2"
     root.mkdir()
     tracked = root / f"app_{other}.py"
     tracked.write_text("x = 1\n", encoding="utf-8")
+    untracked = root / f"app_{other}_scratch.py"
+    untracked.write_text("x = 1\n", encoding="utf-8")
     _init_repo(root)
     _git(root, "add", f"app_{other}.py")
     _git(root, "commit", "-q", "-m", "fixture")
     result = classify("read_file", {"path": str(tracked)}, config, worker=True)
-    assert (result.decision, result.category) == ("deny", RULE), result
+    assert (result.effect, result.decision) == ("read", "allow"), result
+    assert result.category != RULE
+    denied = classify("read_file", {"path": str(untracked)}, config, worker=True)
+    assert (denied.decision, denied.category) == ("deny", RULE), denied
