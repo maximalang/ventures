@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.35] - 2026-10-02
+
+### Security
+- F1 (HIGH) + F2 (MEDIUM), decision t_fc317116 / finding t_5dd6729d:
+  quoted positional file operands were skipped as prose by
+  `_path_guard_subjects`, so `sqlite3 "<board db>" "UPDATE/DELETE ..."`
+  fell through to `scoped_state_change`/`destructive_change` fallbacks —
+  an in-process bypass of the protected-path deny (control-plane
+  mutation without deny and without evidence gates). Fix: extract
+  quoted/unquoted positional file operands for an allowlist of
+  file-operand programs (`_FILE_OPERAND_PROGRAMS`: sqlite3, cp, mv,
+  rm, del, copy, move, xcopy, robocopy, tee); sqlite3 keeps exactly
+  one file positional (later positionals are SQL prose). Fail-closed
+  on unbalanced quoted fragments. No unconditional quoted-span scan;
+  value-flag prose exclusion unchanged; the v1.2.31 single-statement
+  sqlite read lane stays intact (quoted single SELECT remains
+  `allow:read_only`). Corpus: offline 26/26 (C4/C5 now
+  `deny:policy_control_plane_mutation`), variant corpus PASS, 32-case
+  slice suite green, full per-file double suite (normal + simulated
+  worker) on the final head.
+
 ## [1.2.31] - 2026-09-25
 
 ### Changed
