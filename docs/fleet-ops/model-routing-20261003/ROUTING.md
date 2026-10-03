@@ -1,10 +1,11 @@
 # ROUTING — политика автороутера «Рельсы v2.2»
 
-Ред. 03.10.2026 (SPEC v3). Человекочитаемая политика; единый источник данных —
-`profiles/company/scripts/model_router.py` (ROUTES/RULES/PATTERNS/INVARIANTS).
-Файл согласован с `python model_router.py --print-rules`; правки — только в скрипт,
-затем синхрон сюда. Канон: PROGRAM.md v2.2, SPEC-routing-matrix-router.md,
-fleet-doctrine SKILL.md (числа), RESEARCH.md (стоимость/анти-паттерны).
+Ред. 03.10.2026 (SPEC v3 + дельты v4: SPEC-router-v4-hardening.md). Человекочитаемая
+политика; единый источник данных — `profiles/company/scripts/model_router.py`
+(ROUTES/RULES/PATTERNS/INVARIANTS). Файл согласован с `python model_router.py
+--print-rules`; правки — только в скрипт, затем синхрон сюда. Канон: PROGRAM.md v2.2,
+SPEC-routing-matrix-router.md, CANON-MERGE-20261003.md, fleet-doctrine SKILL.md (числа),
+RESEARCH.md (стоимость/анти-паттерны, числа только с URL).
 
 Логика одной строкой: **задача → класс → упорядоченный список моделей → первый
 подходящий; неудача/блок → шаг вправо** (явный пер-картовый пин с причиной, лог в
@@ -30,6 +31,7 @@ ROUTING-LOG.md, фаза C). Детерминировано, объяснимо,
 - R3: needs_vision=true → класс vision (способность выше тира: R3 перекрывает R2).
 - R4: prior_run_failed=true → следующий элемент списка (эскалация одним шагом вправо; на конце списка остаётся последний).
 - R5: спорный класс (нет маркеров) → устойчивый маппинг task_type→класс (research→research, ops→ops, review→review, code→code, code+файловые ключевые слова→data); неизвестный task_type → code.
+- R6: кэш-дисциплина (инвариант №5, канон 8): повторная карта той же работы рекомендует ту же модель — роутер детерминирован; единственная причина смены — prior_run_failed (R4: шаг вправо с логом).
 
 Файловые ключевые слова code→data: migrat*/pipeline*/etl/csv/tsv/parquet/dump*/
 ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/выгрузк*).
@@ -39,6 +41,18 @@ ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/в�
 
 - Неудача/блок → шаг вправо по списку; на конце — остаётся последняя модель.
 - Эскалация явная: пер-картовый пин с причиной + строка в ROUTING-LOG.md (фаза C); тихой подмены на ходу нет (инвариант №1).
+
+## Доступность рельс — --status (дельта v4 D1, канон 7)
+
+- `--status s.json` — опциональный ввод к `--card`: `{"<provider>": {"available": false}}`
+  и/или `{"<model>": {"available": false}}`. Ключ: точный id (`zai/glm-5.3`), короткое
+  имя модели (`glm-5.3`) или провайдер (`zai`); форма `"<key>": false` тоже понимается.
+- Недоступные записи пропускаются ДО выбора — это маршрутизация, не failover: решение
+  остаётся единственным и до старта (инвариант №1). Маркеры в rules_fired:
+  S1 — рельса реально пропущена; W1 — предупреждение деградации.
+- Файла нет / битый JSON / пустой `{}` → все рельсы считаются доступными, W1 в
+  rules_fired; все рельсы класса недоступны → оставлен полный список (W1). Деградация
+  безопасна в обе стороны, решение выдаётся всегда. `--status` без `--card` → exit 2.
 
 ## Инварианты (PROGRAM.md v2.2)
 
@@ -64,11 +78,53 @@ ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/в�
 | qwen-vl-max | одно изображение на вопрос | без reasoning_effort (инвариант №3) | критичное распознавание — перепроверка luna | коллажи в одном запросе; любая настройка effort |
 | gpt-6-luna | массовые простые просмотры, low effort | короткий единообразный ответ на элемент | сложный кадр → эскалация на qwen-vl-max | детальный анализ одного изображения |
 
+## KPI-тройка (дельта v4 D4; измерение фазы C, каноны 4+9)
+
+- QA-block rate по классам — доля диспатчей, заблокированных вердиктом независимой qa.
+- Override share — доля ручных решений company поверх рекомендаций (мера разгрузки, цель к нулю).
+- Escalation rate — доля шагов вправо (R4); живая стоимостная переменная, не константа (RESEARCH.md §1.4).
+- Источники: ROUTING-LOG.md (строка на диспатч) + вердикты qa; еженедельная сверка
+  (weekly delta) с BASELINE-20261003.json (токены по рельсам; included ≠ бесплатно).
+- Kill: QA-block rate вырос на классе → класс возвращается на канон-порядок (PROGRAM.md v2.2).
+
+## Канарейка по классам (дельта v4 D4; порядок раскатки фазы D, канон 10)
+
+- Порядок: ops → code → research → review; каждый класс включается отдельно.
+- strategic и vision — только ручной канон, без авто-пинов.
+- Откат класса = правка одной строки списка ROUTES (+ синхрон этого файла).
+- Запрет «включить всё сразу»: инцидент из досье — 100% трафика сразу дали −9 п.
+  function-call accuracy (RESEARCH.md §1.10, futureagi.com/blog/llm-eval-shadow-traffic-canary-2026).
+
+## Лестница вверх (дельта v4 D4, канон 3)
+
+- Рунг 1 (наш): статические правила — 0 токенов, порядок overhead решения <1 мс против
+  5–20 мс embedding-роутинга (RESEARCH.md §1.5, gingerlabs.ai/blog/routellm-vs-vllm-semantic-router).
+- Рунг 2 (веса/семантика) допустим только при измеренном дефиците: override share >30%
+  на классе две недели подряд (PROGRAM.md v2.2, SPEC v4 D4). Не по моде.
+- Верхние рунги (latency/cost-aware, живые каскады, обученный ML-роутер) — отказ:
+  RESEARCH.md §2.2/§2.4, инварианты №1/№5 (эскалация — только явный пин с логом).
+
+## Кэш-дисциплина (дельта v4 D5, канон 8) — число-обоснование
+
+- Повторная карта той же работы → та же модель (правило R6): кэш-хиты тарифицируются
+  примерно в 10% стандартной input-цены — скидка до 90% на кэшированный префикс у
+  Anthropic, ~50% у OpenAI (RESEARCH.md §1.8: blog.traversaal.ai/claude-code-cost-optimization-benchmark-playbook,
+  managed-code.com/blog-post/prompt-caching-explained, openai.com/index/api-prompt-caching).
+- Смена модели на живой работе обнуляет накопленный кэш (инвариант №5, RESEARCH.md §2.1);
+  единственная причина смены — prior_run_failed (R4: шаг вправо с логом и причиной).
+
 ## CLI
 
-- `python model_router.py --card card.json` → JSON {class, model, provider, reasoning, pattern, reason, rules_fired}.
-- `python model_router.py --selftest` → таблица PASS/FAIL (8 кейсов: по одному на правило + эскалация + спорный класс + структура), exit 0/1.
-- `python model_router.py --print-rules` → печать этой политики из данных скрипта.
+- `python model_router.py --card card.json [--status s.json]` → JSON {class, model,
+  provider, reasoning, pattern, reason, rules_fired, router_version, rules_sha, input_echo}.
+- `python model_router.py --selftest` → таблица PASS/FAIL (11 кейсов: 8 кейсов v3 +
+  status-скип провайдера + вход без единого маркера + protected в title; отдельно —
+  структурная проверка PATTERNS↔ROUTES), exit 0/1.
+- `python model_router.py --print-rules` → печать этой политики из данных скрипта;
+  первая строка — `rules_sha <12 hex>`.
+- Аудит-мета (дельта v4 D2): router_version («v4»); rules_sha = sha1(канонический дамп
+  ROUTES+PATTERNS)[:12] — два прогона на одном входе дают идентичный rules_sha
+  (детерминизм для evals); input_echo — только использованные поля карты.
 
 Поля карты: title, body, task_type, author_model, needs_vision, owner_facing,
 prior_run_failed. Отсутствующие поля = ложные/пустые; решение всегда выдаётся.
@@ -76,6 +132,8 @@ prior_run_failed. Отсутствующие поля = ложные/пусты�
 ## Границы и rollback
 
 - Фаза C: роутер рекомендательный (shadow, без принуждения); пин — явное решение с причиной в карте.
-- Никаких новых рельс/моделей вне списков; 0 live inference; 0 сети; только stdlib.
-- Правка списков — одна строка в ROUTES + синхрон этого файла.
-- Rollback: перестать применять пины (все в ROUTING-LOG.md); оба файла новые — удаление = чистый откат.
+- Никаких новых рельс/моделей вне списков; 0 live inference; 0 сети; только stdlib (hashlib — локальный sha1).
+- Правка списков — одна строка в ROUTES + синхрон этого файла; смена порядка/значений
+  ROUTES/PATTERNS — только отдельным решением company по shadow-данным (SPEC v4).
+- Rollback v4→v3: откат скрипта и этого файла (аудит-мета и --status исчезают; решение
+  без --status не меняется); общий rollback — перестать применять пины (все в ROUTING-LOG.md).
