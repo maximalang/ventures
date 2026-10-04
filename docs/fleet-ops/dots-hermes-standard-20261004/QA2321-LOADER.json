@@ -1,0 +1,115 @@
+{
+ "probe": "qa run2321 independent loader readback (tools.skills_tool.skills_list, fresh HERMES_HOME per profile)",
+ "n": 12,
+ "all_loaded": true,
+ "results": {
+  "company": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "research": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "product": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "operations": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "qa": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "tech": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "finance": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "sales": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "design": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "ux": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "video-director": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  },
+  "video-editor": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work.",
+   "category": null,
+   "hook_present_in_served_root": true
+  }
+ }
+}

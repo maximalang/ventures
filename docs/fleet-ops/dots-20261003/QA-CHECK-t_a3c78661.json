@@ -1,0 +1,408 @@
+{
+  "checks": {
+    "inputs.brain_members": {
+      "pass": true,
+      "detail": "10/10 members hash-verified"
+    },
+    "inputs.candidate_sha256": {
+      "pass": true,
+      "detail": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    "inputs.candidate_sha1": {
+      "pass": true,
+      "detail": "fd6c26f5dbebba33baa17761f43a80e22ed17427"
+    },
+    "inputs.hook_sha256": {
+      "pass": true,
+      "detail": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9"
+    },
+    "Q1.count_12": {
+      "pass": true,
+      "detail": "n=12"
+    },
+    "Q1.profiles_unique": {
+      "pass": true,
+      "detail": "['company', 'design', 'finance', 'operations', 'product', 'qa', 'research', 'sales', 'tech', 'ux', 'video-director', 'video-editor']"
+    },
+    "Q1.paths_unique": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q1.no_case_collisions": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q1.reference_exists_all": {
+      "pass": true,
+      "detail": "missing=[]"
+    },
+    "Q1.root_exists_all": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q1.exact_profile_set": {
+      "pass": true,
+      "detail": "['company', 'design', 'finance', 'operations', 'product', 'qa', 'research', 'sales', 'tech', 'ux', 'video-director', 'video-editor']"
+    },
+    "Q1.rollout_matches_baseline": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q2.all_refs_equal_candidate_sha": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q2.unique_hash_count_1": {
+      "pass": true,
+      "detail": "unique=['f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f']"
+    },
+    "Q2.refs_byte_equal_candidate": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q3.hook_count_1_all": {
+      "pass": true,
+      "detail": "{\"company\": 1, \"research\": 1, \"product\": 1, \"operations\": 1, \"qa\": 1, \"tech\": 1, \"finance\": 1, \"sales\": 1, \"design\": 1, \"ux\": 1, \"video-director\": 1, \"video-editor\": 1}"
+    },
+    "Q3.link_valid_all": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q3.minus_hook_reproduces_backup": {
+      "pass": true,
+      "detail": "{\"company\": \"direct\", \"research\": \"direct\", \"product\": \"direct\", \"operations\": \"direct\", \"qa\": \"direct\", \"tech\": \"direct\", \"finance\": \"direct\", \"sales\": \"direct\", \"design\": \"direct\", \"ux\": \"direct\", \"video-director\": \"direct\", \"video-editor\": \"direct\"}"
+    },
+    "Q3.backup_sha_chain_ok": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q3.frontmatter_intact": {
+      "pass": true,
+      "detail": ""
+    },
+    "Q4.fresh_matches_after_manifest": {
+      "pass": true,
+      "detail": "{\"company\": true, \"research\": true, \"product\": true, \"operations\": true, \"qa\": true, \"tech\": true, \"finance\": true, \"sales\": true, \"design\": true, \"ux\": true, \"video-director\": true, \"video-editor\": true}"
+    },
+    "Q4.company_refs_4_others_1": {
+      "pass": true,
+      "detail": "{\"company\": 4, \"research\": 1, \"product\": 1, \"operations\": 1, \"qa\": 1, \"tech\": 1, \"finance\": 1, \"sales\": 1, \"design\": 1, \"ux\": 1, \"video-director\": 1, \"video-editor\": 1}"
+    },
+    "Q4.default_profile_untouched": {
+      "pass": true,
+      "detail": "default_ref_exists=False default_hook_present=False"
+    }
+  },
+  "findings": [],
+  "targets": {
+    "company": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "research": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "product": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "operations": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "qa": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "tech": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "finance": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "sales": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "design": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "ux": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "video-director": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "video-editor": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    }
+  },
+  "brain_members_count": 10,
+  "brain_members_detail": [
+    {
+      "name": "STUDY.md",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "METHOD-CANDIDATE.md",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "LOAD-HOOK.md",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "SOURCE-AUDIT-SPEC.md",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "ROLLOUT-SPEC.md",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "QA-SPEC.md",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "CONSUMER-SPEC.md",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "SOURCES.json",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "SOURCES-ADDENDUM.json",
+      "exists": true,
+      "hash_ok": true
+    },
+    {
+      "name": "TARGETS-BASELINE.json",
+      "exists": true,
+      "hash_ok": true
+    }
+  ],
+  "brain_packet_sha256": "f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9",
+  "candidate_line_count": 99,
+  "root_drift": {
+    "company": {
+      "fresh": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "manifest_after": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "match": true
+    },
+    "research": {
+      "fresh": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "manifest_after": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "match": true
+    },
+    "product": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "operations": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "qa": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "tech": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "finance": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "sales": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "design": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "ux": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "video-director": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "video-editor": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    }
+  },
+  "skill_root_inventory": {
+    "company": [
+      "SKILL.md",
+      "references\\adaptive-product-organization.md",
+      "references\\dots-operating-method.md",
+      "references\\organization-audit.md",
+      "references\\outcome-loop.md"
+    ],
+    "research": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "product": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "operations": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "qa": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "tech": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "finance": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "sales": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "design": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "ux": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "video-director": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ],
+    "video-editor": [
+      "SKILL.md",
+      "references\\dots-operating-method.md"
+    ]
+  },
+  "author_readback": {
+    "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\AUTHOR-READBACK.json",
+    "sha256": "68def3834652ad7a161a579ee0141e02df3e8a0160c3c0596eb1a706ce2cc351",
+    "matches_operator_note": true
+  },
+  "report_checks": {
+    "ROLLOUT_line3": "Date: 2026-10-04 (UTC+03:00). Worker profile: operations. Kanban task: t_87ddea42 (board: fleet-ops, parent: t_2c44dd2f). task_type: ops.",
+    "ROLLOUT_line24": "All 11 frozen BRAIN-PACKET members re-verified with `sha256sum -c` immediately before install: **11× OK, exit 0.**",
+    "ROLLOUT_line119": "- revenue / refunds / incremental paid costs / new paid commitments / estimated usage: **null** (billing not measured for this task; no spend authorized or incurred).",
+    "ROLLOUT_line3_has_wrong_parent_t_2c44dd2f": true,
+    "ROLLOUT_line24_claims_11_members": true,
+    "brain_manifest_members_actual": 10,
+    "ROLLOUT_line119_conflates": true,
+    "SOURCE_AUDIT_line47": "- DoT (directly observed treatment) reasoning vs Dots product: STUDY.md корректно разводит — DoT-аналогия упомянута только как framing источника метода (sustained responsibility, review gaps), не как claim о продукте Dots. В candidate смешения нет.",
+    "SOURCE_AUDIT_line48": "- Codex permissions.md не принят за Dots/Hermes configuration: candidate правильно маркирует его «[codex-not-dots]… Do not apply to Dots or Hermes» и использует только для deny-first/least-privilege/blast-radius модели. STUDY фиксирует ту же границу. Проверено чтением chatgpt-permissions.md — документ действительно про Codex local sandbox profiles, отдельная система; кандидат не переносит его как конфигурацию Dots/Hermes. CONFIRMED.",
+    "SOURCE_AUDIT_line57": "- R0: «research owns no fleet-policy gate… never write gate:<name>=pass markers» — помечено как fleet context, не как claim из Dots-источников; корректно.",
+    "SOURCE_AUDIT_line65": "3. Кандидат ссылается на «Hermes deliverables artifacts receipt idempotency» (R6, строка 34) без привязки к конкретной строке hermes-kanban.md — механика подтверждается hermes-kanban.md 135 (artifacts staging) и 103–110 (recovery/completion), но это общее fleet-знание, не verbatim quote. Приемлемо для методологического адаптивного документа; зафиксировано как gap низкой важности.",
+    "candidate_contains_codex_not_dots": false,
+    "candidate_contains_R0_R6_sections": false,
+    "source_audit_contains_codex_not_dots": true,
+    "candidate_line34": "Attention: <existing channel + threshold>; independent verifier: <profile>",
+    "rollback_ref_delete_has_hash_check": true
+  },
+  "packet_dir": [
+    "AUTHOR-READBACK.json",
+    "BRAIN-PACKET.json",
+    "CONSUMER-SPEC.md",
+    "DISPATCH-UPDATE.json",
+    "DISPATCH.json",
+    "EVIDENCE-ERRATA-SPEC.md",
+    "EVIDENCE-ERRATA.md",
+    "LOAD-HOOK.md",
+    "METHOD-CANDIDATE.md",
+    "QA-CHECK-t_a3c78661.json",
+    "QA-ERRATA-SPEC.md",
+    "QA-SPEC.md",
+    "QA.json",
+    "QA.md",
+    "REPORT.md",
+    "ROLLOUT-SPEC.md",
+    "ROLLOUT.json",
+    "ROLLOUT.md",
+    "SOURCE-AUDIT-SPEC.md",
+    "SOURCE-AUDIT.md",
+    "SOURCES-ADDENDUM.json",
+    "SOURCES.json",
+    "STUDY.md",
+    "TARGETS-BASELINE.json",
+    "_qa_check_t_a3c78661.py",
+    "_rollout_t_87ddea42.py",
+    "_verify_t_87ddea42.py",
+    "backup-t_87ddea42",
+    "sources"
+  ],
+  "overall_all_checks_pass": true
+}

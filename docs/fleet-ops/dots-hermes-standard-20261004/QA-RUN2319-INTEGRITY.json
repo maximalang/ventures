@@ -1,0 +1,103 @@
+{
+ "checker": "QA-CHECKER-RUN2319.py",
+ "card": "t_d090b4ff",
+ "run_id": 2319,
+ "mode": "read-only byte/structure verification; no content search",
+ "checks": {
+  "subject_json_sha256_equals_head": {
+   "ok": true,
+   "note": "len=7887 sha=2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e"
+  },
+  "subject_members_6_bytes_sha": {
+   "ok": true,
+   "note": "[{'name': 'BASELINE.json', 'bytes_ok': True, 'sha_ok': True}, {'name': 'COMPANY-BRIEF.md', 'bytes_ok': True, 'sha_ok': True}, {'name': 'COMPANY-MATRIX.md', 'bytes_ok': True, 'sha_ok': True}, {'name': 'REFERENCE-CANDIDATE.md', 'bytes_ok': True, 'sha_ok': True}, {'name': 'HOOK-CANDIDATE.md', 'bytes_ok': True, 'sha_ok': True}, {'name': 'AUTHOR-LINEAGE.json', 'bytes_ok': True, 'sha_ok': True}]"
+  },
+  "candidate_reference_sha": {
+   "ok": true,
+   "note": ""
+  },
+  "candidate_hook_sha": {
+   "ok": true,
+   "note": ""
+  },
+  "mechanism_ids_17_unique": {
+   "ok": true,
+   "note": "M01,M02,M03,M04,M05,M06,M07,M08,M09,M10,M11,M12,M13,M14,M15,M16,M17"
+  },
+  "preserved_qa2318_sha256": {
+   "ok": true,
+   "note": "len=10755"
+  },
+  "preserved_stage_files_bytes_sha": {
+   "ok": true,
+   "note": "['qa_dryrun_12targets.py', 'qa_dryrun_stage1.json']"
+  },
+  "preserved_main_lineage_58_glm_zai": {
+   "ok": true,
+   "note": ""
+  },
+  "lane_head_matches": {
+   "ok": true,
+   "note": "apply=t_63f62c17 qa=t_d090b4ff"
+  },
+  "live_preimages_12_unchanged": {
+   "ok": true,
+   "note": "[{'profile': 'company', 'root_ok': True, 'reference_ok': True}, {'profile': 'research', 'root_ok': True, 'reference_ok': True}, {'profile': 'product', 'root_ok': True, 'reference_ok': True}, {'profile': 'operations', 'root_ok': True, 'reference_ok': True}, {'profile': 'qa', 'root_ok': True, 'reference_ok': True}, {'profile': 'tech', 'root_ok': True, 'reference_ok': True}, {'profile': 'finance', 'root_ok': True, 'reference_ok': True}, {'profile': 'sales', 'root_ok': True, 'reference_ok': True}, {'profile': 'design', 'root_ok': True, 'reference_ok': True}, {'profile': 'ux', 'root_ok': True, 'reference_ok': True}, {'profile': 'video-director', 'root_ok': True, 'reference_ok': True}, {'profile': 'video-editor', 'root_ok': True, 'reference_ok': True}]"
+  },
+  "targets_12_unique_profiles_paths": {
+   "ok": true,
+   "note": ""
+  },
+  "dryrun_suffix_split_12": {
+   "ok": true,
+   "note": "[{'profile': 'company', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 15431, 'candidate_root_ok': True}, {'profile': 'research', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 3143, 'candidate_root_ok': True}, {'profile': 'product', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'operations', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'qa', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'tech', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'finance', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'sales', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'design', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'ux', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'video-director', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}, {'profile': 'video-editor', 'old_hook_len': 458, 'old_hook_exactly_once': True, 'base_len': 1592, 'candidate_root_ok': True}]"
+  },
+  "old_hook_identical_across_targets": {
+   "ok": true,
+   "note": "distinct=1 sha=2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9 len=-1"
+  },
+  "old_hook_single_copy_in_every_root": {
+   "ok": true,
+   "note": "structural placeholder; per-root exactly-once recorded in dryrun_suffix_split_12"
+  },
+  "candidate_roots_3_distinct": {
+   "ok": true,
+   "note": "{'company': '7c498bbb691133583cc18147c843238870fae8b9b2f5e31a1b590e09b7189380', 'research': 'a1793d7c3a510bfe01c50fe2ac2d0d9376f0868e6692fc87bf88e8f5728b1fd9', 'shared_10': ['331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a']}"
+  },
+  "expected_after_reference_equals_candidate": {
+   "ok": true,
+   "note": ""
+  },
+  "dryrun_company_selftest_pass": {
+   "ok": true,
+   "note": "134"
+  },
+  "candidate_frontmatter_3_bases": {
+   "ok": true,
+   "note": "[{'profile': 'company', 'frontmatter_block': True, 'name': True, 'description': True, 'entrypoint_link': True}, {'profile': 'research', 'frontmatter_block': True, 'name': True, 'description': True, 'entrypoint_link': True}, {'profile': 'qa', 'frontmatter_block': True, 'name': True, 'description': True, 'entrypoint_link': True}]"
+  },
+  "baseline_frozen_sources_all_verified": {
+   "ok": true,
+   "note": "{'sections': {'inputs': {'verified': 26, 'total': 26}, 'installed_docs': {'verified': 12, 'total': 12}, 'public_hermes_docs': {'verified': 24, 'total': 24}, 'targets': {'verified': 51, 'total': 51}}, 'unverified': []}"
+  }
+ },
+ "detail": {
+  "old_hook": {
+   "len": 458,
+   "sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9"
+  }
+ },
+ "summary": {
+  "ok": 19,
+  "total": 19,
+  "all_ok": true
+ },
+ "unattested": [
+  "semantic acceptance (separate named-document review)",
+  "native loader registration",
+  "serving independence of aux chains",
+  "future model behavior",
+  "live stop",
+  "economics"
+ ]
+}

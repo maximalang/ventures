@@ -1,0 +1,8 @@
+# fleet-token-economy — from audit to program
+
+> Topic-focused reference — moved from this skill's SKILL.md by hub compaction (t_cef261ac, 2026-10-03, SOURCE-ONLY packet). Original text preserved verbatim.
+
+## From audit to program
+
+Freeze a baseline (total tokens, error rate, top repeat loops, largest sessions) in a plan file with per-lever targets and kill criteria; make each lever an independent, revertible kanban card with its own reviewer. The baseline MUST include a boundary snapshot of the cumulative per-profile counters (session_model_usage sums) at the window edge, taken BEFORE the levers deploy — counters are cumulative and messages.token_count is unfilled, so without the boundary snapshot the savings % is unmeasurable after the fact and the control reports null. Verify each lever is actually LOADED per profile (file-size/hash readback of the touched skill/config), never from the rollout card's report alone — «фактически загружено ≠ заявлено»; schedule a weekly no-agent delta-audit cron that recomputes the exact same metric definitions and reports the delta to the baseline. Money saved stays `null` when sessions lack pricing data — report tokens, not currency. When the owner compresses the program window (e.g. two weeks → 48h): update every lever card's deadline AND re-issue the directive as card comments (ready cards are claimed within ~1 minute, so body edits after dispatch never reach the running worker), rescale the baseline proportionally for the control measurement (48h window ↔ per-48h slice of the 7-day baseline), schedule a one-shot control cron at the window end, and pre-declare which levers physically cannot deploy in time — report them «partial» at control time, never tune numbers to hit the target.
+

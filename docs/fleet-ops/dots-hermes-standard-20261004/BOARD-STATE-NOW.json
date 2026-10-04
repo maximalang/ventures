@@ -1,0 +1,26 @@
+{
+  "scope": "Read-only native state snapshot (post-correction binding)",
+  "at_utc": "2026-10-04T01:06:05.489834+00:00",
+  "tasks": {
+    "t_d090b4ff": {
+      "status": "done",
+      "result": "",
+      "comments_total": 11,
+      "last_comment_ids": [
+        null,
+        null,
+        null
+      ]
+    },
+    "t_63f62c17": {
+      "status": "blocked",
+      "result": "",
+      "comments_total": 5,
+      "last_comment_ids": [
+        null,
+        null,
+        null
+      ]
+    }
+  }
+}

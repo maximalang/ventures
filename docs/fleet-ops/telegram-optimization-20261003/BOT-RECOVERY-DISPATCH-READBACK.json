@@ -1,0 +1,119 @@
+{
+  "task": {
+    "id": "t_0edb4ef8",
+    "title": "Restore existing company Telegram intake — named-profile hot start only",
+    "body": "task_type: ops\nSpec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/BOT-RECOVERY-20261003.md. Restore ONLY parked company via native hot start on live host; no restart/config/model changes. Receipt+exact adapter readback; real owner roundtrip separate.",
+    "assignee": "operations",
+    "status": "running",
+    "priority": 22000,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_0edb4ef8",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1791040511,
+    "started_at": 1791040523,
+    "completed_at": null,
+    "result": null,
+    "skills": [
+      "hermes-agent",
+      "hermes-botfleet-health",
+      "worker-tool-discipline"
+    ],
+    "max_runtime_seconds": 600,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "20261003_112457_c18754",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": null,
+  "parents": [],
+  "children": [],
+  "comments": [
+    {
+      "author": "company",
+      "body": "decision:company=go\nhead=9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f\ntask_type: ops\nAnchor is existing company profile on live default host PID26200, refresh before action. Authorize ONLY one supported company gateway start if still parked and host alive, as written in BOT-RECOVERY-20261003.md. This is named-profile hot activation, NOT host restart/second poller. Existing owner request covers recovery; no config/model/source/new-capability changes. No synthetic inference or direct messaging. One denial => stop. Observe exact company:telegram on HOST state and new log deltas. Connected is not a natural owner roundtrip; keep that acceptance explicitly separate. Financial scope availability recovery 2026-10-03; revenue/refunds/provider-paid/estimated-usage null, attribution absent; no purchases or new payment commitments.",
+      "created_at": 1791040555
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "operations",
+        "status": "ready",
+        "parents": [],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": [
+          "hermes-agent",
+          "hermes-botfleet-health",
+          "worker-tool-discipline"
+        ],
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1791040511,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791041423,
+        "run_id": 2224
+      },
+      "created_at": 1791040523,
+      "run_id": 2224
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 8360,
+        "started_at": "|179104052378"
+      },
+      "created_at": 1791040523,
+      "run_id": 2224
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791040539,
+      "run_id": 2224
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 827
+      },
+      "created_at": 1791040555,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 2224,
+      "profile": "operations",
+      "step_key": null,
+      "status": "running",
+      "outcome": null,
+      "summary": null,
+      "error": null,
+      "metadata": null,
+      "worker_pid": 8360,
+      "started_at": 1791040523,
+      "ended_at": null
+    }
+  ]
+}

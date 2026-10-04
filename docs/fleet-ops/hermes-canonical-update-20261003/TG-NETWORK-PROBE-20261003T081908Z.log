@@ -1,0 +1,21 @@
+=== TG-NETWORK-PROBE 20261003T081908Z ===
+--- direct api.telegram.org (token-free) ---
+curl: (23) client returned ERROR on write of 145 bytes
+attempt=1 http=302 time=1.417369s
+curl: (23) client returned ERROR on write of 145 bytes
+attempt=2 http=302 time=1.403310s
+curl: (23) client returned ERROR on write of 145 bytes
+attempt=3 http=302 time=1.398697s
+--- via http://127.0.0.1:10809 ---
+curl: (23) client returned ERROR on write of 145 bytes
+attempt=1 http=302 time=1.455243s
+curl: (23) client returned ERROR on write of 145 bytes
+attempt=2 http=302 time=1.352176s
+curl: (23) client returned ERROR on write of 145 bytes
+attempt=3 http=302 time=1.535086s
+--- proxy listener ---
+  TCP    127.0.0.1:10809        0.0.0.0:0              LISTENING       8264
+  TCP    127.0.0.1:10809        127.0.0.1:59959        CLOSE_WAIT      8264
+  TCP    127.0.0.1:59951        127.0.0.1:10809        TIME_WAIT       0
+  TCP    127.0.0.1:59953        127.0.0.1:10809        TIME_WAIT       0
+  TCP    127.0.0.1:59959        127.0.0.1:10809        FIN_WAIT_2      13052

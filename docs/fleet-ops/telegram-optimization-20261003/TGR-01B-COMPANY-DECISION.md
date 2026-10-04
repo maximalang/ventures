@@ -1,0 +1,39 @@
+# TGR-01B company decision — BLOCK / NO-GO
+
+Owner company; decision task t_32f46379, run2304; observed 2026-10-03T20:41:30Z. Exact source head c605e5b618cf20a2d94422bd2c995b864bd986c8, direct parent 9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f. Source-only decision delivered; source acceptance and live Qwen restoration are NOT delivered.
+
+## Verified source and QA evidence
+
+Actual Git rev-parse/show/status/diff in the author's isolated worktree all exited0. HEAD is the frozen40hex commit; status empty. Exactly four changed paths: gateway/run_config_loaders.py, gateway/run_turn.py, gateway/slash_commands_model.py, tests/gateway/test_profile_channel_override_routing.py. Patch matches git format-patch byte-for-byte: 21106 bytes, SHA256 9b9a5cfb5c8f88be62efb7b464269a74af96434a77e650e083b9caa3a6629926. All 41 receipt-listed QA artifacts exist with matching size/SHA256. Independent JUnit parsed by code: head28 cases24 passed/4 failed/0 errors; base28 cases8 passed/20 failed/0 errors. One head PASS is only a status-method locator, leaving23 behavioral passes/4 failures, not24 behavioral passes.
+
+Canonical completed negative QA is t_307fc218/run2301, TGR-01B-QA-VERDICT.md and TGR-01B-QA-RECEIPT.json. Primary t_d088d7f1/run2248 is superseded NO_VERDICT and contributes no acceptance. QA focused fixture rerun18 passed, exit0. Bounded regressions on both base/head:18 passed from six files, four identical pre-existing host crashes; both exit1, suite not green. Exact named test_profile_route_ownership.py absent. Source reverse-apply --check exit0 is verified QA evidence of source reversal applicability only, not applied rollback or live backup. No remote CI or installed-source activation proof.
+
+B1 remains a real semantic acceptance failure: actual /model text listing and Telegram picker report gpt-6.1-sol/openai-codex while the ordinary turn resolves qwen3.8-max/custom, in both DM1256122537 and forum-1004426332349. Existing helper success does not satisfy real entrypoint parity. All four failing JUnit nodes match this finding. The source delivery is a useful partial fix, not accepted for rollout.
+
+## B2 serving-lineage disposition
+
+Approved stamp-only readback (no message bodies, state stores or credential reads) finds natural API calls for source run2225/session20261003_182150_9ae44a:29 stamps, all qwen3.8-max/custom; continuation2241/session20261003_194421_d5f14b:15, all qwen3.8-max/custom; QA2301/session20261003_230029_32a7ed:41, all gpt-6.1-sol/openai-codex. No fallback stamps were observed in these selected session events; this is not proof that no unlogged fallback/auxiliary call existed. Continuation and QA joins are confirmed by native run metadata. Original2225 has no worker_session_id in native metadata; its task/session join uses the initial exact-task log stamp and time, with that limitation retained.
+
+Hands-author versus reviewer observed main chains differ. Full auxiliary/compression/delegation authorship remains unknown; complete author/brief/reviewer independence is NOT asserted. This company decision brain also serves gpt-6.1-sol/openai-codex, overlapping QA; a same-Sol brain/reviewer pair is treated as correlated, not independent merely by role. The main-serving portion of B2 is now supplied; positive lineage gate remains withheld. No paid identity probe or global repin. Durable stamp receipt: TGR-01B-COMPANY-LINEAGE.json (main-call evidence, limits included).
+
+## B3 status scope decision
+
+Authorize only exact gateway/slash_commands_status.py read/control-flow inspection and offline real-status behavioral fixtures in the next bounded source/QA increment. Do not authorize status-source writes. Keep the original status acceptance rather than silently narrowing it. B3 is currently missing coverage, NOT a demonstrated status product defect. Locator PASS remains excluded from behavioral acceptance.
+
+## Single next owner/action and capability boundary
+
+Canonical next executor remains tech t_25e773da, initially blocked by QA with no run. Approved bounded source-only remediation contract: TGR-01B-B1-REMEDIATION-SPEC.md. Production changes limited to slash_commands_model.py, fixtures to the existing named routing test; predecessor frozen; four real exposed RED/GREEN cases, pin/warm/isolation/status evidence, patch/clean/source rollback and honest baseline attribution. Old QA negatives and old blocked operations/source chain are preserved. No duplicate repair card created.
+
+Exact current dispatch capability blocker: kanban_unblock is not callable in this session's exposed native schema; tool_describe reports it as directly listed rather than supplying a deferred schema. Native edit is also unavailable. No CLI lifecycle write, SQL/import, UI or alternative session workaround is authorized. Read-only CLI list/inventory returned 'kanban: delegate_task child contexts cannot mutate Kanban tasks or boards'; inventory is incomplete, not empty, and no broad retry is permitted. Known exact show lookups succeeded; missing broad inventory does not justify new duplicate capability work.
+
+Next owner company: publish this bounded contract to t_25e773da and bind the decision dependency; release the SAME canonical card only through a genuinely available authorized native unblock once that capability exists. Check at 2026-10-04T20:41:30Z (23:41:30 UTC+03) or sooner on capability arrival. This is a recorded review deadline, not a scheduled watcher or delivery promise. No user approval needed for ordinary source repair; missing native access is the prerequisite, not a request to waive policy.
+
+No rollout preflight/release/configuration card is created now. A safe attested live source loading route is NOT established, and cannot be authorized on rejected source. Dirty canonical runtime overlays are untouched; no updater/reset/stash/clean/restart. After a NEW head obtains independent full-lineage source QA, a separately scoped operations preflight must prove supported source publication/loading boundaries, exact loaded bytes/processes, conflict/drain/backup/rollback and healthy worker/Desktop isolation. Current report does not prove that such mechanism exists.
+
+Original Qwen operations t_b8210384 remains blocked with unchanged denied-session-read precondition. Do not reuse that denial or claim source PASS changes it. Only genuinely loaded accepted code allows a future native company-channel config consumer; model AND provider must then be confirmed from a natural company Telegram run. Desktop/specialists stay unchanged.
+
+## Gates and finance
+
+Delivered: exact immutable source identity, patch/receipt verification, actual negative QA report, source reversal-check evidence, partial natural main-serving attestation, bounded company scope decision. Missing/withheld: positive independent review/QA, remote CI, complete author/brain/auxiliary lineage, real status parity, live-source loading, runtime rollback/backup, natural Telegram Qwen model+provider activation. No positive specialist gate copied or self-issued; no release GO.
+
+Financial scope: this read-only source-disposition run2304, 2026-10-03 execution; sources native task/Git/test artifacts and existing API stamps. Confirmed revenue=null (not investigated); refunds=null (not investigated); incremental provider-paid costs=null (invoice attribution unavailable); estimated usage cost=null (no priced usage readback); new paid commitments=0 (none authorized or made in this run). No purchases or synthetic inference. Hypothesis is correct Telegram route plus protected specialist isolation; actual revenue/cash savings unproven. Kill criterion already met: semantic B1 failure means no live adoption. Rollback not applied because no live change occurred.

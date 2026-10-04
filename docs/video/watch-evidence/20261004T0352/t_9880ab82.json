@@ -1,0 +1,1899 @@
+{
+  "task": {
+    "id": "t_9880ab82",
+    "title": "V9-G0-T: ready-component karaoke + motion integration probe (без финального монтажа)",
+    "body": "task_type: code\n\nV9-G0-T: реализовать МИНИМАЛЬНУЮ интеграцию готовых caption/motion компонентов после независимого concept APPROVE V9-D t_1899f80e. Parent edge освобождается только после завершения concept-review текущей D-карты. Это capability/probe, НЕ монтаж финального клипа. Не менять story/script, не создавать новый renderer/timeline engine, не покупать API/templates и не обходить fleet-policy deny/approval.\n\nАвторитетный direction: parent attachment V9_DIRECTION.md (current-only snapshot; исходная версия SHA256 35d7e3f73f0f18cfe2fc37b81c4a615dad3ccb23bb60211cb9b21fc69a51d948; если QA требует rework, использовать последнюю явно approved редакцию, сверить hash). Также parent attachments DIRECTION_MANIFEST.json, V9_RESUME_EVIDENCE.json, V9_DIRECTION_VALIDATION.json и review verdict. Canon: C:/Users/max/Documents/video-quality-upgrade/V9/V9_DIRECTION.md — только активная часть до ARCHIVE_PRE_INPUTS; ниже исторический НЕисполняемый draft. QUALITY_STANDARD/PLAN attachments t_43cbe893; V5/VIRAL_STANDARD.md.\n\nSettled decisions: Fonovisa/Cherry Auction US1996; EXACT NG_RU_SCRIPT_V8.txt, C:/Users/max/Documents/video-quality-upgrade/V8/NG-V8-01/NG_RU_SCRIPT_V8.txt SHA cff7b70ced2953a396b5021a14eeea1145ef3d6e2f51f26235efb9485559cf6d. Hybrid C, 1080x1920, nominal59.8 s, 8 beats/6 scenes; actual final audio may require retime, no uniform/fabricated word times. Max3 text groups, caption+СХЕМА+ONE graphic label. Data facts: fees space+entrance, amounts/percentages=null; complaint_count=null; remanded not final guilt. No replay, echo, static presenter substitute.\n\nSelected pins (verified archives/licenses, NOT runtime-tested): @motion-canvas/2d@3.17.2 (Rect/Line/Txt/Layout/Circle), @motion-canvas/core@3.17.2 (easeOutCubic/easeInCubic/easeInOutCubic), stable-ts==2.19.1 align(), MIT. Archive SHA/SRI in evidence. Project durations reveal0.28,connector0.42,focus0.32,clear0.18 s; not purported Material token constants. JSON is OUR data-only adapter schema, not native Motion Canvas importer. TICKS/P/update/render/#display legacy lab ABI is NOT automatically supported by Motion Canvas; use public/export API, deterministic seek and minimal adapter. Preserve kit final assembler, no hidden config/collision overrides. Remotion parallel engine/unidentified Mixkit pack rejected.\n\nExisting caption base: C:/Users/max/Desktop/all/video/tools/transcription/ass_generator.py make_ass, OUTSIDE kit. Has word tuples and cumulative \\k but chunks<=12/50-60chars/duration rescale/fade200ms. Not V9-ready. Kit repo C:/Users/max/Desktop/all/tools/capabilities/video-template-kit kit/ass.py _esc changes backslashes and has no word-array: do NOT paste raw \\k into caption.text. Inspect source/provenance/license first; video root LICENSE absent is not automatic MIT and not proof of no rights. If reuse cannot be cleared, return concrete gap/ready alternative for director/company decision, do not invent engine.\n\nPermission scope: own workspace first; task explicitly authorizes necessary minimal kit/adjacent caption adapter changes via isolated branch/worktree, preserve siblings/unrelated files, source inputs read-only. Do not modify voice/media assets or company account/settings. Ready code should accept word{id,text,t0,t1,audit}, page{visible_t0/t1,word_ids,lines,pixel_width,CPS,semantic_word_ids}. Full speech, stable phrase-page, ONLY active word highlight and semantic accent same layer; <=2 lines/42chars AND pixel-fit, target15/max17CPS, safe>=6%side/12%bottom plus actual UI masks, zero overlaps/echo. Final audio SHA linked; ASR hints corrected/forced-aligned then audited. Internal V8 take timing reference is not external/commercial voice clearance; no upload or new voice cloning here.\n\nAcceptance G0-T: exercise on actual content, not stub. Working caption stress-probe for legacy violation windows1.66-2.94,11.55-13.19,20.44-22.00,38.12-38.98,43.37-44.83 (31cue,5>17,max21.094; raw ASR105tokens first издаешь, missing места). Real S01/S05/S06 component demos from direction data. Deterministic frame-seek equality, offline fonts/assets/no random-network; export/labels survive; 320x568/360x640/390x844/720x1280+master UI-mask tests and complete word coverage. Re-paging actual voice, no text deletion/uniform interpolation to cheat. Working artifacts/screenshots+SHA+commands+real test output+licenses/provenance/transitive lock. Distinguish tech test pass from independent viewer/media QA. Request independent review for this code/probe before done; escalate unretrievable capability honestly.\n\nNext owner company/video-editor only after G0-T evidence AND separate G1/G2 company card cleared. Do not render/publish final V9 and do not self-score9-10. Read parent final concept verdict before action.",
+    "assignee": "qa",
+    "status": "blocked",
+    "priority": 1,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_9880ab82",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "video-director",
+    "created_at": 1790898934,
+    "started_at": 1791052151,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": null,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "20261002_020758_13b5d0",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": "pid 19340 not alive Worker's last output: 'c.get(\\'body\\')) print() print(\\'=== EVENTS (last 15) ===\\') evs = data.get(\\'events\\', []) for e in evs[-15:]: print(json.dumps(e, ensure_ascii=False)[:400]) print() print(\\'=== RUNS (last 5) ===\\') rs = data.get(\\'runs\\', []) for r in rs[-5:]: print(json.dumps(r, ensure_ascii=False)[:400]) print() wc = data.get(\\'worker_context\\') print(\\'=== WORKER_CONTEXT (first 3000) ===\\') print((wc or \\'\\')[:3000]) \"  0.5s'"
+  },
+  "latest_summary": "G0-T пробник завершён: stable-ts align по реальному голосу (98/98 слов, 97 approved + 1 needs_review w051 для живого прослушивания), DP re-paging 25 страниц (5 legacy-окон >17 CPS исправлены до max 14.98), Motion Canvas 3.17.2 pins byte-exact, 23 render-job (~3300 кадров): determinism 55/55 + cross-run 37/37 sha-identical, seek 4/4 byte-identical, 5 поверхностей с реальными UI-масками (0 пикселей caption в масках), coverage 427/1707 кадров 0 пропусков, export h264 — маркеры/подписи выживают (mean diff 0.41), offline-рендеры (единственный 404 — favicon, исправлен). Unit-тесты 11/11 OK (перезапуск run 374, exit 0). Все хэши входов/пинов/артефактов сверены дважды (365+374). Отчётный пакет: G0T_REPORT.md, INPUT_VERIFICATION.json, PROVENANCE_LICENSES.md, SHASUMS.txt. Внимание: это tech-pass автоматических проверок; перцептивное viewer/media QA и w051 — за независимым ревью. Финальный клип НЕ монтировался (отдельная карта video-editor, parents=[t_1899f80e, t_9880ab82, t_fab67569]).",
+  "parents": [
+    "t_1899f80e"
+  ],
+  "children": [],
+  "comments": [
+    {
+      "author": "video-director",
+      "body": "GRAPH RESOLVED: G1/G2 sibling = t_fab67569 (company; rights/clean presenter/lawful final take/owner decisions). Финальный монтаж отдельно video-editor только с parents=[t_1899f80e,t_9880ab82,t_fab67569] после независимых prerequisites. Здесь рабочие integration/probes, не production клип. Не дублировать capability/account card; не использовать pending voice-reference для внешних upload.",
+      "created_at": 1790899399
+    },
+    {
+      "author": "tech",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [policy_control_plane_mutation] pattern=policy_control_plane_mutation call_index=234 next_step=правка самой политики запрещена; оформи отдельную tech-карту с диагнозом [continues: company]",
+      "created_at": 1791061789
+    },
+    {
+      "author": "tech",
+      "body": "HANDOFF (run 365, авто-блок): работа по G0-T выполнена ~90%, все артефакты на диске в workspace t_9880ab82.\n\nЧТО СЛУЧИЛОСЬ: после завершения рендеров и анализа я выполнил read-only sqlite-проб (python, mode=ro) по kanban.db досок для поиска provenance ass_generator.py — вызов классифицирован как policy_control_plane_mutation (известный by-design deny на python-доступ к control-plane; санкционированная read-форма — одиночный SELECT через sqlite3 CLI, я ею не воспользовался). Карта авто-заблокирована, последующие terminal-вызовы denied как task_already_blocked. Повторять не буду. Разблокировка — владельцем; после unblock останется только дооформить отчётные файлы (содержательная работа завершена).\n\nГОТОВО (evidence в workspace):\n1. ALIGN/AUDIT: stable-ts 2.19.1 (sdist sha 0ecaf1ed… сверен), load_faster_whisper('medium', CT2, HF_HUB_OFFLINE=1 — полностью офлайн), align() c оригинальным скриптом (sha cff7b70c… сверен) поверх take_s44_clean.wav (sha aa60aa9a…, INTERNAL). Конфиг выбран sweep'ом из 10 вариантов (fast_mode ОТКЛОНЁН: 2/19 сегментов failed, 26 zero-слов). Итог: 98/98 токенов == скрипт, детерминизм 2 прогонов sha-идентичен (436f7ae4…), start-anchors med 30ms/p90 215ms против независимых V8-анкеров, 97 approved + 1 needs_review («На» w051: align 28.86 vs V8 28.09 — под слушание человеком), 1 anchor-repair («Ты» t0=0.0 из conform cue0 + raw ASR, без изобретения таймингов). caption/words_v9.json, caption/audit_report.json, evidence/align_scoring.json.\n2. REPAGING: DP-пагинатор (caption/paginate.py) по реальному голосу: 25 страниц, полное покрытие 98 слов без удалений, ≤2 строк/≤42 chars/pixel-fit ≤828px (Segoe UI 66px, PIL-замер), CPS max 16.07, hard-cap 17: 0 нарушений, target 15 превышен на 2 страницах (темп диктора ~20 CPS в окне 1.66–2.94, исправлено pre-roll/hold-границами в реальных паузах, НЕ равномерной интерполяцией). ВСЕ 5 legacy-окон: max CPS 14.59–14.98 (legacy было >17, max 21.094). «Cherry Auction»/«не+глагол» не разрываются, висячих союзов нет. caption/pages_v9.json, caption/paging_report.json. Независимые unittest 11/11 OK (caption/tests/test_caption_data.py).\n3. MOTION CANVAS PROBE: @motion-canvas/{core,2d}@3.17.2 точные пины (tarball sha 63e3e44c…/58961f10… сверены байт-в-байт), vite 5.4.20, публичные API (Renderer.render/renderFrame + exporterPlugin), data-only adapter (word/page контракт), никакого legacy ABI. Сцены: captionProbe (стресс 5 окон), S01 role_transfer (claim→operator на 1.66, «Cherry Auction» на w012, «Почему?» на w016, outcome=null), S05 procedure_path (отклонил→отменила+strike→вернула→открытый пунктирный тупик, final_liability=null), S06 causal_recall (2 ветви знание/вклад + контроль/выгода, 0 лейблов, auto_liability=false), motion-пресеты 0.28/0.42/0.32/0.18 из манифеста, всё f(t)-декларативно.\n4. РЕНДЕРЫ (23 job'а, chromium 148.0.7778.96, playwright-core 1.62.1): full_timeline 1707 кадров 0–56.86s; ДЕТЕРМИНИЗМ: det_A==det_B 55/55 sha-идентичны + cross-run (отдельный запуск сервера) идентичен; SEEK-EQUALITY: renderFrame(seek) vs sequential 4/4 байт-в-байт; SURFACES 320x568/360x640/390x844(9:16→390x693 letterbox-композит)/720x1280/1080x1920: safe-zone 6%/12% OK, реальные UI-маски Shorts(низ200)/TikTok(низ150/верх130/право60)/VK(низ180) — 0 пикселей капшена в масках на всех поверхностях; coverage-scan 427 кадров — 0 пропусков; караоке: активное слово primary, semantic-акцент question (#F0B06F 2951px на t=3.0), question-страницы 100% question-токен; browser-vs-PIL метрики текста: max delta 3.06px, все строки ≤828 в обоих движках; nbsp==space. evidence/render_manifest.json, evidence/frame_analysis.json, frames/*, evidence/MONTAGE.png.\n5. ЭКСПОРТ: ffmpeg h264 yuv420p (s05_demo_export.mp4 235f, full_timeline_export.mp4 1707f); лейблы живут после компрессии: marker 13745/13752 px, caption 17036/16605, mean abs diff 0.41; amber question-цвет выживает (2355/2742). evidence/export_label_check.json, ffprobe JSONs.\n6. ОФФЛАЙН: рендеры — только localhost vite + системный Segoe UI (без веб-фонт redistribution); align — HF_HUB_OFFLINE=1 на кэше Systran/faster-whisper-medium. Единственный 404 в первом прогоне — /favicon.ico (устранён data-URI, последующие прогоны — 0 console-ошибок).\n\nНЕ ЗАВЕРШЕНО (после unblock, ~15 мин, без новых рендеров): G0T_REPORT.md, INPUT_VERIFICATION.json, PROVENANCE_LICENSES.md (включая вердикт по ass_generator.py: LICENSE отсутствует, git-истории нет — provenance НЕ установлен, код в probe НЕ вендорился (свой adapter), для production reuse требуется решение владельца; kit/ass.py — fleet-репо ca4d838, внутреннее произведение), SHASUMS, канбан-attach артефактов + request_review (независимое QA до done — по карте).\n\nTransitive lock: mc-probe/package-lock.json на диске; python: venv caption/.venv (stable-ts 2.19.1 из сверенного sdist, constraints torch==2.9.1/numpy==2.3.5/faster-whisper==1.2.1/ctranslate2==4.6.1; добавлены torchaudio 2.9.1+cpu, openai-whisper 20250625, numba 0.68.0, tiktoken 0.7.0).\n\nДИАГНОСТИКА ДЛЯ ВЛАДЕЛЬЦА: deny произошёл на read-only SELECT'е — классификатор трактует python-доступ к board DB как control-plane mutation независимо от режима; это тот же класс инцидента, что t_11f9fdc3 (ложный forgery-денай на ro-пробе). Карта блокируется мгновенно, run закрывается policy_denied, хотя 2+ часа работы завершены и валидны.",
+      "created_at": 1791061936
+    },
+    {
+      "author": "tech",
+      "body": "DURABLE EVIDENCE BACKUP (т.к. файловые записи заблокированы gate'ом; workspace scratch может быть очищен — ключевые хэши дублирую здесь).\n\nINPUT VERIFICATION (все сверены sha256sum при приёме):\n- V9_DIRECTION.md (parent attachment, = approved 35d7e3f7…): 35d7e3f73f0f18cfe2fc37b81c4a615dad3ccb23bb60211cb9b21fc69a51d948\n- DIRECTION_MANIFEST.json: dd1be2870647ceec6b6b9423e2e0a712a17a3ebd93b934060f6a61168a93d4cb\n- V9_RESUME_EVIDENCE.json: ffcd2f9edc38010e0d11a1f1e9ff811644fd25819af00f940385439faafa92c4\n- V9_DIRECTION_VALIDATION.json: a2876d975a46dd80ec3414790c1f0ebf3f16745bb735b89295ab0f4c36dc713c\n- REVIEW_README.txt: ef3a29573f8b3dfe4486c2bdc28dc84083222bb68f75c02e12d75aaf760f5ec8\n- NG_RU_SCRIPT_V8.txt: cff7b70ced2953a396b5021a14eeea1145ef3d6e2f51f26235efb9485559cf6d (= settled decision)\n- take_s44_clean.wav: aa60aa9a02b66a0122ef3155d8ffee39f8242f3adedd7cc1aaa2b53e9148f516 (mono 24kHz, 57.022667s, speech_end 56.46; INTERNAL, без внешних upload)\n- caption_conform.json: c63b627e2e379b77c01d38cad23be8038c497c8fe3a66fa5b1efea064578cbe1\n- asr_words_canonical.json: b64138ef9846f5ec6cfc18411d851fc7eebe44383dc23070876a5b5e1d44dcec\n\nPINS (archive sha сверены с task-пинами байт-в-байт):\n- @motion-canvas/2d@3.17.2 tgz: 63e3e44ce9db24fb49603a2375ba6ba635157fdf7a40f1631b0f4250fb6db6ec ✓\n- @motion-canvas/core@3.17.2 tgz: 58961f10e8e7f74bf50915b1ccc20b4660b8ec14be7399e4d4cbf24042d5393a ✓\n- stable_ts==2.19.1 sdist: 0ecaf1ed93e029839569618d2da9a57b883ad04db21f0680146e0650caaf4f52 ✓\n- (reference) @motion-canvas/create@3.17.2 tgz: e369515ba404049f1bbada097da5d3226b8b1d5c17a3479aff2001e47eb8e61a\n\nDERIVED: captions_v9.json (dataset для adapter): 4252fa7ca5cfcec8a185b491ed8189f9896f0358520b824ca8e660bf8892c6e8; align-детерминизм: 2 идентичных sha (436f7ae4dfe5b34b…) в audit_report.json.\n\nTRANSITIVE LOCK: mc-probe/package-lock.json (npm 11.17.0; @motion-canvas/{2d,core}=3.17.2 exact, vite 5.4.20, typescript ^5.6.3; dev: @motion-canvas/{ui,vite-plugin}=3.17.2). Python venv caption/.venv (--system-site-packages): stable-ts 2.19.1 (из сверенного sdist), torchaudio 2.9.1+cpu, openai-whisper 20250625, numba 0.68.0, tiktoken 0.7.0, openai 2.24.0; constraints: torch==2.9.1, numpy==2.3.5, faster-whisper==1.2.1, ctranslate2==4.6.1 (системные, не изменялись). Whisper-модель: Systran/faster-whisper-medium из локального HF-кэша, HF_HUB_OFFLINE=1/TRANSFORMERS_OFFLINE=1. Harness-драйвер: playwright-core 1.62.1 (hermes-agent node_modules) + кэш chromium-1223 (148.0.7778.96), без сетевых загрузок браузеров.\n\nPROVENANCE / LICENSES:\n- ass_generator.py (C:/Users/max/Desktop/all/video/tools/transcription/): LICENSE в корне Desktop/all/video ОТСУТСТВУЕТ, git-репозитория нет, авторских заголовков/таск-ссылок в файле нет («Generated by core.Transcriber (karaoke)» — внутренний тул предыдущего видео-пайплайна). Вердикт: provenance документально НЕ установлен → как внешний код НЕ cleared; «автоматически MIT» не объявляю. В G0-T probe его код НЕ использовался и НЕ вендорился: написан собственный data-only adapter (word/page контракт) + караоке-рендер Txt-нодами Motion Canvas; концепция (word tuples + cumulative highlight) учтена, конкретные дефекты make_ass (chunks≤12, 50–60 chars, duration rescale, fade 200ms) НЕ воспроизведены — paging从头 по реальному голосу. Для production-пути нужно решение владельца/director: подтвердить внутреннее авторство флота (тогда reuse clean как work product) или использовать probe-adapter как базу.\n- kit/ass.py (video-template-kit, git ca4d838): fleet-репозиторий с историей QA-карт — внутреннее произведение; в probe не изменялся, kit остаётся финальным ассемблером (не трогал).\n- stable-ts 2.19.1: MIT (LICENSE в sdist); @motion-canvas/*: MIT (LICENSE в tarball'ах); Segoe UI: системный шрифт машины рендера, в артефакты не копируется/не распространяется.\n- Аудио: внутренний V8-тейк, timing-reference only; никаких внешних загрузок/клонов голоса в этом ране.\n\nФАЙЛЫ В WORKSPACE (C:/Users/max/AppData/Local/hermes/kanban/boards/video/workspaces/t_9880ab82): caption/{align_words,align_variants,align_variants2,rescore,align_canonical,paginate,build_dataset,analyze_frames,merge_manifest,make_montage}.py, caption/tests/test_caption_data.py (11/11 OK), caption/{words_v9,pages_v9,audit_report,paging_report,align_raw,align_variants,align_variants2,align_canonical}.json, mc-probe/ (package.json+lock, vite.config.ts, src/lib/{data,captionLayer,marker,coords,anim,vars}.ts, src/scenes/{captionProbe,s01,s05,s06}.ts, src/projects/*, harness/{harness.html,main.ts,run.mjs,dbg.mjs,dbg2.mjs}, public/data/captions_v9.json), frames/ (23 job-каталога, ~3300 PNG), evidence/{render_manifest*.json, frame_analysis.json, align_scoring.json, export_label_check.json, captions_v9.json, commands.log, MONTAGE.png, s05_demo_export.mp4, full_timeline_export.mp4}, deps/ (сверенные tarball/sdist).\n\nОСТАТОК ПОСЛЕ UNBLOCK (не требует рендеров): G0T_REPORT.md/INPUT_VERIFICATION.json/PROVENANCE_LICENSES.md (содержимое готово — см. этот и предыдущий комментарии), SHASUMS, attach артефактов к карте, request_review независимому QA (tech-прогон ≠ viewer/media QA — по карте требуется отдельное ревью до done).",
+      "created_at": 1791062079
+    },
+    {
+      "author": "company",
+      "body": "UNBLOCK: deny-triage probe_fp: read-only probe misread as policy mutation; safe-path guidance in card comment",
+      "created_at": 1791062095
+    },
+    {
+      "author": "tech",
+      "body": "RUN-365 ZOMBIE STAND-DOWN: старый воркер (run 365, reap при авто-блоке, Windows sigkill=false) подтвердил, что карта unblocked и re-claimed легитимным run 374 (pid 23728, spawned 00:14:12Z+3). Heartbeat от run 365 отклонён («unknown id or not running») — дальше от этого процесса НЕ БУДЕТ lifecycle-вызовов (complete/block/request_review/attach), чтобы не конфликтовать с run 374.\n\nRun 374: весь контент и evidence уже на диске в workspace (проверено: unittest 11/11 зелёные повторно в этом процессе, frames/ — 30 каталогов job'ов, evidence/ полон). Остаток строго по чек-листу из комментария #516 раздел «НЕ ЗАВЕРШЕНО»: (1) G0T_REPORT.md, INPUT_VERIFICATION.json, PROVENANCE_LICENSES.md — содержимое полностью готово в комментариях #516/#517, рендеры НЕ нужны; (2) SHASUMS evidence-файлов; (3) kanban_request_review c artifacts=[G0T_REPORT.md, evidence/MONTAGE.png, evidence/render_manifest.json, evidence/frame_analysis.json, evidence/export_label_check.json, caption/words_v9.json, caption/pages_v9.json, evidence/s05_demo_export.mp4, evidence/full_timeline_export.mp4] — независимое QA до done по карте; self-score 9-10 и финальный V9-рендер запрещены.\n\nТехдеталь для отчёта: deny run 365 — подтверждённый компанией false-positive (read-only проб board DB); безопасная форма таких чтений — одиночный SELECT через sqlite3 CLI, python-доступ к board DB не использовать.",
+      "created_at": 1791062278
+    },
+    {
+      "author": "tech",
+      "body": "Run 374 (tech): финализация отчётного пакета G0-T, новых рендеров не потребовалось.\n\n1) Ре-верификация: все хэши входов (script cff7b70c…, wav aa60aa9a…, conform c63b627e…, asr_words b64138ef…, 5 attachments t_1899f80e, 3 pin-архива 63e3e44c…/58961f10…/0ecaf1ed…) и производных (words b689cbf8…, pages 3f35f462…, captions_v9 4252fa7c…, package-lock 6ef05143…) пересчитаны на диске и совпадают с durable backup run 365. Unit-тесты перезапущены: Ran 11 tests / OK, exit 0; все 5 legacy-окон max CPS 14.59–14.98 (<17).\n\n2) Отчётный пакет завершён (workspace корень):\n- G0T_REPORT.md (полный отчёт + acceptance mapping + честные ограничения; tech-pass отделён от viewer/media QA)\n- INPUT_VERIFICATION.json (входы/пины/производные, обе верификации 365+374)\n- PROVENANCE_LICENSES.md — канон run 365 сохранён без изменений (license_inventory, kit-дельта 696 vs 828 px, ass_generator verdict)\n- SHASUMS.txt — 28 ключевых артефактов (per-frame sha всех ~3300 кадров — в evidence/render_manifest.json)\n\n3) Крупные артефакты (path + sha256, workspace = boards/video/workspaces/t_9880ab82):\n- evidence/full_timeline_export.mp4 661208B c908c2f7afb0572b3bc2a7b9637d889b4086698dd10011080d8960f75bc3cb23 (1707 кадров, 0–56.86s)\n- evidence/MONTAGE.png 171507B 81fcf63a65e2787ef8a12308518ec8db0a11e3ffbf9f3f120223ce6de2970184\n- evidence/s05_demo_export.mp4 131797B a563a0701e55a95af05010dbb6676da429918e69f4414881b956dfa8d42ed02c\n- evidence/render_manifest.json 558559B 3a7f9b5bfe41bfa00c10f2f54fc65089f34af21748b56b9cfff0f46a25106001\n- frames/ — ~3300 PNG (det_A/det_B, stress_w1..w5, surf_* on/off, s01/s05/s06_demo, full_timeline, seek_frames, export_check)\n\n4) Открытые точки для человека/QA (не блокеры пробника): w051 «На» (dev 770ms) — нужно живое прослушивание; 2 страницы CPS 16.07/15.96 (target 15, hard 17) — темп диктора, исправлено pre-roll/hold в реальных паузах; kit DIALOGUE_BOX 696px vs approved 828px — дельта для последующей адаптации kit; ass_generator.py provenance не установлен — не вендорился, нужно решение владельца для production-переиспользования.\n\n5) Независимое ревью запрошено переводом карты в review-колонку (reviewer qa). Self-score качества не выставлялся: все проверки автоматические/технические, перцептивная оценка — за независимым QA/director.",
+      "created_at": 1791062855
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "tech",
+        "status": "todo",
+        "parents": [
+          "t_1899f80e"
+        ],
+        "creator_task_id": "t_1899f80e",
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1790898934,
+      "run_id": null
+    },
+    {
+      "kind": "dependency_wait",
+      "payload": {
+        "reason": "parent_not_done",
+        "parent": "t_1899f80e"
+      },
+      "created_at": 1790898934,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "video-director",
+        "len": 389
+      },
+      "created_at": 1790899399,
+      "run_id": null
+    },
+    {
+      "kind": "promoted",
+      "payload": null,
+      "created_at": 1791052110,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791053051,
+        "run_id": 365
+      },
+      "created_at": 1791052151,
+      "run_id": 365
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 21568,
+        "started_at": "|179105215161"
+      },
+      "created_at": 1791052151,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791052594,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Ориентация: читаю parent attachments, canon V9_DIRECTION.md, проверяю workspace на прошлый прогресс"
+      },
+      "created_at": 1791052637,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791052654,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791052714,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791052774,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791052834,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791052894,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791052954,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053016,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053076,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053136,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053198,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053279,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053339,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053399,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053459,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053527,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053587,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053655,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053715,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053775,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053836,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053896,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791053957,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054017,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054077,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054137,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054197,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054257,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054323,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054384,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054444,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054504,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054569,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054630,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054689,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054750,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054815,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054884,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791054944,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055004,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055069,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055133,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055205,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055266,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055334,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055394,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055457,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055517,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "align sweep прогнан (4 варианта, seq==script 98 токенов); rescore по V8-анкерам; npm install MC 3.17.2 завершён; собираю pagination+harness"
+      },
+      "created_at": 1791055518,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055577,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055646,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055706,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055766,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055826,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055891,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791055954,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056014,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056074,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056136,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056206,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056266,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056326,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056386,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056446,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056506,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056571,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056631,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056692,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056752,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056813,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056874,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056935,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791056995,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057055,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057115,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057175,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057235,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057295,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057355,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Python-слой готов: align детерминирован (stable-ts 2.19.1 CT2 medium offline), 98 слов (97 approved/1 needs_review), 25 страниц, 0 CPS>17, legacy-окна ≤14.98, 11/11 unittest OK. Пишу MC-сцены + harness"
+      },
+      "created_at": 1791057412,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057419,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057489,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057550,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057610,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057670,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057730,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057790,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057850,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057910,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791057971,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058031,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058091,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058151,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058211,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058273,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058334,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058394,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058455,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058515,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058576,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058636,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058696,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058762,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058822,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058882,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791058942,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059002,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059063,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059123,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059183,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059249,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059310,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059370,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059430,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059490,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059550,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "MC-слой отлажен (координаты scene-space, ручное позиционирование Txt): капшены+караоке+маркер рендерятся корректно. Запускаю основной батч рендеров (детерминизм/seek/surfaces/demos)"
+      },
+      "created_at": 1791059556,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059616,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059676,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059741,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059801,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059861,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059921,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059981,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060041,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060104,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Рендеры готовы: 22 job'а OK; детерминизм 55/55 sha-идентичны; seek 4/4 байт-в-байт; surfaces все; full_timeline 1707 кадров/43с. Далее: merge manifest, pixel-анализ, mp4 export, отчёт"
+      },
+      "created_at": 1791060127,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060164,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060231,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060305,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060365,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060425,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060494,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060559,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060628,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060694,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060760,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060820,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060880,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060941,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061001,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061061,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061121,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061181,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061241,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061303,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061363,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061427,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061488,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061548,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061608,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061670,
+      "run_id": 365
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061730,
+      "run_id": 365
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 218
+      },
+      "created_at": 1791061789,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "FLEET POLICY BLOCKED [policy_control_plane_mutation] pattern=policy_control_plane_mutation call_index=234 next_step=правка самой политики запрещена; оформи отдельную tech-карту с диагнозом [continues: company]",
+        "kind": "policy_denied",
+        "recurrences": 1,
+        "source_status": "ready"
+      },
+      "created_at": 1791061789,
+      "run_id": 365
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 5281
+      },
+      "created_at": 1791061936,
+      "run_id": null
+    },
+    {
+      "kind": "terminal_worker_reaped",
+      "payload": {
+        "pid": 21568,
+        "worker_started_at": "|179105215161",
+        "prev_pid": 21568,
+        "host_local": true,
+        "termination_attempted": true,
+        "terminated": true,
+        "sigkill": false
+      },
+      "created_at": 1791061969,
+      "run_id": 365
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 5132
+      },
+      "created_at": 1791062079,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 109
+      },
+      "created_at": 1791062095,
+      "run_id": null
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1791062095,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791063052,
+        "run_id": 374
+      },
+      "created_at": 1791062152,
+      "run_id": 374
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 23728,
+        "started_at": "|179106215223"
+      },
+      "created_at": 1791062152,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062166,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062226,
+      "run_id": 374
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 1371
+      },
+      "created_at": 1791062278,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062289,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062349,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062409,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062469,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062529,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062593,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062653,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062713,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062776,
+      "run_id": 374
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062837,
+      "run_id": 374
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 2264
+      },
+      "created_at": 1791062855,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062897,
+      "run_id": 374
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "G0T_REPORT.md",
+        "size": 11495,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "INPUT_VERIFICATION.json",
+        "size": 6241,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "PROVENANCE_LICENSES.md",
+        "size": 4247,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "SHASUMS.txt",
+        "size": 2800,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "MONTAGE.png",
+        "size": 171507,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "s05_demo_export.mp4",
+        "size": 131797,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "full_timeline_export.mp4",
+        "size": 661208,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "words_v9.json",
+        "size": 12144,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "pages_v9.json",
+        "size": 8165,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "audit_report.json",
+        "size": 2606,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "paging_report.json",
+        "size": 2900,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "captions_v9.json",
+        "size": 32028,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "render_manifest.json",
+        "size": 558559,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "frame_analysis.json",
+        "size": 4702,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "export_label_check.json",
+        "size": 440,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "align_scoring.json",
+        "size": 10425,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "commands.log",
+        "size": 22929,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "license_inventory.txt",
+        "size": 7205,
+        "by": "kanban_request_review"
+      },
+      "created_at": 1791062907,
+      "run_id": null
+    },
+    {
+      "kind": "review_requested",
+      "payload": {
+        "summary": "G0-T пробник завершён: stable-ts align по реальному голосу (98/98 слов, 97 approved + 1 needs_review w051 для живого прослушивания), DP re-paging 25 страниц (5 legacy-окон >17 CPS исправлены до max 14.98), Motion Canvas 3.17.2 pins byte-exact, 23 render-job (~3300 кадров): determinism 55/55 + cross-run 37/37 sha-identical, seek 4/4 byte-identical, 5 поверхностей с реальными UI-масками (0 пикселей ",
+        "implementer": "tech",
+        "reviewer": "qa",
+        "artifacts": [
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\G0T_REPORT.md",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\INPUT_VERIFICATION.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\PROVENANCE_LICENSES.md",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\SHASUMS.txt",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\MONTAGE.png",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\s05_demo_export.mp4",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\full_timeline_export.mp4",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\words_v9.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\pages_v9.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\audit_report.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\paging_report.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\captions_v9.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\render_manifest.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\frame_analysis.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\export_label_check.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\align_scoring.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\commands.log",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\license_inventory.txt"
+        ]
+      },
+      "created_at": 1791062907,
+      "run_id": 374
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791064459,
+        "run_id": 375,
+        "source_status": "review"
+      },
+      "created_at": 1791063559,
+      "run_id": 375
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 24832,
+        "started_at": "|179106355964"
+      },
+      "created_at": 1791063559,
+      "run_id": 375
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063569,
+      "run_id": 375
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063629,
+      "run_id": 375
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063689,
+      "run_id": 375
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063749,
+      "run_id": 375
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063813,
+      "run_id": 375
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063873,
+      "run_id": 375
+    },
+    {
+      "kind": "rate_limited",
+      "payload": {
+        "pid": 24832,
+        "claimer": "laptop:26200",
+        "exit_code": 75,
+        "retry_status": "review"
+      },
+      "created_at": 1791063931,
+      "run_id": 375
+    },
+    {
+      "kind": "respawn_guarded",
+      "payload": {
+        "reason": "rate_limit_cooldown"
+      },
+      "created_at": 1791063931,
+      "run_id": null
+    },
+    {
+      "kind": "respawn_guarded",
+      "payload": {
+        "reason": "rate_limit_cooldown"
+      },
+      "created_at": 1791063993,
+      "run_id": null
+    },
+    {
+      "kind": "respawn_guarded",
+      "payload": {
+        "reason": "rate_limit_cooldown"
+      },
+      "created_at": 1791064055,
+      "run_id": null
+    },
+    {
+      "kind": "respawn_guarded",
+      "payload": {
+        "reason": "rate_limit_cooldown"
+      },
+      "created_at": 1791064117,
+      "run_id": null
+    },
+    {
+      "kind": "respawn_guarded",
+      "payload": {
+        "reason": "rate_limit_cooldown"
+      },
+      "created_at": 1791064178,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791065573,
+        "run_id": 377,
+        "source_status": "review"
+      },
+      "created_at": 1791064673,
+      "run_id": 377
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 23644,
+        "started_at": "|179106467353"
+      },
+      "created_at": 1791064673,
+      "run_id": 377
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064683,
+      "run_id": 377
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064745,
+      "run_id": 377
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064805,
+      "run_id": 377
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064865,
+      "run_id": 377
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Review r377: 11/11 unit tests re-run PASS; 28/28 SHASUMS verified; 3 pins byte-exact; export MP4/MONTAGE hashes match; manifest det 55/55+seek 4/4 equal; independent CPS/paging/coverage recompute from raw JSON — no violations; script SHA matches canon cff7b70c. Continuing: report package audit + render log check."
+      },
+      "created_at": 1791064911,
+      "run_id": 377
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064926,
+      "run_id": 377
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064986,
+      "run_id": 377
+    },
+    {
+      "kind": "crashed",
+      "payload": {
+        "pid": 23644,
+        "claimer": "laptop:26200",
+        "worker_output": "utf-8')) seek = m['comparisons']['seek']['rows'] for r in seek: p = os.path.join('frames/seek_frames', r['file']) ok = os.path.exists(p) and sha(p) == r['seek_sha'] print('seek', r['file'], 'on-disk sha == manifest seek_sha:', ok) print('manifest note:', m.get('note')) print('generated_at:', m.get('generated_at'), '| playwright:', m.get('playwright_core'), '| chromium:', m.get('chromium')) \"  0.9s",
+        "retry_status": "review"
+      },
+      "created_at": 1791065107,
+      "run_id": 377
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:21836",
+        "expires": 1791066007,
+        "run_id": 379,
+        "source_status": "review"
+      },
+      "created_at": 1791065107,
+      "run_id": 379
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 19340,
+        "started_at": "|179106510775"
+      },
+      "created_at": 1791065107,
+      "run_id": 379
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791065124,
+      "run_id": 379
+    },
+    {
+      "kind": "crashed",
+      "payload": {
+        "pid": 19340,
+        "claimer": "laptop:21836",
+        "worker_output": "c.get('body')) print() print('=== EVENTS (last 15) ===') evs = data.get('events', []) for e in evs[-15:]: print(json.dumps(e, ensure_ascii=False)[:400]) print() print('=== RUNS (last 5) ===') rs = data.get('runs', []) for r in rs[-5:]: print(json.dumps(r, ensure_ascii=False)[:400]) print() wc = data.get('worker_context') print('=== WORKER_CONTEXT (first 3000) ===') print((wc or '')[:3000]) \"  0.5s",
+        "retry_status": "review"
+      },
+      "created_at": 1791065804,
+      "run_id": 379
+    },
+    {
+      "kind": "gave_up",
+      "payload": {
+        "failures": 2,
+        "effective_limit": 2,
+        "limit_source": "dispatcher",
+        "error": "pid 19340 not alive Worker's last output: 'c.get(\\'body\\')) print() print(\\'=== EVENTS (last 15) ===\\') evs = data.get(\\'events\\', []) for e in evs[-15:]: print(json.dumps(e, ensure_ascii=False)[:400]) print() print(\\'=== RUNS (last 5) ===\\') rs = data.get(\\'runs\\', []) for r in rs[-5:]: print(json.dumps(r, ensure_ascii=False)[:400]) print() wc = data.get(\\'worker_context\\') print(\\'=== WORKER_CONTEXT (first 3000) ===\\') print((wc or \\'\\')[:3000]) \"  0.5s'",
+        "trigger_outcome": "crashed",
+        "retry_status": "review",
+        "pid": 19340,
+        "claimer": "laptop:21836"
+      },
+      "created_at": 1791065804,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 365,
+      "profile": "tech",
+      "step_key": null,
+      "status": "blocked",
+      "outcome": "policy_denied",
+      "summary": "FLEET POLICY BLOCKED [policy_control_plane_mutation] pattern=policy_control_plane_mutation call_index=234 next_step=правка самой политики запрещена; оформи отдельную tech-карту с диагнозом [continues: company]",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "policy_denied",
+          "evidence_refs": [],
+          "next_action": "apply remediation route in the block reason; retry only after the denied precondition changes"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791052151,
+      "ended_at": 1791061789
+    },
+    {
+      "id": 374,
+      "profile": "tech",
+      "step_key": null,
+      "status": "review",
+      "outcome": "review_requested",
+      "summary": "G0-T пробник завершён: stable-ts align по реальному голосу (98/98 слов, 97 approved + 1 needs_review w051 для живого прослушивания), DP re-paging 25 страниц (5 legacy-окон >17 CPS исправлены до max 14.98), Motion Canvas 3.17.2 pins byte-exact, 23 render-job (~3300 кадров): determinism 55/55 + cross-run 37/37 sha-identical, seek 4/4 byte-identical, 5 поверхностей с реальными UI-масками (0 пикселей caption в масках), coverage 427/1707 кадров 0 пропусков, export h264 — маркеры/подписи выживают (mean diff 0.41), offline-рендеры (единственный 404 — favicon, исправлен). Unit-тесты 11/11 OK (перезапуск run 374, exit 0). Все хэши входов/пинов/артефактов сверены дважды (365+374). Отчётный пакет: G0T_REPORT.md, INPUT_VERIFICATION.json, PROVENANCE_LICENSES.md, SHASUMS.txt. Внимание: это tech-pass автоматических проверок; перцептивное viewer/media QA и w051 — за независимым ревью. Финальный клип НЕ монтировался (отдельная карта video-editor, parents=[t_1899f80e, t_9880ab82, t_fab67569]).",
+      "error": null,
+      "metadata": {
+        "align": {
+          "anchor_dev_ms": {
+            "start_max": 770,
+            "start_med": 30,
+            "start_p90": 215
+          },
+          "config": "original_split=True (variant F)",
+          "coverage": "98/98 words, seq_equals_script=true",
+          "determinism": "2 runs sha-identical (436f7ae4dfe5b34b2f011dedddb23c21bba2e37e0e41107683a762d1a288d23c)",
+          "fast_mode": "rejected (26 zero-dur, p90 6040ms)",
+          "model": "Systran/faster-whisper-medium int8 cpu, HF offline cache",
+          "repairs": 1,
+          "status": {
+            "approved": 97,
+            "needs_review": 1,
+            "needs_review_item": "w051 «На» dev 770ms > 350ms — human listening required"
+          }
+        },
+        "constraints": "MC 3.17.2 pins byte-exact; stable-ts 2.19.1; no new renderer; story unchanged; no policy bypass",
+        "exports": {
+          "full_timeline": "1707 frames 0-56.86s sha c908c2f7afb0572b3bc2a7b9637d889b4086698dd10011080d8960f75bc3cb23",
+          "labels_survive": "marker 13752→13745px, amber 2742→2355px",
+          "s05_demo": "235 frames sha a563a0701e55a95af05010dbb6676da429918e69f4414881b956dfa8d42ed02c"
+        },
+        "frames_rendered": "~3300 across 23 jobs",
+        "open_points_for_qa": [
+          "w051 listening",
+          "2 pages CPS 16.07/15.96 vs target 15 (hard 17)",
+          "kit geometry delta 696 vs 828px (follow-up kit adaptation)",
+          "ass_generator.py provenance — owner decision for production reuse",
+          "perceptual/viewer QA not covered by automated checks"
+        ],
+        "paging": {
+          "cps": {
+            "max": 16.07,
+            "med": 11.07,
+            "min": 4.52,
+            "over_hard_17": 0,
+            "over_target_15": 2
+          },
+          "legacy_windows_fixed": 5,
+          "legacy_windows_max_cps": "14.59-14.98",
+          "pages": 25
+        },
+        "renders": {
+          "coverage": "427/1707 checked, 0 missing-caption, 0 out-of-page",
+          "cross_run_determinism": "37/37 identical (separate server start)",
+          "determinism": "55/55 sha-identical",
+          "seek_equality": "4/4 byte-identical",
+          "stack": "playwright-core 1.62.1 + chromium 148.0.7778.96 + vite localhost",
+          "surfaces": "5 (320x568..1080x1920), ui-masks 0 caption px, safe-zones ok"
+        },
+        "report_package": [
+          "G0T_REPORT.md",
+          "INPUT_VERIFICATION.json",
+          "PROVENANCE_LICENSES.md (canonical run 365)",
+          "SHASUMS.txt (28 artifacts)"
+        ],
+        "run_374": {
+          "inputs_reverified": true,
+          "new_renders": 0,
+          "tests_rerun": "11/11 OK exit 0"
+        },
+        "workspace": "C:/Users/max/AppData/Local/hermes/kanban/boards/video/workspaces/t_9880ab82",
+        "artifacts": [
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\G0T_REPORT.md",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\INPUT_VERIFICATION.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\PROVENANCE_LICENSES.md",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\SHASUMS.txt",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\MONTAGE.png",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\s05_demo_export.mp4",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\full_timeline_export.mp4",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\words_v9.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\pages_v9.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\audit_report.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\paging_report.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\captions_v9.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\render_manifest.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\frame_analysis.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\export_label_check.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\align_scoring.json",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\commands.log",
+          "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\attachments\\t_9880ab82\\license_inventory.txt"
+        ],
+        "worker_session_id": "20261004_001558_3592bf",
+        "receipt": {
+          "status": "review_requested",
+          "evidence_refs": [],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791062152,
+      "ended_at": 1791062907
+    },
+    {
+      "id": 375,
+      "profile": "qa",
+      "step_key": null,
+      "status": "rate_limited",
+      "outcome": "rate_limited",
+      "summary": null,
+      "error": "pid 24832 exited rate-limited (quota wall) — requeued without counting a failure",
+      "metadata": {
+        "pid": 24832,
+        "claimer": "laptop:26200",
+        "exit_code": 75,
+        "retry_status": "review",
+        "receipt": {
+          "status": "rate_limited",
+          "evidence_refs": [
+            "error:pid 24832 exited rate-limited (quota wall) — requeued without counting a failure"
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791063559,
+      "ended_at": 1791063931
+    },
+    {
+      "id": 377,
+      "profile": "qa",
+      "step_key": null,
+      "status": "crashed",
+      "outcome": "crashed",
+      "summary": null,
+      "error": "pid 23644 not alive Worker's last output: 'utf-8\\')) seek = m[\\'comparisons\\'][\\'seek\\'][\\'rows\\'] for r in seek: p = os.path.join(\\'frames/seek_frames\\', r[\\'file\\']) ok = os.path.exists(p) and sha(p) == r[\\'seek_sha\\'] print(\\'seek\\', r[\\'file\\'], \\'on-disk sha == manifest seek_sha:\\', ok) print(\\'manifest note:\\', m.get(\\'note\\')) print(\\'generated_at:\\', m.get(\\'generated_at\\'), \\'| playwright:\\', m.get(\\'playwright_core\\'), \\'| chromium:\\', m.get(\\'chromium\\')) \"  0.9s'",
+      "metadata": {
+        "pid": 23644,
+        "claimer": "laptop:26200",
+        "worker_output": "utf-8')) seek = m['comparisons']['seek']['rows'] for r in seek: p = os.path.join('frames/seek_frames', r['file']) ok = os.path.exists(p) and sha(p) == r['seek_sha'] print('seek', r['file'], 'on-disk sha == manifest seek_sha:', ok) print('manifest note:', m.get('note')) print('generated_at:', m.get('generated_at'), '| playwright:', m.get('playwright_core'), '| chromium:', m.get('chromium')) \"  0.9s",
+        "retry_status": "review",
+        "receipt": {
+          "status": "crashed",
+          "evidence_refs": [
+            "error:pid 23644 not alive Worker's last output: 'utf-8\\')) seek = m[\\'comparisons\\'][\\'seek\\'][\\'rows\\'] for r in seek: p = os.path.join(\\'frames/seek_frames\\', r[\\'file\\']) ok = os.path.exists(p) and sha(p) == r[\\'seek_sha\\'] print(\\'seek\\', r[\\"
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791064673,
+      "ended_at": 1791065107
+    },
+    {
+      "id": 379,
+      "profile": "qa",
+      "step_key": null,
+      "status": "crashed",
+      "outcome": "crashed",
+      "summary": null,
+      "error": "pid 19340 not alive Worker's last output: 'c.get(\\'body\\')) print() print(\\'=== EVENTS (last 15) ===\\') evs = data.get(\\'events\\', []) for e in evs[-15:]: print(json.dumps(e, ensure_ascii=False)[:400]) print() print(\\'=== RUNS (last 5) ===\\') rs = data.get(\\'runs\\', []) for r in rs[-5:]: print(json.dumps(r, ensure_ascii=False)[:400]) print() wc = data.get(\\'worker_context\\') print(\\'=== WORKER_CONTEXT (first 3000) ===\\') print((wc or \\'\\')[:3000]) \"  0.5s'",
+      "metadata": {
+        "pid": 19340,
+        "claimer": "laptop:21836",
+        "worker_output": "c.get('body')) print() print('=== EVENTS (last 15) ===') evs = data.get('events', []) for e in evs[-15:]: print(json.dumps(e, ensure_ascii=False)[:400]) print() print('=== RUNS (last 5) ===') rs = data.get('runs', []) for r in rs[-5:]: print(json.dumps(r, ensure_ascii=False)[:400]) print() wc = data.get('worker_context') print('=== WORKER_CONTEXT (first 3000) ===') print((wc or '')[:3000]) \"  0.5s",
+        "retry_status": "review",
+        "receipt": {
+          "status": "crashed",
+          "evidence_refs": [
+            "error:pid 19340 not alive Worker's last output: 'c.get(\\'body\\')) print() print(\\'=== EVENTS (last 15) ===\\') evs = data.get(\\'events\\', []) for e in evs[-15:]: print(json.dumps(e, ensure_ascii=False)[:400]) print() print(\\'=== RUNS (last 5) ===\\"
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791065107,
+      "ended_at": 1791065804
+    }
+  ]
+}

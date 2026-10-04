@@ -1,0 +1,1093 @@
+{
+  "created_at_utc": "2026-10-03T22:48:29.579243+00:00",
+  "scope": "Dots versus existing Hermes workflow; source/data snapshot only",
+  "revisions": {
+    "installed_hermes": {
+      "repo": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent",
+      "head": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+      "working_tree_dirty": true,
+      "scope": "Source checkout identity only; dirty files are frozen separately; no loaded-runtime claim"
+    },
+    "fleet_integration": {
+      "repo": "C:\\Users\\max\\Desktop\\all\\ventures",
+      "head": "b586b6cd2b05d61b78e0208863a1319d75a93afe",
+      "working_tree_dirty": true,
+      "scope": "Source checkout identity only; dirty files are frozen separately; no loaded-runtime claim"
+    }
+  },
+  "old_method_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+  "targets": [
+    {
+      "profile": "company",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "43bfa18f524f7ee3eec9924e7ed8345b9c0bf73a27c94f62880d6825bf92b954",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\company\\SKILL.md",
+          "bytes": 15889,
+          "sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\company\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\adaptive-product-organization.md",
+          "relative_path": "references/adaptive-product-organization.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\company\\references\\adaptive-product-organization.md",
+          "bytes": 6106,
+          "sha256": "65cce4b5b10de8d9fa7d35f0143feec74b73eb1254fd6d6b0a6e1fd6352d99d0"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\company\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\organization-audit.md",
+          "relative_path": "references/organization-audit.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\company\\references\\organization-audit.md",
+          "bytes": 9190,
+          "sha256": "6da3b9b74024d3d109c295f94e8064a338c2d55e055fe64d26ad5dbc7b55892f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\outcome-loop.md",
+          "relative_path": "references/outcome-loop.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\company\\references\\outcome-loop.md",
+          "bytes": 4439,
+          "sha256": "6b3cd78beba7105fcf256455dfacca0196c51e2974e1de113458734a2dbfef75"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\company\\SKILL.md",
+          "bytes": 15889,
+          "sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8"
+        }
+      ]
+    },
+    {
+      "profile": "research",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "f15d886338ac184f81b38d07655ee1d32c09c4ff2c709bc33f844e920c42b53f",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\research\\SKILL.md",
+          "bytes": 3601,
+          "sha256": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\research\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\research\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\research\\SKILL.md",
+          "bytes": 3601,
+          "sha256": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8"
+        }
+      ]
+    },
+    {
+      "profile": "product",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\product\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\product\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\product\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\product\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "operations",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\operations\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\operations\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\operations\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\operations\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "qa",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\qa\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\qa\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\qa\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\qa\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "tech",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\tech\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\tech\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\tech\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\tech\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "finance",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\finance\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\finance\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\finance\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\finance\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "sales",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\sales\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\sales\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\sales\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\sales\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "design",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\design\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\design\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\design\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\design\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "ux",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\ux\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\ux\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\ux\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\ux\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "video-director",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\video-director\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\video-director\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\video-director\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\video-director\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    },
+    {
+      "profile": "video-editor",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "unmodified_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "snapshots": {
+        "root": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\video-editor\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        },
+        "reference": {
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before\\video-editor\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        }
+      },
+      "markdown_tree": [
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md",
+          "relative_path": "references/dots-operating-method.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\video-editor\\references\\dots-operating-method.md",
+          "bytes": 12995,
+          "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        {
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+          "relative_path": "SKILL.md",
+          "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\before-trees\\video-editor\\SKILL.md",
+          "bytes": 2050,
+          "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054"
+        }
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\AGENTS.md",
+      "kind": "fleet-canon",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\ventures\\AGENTS.md",
+      "bytes": 867,
+      "sha256": "ed673ff31b302ffc1747861975e267ca6bc2d51f1365e854fe3d23fd67b85139"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\OPERATING_SYSTEM.md",
+      "kind": "fleet-canon",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\ventures\\OPERATING_SYSTEM.md",
+      "bytes": 11172,
+      "sha256": "82e9f525111f670b12e0aa4dba0b46acad1bba672142625284b0ec055deda4d9"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\APPROVALS.md",
+      "kind": "fleet-canon",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\ventures\\APPROVALS.md",
+      "bytes": 4032,
+      "sha256": "49ca97fd2730a5a5db83ddde0977fc83e2219c46f7a0b6ac1dea17372ec780b3"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\ORG_MODEL.md",
+      "kind": "fleet-canon",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\ventures\\ORG_MODEL.md",
+      "bytes": 13926,
+      "sha256": "86ee715cee2fa7f10051fc6ccf93854cdf72c281fe0413f6d467d0cccee21145"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\company-os\\SKILL.md",
+      "bytes": 15889,
+      "sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\outcome-loop.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\company-os\\references\\outcome-loop.md",
+      "bytes": 4439,
+      "sha256": "6b3cd78beba7105fcf256455dfacca0196c51e2974e1de113458734a2dbfef75"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\adaptive-product-organization.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\company-os\\references\\adaptive-product-organization.md",
+      "bytes": 6106,
+      "sha256": "65cce4b5b10de8d9fa7d35f0143feec74b73eb1254fd6d6b0a6e1fd6352d99d0"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\kanban-card-authoring\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\devops\\kanban-card-authoring\\SKILL.md",
+      "bytes": 18181,
+      "sha256": "d60fe629f1c5cf9b81d348270d50ba8542e378e77b959221b3facfef813d9188"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\sdlc-review\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\devops\\sdlc-review\\SKILL.md",
+      "bytes": 10465,
+      "sha256": "e03577cea321f0523972759471a5ba7990fae17177cf67c1d7246f26e010d99f"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-workflow-efficiency\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\fleet-workflow-efficiency\\SKILL.md",
+      "bytes": 8247,
+      "sha256": "90abd6a54fa3f38038dfe78382291ba17c72ef18858c96194369c71821813b4c"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-skills-rollout\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\fleet-ops\\fleet-skills-rollout\\SKILL.md",
+      "bytes": 31124,
+      "sha256": "aa0f343861094f6470e70b40ef109234a7546a6ce59ef6b9a9e495d08ce93169"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-skills-rollout\\references\\scoped-additive-rollouts.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\fleet-ops\\fleet-skills-rollout\\references\\scoped-additive-rollouts.md",
+      "bytes": 3241,
+      "sha256": "0ca067f2f8ff1ecf28339ef474147f02b20b296f0045b57460acc4b465463ddb"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-notification-ops\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\fleet-ops\\fleet-notification-ops\\SKILL.md",
+      "bytes": 41224,
+      "sha256": "68d3b3c6040daf271b5dc2062953163e75577815af3482bed8382fbd851e703c"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\fleet-browser-routing\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\fleet-ops\\fleet-browser-routing\\SKILL.md",
+      "bytes": 34630,
+      "sha256": "31fc79caec23d1440eaf45b17f22f68f113b65f8161adf06d8c8992cabcbf1eb"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-doctrine\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\fleet-doctrine\\fleet-doctrine\\SKILL.md",
+      "bytes": 30149,
+      "sha256": "d9dd2b80d1bf219bf5c71704c376928a21597eba1cc0ef39cf2ddaa13c052c75"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\hermes-agent\\SKILL.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\autonomous-ai-agents\\hermes-agent\\SKILL.md",
+      "bytes": 6559,
+      "sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0"
+    },
+    {
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\hermes-agent\\references\\background-systems.md",
+      "kind": "company-skill",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\company-skills\\autonomous-ai-agents\\hermes-agent\\references\\background-systems.md",
+      "bytes": 7347,
+      "sha256": "9bf0a9eb7f60354efc9960a2b063a01a6db20186079db2c82d25b550a35293c7"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\LOAD-HOOK.md",
+      "kind": "old-hook",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\local\\old-hook.md",
+      "bytes": 458,
+      "sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-overview.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/dots.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-overview.md",
+      "bytes": 17871,
+      "sha256": "63bab8760b1419055f4dbd256bad8d75d4dc69561cb8bc42eba12ef7b7324c05"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-getting-started.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/dots/getting-started.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-getting-started.md",
+      "bytes": 4230,
+      "sha256": "6d588a2a015e3b6dcb148fd2187dc6dc76505462d90a0579ff26c58a33b39c28"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-tasks-memory.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/dots/tasks-and-memory.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-tasks-memory.md",
+      "bytes": 7677,
+      "sha256": "c5900e990dd3d2cb6e00df27de2789d35f783e0e7eed56cc1a834c1bc0b3e40d"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-controls.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/dots/controls.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-controls.md",
+      "bytes": 5725,
+      "sha256": "3dd935a75f6ec9bffb01b246260c2f45e8e4a8f4b31a92fb5fedff3353db5700"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-computers-apps.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/dots/computers-and-apps.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-computers-apps.md",
+      "bytes": 5752,
+      "sha256": "42791a20d6a95b927ad41fc437c51528d8e8b896358b8922cc4c867957e2f758"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-channels.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/dots/channels.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-channels.md",
+      "bytes": 2497,
+      "sha256": "1fde5facf50f0a3f289277a46700ab83f110fc9f60998a3f4e8403790354cd31"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-enterprise-admin.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/enterprise/dots-admin-guide.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-enterprise-admin.md",
+      "bytes": 13883,
+      "sha256": "bb0c3074751adb16bc0e4715099206c3c7cea56edd31ec1b3f82b450cc251b02"
+    },
+    {
+      "source_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-enterprise-local-access.md",
+      "kind": "verified-dots-source",
+      "source_url": "https://learn.chatgpt.com/docs/enterprise/cloud-local-access.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\dots-sources\\dots-enterprise-local-access.md",
+      "bytes": 23503,
+      "sha256": "96fb9588467b97c5fd641d93d949977455ed8be8e5aa171081c9880e26a366a4"
+    }
+  ],
+  "public_hermes_docs": [
+    {
+      "name": "context-files",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:27.721844+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-context-files.html",
+        "bytes": 64543,
+        "sha256": "6ae08fda9fe52a13857d5cafb93166f8b23981231accfc54b103f82554cd661b"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-context-files.txt",
+        "bytes": 11492,
+        "sha256": "acccd569430b1b90cae249f906bec385ec4d7a522d88ad6a5823848c69a33a45"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "cron",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/cron",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/cron",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:26.382249+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-cron.html",
+        "bytes": 255146,
+        "sha256": "0dfa27cd796ccfde641a0adac938d29dadbb6da5acea9635027a705a25ebe06f"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-cron.txt",
+        "bytes": 73543,
+        "sha256": "cd77513792955faa57f340c5b4c6430ab056ba42f1e15674f5d7195d85638f0e"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "delegation",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:26.324506+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-delegation.html",
+        "bytes": 158038,
+        "sha256": "efcff6990ce430eb08fb4c4968a2935fb6cd2236c4f26846c1849aa3cd1d628f"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-delegation.txt",
+        "bytes": 48636,
+        "sha256": "5db960d00b3aa91ffdf3f308fa7df55dad70f31632025803fecb3bfed4482943"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "hooks",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:29.386815+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-hooks.html",
+        "bytes": 545040,
+        "sha256": "462de0eb59b624abc167d090afbe3ae5452bdb21fda9e5dea868fd8302ee457e"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-hooks.txt",
+        "bytes": 106122,
+        "sha256": "869b026cd7fa96151afc3dc9d4d234ed3c5b1d81e351d8d77223a1bc553826bd"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "kanban",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:26.356363+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-kanban.html",
+        "bytes": 269859,
+        "sha256": "bacd18824e76ec1335a0c91e81fa2506107a774be6402bc0530b5be45994be53"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-kanban.txt",
+        "bytes": 115794,
+        "sha256": "61767a9181da2ce8f5f54ae11ba0ec695df00be505df006fe8041d5b6e49c661"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "memory",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/memory",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/memory",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:26.269002+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-memory.html",
+        "bytes": 98266,
+        "sha256": "75b4a9561edebe0d5b197b5259b1253f5e17e010dffeead933ccdac66abbc019"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-memory.txt",
+        "bytes": 27965,
+        "sha256": "edc98cbdc0761f5cf59e6f734af22e2e2e63469407aea7889fc1bcb20110e08c"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "profiles",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/profiles",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/profiles",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:27.731751+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-profiles.html",
+        "bytes": 94161,
+        "sha256": "b0c8715369a1a745b129ee84c8267e59216b08916ba13e9c255d15e4dbd1d8f6"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-profiles.txt",
+        "bytes": 23420,
+        "sha256": "7c68e007c5870b03d1a8fea1a2e0b718a8548761b3bc7111772bdb2aab62aff6"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "security",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/security",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/security",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:29.280245+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-security.html",
+        "bytes": 179190,
+        "sha256": "7308040c8faf6407636182e90cfc5f5d7ca909761956a2a9b6c43ad27dd6ce19"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-security.txt",
+        "bytes": 59590,
+        "sha256": "14ed5b2ce439cf8593e9ca6036534eb77a0ba986e3e65338db08794ceb4787cb"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "sessions",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/sessions",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/sessions",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:27.783589+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-sessions.html",
+        "bytes": 187425,
+        "sha256": "3310ce3038a33da01441b1a100b83e75323af51f18e7bce9868713cf892ac05a"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-sessions.txt",
+        "bytes": 58619,
+        "sha256": "25b2f4635421fbf53d6bbba849032b6e5a8bcaa9fa16e4bfac925fa77a03e88d"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "skills",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/skills",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/skills",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:27.804698+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-skills.html",
+        "bytes": 203450,
+        "sha256": "8601f8ffe9531ce61475a2eda872bbdd180d2f8f0265025dcf5232a400f5a2d3"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-skills.txt",
+        "bytes": 51517,
+        "sha256": "8da9946038af7c930089f84d3da4c0d328e8f541769e1a00bd478541b96ddf7a"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "subagent-lifecycle",
+      "url": "https://hermes-agent.nousresearch.com/docs/developer-guide/subagent-lifecycle-api",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/developer-guide/subagent-lifecycle-api",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:29.285008+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-subagent-lifecycle.html",
+        "bytes": 38808,
+        "sha256": "fe529f025a79670ad577b7c75410338d7f27f2dba1daabe1eb426b90ca20c2fe"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-subagent-lifecycle.txt",
+        "bytes": 2753,
+        "sha256": "d4e28ca3e77b0e85ff895a172e66cf556f0852f047259ba3d1eabedb75da6b1a"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    },
+    {
+      "name": "webhooks",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/webhooks",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "retrieved_at_utc": "2026-10-03T22:48:29.260635+00:00",
+      "article_count": 1,
+      "raw": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-webhooks.html",
+        "bytes": 154160,
+        "sha256": "7de4a4624cc3065b9f41201261dd9769441334a7ecafc20a023c712d726cb5ed"
+      },
+      "text": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\public\\hermes-webhooks.txt",
+        "bytes": 32307,
+        "sha256": "a25f451a586c1d6ec28cfbf2f1a9c5593c33d7ea78670640ba40e4a8e57d4662"
+      },
+      "scope": "Full public article text; data only, no live capability or enforcement attestation"
+    }
+  ],
+  "public_doc_errors": [],
+  "installed_docs": [
+    {
+      "name": "kanban",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\features\\kanban.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\kanban.md",
+      "bytes": 123675,
+      "sha256": "856442c7f8190744847a8ce36eca955cdcc40626b52415eed7e1563e68b170e6"
+    },
+    {
+      "name": "delegation",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\features\\delegation.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\delegation.md",
+      "bytes": 50936,
+      "sha256": "01159acb2c9eab62a3617ba3abcb0bf79297e6ce1fb05b0d6315f381e504baf8"
+    },
+    {
+      "name": "cron",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\features\\cron.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\cron.md",
+      "bytes": 76838,
+      "sha256": "728e273184b6d452528e5a8eb899cb8a77defc6303d25964d7a629b9ed6e6d7e"
+    },
+    {
+      "name": "memory",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\features\\memory.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\memory.md",
+      "bytes": 29861,
+      "sha256": "b2195b9f50c0e9ceec6d991e473a0aefbf6b85fc13eb903cc1727077e7df0d01"
+    },
+    {
+      "name": "skills",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\features\\skills.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\skills.md",
+      "bytes": 56069,
+      "sha256": "31215bd96cee1dc4e816f529cb1c62153c1aba151735da449446eebe9fa2007a"
+    },
+    {
+      "name": "context-files",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\features\\context-files.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\context-files.md",
+      "bytes": 12549,
+      "sha256": "0a35eac7c2ea5d0451eeb174348ded0abb9f6af5f3657d7a03d843b3ca4f7009"
+    },
+    {
+      "name": "sessions",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\sessions.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\sessions.md",
+      "bytes": 59777,
+      "sha256": "6ef76af7e474565e329dd7924af0452950accc4b97266af794a945301616c9f5"
+    },
+    {
+      "name": "profiles",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\profiles.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\profiles.md",
+      "bytes": 25301,
+      "sha256": "71ce1ee59df53bdcc5440a29349a4a4f4fe02cfd129a244f256841c6f9bf6baa"
+    },
+    {
+      "name": "security",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\security.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\security.md",
+      "bytes": 64253,
+      "sha256": "911e2d991e15aa50ef88663a8b8c90d05eb06f764fe5840a67a44d936a028948"
+    },
+    {
+      "name": "hooks",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\features\\hooks.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\hooks.md",
+      "bytes": 117007,
+      "sha256": "ff807b43b605048dd6bc66b769ca5981754a114499a3bd1dfeb26ba68e89ec50"
+    },
+    {
+      "name": "webhooks",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\user-guide\\messaging\\webhooks.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\webhooks.md",
+      "bytes": 36061,
+      "sha256": "58d2bc526bd09716628e48f031e6d6e64cd14a3210414f817e8f31eaf8d0d652"
+    },
+    {
+      "name": "subagent-lifecycle",
+      "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\website\\docs\\developer-guide\\subagent-lifecycle-api.md",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\installed-docs\\subagent-lifecycle.md",
+      "bytes": 2947,
+      "sha256": "627a7e88653f0353314a62c7eb5eefbb6083a55312cbfd585eddc1d6b46226c7"
+    }
+  ],
+  "permitted_live_writes_for_later_review": [
+    {
+      "profile": "company",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "research",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "product",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "operations",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "qa",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "tech",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "finance",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "sales",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "design",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "ux",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "video-director",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    },
+    {
+      "profile": "video-editor",
+      "paths": [
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md"
+      ]
+    }
+  ],
+  "financial_scope": {
+    "scope": "fleet-ops internal workflow normalization",
+    "period_start_utc": "2026-10-03T22:33:54+00:00",
+    "period_end_utc": null,
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": null,
+    "estimated_usage_cost": null,
+    "source": "Source collection and task scope; no billing/ledger readback",
+    "unknown_reason": "Not a revenue experiment; billing not measured; no paid capability/order is permitted"
+  }
+}

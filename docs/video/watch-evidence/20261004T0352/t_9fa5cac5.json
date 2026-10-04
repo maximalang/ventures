@@ -1,0 +1,4278 @@
+{
+  "task": {
+    "id": "t_9fa5cac5",
+    "title": "V5-T2: внедрить A5 density lint, wrap_lines ≤2 и θ-калибровку rhythm-lint",
+    "body": "task_type: code\n\nSpec: C:/Users/max/Documents/video-quality-upgrade/V5/SPEC_KIT_V32_LINT.md (findings 7–8 независимой QA t_f0c9e7f7, V5/QA_V5.md).\n\nRepo: C:/Users/max/Desktop/all/tools/capabilities/video-template-kit (main, base head ca4d83877b8588428254a6728d7ca99aa6f8f225).\n\nЗадание (по спеку):\n1. density-валидатор A5 (≤2 строки на caption-событие) входит в lint-выход kit: нарушение = ошибка валидации с clip_id + timecode + фактическое число строк.\n2. Fix auto-layout wrap_lines: удерживать ≤2 строки — разбивка события на два по word-timestamps или сокращение по caption-политике. Рендер с 3-строчным событием после фикса = дефект.\n3. θ-калибровка rhythm-lint по классам контента (talking-head / gaming-dynamic / procedural-animation): класс из spec-файла, таблица θ + метод калибровки в репо с evidence на эталонных клипах V5.\n4. Обратная совместимость: spec без класса → прежнее поведение (θ=3.0), density-валидатор включён для всех.\n5. Тесты: unittest на каждый валидатор + негативный контроль (3-строчное событие не проходит validate); manifest 3.2.0 == __version__ (контрактный тест есть).\n\nAcceptance (из спека): kit validate на WD-V5-02 spec_editor.json как есть → ошибки A5 с timecodes 0.05–2.71 / 4.35–6.99 / 8.01–11.40; rhythm_lint.json содержит блок density; θ-таблица + тесты; полный unittest discover зелёный; коммит в main + SHA в комментарии.\n\nГраницы: НЕ пересобирать V5-ролики, НЕ публиковать, hookscore не трогать. Независимая exact-head QA — отдельной картой (не автор).\n",
+    "assignee": "tech",
+    "status": "scheduled",
+    "priority": 0,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_9fa5cac5",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1790185479,
+    "started_at": 1790185480,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": null,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": null,
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": "pid 36660 not alive Worker's last output: '),+30p\" kit/spec.py + 4 commands  1.7s ┊ 💻 preparing terminal… ┊ 💻 $         grep -n \"exists\" kit/spec.py kit/render.py kit/layout.py + 2 commands  1.1s ┊ 💻 $         grep -n \"SLOTS\\\\|PRIORITY\\\\|FS\\\\b\\\\|fontsize\" kit/layout.py + 4 commands  0.7s ┊ 💻 preparing terminal… ┊ 💻 $         rtk ls -la + 4 commands  0.5s ┊ 📖 preparing read_file… ┊ 📖 read      spec_editor.json L53  0.7s ┊ 📖 preparing read_file…'"
+  },
+  "latest_summary": "company 24.09 12:37: PARKED до 25.09 09:00 — run 174 budget_exhausted (call 75, recurrences=2), работа kit v3.2 НЕ закоммичена (head всё ещё ca4d838=v3.1). Бюджет воркера сбрасывается ежедневно; ретрай сегодня = снова впустую. Клипы V5 от kit v3.2 не зависят (рендерены на ca4d838). Порядок run 175: читать SPEC_KIT_V32_LINT.md -> плотность-A5 в lint + wrap_lines fix + θ-калибровка -> unittest discover зелёный -> manifest 3.2.0 == __version__ -> commit в main + SHA в комментарий. Границы: НЕ пересобирать V5-ролики, hookscore не трогать. decision:company=go",
+  "parents": [],
+  "children": [],
+  "comments": [
+    {
+      "author": "tech",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [budget_exhausted] pattern=unknown call_index=0",
+      "created_at": 1790197493
+    },
+    {
+      "author": "tech",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [budget_exhausted] pattern=budget_exhausted call_index=97",
+      "created_at": 1790197495
+    },
+    {
+      "author": "worker",
+      "body": "RESUME GUIDANCE (company, после budget-блока run 146, token-cap 400k исчерпан на call 95):\n\nПОРЯДОК РАБОТЫ (строго):\n1. ПЕРВЫМ ШАГОМ — инспекция durable-состояния репо C:/Users/max/Desktop/all/tools/capabilities/video-template-kit относительно base ca4d8387: git log --oneline ca4d8387..HEAD, git status --porcelain, git diff --stat. Зафиксировать факт «что уже сделано» одним комментарием ДО любых правок. Рабочие черновики в workspace (px-калибровка wrap/θ из heartbeat-ноты run 146) — забрать оттуда, исследовательскую фазу НЕ повторять.\n2. Оставшееся дробить на 4 инкремента, коммит в main после КАЖДОГО (новый budget-блок должен терять максимум один инкремент):\n   a) A5 density-валидатор (≤2 строки/caption-событие) в lint-выход: clip_id + timecode + фактическое число строк;\n   b) fix wrap_lines ≤2 (разбивка по word-timestamps или сокращение по caption-политике) + негатив-контроль (3-строчное событие не проходит validate);\n   c) θ-таблица по классам (talking-head / gaming-dynamic / procedural-animation) + метод калибровки в репо, backward-compat: spec без класса → θ=3.0;\n   d) manifest 3.2.0 == __version__ + полный unittest discover зелёный.\n3. Экономия токенов: один тестовый прогон на инкремент (не итеративные циклы); θ-таблицу генерировать ОДНИМ скрипт-прогоном, а не перебором проб; выводы команд не перепечатывать в reasoning.\n4. Acceptance без изменений: kit validate на WD-V5-02 spec_editor.json как есть → ошибки A5 с timecodes 0.05–2.71 / 4.35–6.99 / 8.01–11.40; density-блок в rhythm_lint.json; SHA коммита в комментарии.\n5. При нехватке бюджета — честный частичный handoff: SHA последнего коммита + список готовых/неготовых инкрементов. Не ретраить упавшие прогоны, не начинать заново.\n6. Границы прежние: V5-ролики не пересобирать, не публиковать, hookscore не трогать; независимая exact-head QA — отдельной картой.",
+      "created_at": 1790199300
+    },
+    {
+      "author": "tech",
+      "body": "INSPECTION (run 161, до правок): durable-состояние repo video-template-kit — HEAD == base ca4d83877b8588428254a6728d7ca99aa6f8f225, git log ca4d8387..HEAD пуст, git status --porcelain пуст, git diff --stat пуст. Ничего из run 146 не закоммичено. Workspace t_9fa5cac5 пуст (черновики px-калибровки не сохранились — scratch очищен). Вывод: реализация начинается с нуля от base; исследовательская фаза run 146 утрачена, но по guidance не повторяется в полном объёме — калибровка будет выполнена одним скрипт-прогоном. План: 4 инкремента (a: A5 density-валидатор; b: wrap_lines ≤2 + негатив-контроль; c: θ-таблица по классам + backward-compat; d: manifest 3.2.0 + полный unittest discover), коммит в main после каждого.",
+      "created_at": 1790199960
+    },
+    {
+      "author": "tech",
+      "body": "INSPECTION (run 161, clean re-post — предыдущий комментарий 247 содержит артефакт компрессии, считать недействительным):\n- Repo: C:/Users/max/Desktop/all/tools/capabilities/video-template-kit, branch main, HEAD ca4d83877b8588428254a6728d7ca99aa6f8f225 == base; git status/diff чистые.\n- Спека прочитана: V5/SPEC_KIT_V32_LINT.md (kit v3.2: A5 density-валидатор в lint-выход + θ-калибровка по классам контента).\n- Baseline проверен: `python -m kit validate WD-V5-02/spec_editor.json` → OK exit 0 (density-нарушения A5 сейчас НЕ видны — дефект подтверждён).\n- QA-данные: V5/QA_V5.md findings 1/5/7/8; evidence overlay.ass WD-V5-02 показывает wrap_lines 2×≤42 симв, но рендер libass даёт 3 строки (перенос по пиксельной ширине, не по символам) → корень A5-дефекта: символьная модель wrap_lines не соответствует пиксельной ширине Dialogue-стиля (Arial Bold 66).\n- Окружение: python 3.11.16, numpy 2.4.3, PIL 12.3.0, ffmpeg/ffprobe 9.0 (winget) — доступны.\nПлан: эмпирическая калибровка ширины переноса libass для Dialogue \\pos-событий на этом хосте → пиксельная модель в geometry → [A5] density-валидатор в spec.validate + density-блок в rhythm lint → θ-таблица по классам контента с прогонами на эталонных клипах V5 → тесты → manifest/__version__ 3.2.0 → unittest discover → коммит в main + SHA.",
+      "created_at": 1790202145
+    },
+    {
+      "author": "tech",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [budget_exhausted] pattern=budget_exhausted call_index=75",
+      "created_at": 1790229837
+    },
+    {
+      "author": "company",
+      "body": "Specified — updated title, body and promoted to todo.",
+      "created_at": 1790242934
+    },
+    {
+      "author": "company",
+      "body": "SCHEDULED: company 24.09 12:37: PARKED до 25.09 09:00 — run 174 budget_exhausted (call 75, recurrences=2), работа kit v3.2 НЕ закоммичена (head всё ещё ca4d838=v3.1). Бюджет воркера сбрасывается ежедневно; ретрай сегодня = снова впустую. Клипы V5 от kit v3.2 не зависят (рендерены на ca4d838). Порядок run 175: читать SPEC_KIT_V32_LINT.md -> плотность-A5 в lint + wrap_lines fix + θ-калибровка -> unittest discover зелёный -> manifest 3.2.0 == __version__ -> commit в main + SHA в комментарий. Границы: НЕ пересобирать V5-ролики, hookscore не трогать. decision:company=go",
+      "created_at": 1790242938
+    },
+    {
+      "author": "company",
+      "body": "Дозор 04.10.2026: обнаружен просроченный PARK. Нативный read-only show подтверждает scheduled; последняя причина назначала ожидание до 25.09 09:00, новых запусков после №194 в receipt нет. Сам календарь больше не объясняет простой. Прежние два исчерпания бюджета сохранены; ежедневное «обнуление бюджета» из старого комментария не принимаю как новое разрешение повторить весь объём.\n\nТекущее покрытие реализацией пока UNKNOWN: старый HEAD ca4d83877b8588428254a6728d7ca99aa6f8f225 — историческое evidence, не сегодняшняя истина. Карта не закрывается и не объявляется выполненной. Owner восстановления=company. Условие возобновления — свежая инспекция целевого video-template-kit, имеющихся изменений/коммитов и остаточных acceptance; только после этого узкий same-ID контракт либо отдельная bounded evidence/fix-карта без повторения готового. Нет разрешения на commit в main из старого текста: исходные protected-branch проверки и независимая приёмка сохраняются.\n\nГраницы этого дозора: read-only диагностика, без повторного production-старта, удаления/сброса исходников, пересборки V5, публикаций, настройки моделей и платных действий. Wardogs/SYN не задерживать этой secondary kit-линией.\n\nФинансы: scope=диагностика просроченного ожидания, period=04.10.2026/данный тик, source=выполненные действия. Дополнительные платные расходы=0 ₽, новые обязательства=0 ₽. Выручка/возвраты=null (не сверялась бухгалтерия), estimated usage cost=null (billing readback отсутствует).",
+      "created_at": 1791064209
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "tech",
+        "status": "ready",
+        "parents": [],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1790185479,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:41588",
+        "expires": 1790186380,
+        "run_id": 146
+      },
+      "created_at": 1790185480,
+      "run_id": 146
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 40372,
+        "started_at": "|179018548024"
+      },
+      "created_at": 1790185480,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185514,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185574,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185642,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185702,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185762,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185822,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185882,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790185942,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186002,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186062,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186122,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186182,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186242,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186302,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186362,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186423,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186483,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186543,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186603,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186663,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186723,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186783,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186843,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186903,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790186963,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187023,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187083,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187143,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187203,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187265,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187327,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187387,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187447,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187513,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187567,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187627,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187687,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187747,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187807,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187868,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187928,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790187988,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188048,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188108,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188168,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188228,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188288,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188348,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188408,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188468,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188528,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188588,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188648,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188709,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188769,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188829,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188889,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790188949,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189009,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189069,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189129,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189189,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189249,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189309,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189369,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189429,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189490,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189550,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189610,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189670,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189730,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189790,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189850,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189910,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790189970,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190035,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190095,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190161,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190224,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190284,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190362,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190428,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190489,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190549,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190609,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190669,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190729,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190789,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190849,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190909,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790190969,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191029,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191089,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191149,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191209,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191269,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191329,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191390,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191450,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191510,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191570,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191630,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Ориентация завершена; калибровка порогов A5-px и таблицы θ по классам контента на эталонных клипах V5"
+      },
+      "created_at": 1790191642,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191690,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191750,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191810,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191870,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191930,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790191990,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192050,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192110,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192170,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192230,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192294,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192354,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192414,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192474,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192535,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192595,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192655,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192715,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192775,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192835,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192895,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790192955,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193015,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193075,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193135,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193195,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193255,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193315,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193375,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193436,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193496,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193557,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193617,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193677,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193737,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193797,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193857,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193917,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790193977,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194038,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194099,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194161,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194221,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194281,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194341,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194401,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194461,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194521,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194581,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194641,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194701,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194761,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194821,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194882,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790194942,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195002,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195062,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Калибровка: px-модель ширины подписей vs PIL/libass; уточнение границы wrap и выбор θ по классам"
+      },
+      "created_at": 1790195118,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195125,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195185,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195245,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195305,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195365,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195425,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195485,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195545,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195605,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195665,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195725,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195786,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195846,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195906,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790195966,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196026,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196086,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196146,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196206,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196266,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196326,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196386,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196446,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196515,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196575,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196635,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196695,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196755,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196815,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196875,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196935,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790196995,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197055,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197115,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197175,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197235,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197295,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197356,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197416,
+      "run_id": 146
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790197476,
+      "run_id": 146
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 77
+      },
+      "created_at": 1790197493,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "FLEET POLICY BLOCKED [budget_exhausted] pattern=unknown call_index=0",
+        "kind": "needs_input",
+        "recurrences": 1,
+        "source_status": "ready"
+      },
+      "created_at": 1790197493,
+      "run_id": 146
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 87
+      },
+      "created_at": 1790197495,
+      "run_id": null
+    },
+    {
+      "kind": "terminal_worker_reaped",
+      "payload": {
+        "pid": 40372,
+        "worker_started_at": "|179018548024",
+        "prev_pid": 40372,
+        "host_local": true,
+        "termination_attempted": true,
+        "terminated": true,
+        "sigkill": false
+      },
+      "created_at": 1790197615,
+      "run_id": 146
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "worker",
+        "len": 1842
+      },
+      "created_at": 1790199300,
+      "run_id": null
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1790199400,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:41588",
+        "expires": 1790200780,
+        "run_id": 161
+      },
+      "created_at": 1790199880,
+      "run_id": 161
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 36660,
+        "started_at": "|179019988045"
+      },
+      "created_at": 1790199880,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790199907,
+      "run_id": 161
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 715
+      },
+      "created_at": 1790199960,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790199967,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200036,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200096,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200156,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200218,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200283,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200343,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200403,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200463,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200523,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200583,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200643,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200703,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200763,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200823,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200883,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790200945,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201006,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201066,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201126,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201186,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201246,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201306,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201366,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201426,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201487,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201547,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201607,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201667,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201727,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201787,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201847,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201907,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790201967,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202027,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202087,
+      "run_id": 161
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 1291
+      },
+      "created_at": 1790202145,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202150,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202210,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202271,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202331,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202391,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202451,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202511,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202571,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202631,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202691,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202751,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202811,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202871,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202931,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790202991,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203051,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203111,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203171,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203231,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203291,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203351,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203411,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203471,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203531,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203591,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203651,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203711,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203771,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203831,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203891,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790203951,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204012,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204072,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204132,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204192,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204252,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204312,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204372,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204432,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204492,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204552,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204612,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204672,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204732,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204792,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204852,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204912,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790204972,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205033,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205097,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205157,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205217,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205277,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205337,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205397,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205457,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205517,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205578,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205638,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205698,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205758,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205818,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205878,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790205938,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206000,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206060,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206120,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206180,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206240,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206300,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206360,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206420,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206480,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206540,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206600,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206660,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206720,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206780,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206840,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206900,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790206960,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207020,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207080,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207140,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207200,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207260,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207320,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207380,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207440,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207500,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207560,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207620,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207681,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207741,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207801,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207861,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207921,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790207981,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208041,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208101,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208161,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208221,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Прочитана спека v3.2 + QA_V5 findings 7-8; инспекция repo (HEAD ca4d838, чисто); проб pixel-модели wrap на specs V5; готовлю калибровочный рендер libass. Замечен concurrent edit spec_editor.json (01:25:48) — фиксирую QA-era fixture."
+      },
+      "created_at": 1790208238,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208281,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208341,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208401,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208462,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208522,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208582,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208642,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208702,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208762,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208822,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208882,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790208942,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209002,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209062,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209122,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209182,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209242,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209302,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209363,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209423,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209483,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209543,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209603,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209663,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209723,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209783,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209843,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209906,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790209966,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210026,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210086,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210146,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210206,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210266,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210326,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210386,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210447,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210507,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210567,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210627,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210687,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210747,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210807,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210867,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210927,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790210987,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211047,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211107,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211168,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211228,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211288,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211348,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211408,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211468,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211528,
+      "run_id": 161
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790211588,
+      "run_id": 161
+    },
+    {
+      "kind": "reclaim_deferred",
+      "payload": {
+        "reason": "ttl_expired_worker_alive",
+        "claim_lock": "laptop:41588",
+        "claim_expires_now": 1790215375,
+        "prev_pid": 36660,
+        "host_local": true,
+        "termination_attempted": true,
+        "terminated": false,
+        "sigkill": false
+      },
+      "created_at": 1790215255,
+      "run_id": 161
+    },
+    {
+      "kind": "reclaim_deferred",
+      "payload": {
+        "reason": "heartbeat_stale_worker_alive",
+        "claim_lock": "laptop:41588",
+        "claim_expires_now": 1790215375,
+        "prev_pid": 36660,
+        "host_local": true,
+        "termination_attempted": true,
+        "terminated": false,
+        "sigkill": false
+      },
+      "created_at": 1790215255,
+      "run_id": 161
+    },
+    {
+      "kind": "crashed",
+      "payload": {
+        "pid": 36660,
+        "claimer": "laptop:41588",
+        "worker_output": "),+30p\" kit/spec.py + 4 commands  1.7s ┊ 💻 preparing terminal… ┊ 💻 $         grep -n \"exists\" kit/spec.py kit/render.py kit/layout.py + 2 commands  1.1s ┊ 💻 $         grep -n \"SLOTS\\|PRIORITY\\|FS\\b\\|fontsize\" kit/layout.py + 4 commands  0.7s ┊ 💻 preparing terminal… ┊ 💻 $         rtk ls -la + 4 commands  0.5s ┊ 📖 preparing read_file… ┊ 📖 read      spec_editor.json L53  0.7s ┊ 📖 preparing read_file…",
+        "retry_status": "ready"
+      },
+      "created_at": 1790215255,
+      "run_id": 161
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:820",
+        "expires": 1790216156,
+        "run_id": 174
+      },
+      "created_at": 1790215256,
+      "run_id": 174
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 22088,
+        "started_at": "|179021525604"
+      },
+      "created_at": 1790215256,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215266,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215327,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215389,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215451,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215511,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215571,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215631,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215691,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215751,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215811,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215871,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215931,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790215991,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216051,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216112,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216172,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216239,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216299,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216359,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216419,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216480,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216540,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216600,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216660,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216720,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216780,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216840,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216900,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790216961,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217021,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217081,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217141,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217201,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217261,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217321,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217381,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217441,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "run 174: ориентация完成 — repo чист на base ca4d838, root-cause A5 подтверждён (char-модель wrap vs pixel-модель libass 1080px), читаю lint/spec/layout перед реализацией"
+      },
+      "created_at": 1790217476,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217501,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217561,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217621,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217681,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217742,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217802,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217862,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217922,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790217982,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218042,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218102,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218162,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218225,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218285,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218345,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218405,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218465,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218526,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218586,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218646,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218706,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218766,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218826,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218886,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790218946,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219006,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219067,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219127,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219187,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219247,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219307,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219367,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219427,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219487,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219547,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219607,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219696,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219757,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219817,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219877,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219937,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790219997,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220057,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220117,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220177,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220237,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220298,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220358,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220418,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220478,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220538,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220598,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220658,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220718,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220778,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220838,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220898,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790220958,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221038,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221098,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221159,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221219,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221280,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221340,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221424,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221485,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221545,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221605,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221665,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221725,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221785,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221845,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221905,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790221965,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222025,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222085,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222145,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222205,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222283,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222343,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222403,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222463,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222523,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222583,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222643,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222703,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222763,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222824,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222884,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790222944,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223004,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223065,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223125,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223185,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223246,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223306,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223366,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223426,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223488,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223548,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223608,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223668,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223729,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223789,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223851,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223911,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790223971,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224031,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224091,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224153,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224213,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224273,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224354,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224415,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224475,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224535,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224596,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224671,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224731,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224800,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224860,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224920,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790224980,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225040,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225100,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225160,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225220,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225280,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225340,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225400,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225461,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225521,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225581,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225641,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225701,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225761,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225821,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225881,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790225941,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226001,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226061,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226122,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226204,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226264,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226324,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226384,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226444,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226504,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226564,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226625,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226685,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226745,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226806,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226866,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226926,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790226986,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227047,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227107,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227167,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227227,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227287,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227347,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227407,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227467,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227527,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227587,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227647,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227707,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227767,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227827,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227887,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790227947,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228008,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228068,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228128,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228188,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228248,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228308,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228369,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228429,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228489,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228549,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228609,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228669,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228729,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228789,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228849,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228910,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790228970,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229030,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229090,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229150,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229210,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229270,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229330,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229390,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229450,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229510,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229570,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229630,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229690,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229751,
+      "run_id": 174
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790229811,
+      "run_id": 174
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "tech",
+        "len": 87
+      },
+      "created_at": 1790229837,
+      "run_id": null
+    },
+    {
+      "kind": "block_loop_detected",
+      "payload": {
+        "reason": "FLEET POLICY BLOCKED [budget_exhausted] pattern=budget_exhausted call_index=75",
+        "kind": "needs_input",
+        "recurrences": 2,
+        "source_status": "ready",
+        "limit": 2
+      },
+      "created_at": 1790229837,
+      "run_id": 174
+    },
+    {
+      "kind": "terminal_worker_reaped",
+      "payload": {
+        "pid": 22088,
+        "worker_started_at": "|179021525604",
+        "prev_pid": 22088,
+        "host_local": true,
+        "termination_attempted": true,
+        "terminated": true,
+        "sigkill": false
+      },
+      "created_at": 1790229996,
+      "run_id": 174
+    },
+    {
+      "kind": "specified",
+      "payload": {
+        "changed_fields": [
+          "title",
+          "body"
+        ]
+      },
+      "created_at": 1790242934,
+      "run_id": null
+    },
+    {
+      "kind": "promoted",
+      "payload": null,
+      "created_at": 1790242934,
+      "run_id": null
+    },
+    {
+      "kind": "edited",
+      "payload": {
+        "fields": [
+          "body"
+        ]
+      },
+      "created_at": 1790242935,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 571
+      },
+      "created_at": 1790242938,
+      "run_id": null
+    },
+    {
+      "kind": "scheduled",
+      "payload": {
+        "reason": "company 24.09 12:37: PARKED до 25.09 09:00 — run 174 budget_exhausted (call 75, recurrences=2), работа kit v3.2 НЕ закоммичена (head всё ещё ca4d838=v3.1). Бюджет воркера сбрасывается ежедневно; ретрай сегодня = снова впустую. Клипы V5 от kit v3.2 не зависят (рендерены на ca4d838). Порядок run 175: читать SPEC_KIT_V32_LINT.md -> плотность-A5 в lint + wrap_lines fix + θ-калибровка -> unittest discover зелёный -> manifest 3.2.0 == __version__ -> commit в main + SHA в комментарий. Границы: НЕ пересобирать V5-ролики, hookscore не трогать. decision:company=go"
+      },
+      "created_at": 1790242938,
+      "run_id": 194
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 1469
+      },
+      "created_at": 1791064209,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 146,
+      "profile": "tech",
+      "step_key": null,
+      "status": "blocked",
+      "outcome": "blocked",
+      "summary": "FLEET POLICY BLOCKED [budget_exhausted] pattern=unknown call_index=0",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "blocked",
+          "evidence_refs": [],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1790185480,
+      "ended_at": 1786889420
+    },
+    {
+      "id": 161,
+      "profile": "tech",
+      "step_key": null,
+      "status": "crashed",
+      "outcome": "crashed",
+      "summary": null,
+      "error": "pid 36660 not alive Worker's last output: '),+30p\" kit/spec.py + 4 commands  1.7s ┊ 💻 preparing terminal… ┊ 💻 $         grep -n \"exists\" kit/spec.py kit/render.py kit/layout.py + 2 commands  1.1s ┊ 💻 $         grep -n \"SLOTS\\\\|PRIORITY\\\\|FS\\\\b\\\\|fontsize\" kit/layout.py + 4 commands  0.7s ┊ 💻 preparing terminal… ┊ 💻 $         rtk ls -la + 4 commands  0.5s ┊ 📖 preparing read_file… ┊ 📖 read      spec_editor.json L53  0.7s ┊ 📖 preparing read_file…'",
+      "metadata": {
+        "pid": 36660,
+        "claimer": "laptop:41588",
+        "worker_output": "),+30p\" kit/spec.py + 4 commands  1.7s ┊ 💻 preparing terminal… ┊ 💻 $         grep -n \"exists\" kit/spec.py kit/render.py kit/layout.py + 2 commands  1.1s ┊ 💻 $         grep -n \"SLOTS\\|PRIORITY\\|FS\\b\\|fontsize\" kit/layout.py + 4 commands  0.7s ┊ 💻 preparing terminal… ┊ 💻 $         rtk ls -la + 4 commands  0.5s ┊ 📖 preparing read_file… ┊ 📖 read      spec_editor.json L53  0.7s ┊ 📖 preparing read_file…",
+        "retry_status": "ready",
+        "receipt": {
+          "status": "crashed",
+          "evidence_refs": [
+            "error:pid 36660 not alive Worker's last output: '),+30p\" kit/spec.py + 4 commands  1.7s ┊ 💻 preparing terminal… ┊ 💻 $         grep -n \"exists\" kit/spec.py kit/render.py kit/layout.py + 2 commands  1.1s ┊ 💻 $         grep -n \"SLOTS\\\\|PRIORITY\\\\|FS"
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1790199880,
+      "ended_at": 1786889420
+    },
+    {
+      "id": 174,
+      "profile": "tech",
+      "step_key": null,
+      "status": "blocked",
+      "outcome": "blocked",
+      "summary": "FLEET POLICY BLOCKED [budget_exhausted] pattern=budget_exhausted call_index=75",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "blocked",
+          "evidence_refs": [],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1790215256,
+      "ended_at": 1786889420
+    },
+    {
+      "id": 194,
+      "profile": "tech",
+      "step_key": null,
+      "status": "scheduled",
+      "outcome": "scheduled",
+      "summary": "company 24.09 12:37: PARKED до 25.09 09:00 — run 174 budget_exhausted (call 75, recurrences=2), работа kit v3.2 НЕ закоммичена (head всё ещё ca4d838=v3.1). Бюджет воркера сбрасывается ежедневно; ретрай сегодня = снова впустую. Клипы V5 от kit v3.2 не зависят (рендерены на ca4d838). Порядок run 175: читать SPEC_KIT_V32_LINT.md -> плотность-A5 в lint + wrap_lines fix + θ-калибровка -> unittest discover зелёный -> manifest 3.2.0 == __version__ -> commit в main + SHA в комментарий. Границы: НЕ пересобирать V5-ролики, hookscore не трогать. decision:company=go",
+      "error": null,
+      "metadata": null,
+      "worker_pid": null,
+      "started_at": 1790242938,
+      "ended_at": 1786889420
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+
+test_hash_and_size_pinned (test_skill_layer_audit.T01_OffenderFixture.test_hash_and_size_pinned) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\offender\\SKILL.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\offender\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\offender\\references\\official-format.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_real_skill_produces_placement_finding (test_skill_layer_audit.T02_OffenderPlacementFinding.test_real_skill_produces_placement_finding) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\snapshot\\SOUL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_maintenance_reference_not_routine (test_skill_layer_audit.T03_TransportMaintenanceNotRoutine.test_maintenance_reference_not_routine) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\maintenance\\references\\tg-message-format.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\maintenance\\references\\tg-message-format.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_notification_ops_clean (test_skill_layer_audit.T03_TransportMaintenanceNotRoutine.test_notification_ops_clean) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\maintenance\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\maintenance\\SKILL.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_legitimate_specialized_skill_clean (test_skill_layer_audit.T04_T05_NegativeControls.test_legitimate_specialized_skill_clean) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\negative_specialized\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_unique_safety_gate_procedure_clean (test_skill_layer_audit.T04_T05_NegativeControls.test_unique_safety_gate_procedure_clean) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\negative_safety_gate\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_narrow_trigger_runtime_body_is_candidate_not_verdict (test_skill_layer_audit.T06_AmbiguousStaysUnresolved.test_narrow_trigger_runtime_body_is_candidate_not_verdict) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\tests\\fixtures\\ambiguous_runtime\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_status_vocabulary_is_candidate_only (test_skill_layer_audit.T07_NoVerdictVocabulary.test_status_vocabulary_is_candidate_only) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\audit_extension\\skill_layer_audit.py' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_scan_rubrics_identical_live_vs_staged (test_skill_layer_audit.T08_P1P3_Regression.test_scan_rubrics_identical_live_vs_staged) ... ok
+test_staged_main_preserves_dedup_and_heartbeat (test_skill_layer_audit.T09_WatermarkHeartbeatContract.test_staged_main_preserves_dedup_and_heartbeat) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\audit_extension\prompt_audit.py:85: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\profiles\\demo\\SOUL.md' mode='r' encoding='utf-8'>
+  return io.open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\audit_extension\prompt_audit.py:85: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\profiles\\demo\\skills\\fleet-ops\\fleet-notification-ops\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\audit_extension\prompt_audit.py:85: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\profiles\\demo\\skills\\fleet-ops\\telegram-message-formatting\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(path, encoding='utf-8', errors='replace').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\audit_extension\prompt_audit.py:188: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\scripts\\prompt_audit.state.json.tmp' mode='w' encoding='utf-8'>
+  io.open(tmp, 'w', encoding='utf-8').write(json.dumps(st, ensure_ascii=False))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\audit_extension\prompt_audit.py:209: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\scripts\\prompt_audit_arch_candidates.json.tmp' mode='w' encoding='utf-8'>
+  io.open(tmp, 'w', encoding='utf-8').write(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:197: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\scripts\\prompt_audit.state.json' mode='r' encoding='utf-8'>
+  st1 = json.load(io.open(m.STATE, encoding='utf-8'))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:203: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\scripts\\prompt_audit_arch_candidates.json' mode='r' encoding='utf-8'>
+  det = json.load(io.open(m.ARCH_DETAIL, encoding='utf-8'))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\audit_extension\prompt_audit.py:181: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\scripts\\prompt_audit.state.json' mode='r' encoding='utf-8'>
+  return json.load(io.open(STATE, encoding='utf-8'))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:212: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\cache\\scratch\\sla-test-dhfivtbw\\scripts\\prompt_audit.state.json' mode='r' encoding='utf-8'>
+  st2 = json.load(io.open(m.STATE, encoding='utf-8'))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_live_inputs_match_spec_anchors (test_skill_layer_audit.T10_LiveAnchorDriftGuard.test_live_inputs_match_spec_anchors) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\scripts\\prompt_audit.py'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\SOUL.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\telegram-message-formatting\\SKILL.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\telegram-message-formatting\\references\\official-format.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-notification-ops\\SKILL.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-notification-ops\\references\\tg-message-format.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\google-forms-automation\\SKILL.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_no_active_pointer_to_retired_skill (test_skill_layer_audit.T11_PatchedTreeZeroMandatoryLoads.test_no_active_pointer_to_retired_skill) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\scripts\\truffle_form_watch.py' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\fleet-ops\\fleet-notification-ops\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\fleet-ops\\fleet-notification-ops\\references\\cx-group-routing.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\fleet-ops\\fleet-notification-ops\\references\\official-format.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\fleet-ops\\fleet-notification-ops\\references\\tg-message-format.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\fleet-ops\\fleet-notification-ops\\references\\tg-transport-internals.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\productivity\\google-forms-automation\\SKILL.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:48: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\video\\video-pipeline-ops\\references\\ops-facts-2209.md' mode='r' encoding='utf-8'>
+  return io.open(p, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_referenced_files_exist (test_skill_layer_audit.T12_NoBrokenScopedReferences.test_referenced_files_exist) ... ok
+test_official_format_byte_identical_after_move (test_skill_layer_audit.T13_TransportFactsPreserved.test_official_format_byte_identical_after_move) ... C:\Users\max\AppData\Local\hermes\profiles\company\reports\skill-layer-20261003\candidate\tests\test_skill_layer_audit.py:44: ResourceWarning: unclosed file <_io.BufferedReader name='C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\reports\\skill-layer-20261003\\candidate\\retirement\\patched\\skills\\fleet-ops\\fleet-notification-ops\\references\\official-format.md'>
+  return hashlib.sha256(io.open(p, 'rb').read()).hexdigest()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_unique_facts_moved_not_lost (test_skill_layer_audit.T13_TransportFactsPreserved.test_unique_facts_moved_not_lost) ... ok
+test_castle_milord_style_and_soul_untouched (test_skill_layer_audit.T14_StylePreserved.test_castle_milord_style_and_soul_untouched) ... ok
+test_helper_api_preserved (test_skill_layer_audit.T14_StylePreserved.test_helper_api_preserved) ... ok
+test_truffle_form_watch_py_compile (test_skill_layer_audit.T15_PatchedScriptCompiles.test_truffle_form_watch_py_compile) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.229s
+
+OK

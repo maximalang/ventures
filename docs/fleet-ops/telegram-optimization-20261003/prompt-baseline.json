@@ -1,0 +1,1285 @@
+{
+  "platform": "telegram",
+  "model": "gpt-6.1-sol",
+  "system_prompt": {
+    "chars": 47291,
+    "bytes": 57806
+  },
+  "skills_index": {
+    "chars": 12150,
+    "bytes": 12190
+  },
+  "memory": {
+    "chars": 7861,
+    "bytes": 11483
+  },
+  "user_profile": {
+    "chars": 2480,
+    "bytes": 4017
+  },
+  "tools": {
+    "count": 42,
+    "json_bytes": 76517
+  },
+  "sections": [
+    [
+      "stable (identity/guidance/skills)",
+      20202,
+      25500
+    ],
+    [
+      "context (AGENTS.md/cwd files)",
+      0,
+      0
+    ],
+    [
+      "volatile (memory/profile/timestamp)",
+      27087,
+      32304
+    ]
+  ],
+  "skills_breakdown": [
+    {
+      "name": "owner-preview-loop",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 70982,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\product-delivery\\owner-preview-loop\\SKILL.md"
+    },
+    {
+      "name": "hermes-limits-internals",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 57436,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\projects\\hermes-limits-internals\\SKILL.md"
+    },
+    {
+      "name": "windows-host-maintenance",
+      "index_line_bytes": 79,
+      "index_line_total_bytes": 79,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 53252,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\windows-host-maintenance\\SKILL.md"
+    },
+    {
+      "name": "hermes-pool-selection-policy",
+      "index_line_bytes": 91,
+      "index_line_total_bytes": 91,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 47762,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\hermes-pool-selection-policy\\SKILL.md"
+    },
+    {
+      "name": "hermes-internals",
+      "index_line_bytes": 74,
+      "index_line_total_bytes": 74,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 47438,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\hermes-internals\\SKILL.md"
+    },
+    {
+      "name": "video-pipeline-ops",
+      "index_line_bytes": 74,
+      "index_line_total_bytes": 74,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 47393,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\video\\video-pipeline-ops\\SKILL.md"
+    },
+    {
+      "name": "web-account-onboarding",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 45128,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\web-account-onboarding\\SKILL.md"
+    },
+    {
+      "name": "hermes-botfleet-health",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 39367,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\hermes-botfleet-health\\SKILL.md"
+    },
+    {
+      "name": "fleet-notification-ops",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 39347,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-notification-ops\\SKILL.md"
+    },
+    {
+      "name": "android-headless-node-ops",
+      "index_line_bytes": 90,
+      "index_line_total_bytes": 90,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 37665,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\android-headless-node-ops\\SKILL.md"
+    },
+    {
+      "name": "fleet-tool-ops",
+      "index_line_bytes": 78,
+      "index_line_total_bytes": 78,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 34906,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-tool-ops\\SKILL.md"
+    },
+    {
+      "name": "fleet-browser-routing",
+      "index_line_bytes": 76,
+      "index_line_total_bytes": 76,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 34630,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\fleet-browser-routing\\SKILL.md"
+    },
+    {
+      "name": "interactive-demo-mocks",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 31704,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\product-delivery\\interactive-demo-mocks\\SKILL.md"
+    },
+    {
+      "name": "fleet-doctrine",
+      "index_line_bytes": 63,
+      "index_line_total_bytes": 63,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 29403,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-doctrine\\SKILL.md"
+    },
+    {
+      "name": "fleet-skills-rollout",
+      "index_line_bytes": 81,
+      "index_line_total_bytes": 81,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 28487,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-skills-rollout\\SKILL.md"
+    },
+    {
+      "name": "lan-windows-device-ops",
+      "index_line_bytes": 81,
+      "index_line_total_bytes": 81,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 27518,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\lan-windows-device-ops\\SKILL.md"
+    },
+    {
+      "name": "windows-widgets-dev",
+      "index_line_bytes": 80,
+      "index_line_total_bytes": 80,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 26675,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\windows-widgets-dev\\SKILL.md"
+    },
+    {
+      "name": "cron-lane-operations",
+      "index_line_bytes": 74,
+      "index_line_total_bytes": 74,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 25217,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\cron-lane-operations\\SKILL.md"
+    },
+    {
+      "name": "claude-design",
+      "index_line_bytes": 78,
+      "index_line_total_bytes": 78,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 25117,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\creative\\claude-design\\SKILL.md"
+    },
+    {
+      "name": "security-and-hardening",
+      "index_line_bytes": 77,
+      "index_line_total_bytes": 77,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 24743,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\security-and-hardening\\SKILL.md"
+    },
+    {
+      "name": "fleet-token-economy",
+      "index_line_bytes": 72,
+      "index_line_total_bytes": 72,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 22714,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-token-economy\\SKILL.md"
+    },
+    {
+      "name": "performance-optimization",
+      "index_line_bytes": 82,
+      "index_line_total_bytes": 82,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 22109,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\performance-optimization\\SKILL.md"
+    },
+    {
+      "name": "dpo-leadgen",
+      "index_line_bytes": 92,
+      "index_line_total_bytes": 92,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 22100,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\projects\\dpo-leadgen\\SKILL.md"
+    },
+    {
+      "name": "code-review-and-quality",
+      "index_line_bytes": 82,
+      "index_line_total_bytes": 82,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 21037,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\code-review-and-quality\\SKILL.md"
+    },
+    {
+      "name": "external-asset-vetting",
+      "index_line_bytes": 87,
+      "index_line_total_bytes": 87,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 20041,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\external-asset-vetting\\SKILL.md"
+    },
+    {
+      "name": "evidence-gated-release-publication",
+      "index_line_bytes": 98,
+      "index_line_total_bytes": 98,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 18994,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\evidence-gated-release-publication\\SKILL.md"
+    },
+    {
+      "name": "computer-use",
+      "index_line_bytes": 75,
+      "index_line_total_bytes": 75,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 18577,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\computer-use\\SKILL.md"
+    },
+    {
+      "name": "rr-evidence-gated-coordination",
+      "index_line_bytes": 95,
+      "index_line_total_bytes": 95,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 17730,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\recruiter-radar\\rr-evidence-gated-coordination\\SKILL.md"
+    },
+    {
+      "name": "fleet-model-probing",
+      "index_line_bytes": 87,
+      "index_line_total_bytes": 87,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 16971,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-model-probing\\SKILL.md"
+    },
+    {
+      "name": "doubt-driven-development",
+      "index_line_bytes": 87,
+      "index_line_total_bytes": 87,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 16705,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\doubt-driven-development\\SKILL.md"
+    },
+    {
+      "name": "live-state-verification",
+      "index_line_bytes": 85,
+      "index_line_total_bytes": 85,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 15927,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\live-state-verification\\SKILL.md"
+    },
+    {
+      "name": "worker-tool-discipline",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 15795,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\worker-tool-discipline\\SKILL.md"
+    },
+    {
+      "name": "exact-head-acceptance-qa",
+      "index_line_bytes": 85,
+      "index_line_total_bytes": 85,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 15703,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\exact-head-acceptance-qa\\SKILL.md"
+    },
+    {
+      "name": "company-os",
+      "index_line_bytes": 76,
+      "index_line_total_bytes": 76,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 15431,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md"
+    },
+    {
+      "name": "windows-desktop-remediation",
+      "index_line_bytes": 87,
+      "index_line_total_bytes": 87,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 15337,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\windows-desktop-remediation\\SKILL.md"
+    },
+    {
+      "name": "git-workflow-and-versioning",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 15055,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\git-workflow-and-versioning\\SKILL.md"
+    },
+    {
+      "name": "api-and-interface-design",
+      "index_line_bytes": 77,
+      "index_line_total_bytes": 77,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 14952,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\api-and-interface-design\\SKILL.md"
+    },
+    {
+      "name": "systematic-debugging",
+      "index_line_bytes": 88,
+      "index_line_total_bytes": 88,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 14711,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\systematic-debugging\\SKILL.md"
+    },
+    {
+      "name": "bot-dispatch",
+      "index_line_bytes": 71,
+      "index_line_total_bytes": 71,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 14517,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\bot-dispatch\\SKILL.md"
+    },
+    {
+      "name": "hermes-agent-skill-authoring",
+      "index_line_bytes": 93,
+      "index_line_total_bytes": 93,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 14504,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\hermes-agent-skill-authoring\\SKILL.md"
+    },
+    {
+      "name": "google-workspace",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 14440,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\google-workspace\\SKILL.md"
+    },
+    {
+      "name": "interview-me",
+      "index_line_bytes": 62,
+      "index_line_total_bytes": 62,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 14424,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\interview-me\\SKILL.md"
+    },
+    {
+      "name": "competitor-experience-audit",
+      "index_line_bytes": 80,
+      "index_line_total_bytes": 80,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 14390,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\rampstack\\competitor-experience-audit\\SKILL.md"
+    },
+    {
+      "name": "kanban-card-authoring",
+      "index_line_bytes": 81,
+      "index_line_total_bytes": 81,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 13866,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\kanban-card-authoring\\SKILL.md"
+    },
+    {
+      "name": "venture-idea-governance",
+      "index_line_bytes": 90,
+      "index_line_total_bytes": 90,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 13770,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-portfolio\\venture-idea-governance\\SKILL.md"
+    },
+    {
+      "name": "hermes-agent",
+      "index_line_bytes": 76,
+      "index_line_total_bytes": 76,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 13580,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\hermes-agent\\SKILL.md"
+    },
+    {
+      "name": "grounded-citations",
+      "index_line_bytes": 84,
+      "index_line_total_bytes": 84,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 12652,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\research\\grounded-citations\\SKILL.md"
+    },
+    {
+      "name": "pdf",
+      "index_line_bytes": 64,
+      "index_line_total_bytes": 64,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 12489,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\pdf\\SKILL.md"
+    },
+    {
+      "name": "ci-cd-and-automation",
+      "index_line_bytes": 77,
+      "index_line_total_bytes": 77,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 11404,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\ci-cd-and-automation\\SKILL.md"
+    },
+    {
+      "name": "hermes-nightly-update-pipeline",
+      "index_line_bytes": 95,
+      "index_line_total_bytes": 95,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 11334,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\hermes-nightly-update-pipeline\\SKILL.md"
+    },
+    {
+      "name": "stakeholder-communication",
+      "index_line_bytes": 71,
+      "index_line_total_bytes": 71,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 11311,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\rampstack\\stakeholder-communication\\SKILL.md"
+    },
+    {
+      "name": "observability-and-instrumentation",
+      "index_line_bytes": 95,
+      "index_line_total_bytes": 95,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 11130,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\observability-and-instrumentation\\SKILL.md"
+    },
+    {
+      "name": "test-driven-development",
+      "index_line_bytes": 82,
+      "index_line_total_bytes": 82,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 11051,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\test-driven-development\\SKILL.md"
+    },
+    {
+      "name": "popular-web-designs",
+      "index_line_bytes": 87,
+      "index_line_total_bytes": 87,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 11026,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\creative\\popular-web-designs\\SKILL.md"
+    },
+    {
+      "name": "debugging-and-error-recovery",
+      "index_line_bytes": 92,
+      "index_line_total_bytes": 92,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10916,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\debugging-and-error-recovery\\SKILL.md"
+    },
+    {
+      "name": "google-forms-automation",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10795,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\google-forms-automation\\SKILL.md"
+    },
+    {
+      "name": "frontend-ui-engineering",
+      "index_line_bytes": 82,
+      "index_line_total_bytes": 82,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10785,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\frontend-ui-engineering\\SKILL.md"
+    },
+    {
+      "name": "video-editing-craft",
+      "index_line_bytes": 76,
+      "index_line_total_bytes": 76,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10510,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\video\\video-editing-craft\\SKILL.md"
+    },
+    {
+      "name": "shipping-and-launch",
+      "index_line_bytes": 69,
+      "index_line_total_bytes": 69,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10493,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\shipping-and-launch\\SKILL.md"
+    },
+    {
+      "name": "sdlc-review",
+      "index_line_bytes": 70,
+      "index_line_total_bytes": 70,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10465,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\sdlc-review\\SKILL.md"
+    },
+    {
+      "name": "docx",
+      "index_line_bytes": 70,
+      "index_line_total_bytes": 70,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10395,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\docx\\SKILL.md"
+    },
+    {
+      "name": "email-sequences",
+      "index_line_bytes": 60,
+      "index_line_total_bytes": 60,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10377,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\rampstack\\email-sequences\\SKILL.md"
+    },
+    {
+      "name": "typesafe-ai",
+      "index_line_bytes": 79,
+      "index_line_total_bytes": 79,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 10189,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\typesafe-ai\\SKILL.md"
+    },
+    {
+      "name": "documentation-and-adrs",
+      "index_line_bytes": 82,
+      "index_line_total_bytes": 82,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9857,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\documentation-and-adrs\\SKILL.md"
+    },
+    {
+      "name": "telegram-message-formatting",
+      "index_line_bytes": 95,
+      "index_line_total_bytes": 95,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9780,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\telegram-message-formatting\\SKILL.md"
+    },
+    {
+      "name": "donut-browser",
+      "index_line_bytes": 73,
+      "index_line_total_bytes": 73,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9544,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\donut-browser\\SKILL.md"
+    },
+    {
+      "name": "android-apk-builds",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9262,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\android-apk-builds\\SKILL.md"
+    },
+    {
+      "name": "android-apk-building",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9201,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\android-apk-building\\SKILL.md"
+    },
+    {
+      "name": "strategy-doc-authoring",
+      "index_line_bytes": 74,
+      "index_line_total_bytes": 74,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9146,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-portfolio\\strategy-doc-authoring\\SKILL.md"
+    },
+    {
+      "name": "video-direction",
+      "index_line_bytes": 68,
+      "index_line_total_bytes": 68,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9062,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\video\\video-direction\\SKILL.md"
+    },
+    {
+      "name": "experiment-design",
+      "index_line_bytes": 67,
+      "index_line_total_bytes": 67,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 9020,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\rampstack\\experiment-design\\SKILL.md"
+    },
+    {
+      "name": "scrapling",
+      "index_line_bytes": 74,
+      "index_line_total_bytes": 74,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 8993,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\research\\scrapling\\SKILL.md"
+    },
+    {
+      "name": "chromium-profile-migration",
+      "index_line_bytes": 93,
+      "index_line_total_bytes": 93,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 8850,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\chromium-profile-migration\\SKILL.md"
+    },
+    {
+      "name": "fleet-capabilities",
+      "index_line_bytes": 69,
+      "index_line_total_bytes": 69,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 8805,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\fleet-capabilities\\SKILL.md"
+    },
+    {
+      "name": "rr-landing",
+      "index_line_bytes": 73,
+      "index_line_total_bytes": 73,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 8742,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\rr-landing\\SKILL.md"
+    },
+    {
+      "name": "fleet-workflow-efficiency",
+      "index_line_bytes": 93,
+      "index_line_total_bytes": 93,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 8247,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-workflow-efficiency\\SKILL.md"
+    },
+    {
+      "name": "idea-refine",
+      "index_line_bytes": 69,
+      "index_line_total_bytes": 69,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 8184,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\idea-refine\\SKILL.md"
+    },
+    {
+      "name": "rr-copy-truth-gate",
+      "index_line_bytes": 84,
+      "index_line_total_bytes": 84,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7960,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\recruiter-radar\\rr-copy-truth-gate\\SKILL.md"
+    },
+    {
+      "name": "gpt-pool-quota-repair",
+      "index_line_bytes": 89,
+      "index_line_total_bytes": 89,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7922,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\gpt-pool-quota-repair\\SKILL.md"
+    },
+    {
+      "name": "bootstrap-spec-authoring",
+      "index_line_bytes": 90,
+      "index_line_total_bytes": 90,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7891,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\bootstrap-spec-authoring\\SKILL.md"
+    },
+    {
+      "name": "screenshot",
+      "index_line_bytes": 64,
+      "index_line_total_bytes": 64,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7818,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\codex-imports\\screenshot\\SKILL.md"
+    },
+    {
+      "name": "subagent-economy",
+      "index_line_bytes": 82,
+      "index_line_total_bytes": 82,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7647,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\subagent-economy\\SKILL.md"
+    },
+    {
+      "name": "agent-merge-conflict-arbiter",
+      "index_line_bytes": 91,
+      "index_line_total_bytes": 91,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7629,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\agent-merge-conflict-arbiter\\SKILL.md"
+    },
+    {
+      "name": "legal-agent-privacy-hardening",
+      "index_line_bytes": 88,
+      "index_line_total_bytes": 88,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7399,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\security-and-hardening\\legal-agent-privacy-hardening\\SKILL.md"
+    },
+    {
+      "name": "rr-source-pipeline-quality-gates",
+      "index_line_bytes": 99,
+      "index_line_total_bytes": 99,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 7373,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\recruiter-radar\\rr-source-pipeline-quality-gates\\SKILL.md"
+    },
+    {
+      "name": "maps",
+      "index_line_bytes": 68,
+      "index_line_total_bytes": 68,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6958,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\maps\\SKILL.md"
+    },
+    {
+      "name": "session-librarian",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6727,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\session-librarian\\SKILL.md"
+    },
+    {
+      "name": "web-document-editing",
+      "index_line_bytes": 84,
+      "index_line_total_bytes": 84,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6715,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\web-document-editing\\SKILL.md"
+    },
+    {
+      "name": "windows-vpn-client-diagnostics",
+      "index_line_bytes": 93,
+      "index_line_total_bytes": 93,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6563,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\windows-vpn-client-diagnostics\\SKILL.md"
+    },
+    {
+      "name": "exact-head-defect-remediation",
+      "index_line_bytes": 92,
+      "index_line_total_bytes": 92,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6504,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\exact-head-defect-remediation\\SKILL.md"
+    },
+    {
+      "name": "design-inspo",
+      "index_line_bytes": 74,
+      "index_line_total_bytes": 74,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6481,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\design-inspo\\SKILL.md"
+    },
+    {
+      "name": "inspecting-hermes-desktop-dom",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6390,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\inspecting-hermes-desktop-dom\\SKILL.md"
+    },
+    {
+      "name": "dogfood",
+      "index_line_bytes": 72,
+      "index_line_total_bytes": 72,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6324,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\dogfood\\SKILL.md"
+    },
+    {
+      "name": "codex",
+      "index_line_bytes": 65,
+      "index_line_total_bytes": 65,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 6316,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\codex\\SKILL.md"
+    },
+    {
+      "name": "blocked-page-recovery",
+      "index_line_bytes": 85,
+      "index_line_total_bytes": 85,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 5863,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\web\\blocked-page-recovery\\SKILL.md"
+    },
+    {
+      "name": "dozor",
+      "index_line_bytes": 62,
+      "index_line_total_bytes": 62,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 5531,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\projects\\dozor\\SKILL.md"
+    },
+    {
+      "name": "source-landscape-triage",
+      "index_line_bytes": 83,
+      "index_line_total_bytes": 83,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 4958,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\research\\source-landscape-triage\\SKILL.md"
+    },
+    {
+      "name": "goal-judge-failure-recovery",
+      "index_line_bytes": 88,
+      "index_line_total_bytes": 88,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 4642,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\goal-judge-failure-recovery\\SKILL.md"
+    },
+    {
+      "name": "competitor-news-monitor",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 4619,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\research\\competitor-news-monitor\\SKILL.md"
+    },
+    {
+      "name": "watchers",
+      "index_line_bytes": 69,
+      "index_line_total_bytes": 69,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 4509,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\watchers\\SKILL.md"
+    },
+    {
+      "name": "openresearch-lit",
+      "index_line_bytes": 74,
+      "index_line_total_bytes": 74,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 4080,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\research\\openresearch-lit\\SKILL.md"
+    },
+    {
+      "name": "weekly-review-planning",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3937,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\weekly-review-planning\\SKILL.md"
+    },
+    {
+      "name": "playwright",
+      "index_line_bytes": 77,
+      "index_line_total_bytes": 77,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3848,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\codex-imports\\playwright\\SKILL.md"
+    },
+    {
+      "name": "market-evidence-triangulation",
+      "index_line_bytes": 85,
+      "index_line_total_bytes": 85,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3691,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\research\\market-evidence-triangulation\\SKILL.md"
+    },
+    {
+      "name": "codebase-inspection",
+      "index_line_bytes": 80,
+      "index_line_total_bytes": 80,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3612,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\codebase-inspection\\SKILL.md"
+    },
+    {
+      "name": "prompt-cache-discipline",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3557,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\fleet-ops\\prompt-cache-discipline\\SKILL.md"
+    },
+    {
+      "name": "tv-console",
+      "index_line_bytes": 82,
+      "index_line_total_bytes": 82,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3323,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\projects\\tv-console\\SKILL.md"
+    },
+    {
+      "name": "exec-workflow-templates",
+      "index_line_bytes": 89,
+      "index_line_total_bytes": 89,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3240,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-portfolio\\exec-workflow-templates\\SKILL.md"
+    },
+    {
+      "name": "planning-and-task-breakdown",
+      "index_line_bytes": 79,
+      "index_line_total_bytes": 79,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3205,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\planning-and-task-breakdown\\SKILL.md"
+    },
+    {
+      "name": "github",
+      "index_line_bytes": 67,
+      "index_line_total_bytes": 67,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3135,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\github\\SKILL.md"
+    },
+    {
+      "name": "requesting-code-review",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 3070,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\requesting-code-review\\SKILL.md"
+    },
+    {
+      "name": "spec-driven-development",
+      "index_line_bytes": 91,
+      "index_line_total_bytes": 91,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2917,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\spec-driven-development\\SKILL.md"
+    },
+    {
+      "name": "context-engineering",
+      "index_line_bytes": 76,
+      "index_line_total_bytes": 76,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2915,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\context-engineering\\SKILL.md"
+    },
+    {
+      "name": "using-agent-skills",
+      "index_line_bytes": 78,
+      "index_line_total_bytes": 78,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2914,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\using-agent-skills\\SKILL.md"
+    },
+    {
+      "name": "audit",
+      "index_line_bytes": 61,
+      "index_line_total_bytes": 61,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2723,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\audit\\SKILL.md"
+    },
+    {
+      "name": "telegram-channel-research",
+      "index_line_bytes": 90,
+      "index_line_total_bytes": 90,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2713,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\research\\telegram-channel-research\\SKILL.md"
+    },
+    {
+      "name": "yax",
+      "index_line_bytes": 63,
+      "index_line_total_bytes": 63,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2696,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\yandex-cli-yax\\SKILL.md"
+    },
+    {
+      "name": "incremental-implementation",
+      "index_line_bytes": 81,
+      "index_line_total_bytes": 81,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2535,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\incremental-implementation\\SKILL.md"
+    },
+    {
+      "name": "idea",
+      "index_line_bytes": 65,
+      "index_line_total_bytes": 65,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2313,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\idea\\SKILL.md"
+    },
+    {
+      "name": "codegraph-repo-navigation",
+      "index_line_bytes": 86,
+      "index_line_total_bytes": 86,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 2170,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\software-development\\codegraph-repo-navigation\\SKILL.md"
+    },
+    {
+      "name": "rr-project",
+      "index_line_bytes": 70,
+      "index_line_total_bytes": 70,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 1213,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\rr-project\\SKILL.md"
+    },
+    {
+      "name": "rr-ux",
+      "index_line_bytes": 71,
+      "index_line_total_bytes": 71,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 1086,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\codex-imports\\rr-ux\\SKILL.md"
+    },
+    {
+      "name": "seo-site",
+      "index_line_bytes": 53,
+      "index_line_total_bytes": 53,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 905,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\projects\\seo-site\\SKILL.md"
+    },
+    {
+      "name": "ocr-and-documents",
+      "index_line_bytes": 69,
+      "index_line_total_bytes": 69,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 851,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\productivity\\ocr-and-documents\\SKILL.md"
+    },
+    {
+      "name": "github-repo-management",
+      "index_line_bytes": 80,
+      "index_line_total_bytes": 80,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 801,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\github\\github-repo-management\\SKILL.md"
+    },
+    {
+      "name": "github-pr-workflow",
+      "index_line_bytes": 67,
+      "index_line_total_bytes": 67,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 699,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\github\\github-pr-workflow\\SKILL.md"
+    },
+    {
+      "name": "github-code-review",
+      "index_line_bytes": 67,
+      "index_line_total_bytes": 67,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 680,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\github\\github-code-review\\SKILL.md"
+    },
+    {
+      "name": "github-issues",
+      "index_line_bytes": 65,
+      "index_line_total_bytes": 65,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 669,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\github\\github-issues\\SKILL.md"
+    },
+    {
+      "name": "github-issue-to-pr",
+      "index_line_bytes": 76,
+      "index_line_total_bytes": 76,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 629,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\github\\github-issue-to-pr\\SKILL.md"
+    },
+    {
+      "name": "merge-reconciler",
+      "index_line_bytes": 72,
+      "index_line_total_bytes": 72,
+      "index_line_shared_bytes": 0,
+      "index_line_skill_count": 1,
+      "skill_md_bytes": 610,
+      "path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\autonomous-ai-agents\\merge-reconciler\\SKILL.md"
+    }
+  ],
+  "toolsets_breakdown": [
+    {
+      "toolset": "kanban",
+      "tool_count": 15,
+      "json_bytes": 27940
+    },
+    {
+      "toolset": "(unknown)",
+      "tool_count": 5,
+      "json_bytes": 6362
+    },
+    {
+      "toolset": "file",
+      "tool_count": 4,
+      "json_bytes": 6301
+    },
+    {
+      "toolset": "skills",
+      "tool_count": 3,
+      "json_bytes": 4963
+    },
+    {
+      "toolset": "terminal",
+      "tool_count": 1,
+      "json_bytes": 4840
+    },
+    {
+      "toolset": "delegation",
+      "tool_count": 1,
+      "json_bytes": 4659
+    },
+    {
+      "toolset": "browser",
+      "tool_count": 5,
+      "json_bytes": 4407
+    },
+    {
+      "toolset": "browser-use",
+      "tool_count": 1,
+      "json_bytes": 3872
+    },
+    {
+      "toolset": "memory",
+      "tool_count": 1,
+      "json_bytes": 3526
+    },
+    {
+      "toolset": "code_execution",
+      "tool_count": 1,
+      "json_bytes": 3077
+    },
+    {
+      "toolset": "web",
+      "tool_count": 2,
+      "json_bytes": 1910
+    },
+    {
+      "toolset": "tts",
+      "tool_count": 1,
+      "json_bytes": 1898
+    },
+    {
+      "toolset": "clarify",
+      "tool_count": 1,
+      "json_bytes": 1833
+    },
+    {
+      "toolset": "vision",
+      "tool_count": 1,
+      "json_bytes": 845
+    }
+  ]
+}

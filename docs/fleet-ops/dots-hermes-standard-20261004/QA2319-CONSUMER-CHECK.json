@@ -1,0 +1,39 @@
+{
+  "scope": "Company consumer verification; not rewriting reviewer artifacts or accepting source",
+  "json_duplicate_keys": [
+    "checks_this_run",
+    "m01_m17",
+    "scenarios_s01_s17",
+    "reviewer_lineage_run_2319"
+  ],
+  "normal_parser_retained_values": {
+    "checks_this_run": {
+      "status": "pending",
+      "note": "all checks re-executed independently in run 2319 before any positive verdict; results replace this placeholder"
+    },
+    "m01_m17": {
+      "status": "pending_full_named_document_reading_with_quotes"
+    },
+    "scenarios_s01_s17": {
+      "status": "pending"
+    },
+    "reviewer_lineage_run_2319": {
+      "status": "pending_extraction_from_natural_stamps"
+    }
+  },
+  "native_denial_contexts": [
+    {
+      "line": 311,
+      "native_output_excerpt": "\n\u001b[1;38;2;255;215;0m╭─ ☤ Hermes ───────────────────────────────────────────────────────────────────╮\u001b[0m\n\n\u001b[38;2;255;248;220mTerminal-heredoc получил детерминированный policy-deny (review_probe_nonce) — повторю паттерн из памяти: этот класс ловит特定的 command shapes; sanctioned write-путь (write_file/patch в freeze-каталог) в этом ране уже проходил. Denied-форму не повторяю; завершаю запись через patch (рекомендован самим stale-гардом), с прозрачной фиксацией deny в вердикте.\u001b[0m\n\n\u001b[1;38;2;255;215;0m╰──────────────────────────────────────────────────────────────────────────────╯\u001b[0m\n"
+    },
+    {
+      "line": 691,
+      "native_output_excerpt": "\n\u001b[38;2;255;255;255;48;2;19;87;20m+  \"process_notes\": [\u001b[0m\n\n\u001b[38;2;255;255;255;48;2;19;87;20m+    \"one terminal heredoc write of QA-CANDIDATE.md received a deterministic fleet-policy deny (review_probe_nonce); not retried, file written via sanctioned write/patch tools in freeze dir; content verdict unaffected\",\u001b[0m\n\n\u001b[38;2;255;255;255;48;2;19;87;20m+    \"QA-CANDIDATE.md/json checkpoint version written BEFORE verdict flip (WITHHELD first), then finalized\"\u001b[0m\n"
+    },
+    {
+      "line": 767,
+      "native_output_excerpt": "\n\u001b[38;2;255;248;220m- readback: json.load ok, typed_verdict_word=PASS; sha256: QA-CANDIDATE.md 15178B 63f6a88e…, QA-CANDIDATE.json 6314B 62362bcf…, QA-RUN2319-INTEGRITY.json 5791B 1dd30d03….\u001b[0m\n\n\u001b[38;2;255;248;220m- Процессная заметка: один terminal-heredoc получил детерминированный fleet-policy deny (review_probe_nonce) — не повторялся, запись выполнена штатными write/patch; на вердикт не влияет.\u001b[0m\n\n\u001b[38;2;255;248;220m\u001b[0m\n"
+    }
+  ],
+  "source_review_session": "20261004_030640_cd335f"
+}

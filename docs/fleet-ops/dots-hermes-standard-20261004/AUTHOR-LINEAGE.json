@@ -1,0 +1,33 @@
+{
+  "observed_at_utc": "2026-10-03T23:09:52.668559+00:00",
+  "role": "company brain author; interactive session, not a fabricated worker run",
+  "session_id": "20261003_231256_1a496e",
+  "evidence_scope": "Only session-bound main conversation/turn-ended stamps; no message content, auth or config read",
+  "stamp_count": 2,
+  "model_provider_pairs": [
+    {
+      "model": "gpt-6.1-sol",
+      "provider": "openai-codex"
+    }
+  ],
+  "stamps": [
+    {
+      "log_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+      "line": 1809,
+      "event": "conversation_turn",
+      "session_id": "20261003_231256_1a496e",
+      "model": "gpt-6.1-sol",
+      "provider": "openai-codex"
+    },
+    {
+      "log_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log.1",
+      "line": 19787,
+      "event": "conversation_turn",
+      "session_id": "20261003_231256_1a496e",
+      "model": "gpt-6.1-sol",
+      "provider": "openai-codex"
+    }
+  ],
+  "independence": "No reviewer yet; compare reviewer actual natural chain with these author pairs, never infer from assignment",
+  "unknown_reason": null
+}

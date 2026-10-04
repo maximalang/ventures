@@ -1,0 +1,17 @@
+{
+  "generated_utc": "2026-10-04T09:03:25.097415+00:00",
+  "surface": "canonical native read-only CLI with explicit fleet-ops and child-only storage-pin removal",
+  "board": "fleet-ops",
+  "task_id": "t_7638de4f",
+  "status": "done",
+  "run_id": 2333,
+  "outcome": "completed",
+  "final_consumer_comment_once": true,
+  "final_consumer_comment": "FINAL AUDIT CONSUMER RECEIPT — audit outcome accepted with bounded precision exclusions, NOT rollout/runtime approval. Head=6fea85f0637011c110c8bf6068706c5dd78492159292815ea90408f320693658; source SUBJECT=2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e. Native QA run2333 completed, 8/8 dispositions, actual retained checker/raw output hashes verified; QA live 120/120, company consumer 15/15. Final report: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-quality-audit-20261004/REPORT.md. Consumer exclusions: CONSUMER-LIMITS.md and QA-CONSUMER-CHECK.json in the same directory (lineage uncertainty, unsupported fleet-wide/causality prose, additional public-data reads beyond strict finite list). Original reviewer receipts and installation files remain unchanged. Five original-phase observations; F01 corrected only in active company procedural memory; F02/F03/F04/L02 remain open recommendations. No deletion or new rollout. Financial scope: fleet-ops quality audit 2026-10-04; source checks/natural metadata, ledger not measured; revenue/refunds/incremental paid costs/new commitments/estimated usage cost null.",
+  "retained_native_artifacts": [
+    "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\attachments\\t_7638de4f\\independent_checks.py",
+    "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\attachments\\t_7638de4f\\independent_checks_out.json"
+  ],
+  "comment_write_on_done_was_verified_here": true,
+  "limit": "This exact permitted final-comment write/readback works after done; not a general authorization for other tasks/policies."
+}

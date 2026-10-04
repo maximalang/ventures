@@ -1,0 +1,632 @@
+....F..FFF........F.....FFF                                              [100%]
+================================== FAILURES ===================================
+___ test_failed_completion_tail_is_retried_without_rebuilding_dependencies ____
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_failed_completion_tail_is0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FB9A34D90>
+completion_tail = []
+
+    def test_failed_completion_tail_is_retried_without_rebuilding_dependencies(tmp_path, monkeypatch, completion_tail):
+        """Dependencies committed, tail failed: the next launch owes the tail only."""
+        import pm
+        from hermes_cli import _launchers
+    
+        root = _self_checkout(tmp_path, monkeypatch)
+        fact = runtime_facts_path(root)
+        syncs = []
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: fact.is_file())
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+    
+        def sync(extras=None, **kwargs):
+            syncs.append(extras)
+            fact.parent.mkdir(parents=True, exist_ok=True)
+            fact.write_text(json.dumps({"packages": {"venv": {"stamp": "complete", "extras": ["all"]}}}))
+    
+        monkeypatch.setattr(pm, "sync_venv", sync)
+        completion_tail.exit_code = 1
+        with pytest.raises(RuntimeError, match="run `hermes update`"):
+>           venv_sync.prepare_launch(root, [])
+
+tests\hermes_cli\test_update_launch_completion.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+__________ test_same_named_script_outside_the_checkout_still_repairs __________
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_same_named_script_outside0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FB94B1D10>
+completion_tail = []
+
+    def test_same_named_script_outside_the_checkout_still_repairs(tmp_path, monkeypatch, completion_tail):
+        """Only this checkout's own tail is exempt: another tree's worker still owes this one's repair."""
+        import pm
+        from hermes_cli import _launchers
+    
+        root = _self_checkout(tmp_path, monkeypatch)
+        foreign = tmp_path / "other" / "hermes_cli" / "source_completion.py"
+        foreign.parent.mkdir(parents=True)
+        foreign.touch()
+        venv_sync.arm_completion(root)
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: True)
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+        monkeypatch.setattr(sys, "argv", [str(foreign), "--prepared"])
+    
+>       assert venv_sync.prepare_launch(root, sys.argv[1:]) is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\hermes_cli\test_update_launch_completion.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: finishing an interrupted source update...
+________________ test_completion_tail_output_stays_off_stdout _________________
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_completion_tail_output_st0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FB9714D90>
+completion_tail = []
+
+    def test_completion_tail_output_stays_off_stdout(tmp_path, monkeypatch, completion_tail):
+        """The automatic tail runs in front of the user's command, which may be piping JSON."""
+        import pm
+        from hermes_cli import _launchers
+    
+        root = _self_checkout(tmp_path, monkeypatch)
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: False)
+        monkeypatch.setattr(pm, "sync_venv", lambda *a, **kw: None)
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+>       venv_sync.prepare_launch(root, [])
+
+tests\hermes_cli\test_update_launch_completion.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+______ test_first_launch_syncs_without_marker_then_uses_completion_fact _______
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_first_launch_syncs_withou0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FB9717550>
+completion_tail = []
+
+    def test_first_launch_syncs_without_marker_then_uses_completion_fact(tmp_path, monkeypatch, completion_tail):
+        import pm
+        from hermes_cli import _launchers
+    
+        root = tmp_path / "checkout"
+        root.mkdir()
+        (root / ".git").mkdir()
+        (root / "pyproject.toml").write_text("[project]\nname='example'\n")
+        (root / "uv.lock").write_text("lock\n")
+        (root / "install-stamp.json").write_text(json.dumps({"updateMechanism": "self"}))
+        monkeypatch.setenv("HERMES_HOME", str(tmp_path / "home"))
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        monkeypatch.delenv("HERMES_DISABLE_LAZY_INSTALLS", raising=False)
+        fact = runtime_facts_path(root)
+        calls = []
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: fact.is_file())
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+    
+        def sync(extras=None, **kwargs):
+            calls.append((extras, kwargs))
+            fact.parent.mkdir(parents=True, exist_ok=True)
+            fact.write_text(json.dumps({"packages": {"venv": {"stamp": "complete", "extras": ["all"]}}}))
+    
+        monkeypatch.setattr(pm, "sync_venv", sync)
+        # A shipped updater may have written this before it reaches an inert shim.
+        # It is obsolete after successful sync, not the trigger for that sync.
+        (root / ".update-incomplete").write_text("pid=-1\n")
+>       assert venv_sync.prepare_launch(root, []) == Path(sys.executable)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\hermes_cli\test_update_launch_completion.py:190: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+_____________ test_blessed_legacy_install_is_adopted_before_sync ______________
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_blessed_legacy_install_is0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FB95AD310>
+completion_tail = []
+
+    def test_blessed_legacy_install_is_adopted_before_sync(tmp_path, monkeypatch, completion_tail):
+        import pm
+        from hermes_cli import _launchers
+        monkeypatch.setattr(Path, "home", lambda: tmp_path)
+        home = tmp_path / "home"
+        monkeypatch.setenv("HERMES_HOME", str(home))
+        monkeypatch.delenv("HERMES_DISABLE_LAZY_INSTALLS", raising=False)
+        root = home / "hermes-agent"
+        root.mkdir(parents=True)
+        (root / ".git").mkdir()
+        (root / "pyproject.toml").write_text("[project]\n")
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: False)
+        calls = []
+        monkeypatch.setattr(pm, "sync_venv", lambda *args, **kw: calls.append(args))
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+>       assert venv_sync.prepare_launch(root, []) == Path(sys.executable)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\hermes_cli\test_update_launch_completion.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+_ test_supervised_launch_leaves_a_pending_tail_to_the_cli[HERMES_SUPERVISED_CHILD-0-False] _
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_supervised_launch_leaves_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FB94B2010>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000024FB968EF50>
+completion_tail = [], marker = 'HERMES_SUPERVISED_CHILD', value = '0'
+owed_by_cli = False
+
+    @pytest.mark.parametrize("marker,value,owed_by_cli", [
+        ("HERMES_SUPERVISED_CHILD", "1", True),
+        ("HERMES_S6_SUPERVISED_CHILD", "true", True),
+        ("HERMES_SUPERVISED_CHILD", "0", False),
+        ("HERMES_SUPERVISED_CHILD", "false", False),
+    ])
+    def test_supervised_launch_leaves_a_pending_tail_to_the_cli(
+        tmp_path, monkeypatch, capsys, completion_tail, marker, value, owed_by_cli
+    ):
+        """A supervised start leaves a pending tail to the CLI; its manager restarts it every boot (#123340).
+    
+        systemd/launchd/s6 restart the gateway under a policy; with a marker that never
+        clears, each boot would rebuild the completion environment until the disk fills.
+        The obligation stays with `hermes update`. An off value (`0`/`false`) is not a
+        supervised launch and still repays the tail.
+        """
+        import pm
+        from hermes_cli import _launchers
+    
+        root = _self_checkout(tmp_path, monkeypatch)
+        pending = venv_sync.completion_pending_path(root)
+        pending.parent.mkdir(parents=True)
+        pending.write_text("owed\n")
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: True)
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+        monkeypatch.delenv("HERMES_SUPERVISED_CHILD", raising=False)
+        monkeypatch.delenv("HERMES_S6_SUPERVISED_CHILD", raising=False)
+        monkeypatch.setenv(marker, value)
+    
+>       assert venv_sync.prepare_launch(root, ["gateway", "run"]) is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\hermes_cli\test_update_launch_completion.py:369: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: finishing an interrupted source update...
+_ test_supervised_launch_leaves_a_pending_tail_to_the_cli[HERMES_SUPERVISED_CHILD-false-False] _
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_supervised_launch_leaves_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FBCB6EB90>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000024FBCB9B910>
+completion_tail = [], marker = 'HERMES_SUPERVISED_CHILD', value = 'false'
+owed_by_cli = False
+
+    @pytest.mark.parametrize("marker,value,owed_by_cli", [
+        ("HERMES_SUPERVISED_CHILD", "1", True),
+        ("HERMES_S6_SUPERVISED_CHILD", "true", True),
+        ("HERMES_SUPERVISED_CHILD", "0", False),
+        ("HERMES_SUPERVISED_CHILD", "false", False),
+    ])
+    def test_supervised_launch_leaves_a_pending_tail_to_the_cli(
+        tmp_path, monkeypatch, capsys, completion_tail, marker, value, owed_by_cli
+    ):
+        """A supervised start leaves a pending tail to the CLI; its manager restarts it every boot (#123340).
+    
+        systemd/launchd/s6 restart the gateway under a policy; with a marker that never
+        clears, each boot would rebuild the completion environment until the disk fills.
+        The obligation stays with `hermes update`. An off value (`0`/`false`) is not a
+        supervised launch and still repays the tail.
+        """
+        import pm
+        from hermes_cli import _launchers
+    
+        root = _self_checkout(tmp_path, monkeypatch)
+        pending = venv_sync.completion_pending_path(root)
+        pending.parent.mkdir(parents=True)
+        pending.write_text("owed\n")
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: True)
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+        monkeypatch.delenv("HERMES_SUPERVISED_CHILD", raising=False)
+        monkeypatch.delenv("HERMES_S6_SUPERVISED_CHILD", raising=False)
+        monkeypatch.setenv(marker, value)
+    
+>       assert venv_sync.prepare_launch(root, ["gateway", "run"]) is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\hermes_cli\test_update_launch_completion.py:369: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: finishing an interrupted source update...
+_________ test_supervised_launch_with_stale_dependencies_still_syncs __________
+
+tmp_path = WindowsPath('C:/Users/max/AppData/Local/hermes-pytest/b-jrog2d6g/test_supervised_launch_with_st0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024FB946A710>
+completion_tail = []
+
+    def test_supervised_launch_with_stale_dependencies_still_syncs(
+        tmp_path, monkeypatch, completion_tail
+    ):
+        """Stale dependencies stay one-shot for a supervised child (#123340 review).
+    
+        A hand-run ``git pull`` leaves the tree's lockfile ahead of the installed
+        tools with no pending marker; a manager restart must still sync and finish
+        (pre-image behavior) instead of booting on the stale dependency graph — or
+        crash-looping under ``Restart=always`` with no sync at all. The sticky-tail
+        exemption above must not swallow this one-shot condition.
+        """
+        import pm
+        from hermes_cli import _launchers
+    
+        root = _self_checkout(tmp_path, monkeypatch)
+        syncs = []
+        monkeypatch.setattr(pm, "venv_is_current", lambda **kw: False)
+        monkeypatch.setattr(pm, "sync_venv", lambda *a, **kw: syncs.append(a))
+        monkeypatch.setattr(_launchers, "resolve_store_python", lambda _: Path(sys.executable))
+        monkeypatch.setenv("HERMES_SUPERVISED_CHILD", "1")
+    
+>       venv_sync.prepare_launch(root, ["gateway", "run"])
+
+tests\hermes_cli\test_update_launch_completion.py:401: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\venv_sync.py:390: in prepare_launch
+    _finish_source_update(root, current=current, pending=pending)
+hermes_cli\venv_sync.py:446: in _finish_source_update
+    cwd=root, env=activation_environment(root), stdout=sys.__stderr__,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:371: in activation_environment
+    env = env_for(*all_packages())
+          ^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:543: in env_for
+    location = _installed_location(package, lockfile, target)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:87: in _installed_location
+    search_roots = dict.fromkeys(roots if roots is not None else (paths.store_root(), paths.writable_store_root()))
+                                                                  ^^^^^^^^^^^^^^^^^^
+pm\paths.py:44: in store_root
+    return resolve(repo_root())
+           ^^^^^^^^^^^^^^^^^^^^
+pm\environments.py:119: in store_root
+    if manifest_path.is_file():
+       ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\..\..\..\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/manifest.json')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\company\cache\scratch\manifest.json
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+=========================== short test summary info ===========================
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_failed_completion_tail_is_retried_without_rebuilding_dependencies
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_same_named_script_outside_the_checkout_still_repairs
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_completion_tail_output_stays_off_stdout
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_first_launch_syncs_without_marker_then_uses_completion_fact
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_blessed_legacy_install_is_adopted_before_sync
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_supervised_launch_leaves_a_pending_tail_to_the_cli[HERMES_SUPERVISED_CHILD-0-False]
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_supervised_launch_leaves_a_pending_tail_to_the_cli[HERMES_SUPERVISED_CHILD-false-False]
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_supervised_launch_with_stale_dependencies_still_syncs
+8 failed, 19 passed in 4.90s

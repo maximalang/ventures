@@ -1,0 +1,1014 @@
+{
+  "at": "2026-10-03T18:34:03.020379+03:00",
+  "tasks": {
+    "t_0edb4ef8": {
+      "task": {
+        "id": "t_0edb4ef8",
+        "title": "Restore existing company Telegram intake — named-profile hot start only",
+        "body": "task_type: ops\nSpec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/BOT-RECOVERY-20261003.md. Restore ONLY parked company via native hot start on live host; no restart/config/model changes. Receipt+exact adapter readback; real owner roundtrip separate.",
+        "assignee": "operations",
+        "status": "done",
+        "priority": 22000,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_0edb4ef8",
+        "branch_name": null,
+        "project_id": null,
+        "created_by": "company",
+        "created_at": 1791040511,
+        "started_at": 1791040523,
+        "completed_at": 1791040895,
+        "result": null,
+        "skills": [
+          "hermes-agent",
+          "hermes-botfleet-health",
+          "worker-tool-discipline"
+        ],
+        "max_runtime_seconds": 600,
+        "max_retries": null,
+        "model_override": null,
+        "provider_override": null,
+        "session_id": "20261003_112457_c18754",
+        "workflow_template_id": null,
+        "current_step_key": null,
+        "completion_contract": "local-only",
+        "last_failure_error": null
+      },
+      "latest_summary": "COMPANY TELEGRAM INTAKE RESTORED via one named-profile hot start (hermes -p company gateway start, exit 0, 15:16:28Z, zero denials, no restart/config/model changes). Evidence: host PID26200 unchanged; host gateway_state.json company:telegram connected, errors null, writer_pid 26200, updated_at 15:16:51Z (after op); gateway.log deltas 18:16:51 local \"telegram connected (profile: company)\" + \"Now serving profile 'company' (1 adapter connected; control-socket)\"; polling mode up, 195s observation with 0 fatal/duplicate/conflict. Acceptance 1-3,5 PASS; #4 end_to_end_verified=false — no owner inbound in window, no synthetic canary per spec; owner to resend ONE old message for roundtrip verification. Receipt attached (id 411) and persisted in durable evidence root with BOT-RECOVERY-RESULT.md.",
+      "parents": [],
+      "children": [],
+      "comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f\ntask_type: ops\nAnchor is existing company profile on live default host PID26200, refresh before action. Authorize ONLY one supported company gateway start if still parked and host alive, as written in BOT-RECOVERY-20261003.md. This is named-profile hot activation, NOT host restart/second poller. Existing owner request covers recovery; no config/model/source/new-capability changes. No synthetic inference or direct messaging. One denial => stop. Observe exact company:telegram on HOST state and new log deltas. Connected is not a natural owner roundtrip; keep that acceptance explicitly separate. Financial scope availability recovery 2026-10-03; revenue/refunds/provider-paid/estimated-usage null, attribution absent; no purchases or new payment commitments.",
+          "created_at": 1791040555
+        }
+      ],
+      "events": [
+        {
+          "kind": "created",
+          "payload": {
+            "assignee": "operations",
+            "status": "ready",
+            "parents": [],
+            "creator_task_id": null,
+            "tenant": null,
+            "workspace_kind": "scratch",
+            "workspace_path": null,
+            "branch_name": null,
+            "project_id": null,
+            "skills": [
+              "hermes-agent",
+              "hermes-botfleet-health",
+              "worker-tool-discipline"
+            ],
+            "goal_mode": null,
+            "model_override": null,
+            "provider_override": null
+          },
+          "created_at": 1791040511,
+          "run_id": null
+        },
+        {
+          "kind": "claimed",
+          "payload": {
+            "lock": "laptop:26200",
+            "expires": 1791041423,
+            "run_id": 2224
+          },
+          "created_at": 1791040523,
+          "run_id": 2224
+        },
+        {
+          "kind": "spawned",
+          "payload": {
+            "pid": 8360,
+            "started_at": "|179104052378"
+          },
+          "created_at": 1791040523,
+          "run_id": 2224
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040539,
+          "run_id": 2224
+        },
+        {
+          "kind": "commented",
+          "payload": {
+            "author": "company",
+            "len": 827
+          },
+          "created_at": 1791040555,
+          "run_id": null
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040602,
+          "run_id": 2224
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040662,
+          "run_id": 2224
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040727,
+          "run_id": 2224
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040787,
+          "run_id": 2224
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040847,
+          "run_id": 2224
+        },
+        {
+          "kind": "attached",
+          "payload": {
+            "filename": "BOT-RECOVERY-RECEIPT.json",
+            "size": 777,
+            "by": "agent"
+          },
+          "created_at": 1791040883,
+          "run_id": null
+        },
+        {
+          "kind": "completed",
+          "payload": {
+            "result_len": 0,
+            "summary": "COMPANY TELEGRAM INTAKE RESTORED via one named-profile hot start (hermes -p company gateway start, exit 0, 15:16:28Z, zero denials, no restart/config/model changes). Evidence: host PID26200 unchanged; host gateway_state.json company:telegram connected, errors null, writer_pid 26200, updated_at 15:16:51Z (after op); gateway.log deltas 18:16:51 local \"telegram connected (profile: company)\" + \"Now se",
+            "artifacts": [
+              "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/BOT-RECOVERY-RECEIPT.json",
+              "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/BOT-RECOVERY-RESULT.md"
+            ]
+          },
+          "created_at": 1791040895,
+          "run_id": 2224
+        }
+      ],
+      "runs": [
+        {
+          "id": 2224,
+          "profile": "operations",
+          "step_key": null,
+          "status": "done",
+          "outcome": "completed",
+          "summary": "COMPANY TELEGRAM INTAKE RESTORED via one named-profile hot start (hermes -p company gateway start, exit 0, 15:16:28Z, zero denials, no restart/config/model changes). Evidence: host PID26200 unchanged; host gateway_state.json company:telegram connected, errors null, writer_pid 26200, updated_at 15:16:51Z (after op); gateway.log deltas 18:16:51 local \"telegram connected (profile: company)\" + \"Now serving profile 'company' (1 adapter connected; control-socket)\"; polling mode up, 195s observation with 0 fatal/duplicate/conflict. Acceptance 1-3,5 PASS; #4 end_to_end_verified=false — no owner inbound in window, no synthetic canary per spec; owner to resend ONE old message for roundtrip verification. Receipt attached (id 411) and persisted in durable evidence root with BOT-RECOVERY-RESULT.md.",
+          "error": null,
+          "metadata": {
+            "acceptance": {
+              "1_before_after_pid": "PASS",
+              "2_state_connected_writer_26200": "PASS",
+              "3_log_deltas_195s_clean": "PASS",
+              "4_owner_roundtrip": "PENDING",
+              "5_receipt_attached": "PASS"
+            },
+            "company_telegram": {
+              "state": "connected",
+              "updated_at": "2026-10-03T15:16:51Z",
+              "writer_pid": 26200
+            },
+            "end_to_end_verified": false,
+            "evidence_root": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/",
+            "host_pid": 26200,
+            "installed_head": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+            "invocations": 1,
+            "operation": "hermes -p company gateway start",
+            "op_utc": "2026-10-03T15:16:28Z",
+            "policy_denials": 0,
+            "receipt_attachment_id": 411,
+            "artifacts": [
+              "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/BOT-RECOVERY-RECEIPT.json",
+              "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/BOT-RECOVERY-RESULT.md"
+            ],
+            "worker_session_id": "20261003_181530_87ffde",
+            "receipt": {
+              "status": "done",
+              "evidence_refs": [],
+              "next_action": "verify outcome"
+            }
+          },
+          "worker_pid": null,
+          "started_at": 1791040523,
+          "ended_at": 1791040895
+        }
+      ]
+    },
+    "t_ced9d357": {
+      "task": {
+        "id": "t_ced9d357",
+        "title": "TGR-01B: bounded native Telegram profile model/provider fix, no ancillary reads",
+        "body": "task_type: code\nSpec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/TGR-01B-SOURCE-SPEC.md. Base9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f; source-only own14+fixtures, scoped3files; ancillary denied read excluded, no retry/bypass/live changes. FullSHA+RED/GREEN/logs/patch.",
+        "assignee": "tech",
+        "status": "running",
+        "priority": 19000,
+        "tenant": null,
+        "workspace_kind": "worktree",
+        "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\.worktrees\\tg-qwen-profile-routing-bounded-20261003",
+        "branch_name": "wt/t_ced9d357",
+        "project_id": null,
+        "created_by": "company",
+        "created_at": 1791040886,
+        "started_at": 1791040894,
+        "completed_at": null,
+        "result": null,
+        "skills": [
+          "worker-tool-discipline",
+          "test-driven-development"
+        ],
+        "max_runtime_seconds": 1800,
+        "max_retries": null,
+        "model_override": null,
+        "provider_override": null,
+        "session_id": "20261003_112457_c18754",
+        "workflow_template_id": null,
+        "current_step_key": null,
+        "completion_contract": "local-only",
+        "last_failure_error": null
+      },
+      "latest_summary": null,
+      "parents": [],
+      "children": [
+        "t_d088d7f1"
+      ],
+      "comments": [],
+      "events": [
+        {
+          "kind": "created",
+          "payload": {
+            "assignee": "tech",
+            "status": "ready",
+            "parents": [],
+            "creator_task_id": null,
+            "tenant": null,
+            "workspace_kind": "worktree",
+            "workspace_path": "C:/Users/max/AppData/Local/hermes/hermes-agent/.worktrees/tg-qwen-profile-routing-bounded-20261003",
+            "branch_name": null,
+            "project_id": null,
+            "skills": [
+              "worker-tool-discipline",
+              "test-driven-development"
+            ],
+            "goal_mode": null,
+            "model_override": null,
+            "provider_override": null
+          },
+          "created_at": 1791040886,
+          "run_id": null
+        },
+        {
+          "kind": "claimed",
+          "payload": {
+            "lock": "laptop:26200",
+            "expires": 1791041794,
+            "run_id": 2225
+          },
+          "created_at": 1791040894,
+          "run_id": 2225
+        },
+        {
+          "kind": "spawned",
+          "payload": {
+            "pid": 22092,
+            "started_at": "|179104090421"
+          },
+          "created_at": 1791040904,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040918,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791040982,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041053,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041113,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041173,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041233,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041294,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041354,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041414,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041474,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041534,
+          "run_id": 2225
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041594,
+          "run_id": 2225
+        }
+      ],
+      "runs": [
+        {
+          "id": 2225,
+          "profile": "tech",
+          "step_key": null,
+          "status": "running",
+          "outcome": null,
+          "summary": null,
+          "error": null,
+          "metadata": null,
+          "worker_pid": 22092,
+          "started_at": 1791040894,
+          "ended_at": null
+        }
+      ]
+    },
+    "t_d088d7f1": {
+      "task": {
+        "id": "t_d088d7f1",
+        "title": "TGR-01B: independent frozen-head routing and provider-isolation QA",
+        "body": "task_type: review\nSpec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/TGR-01B-QA-SPEC.md. Independent exact real parentSHA rerun+own isolation probes, no live/model/source adoption. Lineage+RED/GREEN+bounded regressions+verdict. Parent source t_ced9d357; no prior denied ancillary read.",
+        "assignee": "qa",
+        "status": "todo",
+        "priority": 18000,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "created_by": "company",
+        "created_at": 1791041278,
+        "started_at": null,
+        "completed_at": null,
+        "result": null,
+        "skills": [
+          "exact-head-acceptance-qa",
+          "worker-tool-discipline"
+        ],
+        "max_runtime_seconds": 1800,
+        "max_retries": null,
+        "model_override": null,
+        "provider_override": null,
+        "session_id": "20261003_112457_c18754",
+        "workflow_template_id": null,
+        "current_step_key": null,
+        "completion_contract": "local-only",
+        "last_failure_error": null
+      },
+      "latest_summary": null,
+      "parents": [
+        "t_ced9d357"
+      ],
+      "children": [
+        "t_32f46379"
+      ],
+      "comments": [],
+      "events": [
+        {
+          "kind": "created",
+          "payload": {
+            "assignee": "qa",
+            "status": "todo",
+            "parents": [
+              "t_ced9d357"
+            ],
+            "creator_task_id": null,
+            "tenant": null,
+            "workspace_kind": "scratch",
+            "workspace_path": null,
+            "branch_name": null,
+            "project_id": null,
+            "skills": [
+              "exact-head-acceptance-qa",
+              "worker-tool-discipline"
+            ],
+            "goal_mode": null,
+            "model_override": null,
+            "provider_override": null
+          },
+          "created_at": 1791041278,
+          "run_id": null
+        },
+        {
+          "kind": "dependency_wait",
+          "payload": {
+            "reason": "parent_not_done",
+            "parent": "t_ced9d357"
+          },
+          "created_at": 1791041278,
+          "run_id": null
+        }
+      ],
+      "runs": []
+    },
+    "t_daf14af6": {
+      "task": {
+        "id": "t_daf14af6",
+        "title": "Telegram context optimization — staged exact native hub payload, company-only target",
+        "body": "task_type: ops\nPrepare ONLY staged11-op native payload+rollback for active COMPANY to consume; NEVER live-apply from operations profile. Spec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-PAYLOAD-PREPARATION-SPEC.md. Anchor accepted manifest aca8e05c…15e6c, independent QA t_d5e37e14.",
+        "assignee": "operations",
+        "status": "running",
+        "priority": 15000,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_daf14af6",
+        "branch_name": null,
+        "project_id": null,
+        "created_by": "company",
+        "created_at": 1791041433,
+        "started_at": 1791041453,
+        "completed_at": null,
+        "result": null,
+        "skills": [
+          "worker-tool-discipline"
+        ],
+        "max_runtime_seconds": 900,
+        "max_retries": null,
+        "model_override": null,
+        "provider_override": null,
+        "session_id": "20261003_112457_c18754",
+        "workflow_template_id": null,
+        "current_step_key": null,
+        "completion_contract": "local-only",
+        "last_failure_error": null
+      },
+      "latest_summary": null,
+      "parents": [
+        "t_d5e37e14"
+      ],
+      "children": [
+        "t_c7312fde"
+      ],
+      "comments": [],
+      "events": [
+        {
+          "kind": "created",
+          "payload": {
+            "assignee": "operations",
+            "status": "ready",
+            "parents": [
+              "t_d5e37e14"
+            ],
+            "creator_task_id": null,
+            "tenant": null,
+            "workspace_kind": "scratch",
+            "workspace_path": null,
+            "branch_name": null,
+            "project_id": null,
+            "skills": [
+              "worker-tool-discipline"
+            ],
+            "goal_mode": null,
+            "model_override": null,
+            "provider_override": null
+          },
+          "created_at": 1791041433,
+          "run_id": null
+        },
+        {
+          "kind": "claimed",
+          "payload": {
+            "lock": "laptop:26200",
+            "expires": 1791042353,
+            "run_id": 2226
+          },
+          "created_at": 1791041453,
+          "run_id": 2226
+        },
+        {
+          "kind": "spawned",
+          "payload": {
+            "pid": 16936,
+            "started_at": "|179104145380"
+          },
+          "created_at": 1791041453,
+          "run_id": 2226
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041470,
+          "run_id": 2226
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041530,
+          "run_id": 2226
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791041590,
+          "run_id": 2226
+        }
+      ],
+      "runs": [
+        {
+          "id": 2226,
+          "profile": "operations",
+          "step_key": null,
+          "status": "running",
+          "outcome": null,
+          "summary": null,
+          "error": null,
+          "metadata": null,
+          "worker_pid": 16936,
+          "started_at": 1791041453,
+          "ended_at": null
+        }
+      ]
+    },
+    "t_c7312fde": {
+      "task": {
+        "id": "t_c7312fde",
+        "title": "Adopt accepted compact hubs through company-local native skill consumer",
+        "body": "task_type: ops\nConsume staged native11-op payload in active COMPANY only after accepted independent QA. Spec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-COMPANY-CONSUMER-SPEC.md. Anchor exact manifest aca8e05c…15e6c+parent hashes; readback/rollback, no model/lifecycle changes.",
+        "assignee": "company",
+        "status": "todo",
+        "priority": 14000,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "created_by": "company",
+        "created_at": 1791041522,
+        "started_at": null,
+        "completed_at": null,
+        "result": null,
+        "skills": [],
+        "max_runtime_seconds": 1200,
+        "max_retries": null,
+        "model_override": null,
+        "provider_override": null,
+        "session_id": "20261003_112457_c18754",
+        "workflow_template_id": null,
+        "current_step_key": null,
+        "completion_contract": "local-only",
+        "last_failure_error": null
+      },
+      "latest_summary": null,
+      "parents": [
+        "t_daf14af6"
+      ],
+      "children": [],
+      "comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=aca8e05c554e5998b1b461e12ff182733140c4283b6b463be08805b31ee15e6c\ntask_type: ops\nAuthorize ONLY the exact independently SOURCE_PASS-reviewed HUB-PACKET11paths as described in HUB-COMPANY-CONSUMER-SPEC.md, AFTER completed genuine staged payload receipt from operations t_daf14af6. QA source t_d5e37e14 report SHA2562196ca2b02bfa7cfdf7edfa9e8cabc4b8ae1131d83b82242b4c7f9f3f5f9b98c; read native record and report, no company reissued QA stamps. Active skill tool must resolve exact company paths, all live before hashes unchanged. Single atomic native application and exact per-path readback/rollback only. This does not authorize model/config/lifecycle/retirement/other-profile changes or guard bypass. Source/static size claim only; runtime token/cash effect unverified. Financial scope company hub adoption actual period, source independent QA/native receipts; provider costs/estimated usage/revenue/refunds null absent attribution, new paid commitments0.",
+          "created_at": 1791041584
+        }
+      ],
+      "events": [
+        {
+          "kind": "created",
+          "payload": {
+            "assignee": "company",
+            "status": "todo",
+            "parents": [
+              "t_daf14af6"
+            ],
+            "creator_task_id": null,
+            "tenant": null,
+            "workspace_kind": "scratch",
+            "workspace_path": null,
+            "branch_name": null,
+            "project_id": null,
+            "skills": null,
+            "goal_mode": null,
+            "model_override": null,
+            "provider_override": null
+          },
+          "created_at": 1791041522,
+          "run_id": null
+        },
+        {
+          "kind": "dependency_wait",
+          "payload": {
+            "reason": "parent_not_done",
+            "parent": "t_daf14af6"
+          },
+          "created_at": 1791041522,
+          "run_id": null
+        },
+        {
+          "kind": "commented",
+          "payload": {
+            "author": "company",
+            "len": 979
+          },
+          "created_at": 1791041584,
+          "run_id": null
+        }
+      ],
+      "runs": []
+    },
+    "t_32f46379": {
+      "task": {
+        "id": "t_32f46379",
+        "title": "TGR-01B company — verified source disposition and next safe native Qwen step",
+        "body": "task_type: ops\nSpec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/TGR-01B-COMPANY-DECISION-SPEC.md. Verify real frozen parentSHA/independentQA, decide supported bounded route or exact capability blocker. No live config/code/restart here. Desktop/specialists preserved.",
+        "assignee": "company",
+        "status": "todo",
+        "priority": 17500,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "created_by": "company",
+        "created_at": 1791041522,
+        "started_at": null,
+        "completed_at": null,
+        "result": null,
+        "skills": [],
+        "max_runtime_seconds": 900,
+        "max_retries": null,
+        "model_override": null,
+        "provider_override": null,
+        "session_id": "20261003_112457_c18754",
+        "workflow_template_id": null,
+        "current_step_key": null,
+        "completion_contract": "local-only",
+        "last_failure_error": null
+      },
+      "latest_summary": null,
+      "parents": [
+        "t_d088d7f1"
+      ],
+      "children": [],
+      "comments": [],
+      "events": [
+        {
+          "kind": "created",
+          "payload": {
+            "assignee": "company",
+            "status": "todo",
+            "parents": [
+              "t_d088d7f1"
+            ],
+            "creator_task_id": null,
+            "tenant": null,
+            "workspace_kind": "scratch",
+            "workspace_path": null,
+            "branch_name": null,
+            "project_id": null,
+            "skills": null,
+            "goal_mode": null,
+            "model_override": null,
+            "provider_override": null
+          },
+          "created_at": 1791041522,
+          "run_id": null
+        },
+        {
+          "kind": "dependency_wait",
+          "payload": {
+            "reason": "parent_not_done",
+            "parent": "t_d088d7f1"
+          },
+          "created_at": 1791041522,
+          "run_id": null
+        }
+      ],
+      "runs": []
+    },
+    "t_38a4b49e": {
+      "task": {
+        "id": "t_38a4b49e",
+        "title": "Telegram optimization: exact acceptance, hub rollout authorization and natural-run savings",
+        "body": "task_type: ops\nClose owner Telegram optimization loop, not a status-only handoff. Parents native config rollout t_ee2ad6bf and exact-hub QA t_d5e37e14. Contract/evidence C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/DECISION-AND-CONTRACT.md. Verify real exact verdict/lineage/tests and config receipt; do not treat done as PASS. If hub QA positive, record company decision bound to immutable accepted manifest on ONE new idempotent operations consumer (idempotency tg-opt-20261003-hubs-rollout), scoped company two hubs only, preserve names/ref links and use native skill interfaces/backup/rollback; material installation by operations, not company. Integrate existing Telegram-retirement t_b3e6c428/t_45c34a6a only if independent exact verdict is genuinely ready; otherwise leave unchanged and report that boundary. No bypass of owner retirement directive/no mandatory formatting skill. Collect minimum10 actual natural post-change Telegram completion lines and compare same model/task strata baseline, cache separately, routing/context retention; if insufficient give bounded WAIT with check_at via existing audit/notification mechanism (no new recurring controller or paid probe). Outcome must distinguish applied/resolved/live and proved saving, with receipt/artifact. Source-only work ≠live complete. No secret reads, models/profile/global changes/restart/history deletion. Short owner result<=6lines, financial actual/unknown separately per contract.",
+        "assignee": "company",
+        "status": "blocked",
+        "priority": 210,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_38a4b49e",
+        "branch_name": null,
+        "project_id": null,
+        "created_by": "company",
+        "created_at": 1791017076,
+        "started_at": 1791025875,
+        "completed_at": null,
+        "result": null,
+        "skills": [],
+        "max_runtime_seconds": 1800,
+        "max_retries": null,
+        "model_override": null,
+        "provider_override": null,
+        "session_id": "20261003_112457_c18754",
+        "workflow_template_id": null,
+        "current_step_key": null,
+        "completion_contract": "local-only",
+        "last_failure_error": "pid 12868 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'e literal placeholder Запрос: work kanban task t_38a4b49e \\x1b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\\x1b[0m \\x1b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\\x1b[0m \\x1b[1;31m`hermes -p company auth add openai-codex --type oauth` to re"
+      },
+      "latest_summary": null,
+      "parents": [
+        "t_d5e37e14",
+        "t_ee2ad6bf"
+      ],
+      "children": [],
+      "comments": [
+        {
+          "author": "company",
+          "body": "Accepted measurement correction: review MEASUREMENT-REVIEW.md and measurement-strata.json. Revised minimum natural after-change sample=10 comparable Telegram calls PER observed model/provider stratum, not pooled changed model mix. Actual API baseline span23.515h; no weekly extrapolation. Output/input/cache/unknown separately; no theoretical cache-price conversion without verified provider tariff/quota semantics. Telegram observations remain valid TG-scope observations; include outside-TG effects only for company-wide conclusions. Candidate128000 is trigger, not ceiling. Child second eye was methodology advice only; native independent QA still required.",
+          "created_at": 1791017771
+        },
+        {
+          "author": "company",
+          "body": "Continuation checkpoint: CONTINUATION-READINESS-1300.json in evidence root, observed13:11:13+03. Primary qa source verdict delivered/verified on original t_8a81338c (not company re-review); alternate t_e87dad43 remains mandatory. Native company readback still threshold_tokens=null/tool_progress=new/Desktop default gpt-6.1-sol: nothing applied yet. Retirement preflight via scoped native CLI (pins removed only in read-only subprocess) checked9boards/212active rows with skills fields present. Exactly ONE active company task still pins old formatting skill: fleet-ops t_4aabc1fb todo; cron c92f4e39c75d also unresolved. Native task skill-field editor is not exposed to this company surface: no CLI/SQL lifecycle-write workaround, no deletion/pretend-retirement. Source gate t_45c34a6a is independent SOURCE_ONLY, not runtime clearance. Keep old skill intact until legitimate native metadata edit exists; integrate other independent branches without false completion. Existing guarded company consumers own continuation; current next natural evidence checkpoint13:41+03, no duplicate recurring jobs/probes. Financial scope continuation native readbacks/artifact receipt: provider usage/incremental paid/revenue/refunds=null with attribution absent/outside scope; no paid commitments.",
+          "created_at": 1791022362
+        },
+        {
+          "author": "company",
+          "body": "Verified continuation 2026-10-03T18:30+03: company Telegram intake restored by operations t_0edb4ef8 (one native named-profile start exit0, host PID26200 unchanged). Native company gateway status now served; host exact company:telegram connected with fresh matching writer, 195s new log deltas clean. True receipt/attachment411 read back; natural owner inbound/reply remains UNVERIFIED, owner must resend one message. No model/restart/source changes made. Live config 128000/off confirmed. Qwen source lane recovered as bounded t_ced9d357→independentQA t_d088d7f1 (excluded ancillary denied read, no retry/bypass); prior blocked chain remains audit-only. Accepted hub packet now staged operations t_daf14af6→company-local native consumer because skill_manage has no target-profile argument. This is actual recovery+verified waiting, NOT a runtime token/cash saving claim. Financial scope company Telegram/optimization continuation, 2026-10-03, source native status/receipts/independent source artifacts: revenue/refunds/provider-paid/estimated usage null not investigated/attribution absent, no purchases/new paid commitments. Next source artifacts/QA owner tech→qa; check_at 2026-10-03T19:00+03, natural owner roundtrip separate.",
+          "created_at": 1791041522
+        }
+      ],
+      "events": [
+        {
+          "kind": "created",
+          "payload": {
+            "assignee": "company",
+            "status": "todo",
+            "parents": [
+              "t_ee2ad6bf",
+              "t_d5e37e14"
+            ],
+            "creator_task_id": null,
+            "tenant": null,
+            "workspace_kind": "scratch",
+            "workspace_path": null,
+            "branch_name": null,
+            "project_id": null,
+            "skills": null,
+            "goal_mode": null,
+            "model_override": null,
+            "provider_override": null
+          },
+          "created_at": 1791017076,
+          "run_id": null
+        },
+        {
+          "kind": "dependency_wait",
+          "payload": {
+            "reason": "parent_not_done",
+            "parent": "t_ee2ad6bf"
+          },
+          "created_at": 1791017076,
+          "run_id": null
+        },
+        {
+          "kind": "commented",
+          "payload": {
+            "author": "company",
+            "len": 660
+          },
+          "created_at": 1791017771,
+          "run_id": null
+        },
+        {
+          "kind": "commented",
+          "payload": {
+            "author": "company",
+            "len": 1284
+          },
+          "created_at": 1791022362,
+          "run_id": null
+        },
+        {
+          "kind": "promoted",
+          "payload": null,
+          "created_at": 1791025873,
+          "run_id": null
+        },
+        {
+          "kind": "claimed",
+          "payload": {
+            "lock": "laptop:26200",
+            "expires": 1791026775,
+            "run_id": 2223
+          },
+          "created_at": 1791025875,
+          "run_id": 2223
+        },
+        {
+          "kind": "spawned",
+          "payload": {
+            "pid": 12868,
+            "started_at": "|179102587546"
+          },
+          "created_at": 1791025875,
+          "run_id": 2223
+        },
+        {
+          "kind": "crashed",
+          "payload": {
+            "pid": 12868,
+            "claimer": "laptop:26200",
+            "exit_kind": "terminal_provider",
+            "exit_code": 78,
+            "terminal_provider": true,
+            "worker_output": "e literal placeholder Запрос: work kanban task t_38a4b49e \u001b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\u001b[0m \u001b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\u001b[0m \u001b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \u001b[0m \u001b[1;31m`hermes -p company model` to re-authenticate.\u001b[0m Goodbye! ☤",
+            "retry_status": "ready"
+          },
+          "created_at": 1791025936,
+          "run_id": 2223
+        },
+        {
+          "kind": "gave_up",
+          "payload": {
+            "failures": 1,
+            "effective_limit": 2,
+            "limit_source": "dispatcher",
+            "error": "pid 12868 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'e literal placeholder Запрос: work kanban task t_38a4b49e \\x1b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\\x1b[0m \\x1b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\\x1b[0m \\x1b[1;31m`hermes -p company auth add openai-codex --type oauth` to re",
+            "trigger_outcome": "crashed",
+            "retry_status": "ready",
+            "sticky": true,
+            "pid": 12868,
+            "claimer": "laptop:26200",
+            "terminal_provider": true
+          },
+          "created_at": 1791025936,
+          "run_id": null
+        },
+        {
+          "kind": "commented",
+          "payload": {
+            "author": "company",
+            "len": 1230
+          },
+          "created_at": 1791041522,
+          "run_id": null
+        }
+      ],
+      "runs": [
+        {
+          "id": 2223,
+          "profile": "company",
+          "step_key": null,
+          "status": "crashed",
+          "outcome": "crashed",
+          "summary": null,
+          "error": "pid 12868 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'e literal placeholder Запрос: work kanban task t_38a4b49e \\x1b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\\x1b[0m \\x1b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\\x1b[0m \\x1b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \\x1b[0m \\x1b[1;31m`hermes -p company model` to re-authenticate.\\x1b[0m Goodbye! ☤'",
+          "metadata": {
+            "pid": 12868,
+            "claimer": "laptop:26200",
+            "exit_kind": "terminal_provider",
+            "exit_code": 78,
+            "terminal_provider": true,
+            "worker_output": "e literal placeholder Запрос: work kanban task t_38a4b49e \u001b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\u001b[0m \u001b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\u001b[0m \u001b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \u001b[0m \u001b[1;31m`hermes -p company model` to re-authenticate.\u001b[0m Goodbye! ☤",
+            "retry_status": "ready",
+            "receipt": {
+              "status": "crashed",
+              "evidence_refs": [
+                "error:pid 12868 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'e literal placeholder Запрос: work kanban task t_38a4b49e \\x1b[1"
+              ],
+              "next_action": "review outcome and continue workflow"
+            }
+          },
+          "worker_pid": null,
+          "started_at": 1791025875,
+          "ended_at": 1791025936
+        }
+      ]
+    }
+  },
+  "host_state": {
+    "pid": 26200,
+    "kind": "hermes-gateway",
+    "argv": [
+      "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\hermes_cli\\main.py",
+      "gateway",
+      "run"
+    ],
+    "start_time": 179101792746,
+    "hermes_home": "C:\\Users\\max\\AppData\\Local\\hermes",
+    "gateway_state": "running",
+    "exit_reason": null,
+    "restart_requested": false,
+    "active_agents": 4,
+    "platforms": {
+      "telegram": {
+        "state": "connected",
+        "error_code": null,
+        "error_message": null,
+        "updated_at": "2026-09-22T01:12:49.605097+00:00",
+        "writer_pid": 24096,
+        "writer_start_time": 179003952582,
+        "needs_attention": false,
+        "retrying_since": null
+      },
+      "webhook": {
+        "state": "connected",
+        "error_code": null,
+        "error_message": null,
+        "updated_at": "2026-10-03T09:00:08.643605+00:00",
+        "writer_pid": 26200,
+        "writer_start_time": 179101792746,
+        "needs_attention": false,
+        "retrying_since": null,
+        "listener_base": "http://127.0.0.1:8644"
+      },
+      "company:telegram": {
+        "state": "connected",
+        "error_code": null,
+        "error_message": null,
+        "needs_attention": false,
+        "retrying_since": null,
+        "updated_at": "2026-10-03T15:16:51.093773+00:00",
+        "writer_pid": 26200,
+        "writer_start_time": 179101792746
+      }
+    },
+    "updated_at": "2026-10-03T15:33:10.388473+00:00",
+    "code_sha": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+    "code_version": "0.21.5",
+    "session_store": {
+      "status": "ok"
+    },
+    "multiplex_standalone_reason": null,
+    "served_profiles": [
+      "default",
+      "company",
+      "design",
+      "finance",
+      "product",
+      "qa",
+      "research",
+      "sales",
+      "tech",
+      "ux",
+      "video-director",
+      "video-editor"
+    ],
+    "active_work": null
+  },
+  "owner_roundtrip_verified": false,
+  "source_model_restoration_verified": false,
+  "next_check_at": "2026-10-03T19:00:00+03:00",
+  "financial": {
+    "scope": "company Telegram recovery and optimization continuation",
+    "period": "2026-10-03",
+    "source": "native task/status/receipts",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "estimated_usage_cost": null,
+    "reason": "outside revenue scope; provider usage invoice attribution unavailable",
+    "new_paid_commitments": 0
+  }
+}

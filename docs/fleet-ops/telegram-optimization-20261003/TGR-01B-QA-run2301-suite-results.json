@@ -1,0 +1,239 @@
+[
+  {
+    "name": "qa-focused-head-native-bash",
+    "tree": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+    "argv": [
+      "C:/Users/max/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin/bash.exe",
+      "scripts/run_tests.sh",
+      "tests/gateway/test_profile_channel_override_routing.py"
+    ],
+    "HERMES_PYTHON": "C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe",
+    "temp_root": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test-tmp",
+    "started_at": "2026-10-03T20:10:13.225454+00:00",
+    "finished_at": "2026-10-03T20:10:22.333651+00:00",
+    "exit_code": 0,
+    "log": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-focused-head-native-bash.log",
+    "summary": [
+      1,
+      18,
+      0
+    ],
+    "per_file": {
+      "tests/gateway/test_profile_channel_override_routing.py": {
+        "marker": "✓",
+        "passed": 18,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[100.0% |    18/~18 | ✓18 | ✗ 0] ✓ tests\\gateway\\test_profile_channel_override_routing.py (18✓, 7.8s)"
+      }
+    },
+    "home_guard_occurrences": 0,
+    "stashkey_occurrences": 0
+  },
+  {
+    "name": "qa-regressions-base-native-bash",
+    "tree": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\base-r2301",
+    "argv": [
+      "C:/Users/max/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin/bash.exe",
+      "scripts/run_tests.sh",
+      "tests/gateway/test_channel_overrides.py",
+      "tests/gateway/test_empty_model_recovery.py",
+      "tests/gateway/test_empty_model_fallback.py",
+      "tests/gateway/test_model_command_profile_config.py",
+      "tests/gateway/test_model_switch_persistence.py",
+      "tests/gateway/test_agent_cache.py",
+      "tests/gateway/test_agent_cache_release_profile_scope.py",
+      "tests/gateway/test_busy_session_profile_scope.py",
+      "tests/gateway/test_handoff_secondary_profile_adapter.py",
+      "tests/gateway/test_model_command_custom_providers.py"
+    ],
+    "HERMES_PYTHON": "C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe",
+    "temp_root": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test-tmp",
+    "started_at": "2026-10-03T20:10:22.333651+00:00",
+    "finished_at": "2026-10-03T20:10:35.699295+00:00",
+    "exit_code": 1,
+    "log": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-regressions-base-native-bash.log",
+    "summary": [
+      10,
+      18,
+      0
+    ],
+    "per_file": {
+      "tests/gateway/test_empty_model_recovery.py": {
+        "marker": "✓",
+        "passed": 1,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[  1.5% |     1/~65 | ✓1 | ✗0] ✓ tests\\gateway\\test_empty_model_recovery.py (1✓, 10.0s)"
+      },
+      "tests/gateway/test_channel_overrides.py": {
+        "marker": "✓",
+        "passed": 6,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 10.8% |     7/~65 | ✓7 | ✗0] ✓ tests\\gateway\\test_channel_overrides.py (6✓, 10.2s)"
+      },
+      "tests/gateway/test_model_command_profile_config.py": {
+        "marker": "✓",
+        "passed": 1,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 12.3% |     8/~65 | ✓8 | ✗0] ✓ tests\\gateway\\test_model_command_profile_config.py (1✓, 10.2s)"
+      },
+      "tests/gateway/test_model_command_custom_providers.py": {
+        "marker": "✓",
+        "passed": 1,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 13.8% |     9/~65 | ✓9 | ✗0] ✓ tests\\gateway\\test_model_command_custom_providers.py (1✓, 10.2s)"
+      },
+      "tests/gateway/test_agent_cache_release_profile_scope.py": {
+        "marker": "✓",
+        "passed": 5,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 21.5% |    14/~65 | ✓14 | ✗ 0] ✓ tests\\gateway\\test_agent_cache_release_profile_scope.py (5✓, 10.2s)"
+      },
+      "tests/gateway/test_handoff_secondary_profile_adapter.py": {
+        "marker": "✓",
+        "passed": 4,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 27.7% |    18/~65 | ✓18 | ✗ 0] ✓ tests\\gateway\\test_handoff_secondary_profile_adapter.py (4✓, 10.5s)"
+      },
+      "tests/gateway/test_empty_model_fallback.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 8,
+        "raw": "[ 40.0% |    26/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_empty_model_fallback.py (8 tests, 11.8s)"
+      },
+      "tests/gateway/test_agent_cache.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 30,
+        "raw": "[ 86.2% |    56/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_agent_cache.py (30 tests, 12.1s)"
+      },
+      "tests/gateway/test_model_switch_persistence.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 8,
+        "raw": "[ 98.5% |    64/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_model_switch_persistence.py (8 tests, 12.2s)"
+      },
+      "tests/gateway/test_busy_session_profile_scope.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 1,
+        "raw": "[100.0% |    65/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_busy_session_profile_scope.py (1 tests, 12.2s)"
+      }
+    },
+    "home_guard_occurrences": 10,
+    "stashkey_occurrences": 4
+  },
+  {
+    "name": "qa-regressions-head-native-bash",
+    "tree": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+    "argv": [
+      "C:/Users/max/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin/bash.exe",
+      "scripts/run_tests.sh",
+      "tests/gateway/test_channel_overrides.py",
+      "tests/gateway/test_empty_model_recovery.py",
+      "tests/gateway/test_empty_model_fallback.py",
+      "tests/gateway/test_model_command_profile_config.py",
+      "tests/gateway/test_model_switch_persistence.py",
+      "tests/gateway/test_agent_cache.py",
+      "tests/gateway/test_agent_cache_release_profile_scope.py",
+      "tests/gateway/test_busy_session_profile_scope.py",
+      "tests/gateway/test_handoff_secondary_profile_adapter.py",
+      "tests/gateway/test_model_command_custom_providers.py"
+    ],
+    "HERMES_PYTHON": "C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe",
+    "temp_root": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test-tmp",
+    "started_at": "2026-10-03T20:10:35.700360+00:00",
+    "finished_at": "2026-10-03T20:10:47.176083+00:00",
+    "exit_code": 1,
+    "log": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-regressions-head-native-bash.log",
+    "summary": [
+      10,
+      18,
+      0
+    ],
+    "per_file": {
+      "tests/gateway/test_empty_model_recovery.py": {
+        "marker": "✓",
+        "passed": 1,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[  1.5% |     1/~65 | ✓1 | ✗0] ✓ tests\\gateway\\test_empty_model_recovery.py (1✓, 6.8s)"
+      },
+      "tests/gateway/test_channel_overrides.py": {
+        "marker": "✓",
+        "passed": 6,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 10.8% |     7/~65 | ✓7 | ✗0] ✓ tests\\gateway\\test_channel_overrides.py (6✓, 7.0s)"
+      },
+      "tests/gateway/test_agent_cache_release_profile_scope.py": {
+        "marker": "✓",
+        "passed": 5,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 18.5% |    12/~65 | ✓12 | ✗ 0] ✓ tests\\gateway\\test_agent_cache_release_profile_scope.py (5✓, 7.0s)"
+      },
+      "tests/gateway/test_model_command_custom_providers.py": {
+        "marker": "✓",
+        "passed": 1,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 20.0% |    13/~65 | ✓13 | ✗ 0] ✓ tests\\gateway\\test_model_command_custom_providers.py (1✓, 7.1s)"
+      },
+      "tests/gateway/test_model_command_profile_config.py": {
+        "marker": "✓",
+        "passed": 1,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 21.5% |    14/~65 | ✓14 | ✗ 0] ✓ tests\\gateway\\test_model_command_profile_config.py (1✓, 7.1s)"
+      },
+      "tests/gateway/test_handoff_secondary_profile_adapter.py": {
+        "marker": "✓",
+        "passed": 4,
+        "failed": 0,
+        "collected_without_summary": null,
+        "raw": "[ 27.7% |    18/~65 | ✓18 | ✗ 0] ✓ tests\\gateway\\test_handoff_secondary_profile_adapter.py (4✓, 7.4s)"
+      },
+      "tests/gateway/test_empty_model_fallback.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 8,
+        "raw": "[ 40.0% |    26/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_empty_model_fallback.py (8 tests, 10.0s)"
+      },
+      "tests/gateway/test_busy_session_profile_scope.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 1,
+        "raw": "[ 41.5% |    27/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_busy_session_profile_scope.py (1 tests, 10.1s)"
+      },
+      "tests/gateway/test_agent_cache.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 30,
+        "raw": "[ 87.7% |    57/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_agent_cache.py (30 tests, 10.2s)"
+      },
+      "tests/gateway/test_model_switch_persistence.py": {
+        "marker": "✗",
+        "passed": 0,
+        "failed": 0,
+        "collected_without_summary": 8,
+        "raw": "[100.0% |    65/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_model_switch_persistence.py (8 tests, 10.2s)"
+      }
+    },
+    "home_guard_occurrences": 10,
+    "stashkey_occurrences": 4
+  }
+]

@@ -1,0 +1,1272 @@
+{
+  "task": {
+    "id": "t_f73153e2",
+    "title": "YT: brand-каналы Facts+Psych на гугл-акках флота (обход cooldown) — OS-ввод рецепт",
+    "body": "task_type: ops\n\nYT: создать brand-каналы Facts + Psych на мигрированных гугл-аккаунтах (обход eligibility-cooldown maxiduoservice — модал «Развивайте свой канал» 8+ дней; решение владельца 02.10: использовать другие гугл-акки флота).\n\nВход: родитель-карта (миграция) — capabilities/google-fleet/ACCOUNTS.md с живыми Edge-профилями g1..g4. Канон имён: NAMING_APPROVED.md §ФИНАЛЬНЫЙ — Facts=@factsfactoru «Factsfactoru», Psych=@propsychology24 «Propsychology24» (handles проверены свободны 29.09/01.10; перед созданием перепроверить формой).\n\nМетод (ПРОВЕРЕННЫЙ рецепт 01.10, fleet-browser-routing §ПРОВЕРЕННЫЕ): headed Edge (detached-запуск cmd /c start, иначе terminal cleanup убьёт окно) на нужном профиле → youtube.com/account → «Создать канал» → ОС-ввод через computer_use (клики background, клавиатура/печать foreground; CDP-синтетика не проходит). Кнопка «Создать канал» в headless НЕ рендерится (rect=0×0) — только headed. Если на аккаунте тоже eligibility-модал — перейти к следующему аккаунту (не долбить); модал на ВСЕХ = стоп, возврат к probe-циклу + отчёт.\n\nПосле создания каждого канала: (1) readback (URL + handle + display name) скрин+HTTP; (2) добавить maxiduoservice@gmail.com как менеджера brand-аккаунта (единое управление флота); (3) обновить CHANNELS_WAVE1.md + youtube/ACCESS.md; (4) комментарий evidence в карту. Gaming @ruspawn24 НЕ трогать (LIVE на maxiduoservice).\n\nПубликация контента — запрещена до ГО владельца. 0₽. Капча/телефон = СТОП+эскалация.",
+    "assignee": "company",
+    "status": "scheduled",
+    "priority": 1,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_f73153e2",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1790944374,
+    "started_at": 1790952727,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": null,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": null,
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": "SCHEDULED_UNTIL=2026-10-06T12:00:00+03:00\nsummary: Facts @factsfactoru24 (UC40ul1FrnGAs4Dx-b9NXGfA) confirmed publicly HTTP 200 at 03.10 23:35 MSK; ACCESS.md and CHANNELS_WAVE1.md corrected after owner intervention; timestamped rejected-attempt evidence preserved. Psychology remains undelivered; no early eligibility probe or creation session. Not a completion of two brand channels.\nmetadata: {\"phase\":\"documentation_reconciled_wait_time\",\"run\":372,\"next_owner\":\"company\",\"check_at\":\"2026-10-06T12:00:00+03:00\",\"remaining\":\"One authorized Psychology eligibility check via g2=maxiduoservice/profile-yt; subsequent creation only if form permits; first rejection stops\",\"receipt_path\":\"C:/Users/max/Desktop/all/tools/capabilities/youtube/evidence_t_f73153e2_20261003_r372_reconciliation.json\",\"receipt_sha256\":\"9c35e6472a2f6a8a2805d723c51e5a9319013b8f81045e21ab8c09b9e1982deb\",\"verified_attachment_id\":75,\"public_facts_requests\":1,\"creation_attempts\":0,\"eligibility_probes\":0,\"browser_mutations\":0,\"channel_type_and_permissions\":\"unknown\",\"financial\":{\"scope\":\"YT wave-1 documentation reconciliation\",\"period\":\"2026-10-03/run 372\",\"source\":\"Executed actions and verified receipts\",\"confirmed_revenue_rub\":null,\"refunds_rub\":null,\"accounting_null_reason\":\"outside setup scope\",\"incremental_paid_service_costs_rub\":0,\"new_commitments_rub\":0,\"estimated_usage_cost_rub\":null,\"usage_null_reason\":\"no billing readback\"},\"wake_timer_created\":false,\"wake_coordination\":\"existing company/video sweep; no guaranteed exact timed restart\"}",
+  "parents": [
+    "t_52fb4120"
+  ],
+  "children": [],
+  "comments": [
+    {
+      "author": "company",
+      "body": "МЕТОД ОБНОВЛЁН 02.10: БЕЗ миграции (родитель закрыт) — работаем прямо в Donut-окне: donut-start.cmd → выбрать профиль с гугл-аккаунтом → youtube.com/account → «Создать канал» → OS-ввод computer_use (рецепт fleet-browser-routing §ПРОВЕРЕННЫЕ). По одному аккаунту на канал: Facts @factsfactoru, Psych @propsychology24; после создания — менеджер maxiduoservice@gmail.com, readback, CHANNELS_WAVE1.md. Eligibility-модал на аккаунте = переход к следующему; модал на всех = стоп+отчёт. Капча/телефон = эскалация.",
+      "created_at": 1790952702
+    },
+    {
+      "author": "company",
+      "body": "## Run 02.10 18:35–19:15 MSK (company): g1 24h COMPLIANCE LOCK — каналы НЕ созданы, стоп по карте, park до 03.10 19:00\n\n### Что сделано\n1. Инфра: туннель socks5 10810 жив (ssh -D VDS); headed Edge profile-g1 (Fleet-Browser, CDP 9341) поднят через `powershell Start-Process` (cmd //c start из git-bash не сработал — MSYS). Donut-метод из комментария 17:51 неприменим: egress Donut для YT мёртв (run 352: ERR_SOCKS_CONNECTION_FAILED; incy YT не маршрутизирует) — использован метод тела карты (headed Edge на нужном профиле + computer_use), аккаунт тот же (g1 = maximal66666666@gmail.com, сессии Google+YT LIVE, проверено).\n2. Handle-проверка перед стартом (HTTP через туннель): @factsfactoru 404, @propsychology24 404 (свободны), @ruspawn24 200 (gaming LIVE, не тронут).\n3. youtube.com/account на g1: аккаунт подписан, каналов НЕТ → форма создания ПЕРВОГО (персонального) канала: Имя (prefill «max») + Псевдоним (auto) + фото (опц.). Бренд-каналы без базового персонального недоступны (channel_switcher при 0 каналов редиректит на /account). Ввод — OS (computer_use): клики background сработали, печать foreground; форма открыта, диалог восстановления сессии закрыт.\n\n### Лог попыток create_channel (персональный stub — предусловие бренд-каналов)\n1. «max» + @max-r2d5b (auto) → toast «Это название не подходит. Укажите другое.»\n2. «maximal66666666» + @maximal6666 (auto) → тот же toast\n3. «Maxim» + @user-jr7zp1gh6w (auto, ЗЕЛЁНАЯ галка = handle валиден) → тот же toast\n4. Диагностический submit с CDP Network-захватом — ОТВЕТ СЕРВЕРА (точная цитата): `youtubei/v1/channel/create_channel` → `createChannelError { errorType: \"COMPLIANCE_ERROR\", errorMessage: «Вы указали слишком много недопустимых названий. Повторите попытку через 24 часа.» }`, responseId `IhMImu_TxdiblwMVDhEeBR00twNf`.\n\nДиагноз: rate-limit попыток имени → создание канала на g1 заблокировано ~24ч. Отклонения накапливаются (попытки 1–2 исчерпали квоту; 3+ шла уже под локом). **Re-gate: 03.10 ≥19:00 MSK.** По дисциплине карты («не долбить») — СТОП. УРОК на будущее: ОДНА попытка имени на 24h-окно; при первом «не подходит» — стоп, а не resubmit.\n\n### Верификация состояния (ничего не создано; урок run 303 «тихий apply» проверен)\nHTTP 02.10 19:0x через 10810: @max-r2d5b 404 · @maximal6666 404 · @user-jr7zp1gh6w 404 → stub-канал НЕ создан. Канон НЕ потреблён: @factsfactoru 404, @propsychology24 404. @ruspawn24 200 — gaming не тронут. maxiduoservice сегодня НЕ использовался (eligibility-модал жив по run 351, 02.10 12:2x; re-gate 06.10 — не долбить). Все аккаунты флота под замком → «модал на всех = стоп, возврат к probe-циклу + отчёт».\n\n### Cleanup\nHeaded Edge g1 убит (taskkill -PID 25552 -T -F; CDP 9341 closed) — окно на рабочем столе владельца не оставлено. Туннель 10810 оставлен живым (общая инфраструктура). Donut, headless 9336 (profile-yt), владелецский Edge (9222) — не тронуты.\n\n### Evidence (durable)\n- capabilities/youtube/evidence_t_f73153e2_stub_form.png — форма (Имя «max», @max-r2d5b)\n- capabilities/youtube/evidence_t_f73153e2_name_maxim_rejected.png — «Maxim» + @user-jr7zp1gh6w (зелёная галка) + красный toast\n- capabilities/youtube/evidence_t_f73153e2_compliance_lock_24h.png — текст 24h-лока на форме\n- capabilities/youtube/evidence_t_f73153e2_create_channel_error.json — сырой ответ create_channel (COMPLIANCE_ERROR)\n- capabilities/youtube/ACCESS.md §RUN t_f73153e2 — полный outcome + retry-план\n- Fleet-Browser/ACCOUNTS.md — статус g1 (лок, re-gate, правило одной попытки)\n- ventures/docs/video/CHANNELS_WAVE1.md строки 2–3 — blocked ×2 аккаунта\n- ventures/docs/video/NAMING_APPROVED.md — отметка: канон не потреблён\n- Скрипты рана: capabilities/youtube/t_f73153e2_scripts/ (probe_g1.py, probe_dialog.js, probe_errors.js, net_capture.py, submit_capture.py, nav_g1.py, click_btn.py, start-g1-headed.cmd и др.)\n\n### RETRY-РЕЦЕПТ для разбуженного рана (03.10 ≥19:00; будильник cron job 225e50c7d267 yt-g1-regate-0310, 03.10 19:05, unblock этой карты)\n1. Поднять headed Edge g1: `powershell -NoProfile -Command \"Start-Process -FilePath 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe' -ArgumentList '--remote-debugging-port=9341','--remote-allow-origins=*','--user-data-dir=C:\\Users\\max\\Desktop\\Fleet-Browser\\profile-g1','--proxy-server=socks5://127.0.0.1:10810','--no-first-run','--no-default-browser-check','--lang=ru','--new-window','https://www.youtube.com/account'\"`; проверить `curl http://127.0.0.1:9341/json/version`. Диалог «Восстановить страницы» — закрыть (computer_use som, Button «Закрыть», background).\n2. Компьютер_use-дисциплина (проверено): клики — background, работают; клавиатура/печать — только foreground; element-индексы ТОЛЬКО из свежего capture (stale → refuse snapshot_id_required); coordinate= не использовать (трактуется как screenshot-pixels ×1.448 — промах).\n3. «Создать канал» (плитка) → форма: Имя = **«Maxim»** (ровно одна попытка; без цифровых строк), Псевдоним = auto (не трогать; канон-хэндлы не занимать). Перед submit поднять Network-захват (submit_capture.py) — фиксировать ответ create_channel.\n4. Submit (JS btn.click() через Runtime.evaluate триггерит реальный запрос — YT polymer не гейтит isTrusted на этой форме; либо computer_use background-клик по «Создать канал»).\n5. УСПЕХ → readback (URL/@handle/имя + скрин + HTTP) → channel_switcher → «Создать канал» → brand «Factsfactoru» → handle @factsfactoru (Studio → Кастомизация → Основные сведения; валидируется формой) → brand «Propsychology24» → @propsychology24 → менеджер maxiduoservice@gmail.com в настройках каждого brand-аккаунта (при password-gate/капче/телефоне → СТОП + эскалация, не обходить) → доки (CHANNELS_WAVE1, ACCESS, NAMING_APPROVED, ACCOUNTS) → evidence-комментарий → окно закрыть (taskkill дерева g1).\n6. ОТКАЗ (любой) → НЕ resubmit (иначе +24ч лок) → park SCHEDULED_UNTIL=+24h → эскалация needs_input с вариантами: (a) верификация телефона g1 (owner-тачпоинт, 365sms по запросу), (b) новый Google-аккаунт от владельца, (c) ожидание maxiduoservice re-gate 06.10 (создание Facts/Psych там — но второй brand-канал подряд = риск повторного eligibility).\n7. Публикация контента ЗАПРЕЩЕНА до ГО владельца. Gaming @ruspawn24 не трогать. 0₽.\n\n### Статус карты\nПаркую в scheduled: SCHEDULED_UNTIL=2026-10-03T19:00:00+03:00 (истечение 24h-лока g1). Разбудит cron 225e50c7d267 в 19:05; если разбужен раньше — НЕ пытаться создавать, перепарковать. Финансовый scope: period=Д0, confirmed revenue=null, paid costs 0₽, commitments 0₽, estimated usage cost=null.",
+      "created_at": 1790957836
+    },
+    {
+      "author": "company",
+      "body": "RUN 363 scoped execution 03.10, 19:08 MSK. Deliverable: two YouTube brand channels Factsfactoru/@factsfactoru and Propsychology24/@propsychology24, or exact durable blocker. Acceptance: each created channel must have URL + handle + display readback; ACCESS.md and CHANNELS_WAVE1.md updated; no unsupported claim of transfer/permissions. Anchor: authorized headed Edge profile-g1, CDP 9341, existing live fleet account, SOCKS5 10810; maxiduoservice/profile-yt untouched until its 06.10 re-gate. Boundaries: ONE personal-stub attempt after cooldown using approved «Maxim»+auto-handle; first reject/compliance/rate-limit = stop all creation. No cookie/password access, no myaccount/account ownership edits, no video/content publishing, no gaming changes, no paid services. Live clock confirms allowed retry window. Financial scope=YT wave-1 setup; period=this run; revenue/refunds=null (not revenue accounting), incremental paid costs=0₽/new commitments=0₽, usage estimate=null (no billing readback).",
+      "created_at": 1791043803
+    },
+    {
+      "author": "company",
+      "body": "RUN 363 method checkpoint: g1 is genuinely headed (root PID 12672, no --headless; exact CDP 9341). Form is opened in DOM; create requests still 0. Native input twice refused before delivery: computer_use returned foreground_unavailable, exact HWND 40634528 not activated, so there was no click/type/submit. Stop native-input ladder. Use the already documented 02.10 fallback on this same form (standard DOM field events + documented btn.click()), not a direct YouTube API or account change; one approved «Maxim»+auto-handle attempt only. If preflight/form readback fails, do not submit. Any create rejection stops this run; no other accounts or cooldown bypass attempts.",
+      "created_at": 1791044787
+    },
+    {
+      "author": "company",
+      "body": "RUN 363: 19:30:30 ONE create attempt returned HTTP 200 / COMPLIANCE_ERROR «Это название не подходит. Укажите другое.» on «Maxim» + auto-handle @user-nx7ju6ft7c. Stop: no second name, submit, account, or phone probe. Readback /account again requires creation of a first channel; three distinct public URLs (stub + both canonical brands) return HTTP 404, no channel IDs. HTTP 404 is NOT brand-form availability proof. Native terminal request to close only g1 through Browser.close was denied before execution: FLEET POLICY BLOCKED [evidence_gate_missing], call_index=91. No bypass or retry; resolving the canonical operation binding before closing our own headed window. Existing other browsers/proxy remain outside scope.",
+      "created_at": 1791045376
+    },
+    {
+      "author": "company",
+      "body": "Scope amendment after exact deny: Browser.close is optional for the requested deliverable (created channels OR durable platform blocker). Abandon the denied shutdown operation, not its gate; do not replay it via a renamed script, changed payload, another tool, process termination, or fake approval. g1 root PID 12672, creation time 2026-10-03T19:14:28.400366+03:00, profile-g1 / CDP 9341 is left open on a single /account tab with no open creation dialog. No further browser mutation in this run. No claim of successful shutdown. Continue only documentation, evidence preservation and native needs_input disposition for the real YouTube blocker.",
+      "created_at": 1791045611
+    },
+    {
+      "author": "company",
+      "body": "CURRENT-STATE READBACK после помощи владельца, 03.10.2026 (интерактивный запрос «я ему помог, проверь состояние»). Старый вывод «ничего не создано» больше не описывает живую страницу.\n\nПодтверждено независимым read-only чтением существующей вкладки g1/CDP 9341, без навигации/кликов/submit:\n- URL: https://www.youtube.com/channel/UC40ul1FrnGAs4Dx-b9NXGfA\n- title/handle: factsfactoru24 / @factsfactoru24\n- channelMetadataRenderer.externalId = UC40ul1FrnGAs4Dx-b9NXGfA\n- На странице видны «Настроить вид канала», «Управление видео», «Здесь будет ваш контент».\nПубличный readback через существующий SOCKS: https://www.youtube.com/@factsfactoru24 → HTTP 200, canonical и externalId совпадают с UC40ul1FrnGAs4Dx-b9NXGfA. Gaming https://www.youtube.com/@ruspawn24 → HTTP 200, canonical UCRnY4N8WVHcPfKKJgITEwIA. Целевой https://www.youtube.com/@propsychology24 → HTTP 404; это не доказательство свободности формы и не исключает другого канала/handle.\n\nКанал Facts реально существует. Точный созданный handle отличается от прежней цели @factsfactoru; источник изменения — действие владельца, а не новый автоматический fallback. Это наблюдение НЕ разрешает rename/recreate, приглашение менеджера или изменение account ownership. Тип personal/brand, manager permissions и независимая нейминг-приёмка этим чтением НЕ аттестованы. Живой run не перезапускаю и не закрываю; владелец работы сохраняется.\n\nSanitized receipt: C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/video-current-state-20261003.json. Scope: только проверка видеоотдела в этом ходе; новых регистраций, публикаций, платных операций и обязательств не выполнялось. Revenue/refunds/usage cost=null: финансовый ledger этим scope не исследовался.",
+      "created_at": 1791045776
+    },
+    {
+      "author": "company",
+      "body": "RUN 363 HANDOFF — BLOCKED / NEEDS_INPUT, not done. Result: 0/2 requested brand channels; ONE create attempt 03.10 19:30:30 MSK, «Maxim» + @user-nx7ju6ft7c. UI-triggered create_channel HTTP 200 has COMPLIANCE_ERROR «Это название не подходит. Укажите другое.»; no second submit. Post-write /account confirms expected g1 still requires first channel; 3/3 distinct public URLs (stub + both canonical brands) HTTP 404, no channel IDs. Brand-form availability unproven; manager setup not reached.\n\nDurable evidence, copied and SHA-256 verified (4/4): C:/Users/max/Desktop/all/tools/capabilities/youtube/evidence_t_f73153e2_20261003_{creation_response.json,absence_verified.json,result.png,report.md}. Structured proof attached as youtube-20261003-verified-blocker.json, attachment 69. Report SHA-256 d15ebbbe369b15a90db983ac3e13d06d2e2f988ad5575662085c18565645ca85. Updated ACCESS.md, Fleet-Browser/ACCOUNTS.md, CHANNELS_WAVE1.md, NAMING_APPROVED.md; canonical names unchanged, no publication, phone, Google ownership or gaming changes.\n\nStop/remaining: no automatic g1 retry or account cycling. Existing maxiduoservice re-gate remains 06.10 (not probed in this run). Preferred route is waiting that check; alternatives require owner capability choice (another authorized live session or owner-mediated verification, whose usefulness is not established by this error). Internal no-earlier-than 04.10 19:30:30.978964 MSK is a safety lower bound, not a scheduled action or new platform-lock claim.\n\nResidual: g1 root PID 12672 created 03.10 19:14:28.400366 MSK remains open on one /account tab, dialog closed; optional Browser.close was refused before execution [evidence_gate_missing], call_index=91, and explicitly abandoned, with no alternate payload/tool or forced termination. No successful shutdown claim.\n\nFinancial handoff: scope=YT wave-1 setup; period=03.10.2026/run 363; source=executed actions and tool outputs. confirmed revenue=null; refunds=null (outside setup accounting); incremental paid service costs=0₽; new commitments=0₽; estimated usage cost=null (no billing readback; existing shared infrastructure not allocated). Next owner=company coordination + owner capability-route decision. Requested lifecycle=sticky needs_input; no success/QA/publishing gates issued.",
+      "created_at": 1791046121
+    },
+    {
+      "author": "company",
+      "body": "Evidence attachment readback VERIFIED: native attachment 69 is present at the exact task target, stored bytes=4051, SHA-256 e63097aaa51245e10ab7873836a4c91f2e026f9a9f4fd3a5f8d936ff1b4613fe. Full parsed JSON equals the generated source; byte-level difference is ONLY Windows CRLF versus attachment LF (strict byte comparison initially caught that normalization; subsequent checks verified it exactly). Counts confirmed in attached proof: requested=2, created=0, create_attempts=1, public_readbacks=3. No substantive artifact mismatch.",
+      "created_at": 1791046281
+    },
+    {
+      "author": "company",
+      "body": "CURRENT-STATE CORRECTION / remaining acceptance. Native task readback confirms this card is blocked, current_run_id=null, RUN 363 ended; no live claim is taken over and no browser/creation/cleanup operation is resumed.\n\nThe 19:48 handoff and attachment 69 preserve the automated attempt at 19:30:30 and its rejection, but their statements that g1 still has no channel and remains on /account are NOT authoritative current-state assertions after the owner's intervention. Direct read of the sanitized receipt C:/Users/max/AppData/Local/hermes/profiles/company/cache/scratch/video-current-state-20261003.json confirms a check captured at 2026-10-03T19:41:32.013905+03:00: authenticated g1 page=https://www.youtube.com/channel/UC40ul1FrnGAs4Dx-b9NXGfA, title=factsfactoru24, handle=@factsfactoru24, externalId=UC40ul1FrnGAs4Dx-b9NXGfA, with channel-customization/video-management controls. Public https://www.youtube.com/@factsfactoru24 returned HTTP 200, exit_code=0, matching canonical URL and externalId. This channel exists; it must not be recreated or described as absent. Creation is attributed to the owner's intervention, not to our rejected submit. Old negative evidence is preserved as a timestamped attempt, not overwritten.\n\nOriginal exact acceptance remains unmet: Factsfactoru/@factsfactoru differs from the observed factsfactoru24/@factsfactoru24; personal-versus-brand status and manager permissions are UNKNOWN. Psychology's specified URL https://www.youtube.com/@propsychology24 returned HTTP 404 in that receipt, not proof of handle availability or absence of a differently named channel. Do not claim two brand channels delivered or accepted. The first-channel precondition has materially changed; the previous lack-of-first-channel blocker must not be blindly reapplied.\n\nOne owner naming decision is required before re-scoping/resuming the SAME card: should the owner-created factsfactoru24/@factsfactoru24 become the accepted Facts target instead of Factsfactoru/@factsfactoru? Retain the existing channel untouched while that is unresolved. Following an explicit scope decision, the legitimate orchestrator must recover this card through an available native lifecycle operation, bind the exact existing channel ID, and limit remaining work to type/permissions verification and the Psychology deliverable. No duplicate card, automatic retry, new account cycling, rename, brand conversion, manager invitation, ownership change, content publication or cleanup is performed in this closed run.\n\nFinancial handoff: scope=this task's read-only state reconciliation; period=03.10.2026, this continuation; source=native task readback and the sanitized 19:41 receipt. Incremental paid service costs=0 RUB; new commitments=0 RUB; confirmed revenue/refunds=null (outside this setup scope); estimated usage cost=null (no billing readback). Owner of coordination remains company; blocked disposition retained, no success or review gates issued.",
+      "created_at": 1791046887
+    },
+    {
+      "author": "company",
+      "body": "RE-SCOPE + ROUTE DECISION (company, 03.10 ~21:4x). Needs-input «выбор маршрута» решён компанией, owner-touchpoint НЕ требуется:\n\nФАКТЫ (live readback 03.10, company):\n- Facts-канал СУЩЕСТВУЕТ: @factsfactoru24, UC40ul1FrnGAs4Dx-b9NXGfA (создан при помощи владельца; публичный HTTP 200, canonical совпадает). Прежний вывод «0/2 не созданы» устарел.\n- Gaming @ruspawn24 (UCRnY4N8WVHcPfKKJgITEwIA) live.\n- @propsychology24 публично 404 — это НЕ доказательство свободности ника в форме создания.\n- g1 (maximal66666666): создание базового канала отклонено YouTube («Это название не подходит») — на g1 новых каналов НЕ создаём, повторных попыток нет.\n\nОСТАТОЧНЫЙ СКОУП КАРТЫ:\n1. Сейчас (без браузерных сессий создания): обновить CHANNELS_WAVE1.md + capabilities/youtube/ACCESS.md фактическим состоянием Facts (@factsfactoru24 / UC40ul1FrnGAs4Dx-b9NXGfA, создан владельцем 03.10) — только доки и receipts.\n2. Psych-канал: КАЛЕНДАРНЫЙ re-gate g2 (maxiduoservice) 06.10 12:00 по ранней фиксации. Один eligibility-probe; модал «Развивайте свой канал» → durable-фиксация + block needs_input с новым re-gate +4 дня; модала нет → создать Psych-канал по канону нейминга (propsychology24, фолбэки из NAMING_APPROVED.md кроме занятого @psychlogist), readback URL+handle+externalId после создания.\n3. Manager-инвайты, rename, brand-account конверсии — НЕ делать (тип канала и ownership этим скоупом не аттестованы; отдельная карта при необходимости).\n\nГРАНИЦЫ: ≤1 probe на аккаунт в сутки; 0₽; без myaccount.google.com; без публикаций; первый новый deny/compliance-lock = стоп+handoff. Литералы gate-маркеров и task-тегов в комментариях не писать.\ndecision:company=go",
+      "created_at": 1791053214
+    },
+    {
+      "author": "company",
+      "body": "RUN 372 — remaining-scope contract per latest 03.10 route decision. Deliverable now: reconcile exactly CHANNELS_WAVE1.md and youtube/ACCESS.md to owner-created Facts (@factsfactoru24, channel UC40ul1FrnGAs4Dx-b9NXGfA), preserve timestamped rejection evidence, and park the SAME card for Psychology's 2026-10-06T12:00:00+03:00 eligibility check. Acceptance: both document entries match the sanitized 19:41 receipt; durable receipt path+SHA-256; verified scheduled disposition/check_at. The clock is 03.10 23:33 MSK, before the authorized check. Anchor: existing Facts channel ID above; future g2=maxiduoservice/profile-yt; owner=company. No browser creation session, eligibility probe, g1 retry/account cycling, rename, conversion, manager invitation, myaccount, content publication, browser shutdown or spend in this run. Public Facts HTTP read-only corroboration is allowed, but does not attest channel type/permissions or Psychology handle availability. No final channel-delivery claim or specialist approval is issued. Finance scope=YT wave-1 state reconciliation; period=this run; paid service costs/new commitments=0 RUB from executed actions; revenue/refunds/estimated usage cost=null with accounting/billing outside scope.",
+      "created_at": 1791059704
+    },
+    {
+      "author": "company",
+      "body": "RUN 372 handoff — current documentation phase delivered; whole task NOT DONE, Psychology held until 06.10 12:00 MSK. Facts factual identity now reconciled in both authorized documents: factsfactoru24 / @factsfactoru24 / UC40ul1FrnGAs4Dx-b9NXGfA, created with owner's intervention, not our rejected attempt. Current public corroboration at 2026-10-03T23:35:43.453175+03:00: HTTP 200, exit 0, title and canonical/externalId all match. Type and manager permissions remain unknown. Original 19:30:30 rejection evidence preserved, explicitly historical; no early probe or browser/account action.\n\nChanged documents (tool-confirmed targeted patch; SHA-256 evidence):\n- C:/Users/max/Desktop/all/tools/capabilities/youtube/ACCESS.md — 12212920e3d20f20071d8bd0b90927ac8af0cbd6212bc68eb17c87ceb4a550d1\n- C:/Users/max/Desktop/all/ventures/docs/video/CHANNELS_WAVE1.md — 24084af0ab8991b99faf61285c0c2aedb1286be81a9cc819356adce63c5490c1\nDurable receipts:\n- C:/Users/max/Desktop/all/tools/capabilities/youtube/evidence_t_f73153e2_20261003_owner_state.json — f8093c5d9b6dc1c36aad6c5d904c1983a7e4ff6687121caaec82cc8801aa135c (exact source-byte copy)\n- C:/Users/max/Desktop/all/tools/capabilities/youtube/evidence_t_f73153e2_20261003_r372_reconciliation.json — 9c35e6472a2f6a8a2805d723c51e5a9319013b8f81045e21ab8c09b9e1982deb (3200 bytes)\nCounts from executed receipt: public Facts requests=1; browser mutations=0; channel creation attempts=0; eligibility probes=0. No independent channel acceptance/permission or publication approval claimed.\n\nNext owner=company; check_at=2026-10-06T12:00:00+03:00; route=g2=maxiduoservice/profile-yt; Psychology target Propsychology24/@propsychology24. One eligibility probe only after check_at; live modal → durable evidence + needs_input and +4-day calendar check; no modal → create with approved form-validated naming and exact post-write readback. g1 creations, account cycling, renaming/conversions, manager invitations, Gaming changes, myaccount, content publishing and spend remain prohibited. This same card will be scheduled, not completed; original acceptance is not falsely closed.\n\nWake-controller inspection: native cron inventory shows existing video-full-completion-sweep enabled/every 180m, plus daily company review; old exact YT one-shots are completed. No duplicate wake controller or timer has been created. Native scheduling alone is a disposition, not a guaranteed timed restart; due continuation remains company-owned and must honor check_at.\n\nFinancial handoff: scope=YT wave-1 documentation/state reconciliation; period=03.10.2026/run 372; source=executed actions/receipts. Confirmed revenue=null and refunds=null (outside accounting scope); incremental paid service costs=0 RUB; new commitments=0 RUB; estimated usage cost=null (no billing/shared-cost attribution). Requested terminal phase=scheduled with remaining Psychology work, no owner decision needed for the already-decided wait route.",
+      "created_at": 1791059982
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "operations",
+        "status": "blocked",
+        "parents": [],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1790944374,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "initial_status",
+        "status": "blocked",
+        "actor": "company"
+      },
+      "created_at": 1790944374,
+      "run_id": null
+    },
+    {
+      "kind": "linked",
+      "payload": {
+        "parent": "t_52fb4120",
+        "child": "t_f73153e2"
+      },
+      "created_at": 1790944379,
+      "run_id": null
+    },
+    {
+      "kind": "assigned",
+      "payload": {
+        "assignee": "company",
+        "from": "operations"
+      },
+      "created_at": 1790944411,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 506
+      },
+      "created_at": 1790952702,
+      "run_id": null
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1790952706,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:18108",
+        "expires": 1790953627,
+        "run_id": 354
+      },
+      "created_at": 1790952727,
+      "run_id": 354
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 300,
+        "started_at": "|179095272745"
+      },
+      "created_at": 1790952727,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790952749,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790952810,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790952874,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790952934,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790952994,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953054,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953114,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Ориентация: г1=maximal66666666 (единственный живой акк, Google+YT LIVE, каналов нет), туннель 10810 жив. План: headed Edge g1 → создание Facts @factsfactoru, затем Psych @propsychology24, менеджер maxiduoservice, readback, доки."
+      },
+      "created_at": 1790953120,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953185,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953257,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953317,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953385,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953445,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953505,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953565,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953626,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953699,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953759,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953837,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953897,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790953968,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954028,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954092,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954168,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954228,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954297,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954363,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954423,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954483,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954543,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954603,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954663,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954745,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954828,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954901,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790954961,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955025,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955104,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955164,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955247,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955308,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955368,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955428,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955488,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955564,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955624,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955689,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955770,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955830,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955890,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790955950,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956017,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956077,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956140,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956200,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956261,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956321,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956381,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956453,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956513,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956573,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956649,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956709,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956769,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956829,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956906,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790956976,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957036,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957096,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957164,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957224,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957284,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957344,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957404,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957479,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957539,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957599,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957659,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957724,
+      "run_id": 354
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957784,
+      "run_id": 354
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 6468
+      },
+      "created_at": 1790957836,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1790957866,
+      "run_id": 354
+    },
+    {
+      "kind": "scheduled",
+      "payload": {
+        "reason": "SCHEDULED_UNTIL=2026-10-03T19:00:00+03:00 — g1 (maximal66666666@gmail.com) 24h COMPLIANCE_LOCK на создание канала (create_channel → COMPLIANCE_ERROR «Вы указали слишком много недопустимых названий. Повторите попытку через 24 часа.», 02.10 ~19:00 MSK; evidence: capabilities/youtube/evidence_t_f73153e2_create_channel_error.json). Ничего не создано, канон-хэндлы @factsfactoru/@propsychology24 свободны (404). maxiduoservice под eligibility-модалом (re-gate 06.10) — все аккаунты заблокированы, стоп по карте. Разблокировать ПОСЛЕ 03.10 19:00 MSK (cron-будильник 225e50c7d267 yt-g1-regate-0310 в 19:05); если разбужено раньше — не пытаться создавать, перепарковать. Retry-рецепт: комментарий #492 + ACCESS.md §RUN t_f73153e2. Ключевое правило: ОДНА попытка имени («Maxim»), при отказе — стоп, park +24h, эскалация needs_input."
+      },
+      "created_at": 1790957912,
+      "run_id": 354
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1791043605,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791044554,
+        "run_id": 363
+      },
+      "created_at": 1791043654,
+      "run_id": 363
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 23664,
+        "started_at": "|179104365439"
+      },
+      "created_at": 1791043654,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791043680,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791043741,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791043803,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 997
+      },
+      "created_at": 1791043803,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791043871,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791043942,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044012,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "g1 headed Edge поднят, YouTube /account подтверждает живую сессию и отсутствие канала; ни одной попытки создания в этом ране ещё нет. Готовлю один OS-submit с безопасным наблюдением ответа."
+      },
+      "created_at": 1791044017,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044078,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044144,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044230,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044291,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044371,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044436,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "RUN 363 продолжается; попыток создания 0. Разбираю точный target g1: DOM живой, native AX видит только chrome; чужие профили не трогаю."
+      },
+      "created_at": 1791044474,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044496,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044557,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044618,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044686,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044756,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 670
+      },
+      "created_at": 1791044787,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044816,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044876,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044939,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791044999,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045062,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Одна разрешённая попытка выполнена 19:30:30: HTTP 200 содержит COMPLIANCE_ERROR «Это название не подходит. Укажите другое.»; повторов не будет. Сохраняю безопасный ответ, проверяю отсутствие созданных каналов, обновляю документы и закрываю только g1."
+      },
+      "created_at": 1791045120,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045125,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045186,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045248,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045326,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 720
+      },
+      "created_at": 1791045376,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045386,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045452,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045512,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045574,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 646
+      },
+      "created_at": 1791045611,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045646,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045709,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045771,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 1716
+      },
+      "created_at": 1791045776,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045845,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045907,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791045967,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791046027,
+      "run_id": 363
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "youtube-20261003-verified-blocker.json",
+        "size": 4051,
+        "by": "agent"
+      },
+      "created_at": 1791046029,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791046092,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 2276
+      },
+      "created_at": 1791046121,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791046174,
+      "run_id": 363
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791046234,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 533
+      },
+      "created_at": 1791046281,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "После cooldown единственная попытка g1 создать базовый канал «Maxim» отклонена YouTube («Это название не подходит. Укажите другое.»); Factsfactoru и Propsychology24 не созданы (0/2), readback и доказательства сохранены в документах и attachment 69. Нужен выбор маршрута: ждать прежней проверки maxiduoservice 06.10 либо предоставить другой разрешённый аккаунт с живой сессией; автоматических повторов g1 нет, а польза телефонной верификации этим ответом не доказана.",
+        "kind": "needs_input",
+        "recurrences": 1,
+        "source_status": "ready"
+      },
+      "created_at": 1791046291,
+      "run_id": 363
+    },
+    {
+      "kind": "terminal_worker_reaped",
+      "payload": {
+        "pid": 23664,
+        "worker_started_at": "|179104365439",
+        "prev_pid": 23664,
+        "host_local": true,
+        "termination_attempted": true,
+        "terminated": true,
+        "sigkill": false
+      },
+      "created_at": 1791046467,
+      "run_id": 363
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 2952
+      },
+      "created_at": 1791046887,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 1649
+      },
+      "created_at": 1791053214,
+      "run_id": null
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1791059513,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791060415,
+        "run_id": 372
+      },
+      "created_at": 1791059515,
+      "run_id": 372
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 488,
+        "started_at": "|179105951523"
+      },
+      "created_at": 1791059515,
+      "run_id": 372
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059538,
+      "run_id": 372
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059623,
+      "run_id": 372
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059687,
+      "run_id": 372
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 1229
+      },
+      "created_at": 1791059704,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Latest re-scope honored: documentation-only reconciliation of owner-created Facts; no early Psychology probe. Durable receipt and two document corrections in progress; parking before 06.10 12:00 MSK."
+      },
+      "created_at": 1791059745,
+      "run_id": 372
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059749,
+      "run_id": 372
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059809,
+      "run_id": 372
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059891,
+      "run_id": 372
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059953,
+      "run_id": 372
+    },
+    {
+      "kind": "attached",
+      "payload": {
+        "filename": "youtube-20261003-r372-reconciliation.json",
+        "size": 3200,
+        "by": "agent"
+      },
+      "created_at": 1791059982,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 2938
+      },
+      "created_at": 1791059982,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060013,
+      "run_id": 372
+    },
+    {
+      "kind": "scheduled",
+      "payload": {
+        "reason": "SCHEDULED_UNTIL=2026-10-06T12:00:00+03:00\nsummary: Facts @factsfactoru24 (UC40ul1FrnGAs4Dx-b9NXGfA) confirmed publicly HTTP 200 at 03.10 23:35 MSK; ACCESS.md and CHANNELS_WAVE1.md corrected after owner intervention; timestamped rejected-attempt evidence preserved. Psychology remains undelivered; no early eligibility probe or creation session. Not a completion of two brand channels.\nmetadata: {\"phase\":\"documentation_reconciled_wait_time\",\"run\":372,\"next_owner\":\"company\",\"check_at\":\"2026-10-06T12:00:00+03:00\",\"remaining\":\"One authorized Psychology eligibility check via g2=maxiduoservice/profile-yt; subsequent creation only if form permits; first rejection stops\",\"receipt_path\":\"C:/Users/max/Desktop/all/tools/capabilities/youtube/evidence_t_f73153e2_20261003_r372_reconciliation.json\",\"receipt_sha256\":\"9c35e6472a2f6a8a2805d723c51e5a9319013b8f81045e21ab8c09b9e1982deb\",\"verified_attachment_id\":75,\"public_facts_requests\":1,\"creation_attempts\":0,\"eligibility_probes\":0,\"browser_mutations\":0,\"channel_type_and_permissions\":\"unknown\",\"financial\":{\"scope\":\"YT wave-1 documentation reconciliation\",\"period\":\"2026-10-03/run 372\",\"source\":\"Executed actions and verified receipts\",\"confirmed_revenue_rub\":null,\"refunds_rub\":null,\"accounting_null_reason\":\"outside setup scope\",\"incremental_paid_service_costs_rub\":0,\"new_commitments_rub\":0,\"estimated_usage_cost_rub\":null,\"usage_null_reason\":\"no billing readback\"},\"wake_timer_created\":false,\"wake_coordination\":\"existing company/video sweep; no guaranteed exact timed restart\"}"
+      },
+      "created_at": 1791060035,
+      "run_id": 372
+    }
+  ],
+  "runs": [
+    {
+      "id": 354,
+      "profile": "company",
+      "step_key": null,
+      "status": "scheduled",
+      "outcome": "scheduled",
+      "summary": "SCHEDULED_UNTIL=2026-10-03T19:00:00+03:00 — g1 (maximal66666666@gmail.com) 24h COMPLIANCE_LOCK на создание канала (create_channel → COMPLIANCE_ERROR «Вы указали слишком много недопустимых названий. Повторите попытку через 24 часа.», 02.10 ~19:00 MSK; evidence: capabilities/youtube/evidence_t_f73153e2_create_channel_error.json). Ничего не создано, канон-хэндлы @factsfactoru/@propsychology24 свободны (404). maxiduoservice под eligibility-модалом (re-gate 06.10) — все аккаунты заблокированы, стоп по карте. Разблокировать ПОСЛЕ 03.10 19:00 MSK (cron-будильник 225e50c7d267 yt-g1-regate-0310 в 19:05); если разбужено раньше — не пытаться создавать, перепарковать. Retry-рецепт: комментарий #492 + ACCESS.md §RUN t_f73153e2. Ключевое правило: ОДНА попытка имени («Maxim»), при отказе — стоп, park +24h, эскалация needs_input.",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "scheduled",
+          "evidence_refs": [],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1790952727,
+      "ended_at": 1790957912
+    },
+    {
+      "id": 363,
+      "profile": "company",
+      "step_key": null,
+      "status": "blocked",
+      "outcome": "blocked",
+      "summary": "После cooldown единственная попытка g1 создать базовый канал «Maxim» отклонена YouTube («Это название не подходит. Укажите другое.»); Factsfactoru и Propsychology24 не созданы (0/2), readback и доказательства сохранены в документах и attachment 69. Нужен выбор маршрута: ждать прежней проверки maxiduoservice 06.10 либо предоставить другой разрешённый аккаунт с живой сессией; автоматических повторов g1 нет, а польза телефонной верификации этим ответом не доказана.",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "blocked",
+          "evidence_refs": [],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791043654,
+      "ended_at": 1791046291
+    },
+    {
+      "id": 372,
+      "profile": "company",
+      "step_key": null,
+      "status": "scheduled",
+      "outcome": "scheduled",
+      "summary": "SCHEDULED_UNTIL=2026-10-06T12:00:00+03:00\nsummary: Facts @factsfactoru24 (UC40ul1FrnGAs4Dx-b9NXGfA) confirmed publicly HTTP 200 at 03.10 23:35 MSK; ACCESS.md and CHANNELS_WAVE1.md corrected after owner intervention; timestamped rejected-attempt evidence preserved. Psychology remains undelivered; no early eligibility probe or creation session. Not a completion of two brand channels.\nmetadata: {\"phase\":\"documentation_reconciled_wait_time\",\"run\":372,\"next_owner\":\"company\",\"check_at\":\"2026-10-06T12:00:00+03:00\",\"remaining\":\"One authorized Psychology eligibility check via g2=maxiduoservice/profile-yt; subsequent creation only if form permits; first rejection stops\",\"receipt_path\":\"C:/Users/max/Desktop/all/tools/capabilities/youtube/evidence_t_f73153e2_20261003_r372_reconciliation.json\",\"receipt_sha256\":\"9c35e6472a2f6a8a2805d723c51e5a9319013b8f81045e21ab8c09b9e1982deb\",\"verified_attachment_id\":75,\"public_facts_requests\":1,\"creation_attempts\":0,\"eligibility_probes\":0,\"browser_mutations\":0,\"channel_type_and_permissions\":\"unknown\",\"financial\":{\"scope\":\"YT wave-1 documentation reconciliation\",\"period\":\"2026-10-03/run 372\",\"source\":\"Executed actions and verified receipts\",\"confirmed_revenue_rub\":null,\"refunds_rub\":null,\"accounting_null_reason\":\"outside setup scope\",\"incremental_paid_service_costs_rub\":0,\"new_commitments_rub\":0,\"estimated_usage_cost_rub\":null,\"usage_null_reason\":\"no billing readback\"},\"wake_timer_created\":false,\"wake_coordination\":\"existing company/video sweep; no guaranteed exact timed restart\"}",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "scheduled",
+          "evidence_refs": [],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791059515,
+      "ended_at": 1791060035
+    }
+  ]
+}

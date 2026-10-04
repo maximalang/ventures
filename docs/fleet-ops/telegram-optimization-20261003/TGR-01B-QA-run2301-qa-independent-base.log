@@ -1,0 +1,346 @@
+▶ not activated — using HERMES_PYTHON: C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe
+▶ running per-file parallel test suite via run_tests_parallel.py
+  (TZ=UTC LANG=C.UTF-8 PYTHONHASHSEED=0; clean env)
+▶ pre-compiling bytecode cache
+▶ launching test runner
+Discovered 1 test files (~14 tests) under ['C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test_qa_tgr_routing.py']; running with -j 18
+[100.0% |    14/~14 | ✓ 8 | ✗18] ✗ C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py (8✓ 18✗, 10.1s)
+
+  ╔╍ Failed: C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║ RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+  ║ C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <function BaseEventLoop.__del__ at 0x000001DE798213A0>
+  ║ 
+  ║ Traceback (most recent call last):
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\base_events.py", line 695, in __del__
+  ║     self.close()
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py", line 696, in close
+  ║     self._close_self_pipe()
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py", line 776, in _close_self_pipe
+  ║     self._ssock.close()
+  ║     ^^^^^^^^^^^
+  ║ AttributeError: 'ProactorEventLoop' object has no attribute '_ssock'
+  ║ 
+  ║ Enable tracemalloc to get traceback where the object was allocated.
+  ║ See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  ║   warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+  ║ 
+  ║ FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[unknown-identity]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[unknown-source]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[unserved]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[missing-cache]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_bare_routed_source_is_supported - Asse...
+  ║ FAILED ..\test_qa_tgr_routing.py::test_authoritative_identity_beats_conflicting_source_profile
+  ║ FAILED ..\test_qa_tgr_routing.py::test_ordinary_next_turn_and_signature_follow_cache_replacement
+  ║ FAILED ..\test_qa_tgr_routing.py::test_a_b_a_no_mutation_or_config_borrowing
+  ║ FAILED ..\test_qa_tgr_routing.py::test_slash_override_helper_matches_turn[dm]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_slash_override_helper_matches_turn[forum]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[dm]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[forum]
+  ║ 18 failed, 8 passed in 2.44s
+  ║
+  ║  Repro: python -m pytest C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py -q -s --tb=short --junitxml=C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\evidence\qa-independent-base.xml
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+
+=== Summary: 1 files, 8 tests passed, 18 failed (100% complete) in 10.3s (18 workers) ===
+
+=== Per-file subprocess time distribution ===
+  Files:   1
+  Total subprocess CPU-wall: 10.1s  (runner wall: 10.3s, parallelism: 18x)
+  P50: 10.09s  P90: 10.09s  P95: 10.09s  P99: 10.09s  Max: 10.09s
+  <1s: 0 files (0%)  <2s: 0 files (0%)
+  Top 10 slowest:
+     10.09s  C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py
+
+=== Failure output ===
+
+--- C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py ---
+QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-991", "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-992", "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-993", "source_profile": "tech", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-993", "source_profile": "tech", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "ghost", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "ghost", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-id-991", "source_profile": "tech", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "default", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": null, "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": null, "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["explicit-sol/v7", "openai-codex", "https://qa-pin.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["explicit-astra/v7", "qa-astra", "https://qa-astra.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-warm-991", "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-slash-991", "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-list-991", "source_profile": "company", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+F.QA_ROUTE {"chat": null, "thread": null, "source_profile": null, "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_STATUS_MODULE gateway.slash_commands_status
+.
+================================== FAILURES ===================================
+______________________ test_fresh_company_entrypoint[dm] ______________________
+..\test_qa_tgr_routing.py:92: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+________________ test_fresh_company_entrypoint[negative-forum] ________________
+..\test_qa_tgr_routing.py:92: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+________________ test_fresh_company_entrypoint[new-topic-one] _________________
+..\test_qa_tgr_routing.py:92: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+________________ test_fresh_company_entrypoint[new-topic-two] _________________
+..\test_qa_tgr_routing.py:92: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+_______________ test_specialist_same_forum_isolation[own-rule] ________________
+..\test_qa_tgr_routing.py:97: in test_specialist_same_forum_isolation
+    assert_route(runner(served=served), source("tech", FORUM, "qa-new-993"), expected)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qa-specialist/v2', 'qa-tech', 'https://qa-tech.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qa-speciali....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qa-specialist/v2'
+E     Use -v to get more diff
+______________ test_specialist_same_forum_isolation[own-global] _______________
+..\test_qa_tgr_routing.py:97: in test_specialist_same_forum_isolation
+    assert_route(runner(served=served), source("tech", FORUM, "qa-new-993"), expected)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff
+____________ test_unknown_and_unserved_fail_safe[unknown-identity] ____________
+..\test_qa_tgr_routing.py:104: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff
+_____________ test_unknown_and_unserved_fail_safe[unknown-source] _____________
+..\test_qa_tgr_routing.py:104: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff
+________________ test_unknown_and_unserved_fail_safe[unserved] ________________
+..\test_qa_tgr_routing.py:104: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff
+_____________ test_unknown_and_unserved_fail_safe[missing-cache] ______________
+..\test_qa_tgr_routing.py:104: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff
+____________________ test_bare_routed_source_is_supported _____________________
+..\test_qa_tgr_routing.py:108: in test_bare_routed_source_is_supported
+    assert_route(runner(), source(identity=False), QWEN)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+________ test_authoritative_identity_beats_conflicting_source_profile _________
+..\test_qa_tgr_routing.py:114: in test_authoritative_identity_beats_conflicting_source_profile
+    assert_route(runner(), s, QWEN)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+_______ test_ordinary_next_turn_and_signature_follow_cache_replacement ________
+..\test_qa_tgr_routing.py:137: in test_ordinary_next_turn_and_signature_follow_cache_replacement
+    m1, rt1 = assert_route(r, s, QWEN)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+_________________ test_a_b_a_no_mutation_or_config_borrowing __________________
+..\test_qa_tgr_routing.py:153: in test_a_b_a_no_mutation_or_config_borrowing
+    assert_route(r, s, QWEN)
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+_________________ test_slash_override_helper_matches_turn[dm] _________________
+..\test_qa_tgr_routing.py:164: in test_slash_override_helper_matches_turn
+    model, rt = assert_route(r, s, QWEN)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+_______________ test_slash_override_helper_matches_turn[forum] ________________
+..\test_qa_tgr_routing.py:164: in test_slash_override_helper_matches_turn
+    model, rt = assert_route(r, s, QWEN)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+..\test_qa_tgr_routing.py:86: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff
+___________ test_real_model_listing_agrees_with_effective_turn[dm] ____________
+..\test_qa_tgr_routing.py:181: in test_real_model_listing_agrees_with_effective_turn
+    reply = asyncio.run(r._handle_model_command(event))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:189: in run
+    with Runner(debug=debug) as runner:
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:810: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:699: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\windows_events.py:315: in __init__
+    super().__init__(proactor)
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:639: in __init__
+    self._make_self_pipe()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:784: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\socket.py:621: in _fallback_socketpair
+    csock.connect((addr, port))
+..\test_qa_tgr_routing.py:21: in no_connect
+    raise AssertionError("offline probe attempted network")
+E   AssertionError: offline probe attempted network
+__________ test_real_model_listing_agrees_with_effective_turn[forum] __________
+..\test_qa_tgr_routing.py:181: in test_real_model_listing_agrees_with_effective_turn
+    reply = asyncio.run(r._handle_model_command(event))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:189: in run
+    with Runner(debug=debug) as runner:
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:810: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:699: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\windows_events.py:315: in __init__
+    super().__init__(proactor)
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:639: in __init__
+    self._make_self_pipe()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:784: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\socket.py:621: in _fallback_socketpair
+    csock.connect((addr, port))
+..\test_qa_tgr_routing.py:21: in no_connect
+    raise AssertionError("offline probe attempted network")
+E   AssertionError: offline probe attempted network
+=========================== short test summary info ===========================
+FAILED ..\test_qa_tgr_routing.py::test_fresh_company_entrypoint[dm] - Asserti...
+FAILED ..\test_qa_tgr_routing.py::test_fresh_company_entrypoint[negative-forum]
+FAILED ..\test_qa_tgr_routing.py::test_fresh_company_entrypoint[new-topic-one]
+FAILED ..\test_qa_tgr_routing.py::test_fresh_company_entrypoint[new-topic-two]
+FAILED ..\test_qa_tgr_routing.py::test_specialist_same_forum_isolation[own-rule]
+FAILED ..\test_qa_tgr_routing.py::test_specialist_same_forum_isolation[own-global]C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unraisableexception.py:33: RuntimeWarning: coroutine 'GatewayModelCommandsMixin._handle_model_command' was never awaited
+  gc.collect()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <function BaseEventLoop.__del__ at 0x000001DE798213A0>
+
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\base_events.py", line 695, in __del__
+    self.close()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py", line 696, in close
+    self._close_self_pipe()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py", line 776, in _close_self_pipe
+    self._ssock.close()
+    ^^^^^^^^^^^
+AttributeError: 'ProactorEventLoop' object has no attribute '_ssock'
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+
+FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[unknown-identity]
+FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[unknown-source]
+FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[unserved]
+FAILED ..\test_qa_tgr_routing.py::test_unknown_and_unserved_fail_safe[missing-cache]
+FAILED ..\test_qa_tgr_routing.py::test_bare_routed_source_is_supported - Asse...
+FAILED ..\test_qa_tgr_routing.py::test_authoritative_identity_beats_conflicting_source_profile
+FAILED ..\test_qa_tgr_routing.py::test_ordinary_next_turn_and_signature_follow_cache_replacement
+FAILED ..\test_qa_tgr_routing.py::test_a_b_a_no_mutation_or_config_borrowing
+FAILED ..\test_qa_tgr_routing.py::test_slash_override_helper_matches_turn[dm]
+FAILED ..\test_qa_tgr_routing.py::test_slash_override_helper_matches_turn[forum]
+FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[dm]
+FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[forum]
+18 failed, 8 passed in 2.44s
+
+=== 1 file with test failures (18 tests failed) ===
+  C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py  (18 tests failed)

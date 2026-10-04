@@ -1,0 +1,90 @@
+{
+  "artifact": "QA-CANDIDATE.json",
+  "card": "t_d090b4ff",
+  "board": "fleet-ops",
+  "run_id": 2319,
+  "phase": "artifact/recovery phase after run2318 WITHHELD (same-card re-scope by company)",
+  "final": true,
+  "checks_this_run": {
+    "integrity_checker": "QA-CHECKER-RUN2319.py -> QA-RUN2319-INTEGRITY.json",
+    "integrity_result": "19/19 ok, exit 0",
+    "integrity_detail": "subject head 2fedef53; 6/6 members; 12/12 live preimages unchanged; baseline inputs 26/26 + installed_docs 12/12 + public 24/24 + targets 51/51 verified; PRESERVED-QA-2318 sha a140bcda (10755B) + stage files ok; suffix-split: old hook 458B sha 2e10a1c6 exactly-once in all 12 roots; 3 distinct candidate roots (company 7c498bbb, research a1793d7c, shared-10 331ac2fb); expected_after_reference all 12 = candidate sha; frontmatter+entrypoint ok in 3 bases; company selftest 134/134 recomputed",
+    "named_readings": "D1-D8 all 8 fully read; H1-H12 all 12 fully read (kanban 1762 lines, delegation 792, cron 1546, hooks 2478, security 1201, sessions 1297, skills 1273, memory, webhooks, context-files, subagent-lifecycle 69, profiles); F1-F9 canon read; published-vs-installed drift factually confirmed (installed kanban 122585 chars/58 H2 vs published 114586 chars/38 H2, +12 installed-only sections)",
+    "note": "all checks re-executed independently in run 2319; inherited run-2318 results re-verified, not trusted"
+  },
+  "m01_m17": {
+    "result": "17/17 confirmed against actual text",
+    "routing": {
+      "M01": "REMOVE_DUPLICATE ok (old method §1 lines 13-35 template absent from candidate; line 27 forbids second tracker/envelope)",
+      "M02": "REUSE_CANON ok (line 16 native kanban card)",
+      "M03": "REUSE_CANON ok (line 17 single dispatcher; H2 non-durable, H12 cooperative cancel)",
+      "M04": "CLARIFY_EXISTING ok (line 29 kanban_schedule parks, no timer)",
+      "M05": "REUSE_CANON+CAPABILITY_LIMIT ok (lines 18/29 native polling allowed; D6 line 25; H11 route+HMAC)",
+      "M06": "REUSE_CANON ok (line 31 findings/drafts grant nothing)",
+      "M07": "REUSE_CANON ok (native compact handoff; no second context DB)",
+      "M08": "REUSE_CANON ok (task truth in kanban/STATE; no second log)",
+      "M09": "REUSE_CANON+NO_INSTALL ok (lines 20/31 channel change moves no grants)",
+      "M10": "REUSE_CANON+NO_IMPORT ok (canon over Dots dictionary)",
+      "M11": "NO_INSTALL ok (cloud computer/grants not imported)",
+      "M12": "REUSE_CANON ok (docs not attestation)",
+      "M13": "PARTIAL_REUSE ok (cancel evidence distinct; missing op = gap)",
+      "M14": "REUSE_CANON ok (no promise to undo delivered actions)",
+      "M15": "CLARIFY_EXISTING ok (finite output != bet completion; no suppression of honest remaining work)",
+      "M16": "NO_INSTALL/NO_INHERITANCE ok (enterprise NO_INSTALL)",
+      "M17": "REUSE_CANON ok (existing feedback rules)"
+    }
+  },
+  "scenarios_s01_s17": {
+    "result": "17/17 CONSISTENT",
+    "detail": "S01-S17 each verified against candidate text with loci; see QA-CANDIDATE.md §5"
+  },
+  "reviewer_lineage_run_2319": {
+    "session_id": "20261004_030640_cd335f",
+    "main_api_stamps": "42/42 = glm-5.3/zai (calls #1-#42, no gaps; lower bound at artifact time, run ongoing)",
+    "aux_other_model_chains": "not observed (absence not proven)",
+    "author_chain": "gpt-6.1-sol/openai-codex (AUTHOR-LINEAGE.json, session 20261003_231256_1a496e)",
+    "main_pair_overlap": false
+  },
+  "artifacts": {
+    "qa_candidate_md": "QA-CANDIDATE.md (final, PASS)",
+    "qa_candidate_json": "QA-CANDIDATE.json (this file)",
+    "integrity_report": "QA-RUN2319-INTEGRITY.json",
+    "checker": "QA-CHECKER-RUN2319.py"
+  },
+  "process_notes": [
+    "one terminal heredoc write of QA-CANDIDATE.md received a deterministic fleet-policy deny (review_probe_nonce); not retried, file written via sanctioned write/patch tools in freeze dir; content verdict unaffected",
+    "QA-CANDIDATE.md/json checkpoint version written BEFORE verdict flip (WITHHELD first), then finalized"
+  ],
+  "exact_head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "typed_verdict_word": "PASS",
+  "verdict_scope": "source-candidate acceptance only; installation/load/live/economics NOT attested",
+  "candidates": {
+    "reference_sha256": "80933ccf80e99e6b9d62b6f15c5c4f8cf69e9ee79ab1b2e9296173b99cdf4def",
+    "hook_sha256": "40b6f5e5edad6b8349c3143e032e29d2d02fa5cd1362c9ba9c10dbdbc2bdc88d"
+  },
+  "inherited_from_run_2318": {
+    "integrity_checks": "25/25 ok at time of run2318 (subject head, 6/6 members, 12/12 preimages, baseline 26+24+12, candidate sha match)",
+    "dryrun_12_targets": "ok, own checker exit 0 (old hook exactly-once suffix; candidate root = base+new hook; 3 distinct bases -> 3 distinct candidate roots; frontmatter parse ok)",
+    "semantic_reading": "D1-D8, H1-H12, F1-F9 read; M01-M17 17/17 ok; S01-S17 17/17 consistent (word-form, comment 5626)",
+    "main_lineage": "58/58 glm-5.3/zai per PRESERVED-QA-2318.json",
+    "author_chain": "gpt-6.1-sol/openai-codex (AUTHOR-LINEAGE.json)",
+    "main_pair_overlap": false
+  },
+  "limits": [
+    "source-only acceptance; no installation/load/live/economics attestation",
+    "live preimages verified only as of this run; APPLY must re-verify before each atomic write (F9)",
+    "no content-search/discovery surfaces in this phase per re-scope; denied query not replayed in any form",
+    "financial fields null (not measured), never reported as 0"
+  ],
+  "financial_scope": {
+    "scope": "fleet-ops method normalization QA (partial)",
+    "period": "COMPANY-BRIEF through actual end of this review run",
+    "source": "natural run stamps and checker results of this run; ledger not read",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": null,
+    "estimated_usage_cost": null,
+    "unknown_reason": "not measured; serving stamps are not billing records"
+  }
+}

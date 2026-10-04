@@ -1,0 +1,46 @@
+{
+  "verified_at": "2026-10-03T13:28:21.070255+03:00",
+  "source_anchor": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+  "native_config_verified": {
+    "compression.threshold_tokens": {
+      "value": "128000",
+      "exit_code": 0
+    },
+    "display.platforms.telegram.tool_progress": {
+      "value": "off",
+      "exit_code": 0
+    },
+    "model.default": {
+      "value": "gpt-6.1-sol",
+      "exit_code": 0
+    }
+  },
+  "configuration_applied": true,
+  "runtime_loaded_observed": false,
+  "runtime_loading_note": "consumer/cache behavior inspected by both independent source reviewers; natural next-turn metadata not yet captured; receipt naturally_loaded_on_next_turn is an expectation, NOT an observation",
+  "profile_wide_compaction": true,
+  "display_off_scope": "company Telegram only; warnings/steering/interim/long-running/rich preservation checked by source QA",
+  "qwen_restore": "NOT APPLIED; source task t_e8c66b4a is policy-blocked, no isolated worktree source diff observed",
+  "hub_packet": {
+    "phase": "delivered source-only, pending independent qa t_d5e37e14",
+    "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\HUB-PACKET",
+    "manifest_sha256": "aca8e05c554e5998b1b461e12ff182733140c4283b6b463be08805b31ee15e6c",
+    "file_count": 24,
+    "source_admin_tests": "17 passed, exit0",
+    "source_admin_log": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\HUB-SOURCE-ADMIN-TEST.txt",
+    "hub_chars_before": 33372,
+    "hub_chars_candidate": 12523,
+    "hub_char_reduction_pct": 62.47
+  },
+  "financial": {
+    "scope": "source packet integrity and native two-key rollout verification",
+    "period": "2026-10-03",
+    "source": "native CLI, independent QA artifacts, operations receipt; billing not inspected",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": 0,
+    "estimated_usage_cost": null,
+    "unknown_reason": "revenue/refunds outside scope; invoice/usage attribution absent"
+  }
+}

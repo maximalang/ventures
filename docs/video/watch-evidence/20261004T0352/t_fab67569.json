@@ -1,0 +1,401 @@
+{
+  "task": {
+    "id": "t_fab67569",
+    "title": "V9-G1/G2: owner/capability GO для чистого аватара и законной живой XTTS-речи",
+    "body": "task_type: ops\n\nV9-G1/G2 owner/capability handoff после независимого concept-review V9-D t_1899f80e. Direction завершён как текстовое решение, НЕ production GO. Parent завершается независимой QA по концепту; пользоваться approved последней редакцией, не собственным media-pass.\n\nКонтекст: V8 owner3/10; binding target V9 owner9-10/10; Fonovisa/CherryAuction история/NG_RU_SCRIPT_V8.txt сохраняются. Hybrid C: synthetic humanlike presenter для hook/оговорки, крупные причинные S01-S06 схемы; 1080x1920 nominal59.8 s, no replay/CTA/cross-post. Не изменять story или подменять новый presenter старыми Fisher shots/статичным portrait.\n\nArtifacts на parent: V9_DIRECTION.md current-only snapshot (исходная SHA35d7e3f73f0f18cfe2fc37b81c4a615dad3ccb23bb60211cb9b21fc69a51d948; если concept rework — approved later SHA); DIRECTION_MANIFEST.json; V9_RESUME_EVIDENCE.json; V9_DIRECTION_VALIDATION.json. Canon C:/Users/max/Documents/video-quality-upgrade/V9/V9_DIRECTION.md active before ARCHIVE_PRE_INPUTS. Read V9-R t_82885859 и V9-C t_efa7e5b6 handoffs. G0-T caption/motion implementation заведена отдельной tech parent-D картой; не дублировать, найти среди детей t_1899f80e. Company — один owner следующего capability-to-production pipeline.\n\nПроверенные ограничения: FreeLipSync real19.8s probe+grid в V9-R имеет watermark через лицо/глаз и NO-GO для production; по stills не подтверждены lip-sync/voice. Права портрета/voice/platform не cleared. Маркетинг no-watermark и RMS-match не production acceptance. HeyGenFree — первый owner-preview candidate, VidnozFree backup; external-upload/наш waveform на этих free tiers НЕ проверены на нашем аккаунте. Account signup/new paid capability only authorized and policy-gated; no hidden register/phone/card/PII; не повторять deny другим task. Account/credential tools соблюдать, no secrets in comments/artifacts. Paid plans require owner+financeGO.\n\nG2: XTTS-v2 остаётся RU voice engine, reference C:/Users/max/Documents/video-quality-upgrade/V7/dub_samples_v2/xtts_v2_sample.wav. Model CPML NC-risk waiver owner01.10 accepted отдельно; это НЕ consent на Fisher voice/likeness или внешнюю SaaS загрузку. V8 take_s44_clean.wav используется только internal timing reference до documented voice-reference clearance. Нужен законный reference+полный final take того же текста, owner реально слушает целиком (SIM/ASR не acceptance), SHA фиксируется; если waveform меняется, captions/motion word anchors retime/re-audit. NoElevenLabs/native other voice engine silently.\n\nG1: компания фиксирует разрешённый account/platform/input rights/ToS; маршрутизирует authorised15-30s stock-presenter live probe той же RU-дорожкой подходящему specialist (не сама переписывает story/монтирует финал). Exact avatar/platform/waveform SHA, внешний звук не пересинтезирован, watermarks/resolution/caps/commercial/image/voice rules documented. IndependentQA watches/listens all playback; lip-offset target<=80ms, recurring/systematic>120fail — project requirements, not already measured. No repeated rubber-mouth/eye/frozen face; owner sees/hears quality. G1 passes only clean approved output OR explicitly authorised preview-only stage clearly not production pass.\n\nЕсли free clean-quality output недостижим: один конкретный owner proposal с real demonstrator/ценой/ограничениями/clearance, затем owner/finance decision. Не покупать безGO, не объявлять 0rub+clean avatar уже достижимыми. При нужном human decision kanban_block needs_input, не headlessclarify. Не держать задачу done только потому что написан план, если G1/G2 не закрыты.\n\nПравовая корректность: CC BY3.0 Source https://commons.wikimedia.org/wiki/File:William_Fisher_CopyrightX,_Lecture_11_1.webm , original https://www.youtube.com/watch?v=0izqmst4FQI . End-card+full attribution/actual changes/no endorsement/platform disclosure нужны. Утверждения V9-R о ФЗ-243/обязательной маркировке РФ пока director independently не проверил; проверить применимые требования доrelease, не считать исследовательский claim legal verdict.\n\nAcceptance: recorded owner/capability/finance decisions, cleared inputs, реальные G1 probe+independent QA evidence и G2 ownerlistening/final audio hash или честная surfaced block. После закрытия G1/G2 И independentG0-Т создать video-editor production card с parents=[t_1899f80e,actual_tech_card_id,this_card_id], полным settled direction/script/source contract. Далее director creative acceptance, independentfinalQA gate:qa=pass, owner9-10/GO и только отдельная release lane. Не publish/автопостить здесь; не self-rate качество.\n\nРешение director: графика отвечает почему, не украшает. Не добавлять чисел жалоб/сумм/процентов/цитат судьи, universal landlord rule или final conviction. Предварительные18document checks/Hooks78 не заменяют viewer/owner verdict.",
+    "assignee": "company",
+    "status": "blocked",
+    "priority": 1,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_fab67569",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "video-director",
+    "created_at": 1790898934,
+    "started_at": 1791052151,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": null,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "20261002_020758_13b5d0",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": "pid 28180 not alive Worker's last output: \"v); keeping the literal placeholder Config ref '${env:TWENTYFIRST_API_KEY}': TWENTYFIRST_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder Config ref '${env:TIMEWEB_MCP_TOKEN}': TIMEWEB_MCP_TOKEN is not set (check ~/.hermes/.env); keeping the literal placeholder Запрос: work kanban task t_fab67569 \\x1b[2;3mИнициализация агента...\\x1b[0m \\x1b[38;2;255;191;0m\\x1b[0m ┊ ⚡ kanban_sh   0.4s\""
+  },
+  "latest_summary": null,
+  "parents": [
+    "t_1899f80e"
+  ],
+  "children": [],
+  "comments": [
+    {
+      "author": "video-director",
+      "body": "GRAPH RESOLVED: actual G0-T sibling = t_9880ab82 (tech); не заводить дубль. После своего G1/G2 GO и независимого G0-T pass future video-editor production parents=[t_1899f80e,t_9880ab82,t_fab67569]. Обе текущие дочерние карты ждут независимого same-card concept review t_1899f80e; его документальный APPROVE не media gate:qa=pass и не разрешение final render/publication.",
+      "created_at": 1790899399
+    },
+    {
+      "author": "company",
+      "body": "Восстановление после остановки запуска 03.10. Причина последнего запуска — terminal_provider, exit 78, consumed refresh token; это не вердикт по аватару/голосу. Изменившееся предусловие: тот же company-профиль уже выполняет естественный запуск SYN №373, документы записаны, свежие события heartbeat подтверждены 04.10 около 00:45 МСК. Платная проверка модели и изменение настроек не выполнялись. Разрешён ровно один bounded resume, не повторяющий прежний запуск вслепую.\n\nОстаточный контракт: сначала инспекция новейших документов/проб и существующих решений; не переделывать готовое. Deliverable — C:/Users/max/Documents/video-quality-upgrade/V9/G1_G2_CAPABILITY_HANDOFF.md с точным состоянием двух входов исходного задания: разрешённый чистый presenter и законная RU-дорожка. Для каждого: имеющийся файл/URL и полный SHA-256, права/ограничения и источник, подтверждённые решения, недостающее доказательство, единственный следующий owner/action. Прежний V9_DIRECTION snapshot 35d7e3f73f0f18cfe2fc37b81c4a615dad3ccb23bb60211cb9b21fc69a51d948 — только документальный anchor; актуальный принятый snapshot сверить в родителе. Текстовое направление не разрешает рендер.\n\nПриёмка исходной карты не ослаблена: реальные G1/G2 результаты и независимая проверка либо честный конкретный surfaced block; документ сам по себе не означает завершение. Wardogs-first — основная линия; эта capability-линия secondary и не блокирует Wardogs C01. Не дублировать karaoke/motion-пробник, который уже передан независимому QA. Не оценивать собственное качество.\n\nЗапреты: публикации, новые регистрации/ренеймы, телефон/SMS/KYC, изменение модели/пулов/инфраструктуры, внешняя загрузка голоса/лица без подтверждённых прав и отдельного разрешения, платежи и новые обязательства. Новый отказ или отсутствующее разрешение — сохранить точное evidence и остановиться, не менять поверхность/метод для обхода. Company отвечает за документальный handoff и маршрутизацию специалистам, не за монтаж.\n\nФинансовый scope: восстановление этой secondary-линии; period=04.10.2026, данный тик; source=исполненные действия и естественные Kanban receipts. Дополнительные платные расходы=0 ₽, новые обязательства=0 ₽. Подтверждённая выручка/возвраты=null (бухгалтерия вне scope), estimated usage cost=null (нет billing readback).",
+      "created_at": 1791064114
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "company",
+        "status": "todo",
+        "parents": [
+          "t_1899f80e"
+        ],
+        "creator_task_id": "t_1899f80e",
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1790898934,
+      "run_id": null
+    },
+    {
+      "kind": "dependency_wait",
+      "payload": {
+        "reason": "parent_not_done",
+        "parent": "t_1899f80e"
+      },
+      "created_at": 1790898934,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "video-director",
+        "len": 370
+      },
+      "created_at": 1790899399,
+      "run_id": null
+    },
+    {
+      "kind": "promoted",
+      "payload": null,
+      "created_at": 1791052110,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791053051,
+        "run_id": 366
+      },
+      "created_at": 1791052151,
+      "run_id": 366
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 21344,
+        "started_at": "|179105215166"
+      },
+      "created_at": 1791052151,
+      "run_id": 366
+    },
+    {
+      "kind": "crashed",
+      "payload": {
+        "pid": 21344,
+        "claimer": "laptop:26200",
+        "exit_kind": "terminal_provider",
+        "exit_code": 78,
+        "terminal_provider": true,
+        "worker_output": "n `hermes pm install` Запрос: work kanban task t_fab67569 \u001b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\u001b[0m \u001b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\u001b[0m \u001b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \u001b[0m \u001b[1;31m`hermes -p company model` to re-authenticate.\u001b[0m Goodbye! ☤",
+        "retry_status": "ready"
+      },
+      "created_at": 1791052214,
+      "run_id": 366
+    },
+    {
+      "kind": "gave_up",
+      "payload": {
+        "failures": 1,
+        "effective_limit": 2,
+        "limit_source": "dispatcher",
+        "error": "pid 21344 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'n `hermes pm install` Запрос: work kanban task t_fab67569 \\x1b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\\x1b[0m \\x1b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\\x1b[0m \\x1b[1;31m`hermes -p company auth add openai-codex --type oauth` to re",
+        "trigger_outcome": "crashed",
+        "retry_status": "ready",
+        "sticky": true,
+        "pid": 21344,
+        "claimer": "laptop:26200",
+        "terminal_provider": true
+      },
+      "created_at": 1791052214,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 2285
+      },
+      "created_at": 1791064114,
+      "run_id": null
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1791064164,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791065078,
+        "run_id": 376
+      },
+      "created_at": 1791064178,
+      "run_id": 376
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 18600,
+        "started_at": "|179106417882"
+      },
+      "created_at": 1791064178,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064207,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064268,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064336,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064410,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064472,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Проверяю exact direction, происхождение XTTS reference и существующий avatar probe; готовлю узкий G1/G2 handoff без рендера, регистрации или upload."
+      },
+      "created_at": 1791064508,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064542,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064603,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064668,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064728,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064808,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064869,
+      "run_id": 376
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064976,
+      "run_id": 376
+    },
+    {
+      "kind": "crashed",
+      "payload": {
+        "pid": 18600,
+        "claimer": "laptop:26200",
+        "worker_output": "я waveform требует retime + re-audit caption/motion word anchors; старые тайминги не финальные.\u001b[0m \u001b[38;2;255;255;255;48;2;19;87;20m+\u001b[0m \u001b[38;2;139;134;130m… пропущено строк diff: 24 ещё в 1 файл(ах)/раздел(ах)\u001b[0m ⟳ compacting context… 🗜️ Compacting context — summarizing earlier conversation so I can continue... 🗜️ Compacting context — still summarizing earlier conversation so I can continue...",
+        "retry_status": "ready"
+      },
+      "created_at": 1791065107,
+      "run_id": 376
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:21836",
+        "expires": 1791066007,
+        "run_id": 378
+      },
+      "created_at": 1791065107,
+      "run_id": 378
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 28180,
+        "started_at": "|179106510766"
+      },
+      "created_at": 1791065107,
+      "run_id": 378
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791065140,
+      "run_id": 378
+    },
+    {
+      "kind": "crashed",
+      "payload": {
+        "pid": 28180,
+        "claimer": "laptop:21836",
+        "worker_output": "v); keeping the literal placeholder Config ref '${env:TWENTYFIRST_API_KEY}': TWENTYFIRST_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder Config ref '${env:TIMEWEB_MCP_TOKEN}': TIMEWEB_MCP_TOKEN is not set (check ~/.hermes/.env); keeping the literal placeholder Запрос: work kanban task t_fab67569 \u001b[2;3mИнициализация агента...\u001b[0m \u001b[38;2;255;191;0m\u001b[0m ┊ ⚡ kanban_sh   0.4s",
+        "retry_status": "ready"
+      },
+      "created_at": 1791065804,
+      "run_id": 378
+    },
+    {
+      "kind": "gave_up",
+      "payload": {
+        "failures": 2,
+        "effective_limit": 2,
+        "limit_source": "dispatcher",
+        "error": "pid 28180 not alive Worker's last output: \"v); keeping the literal placeholder Config ref '${env:TWENTYFIRST_API_KEY}': TWENTYFIRST_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder Config ref '${env:TIMEWEB_MCP_TOKEN}': TIMEWEB_MCP_TOKEN is not set (check ~/.hermes/.env); keeping the literal placeholder Запрос: work kanban task t_fab67569 \\x1b[2;3mИнициализация агента...\\x1b[0m \\x1b[38;2;255;191;0m\\x1b[0m ┊ ⚡ kanban_sh   0.4s\"",
+        "trigger_outcome": "crashed",
+        "retry_status": "ready",
+        "pid": 28180,
+        "claimer": "laptop:21836"
+      },
+      "created_at": 1791065804,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 366,
+      "profile": "company",
+      "step_key": null,
+      "status": "crashed",
+      "outcome": "crashed",
+      "summary": null,
+      "error": "pid 21344 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'n `hermes pm install` Запрос: work kanban task t_fab67569 \\x1b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\\x1b[0m \\x1b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\\x1b[0m \\x1b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \\x1b[0m \\x1b[1;31m`hermes -p company model` to re-authenticate.\\x1b[0m Goodbye! ☤'",
+      "metadata": {
+        "pid": 21344,
+        "claimer": "laptop:26200",
+        "exit_kind": "terminal_provider",
+        "exit_code": 78,
+        "terminal_provider": true,
+        "worker_output": "n `hermes pm install` Запрос: work kanban task t_fab67569 \u001b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\u001b[0m \u001b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\u001b[0m \u001b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \u001b[0m \u001b[1;31m`hermes -p company model` to re-authenticate.\u001b[0m Goodbye! ☤",
+        "retry_status": "ready",
+        "receipt": {
+          "status": "crashed",
+          "evidence_refs": [
+            "error:pid 21344 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'n `hermes pm install` Запрос: work kanban task t_fab67569 \\x1b[1"
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791052151,
+      "ended_at": 1791052214
+    },
+    {
+      "id": 376,
+      "profile": "company",
+      "step_key": null,
+      "status": "crashed",
+      "outcome": "crashed",
+      "summary": null,
+      "error": "pid 18600 not alive Worker's last output: 'я waveform требует retime + re-audit caption/motion word anchors; старые тайминги не финальные.\\x1b[0m \\x1b[38;2;255;255;255;48;2;19;87;20m+\\x1b[0m \\x1b[38;2;139;134;130m… пропущено строк diff: 24 ещё в 1 файл(ах)/раздел(ах)\\x1b[0m ⟳ compacting context… 🗜️ Compacting context — summarizing earlier conversation so I can continue... 🗜️ Compacting context — still summarizing earlier conversation so I can continue...'",
+      "metadata": {
+        "pid": 18600,
+        "claimer": "laptop:26200",
+        "worker_output": "я waveform требует retime + re-audit caption/motion word anchors; старые тайминги не финальные.\u001b[0m \u001b[38;2;255;255;255;48;2;19;87;20m+\u001b[0m \u001b[38;2;139;134;130m… пропущено строк diff: 24 ещё в 1 файл(ах)/раздел(ах)\u001b[0m ⟳ compacting context… 🗜️ Compacting context — summarizing earlier conversation so I can continue... 🗜️ Compacting context — still summarizing earlier conversation so I can continue...",
+        "retry_status": "ready",
+        "receipt": {
+          "status": "crashed",
+          "evidence_refs": [
+            "error:pid 18600 not alive Worker's last output: 'я waveform требует retime + re-audit caption/motion word anchors; старые тайминги не финальные.\\x1b[0m \\x1b[38;2;255;255;255;48;2;19;87;20m+\\x1b[0m \\x1b[38;2;139;134;130m… пропущено строк diff: 24 "
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791064178,
+      "ended_at": 1791065107
+    },
+    {
+      "id": 378,
+      "profile": "company",
+      "step_key": null,
+      "status": "crashed",
+      "outcome": "crashed",
+      "summary": null,
+      "error": "pid 28180 not alive Worker's last output: \"v); keeping the literal placeholder Config ref '${env:TWENTYFIRST_API_KEY}': TWENTYFIRST_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder Config ref '${env:TIMEWEB_MCP_TOKEN}': TIMEWEB_MCP_TOKEN is not set (check ~/.hermes/.env); keeping the literal placeholder Запрос: work kanban task t_fab67569 \\x1b[2;3mИнициализация агента...\\x1b[0m \\x1b[38;2;255;191;0m\\x1b[0m ┊ ⚡ kanban_sh   0.4s\"",
+      "metadata": {
+        "pid": 28180,
+        "claimer": "laptop:21836",
+        "worker_output": "v); keeping the literal placeholder Config ref '${env:TWENTYFIRST_API_KEY}': TWENTYFIRST_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder Config ref '${env:TIMEWEB_MCP_TOKEN}': TIMEWEB_MCP_TOKEN is not set (check ~/.hermes/.env); keeping the literal placeholder Запрос: work kanban task t_fab67569 \u001b[2;3mИнициализация агента...\u001b[0m \u001b[38;2;255;191;0m\u001b[0m ┊ ⚡ kanban_sh   0.4s",
+        "retry_status": "ready",
+        "receipt": {
+          "status": "crashed",
+          "evidence_refs": [
+            "error:pid 28180 not alive Worker's last output: \"v); keeping the literal placeholder Config ref '${env:TWENTYFIRST_API_KEY}': TWENTYFIRST_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder Config ref '${env:TIMEWEB_MCP_TOK"
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791065107,
+      "ended_at": 1791065804
+    }
+  ]
+}

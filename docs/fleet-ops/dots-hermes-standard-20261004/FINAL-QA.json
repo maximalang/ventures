@@ -1,0 +1,75 @@
+{
+  "artifact": "FINAL-QA",
+  "card": "t_63f62c17",
+  "board": "fleet-ops",
+  "run_id": 2321,
+  "reviewer_profile": "qa",
+  "reviewer_session": "20261004_042700_8fb555",
+  "final": true,
+  "typed_verdict_word": "PASS",
+  "verdict_scope": "installation acceptance of dots-hermes-standard-20261004 across 12 live profiles; NOT future model obedience, live runtime behavior/stop, or economics",
+  "source_head_sha256": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "installed_subject": {
+    "reference_sha256_all_12": "80933ccf80e99e6b9d62b6f15c5c4f8cf69e9ee79ab1b2e9296173b99cdf4def",
+    "hook_sha256_all_12": "40b6f5e5edad6b8349c3143e032e29d2d02fa5cd1362c9ba9c10dbdbc2bdc88d",
+    "old_hook_sha256_removed_all_12": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+    "after_root_groups": {
+      "company_solo": "7c498bbb691133583cc18147c843238870fae8b9b2f5e31a1b590e09b7189380",
+      "research_solo": "a1793d7c3a510bfe01c50fe2ac2d0d9376f0868e6692fc87bf88e8f5728b1fd9",
+      "shared_10": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a"
+    }
+  },
+  "checks_this_run": {
+    "own_battery": "qa2321_battery.py -> QA2321-BATTERY.json: 286/286 pass, exit 0 (script sha256 see artifacts)",
+    "own_battery_sections": {
+      "A_freeze_chain": "baseline 5490e880; subject head 2fedef53; 6/6 members; receipts ed4d00c9/30a1e12e/e7fe2920 verified; GO binds head; inputs 26/26; snapshots 24/24; before-trees 27/27",
+      "B_live_targets": "reference byte-equal 12/12; one new hook + zero old hook 12/12; remainder arithmetic vs frozen before-snapshots 12/12; recomputed after-root == live 12/12; tree name-set + byte hashes unchanged (intended targets = candidate/after-root); frontmatter+entrypoint 12/12; no applytmp residue",
+      "C_run2320_receipt": "12/12 APPLIED; before == BASELINE; after == live; errors=[]",
+      "D_backups": "12 dirs, exactly 2 files each, hashes == before (own-bytes rollback material confirmed)",
+      "E_ops_artifacts_parse": "APPLY-VERIFY 98 keys exact set all true; APPLY-LOADER 12 profiles all loaded",
+      "F_preserved_old_standard": "dots-20261003 LOAD-HOOK + 8 verified sources byte-equal",
+      "G_no_overclaims": "static-install limit + no-obedience + finance null wording present; forbidden claims absent"
+    },
+    "own_loader_probe": "qa2321_loader.py -> QA2321-LOADER.json: real tools.skills_tool.skills_list vs scoped temp copies, fresh HERMES_HOME per profile; 12/12 loaded; exit 0",
+    "lineage": "author gpt-6.1-sol/openai-codex; issuer operations main 32 stamps kimi-k3/custom (1 qwen3.8-max aux = background_review, not main); source-reviewer 60 main glm-5.3/zai; this reviewer 21/21 main glm-5.3/zai; no pairwise overlap; initial verdict and new issuer preserved separately"
+  },
+  "counts": {
+    "targets": 12,
+    "unique_profiles": 12,
+    "unique_live_paths": 24,
+    "battery_checks_total": 286,
+    "battery_checks_passed": 286,
+    "battery_checks_failed": 0,
+    "loader_profiles_loaded": 12,
+    "markdown_tree_files_checked": 27
+  },
+  "coverage_and_preserved_tree": {
+    "captured_markdown_tree": "name sets unchanged in all 12 skill roots; every non-target .md byte-equal to baseline",
+    "allowlist": "24/24 live paths == permitted_live_writes_for_later_review; no writes outside allowlist detected",
+    "temp_residue": "none (*.applytmp* search clean in roots and freeze dir)"
+  },
+  "reused_source_evidence": {
+    "basis": "subject hashes unchanged (section A re-verified this run)",
+    "qa_candidate_fixed_sha256": "ed4d00c92f5b5574f22980f7b37db2c5d45008113e5e7efc192b6412f7ca75d3",
+    "m01_m17": "17/17 confirmed",
+    "s01_s17": "17/17 consistent"
+  },
+  "process_note": "operations' first self-battery was 86/98 (12 captured_markdown_tree_unchanged fails) and first loader probe all-False; resolved by THIS run's own byte-level battery and own loader probe, not by narrative",
+  "limits": [
+    "static file installation attested; no future model obedience or live runtime behavior claim",
+    "loader readback proves discovery/parse of the entrypoint, not runtime skill invocation behavior",
+    "aux model chains (compression/vision/background) not observed in reviewed sessions; absence not proven",
+    "live files verified as of this run; any later foreign edit invalidates rollback preconditions (HOLD rule)"
+  ],
+  "financial_scope": {
+    "scope": "fleet-ops internal method normalization from COMPANY-BRIEF to final QA",
+    "period": "2026-10-03T22:33:54Z -> end of this review run",
+    "source": "natural run stamps and checker results of this run; ledger not read",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": null,
+    "estimated_usage_cost": null,
+    "unknown_reason": "not measured; serving stamps are not billing records; not a zero-cost assertion"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "defect_scope": "single artifact QA-CANDIDATE.json structure; reviewer prose verdict + integrity battery unaffected",
+  "duplicate_summary": {
+    "checks_this_run": {
+      "occurrences": 2,
+      "populated_variant_is_first": true,
+      "placeholder_variant_is_last": false
+    },
+    "m01_m17": {
+      "occurrences": 2,
+      "populated_variant_is_first": true,
+      "placeholder_variant_is_last": false
+    },
+    "scenarios_s01_s17": {
+      "occurrences": 2,
+      "populated_variant_is_first": true,
+      "placeholder_variant_is_last": false
+    },
+    "reviewer_lineage_run_2319": {
+      "occurrences": 2,
+      "populated_variant_is_first": true,
+      "placeholder_variant_is_last": false
+    }
+  },
+  "cross_checks": {
+    "integrity_all_ok": true,
+    "my_independent_stamp_observation_matches_reviewer_claim": true,
+    "reviewer_claimed_stamps": [
+      "42/42 = glm-5.3/zai (calls #1-#42, no gaps; lower bound at artifact time, run ongoing)"
+    ],
+    "my_observed_stamps": "60 calls, providers=[{'provider': 'zai', 'model': 'glm-5.3'}]"
+  },
+  "semantic_content_available_in_prose": true,
+  "conclusion": "Verdict content is corroborated by independent evidence (my own stamp readback + checker file), but the machine receipt remains structurally invalid for mandatory structured acceptance. A corrected receipt must be produced by an authorized writer, not by company rewriting QA artifacts."
+}

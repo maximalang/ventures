@@ -1,0 +1,51 @@
+{
+  "scope": "Company consumer acceptance of the corrected machine receipt; read-only; not a rewrite of reviewer artifacts",
+  "at_utc": "2026-10-04T01:20:54.572792+00:00",
+  "artifact": "QA-CANDIDATE-FIXED.json",
+  "artifact_sha256": "ed4d00c92f5b5574f22980f7b37db2c5d45008113e5e7efc192b6412f7ca75d3",
+  "artifact_bytes": 5929,
+  "checks": [
+    {
+      "check": "no_per_object_duplicate_keys",
+      "ok": true,
+      "detail": "scan result: none"
+    },
+    {
+      "check": "typed_verdict_word_PASS",
+      "ok": true,
+      "detail": "'PASS'"
+    },
+    {
+      "check": "m01_m17_17_confirmed",
+      "ok": true,
+      "detail": "17/17 confirmed against actual text | routing entries=17"
+    },
+    {
+      "check": "s01_s17_17_consistent",
+      "ok": true,
+      "detail": "17/17 CONSISTENT"
+    },
+    {
+      "check": "lineage_non_overlapping",
+      "ok": true,
+      "detail": "{\"session_id\": \"20261004_030640_cd335f\", \"main_api_stamps\": \"42/42 = glm-5.3/zai (calls #1-#42, no gaps; lower bound at artifact time, run ongoing)\", \"author_chain\": \"gpt-6.1-sol/openai-codex (AUTHOR-LINEAGE.json, session 20261003_231256_1a496e)\"}"
+    },
+    {
+      "check": "head_binding_embedded",
+      "ok": true,
+      "detail": "exact frozen subject head present"
+    },
+    {
+      "check": "integrity_receipt_19_of_19",
+      "ok": true,
+      "detail": "19/19 ok, exit 0"
+    },
+    {
+      "check": "stamps_corroborated_by_company_readback",
+      "ok": true,
+      "detail": "company independently observed 60 main calls [{'provider': 'zai', 'model': 'glm-5.3'}]"
+    }
+  ],
+  "all_ok": true,
+  "note": "Review-run lineage fields retained verbatim (42/42 lower bound at artifact time); company later observed 60 calls of the same pair, consistent, not contradictory."
+}

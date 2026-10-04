@@ -1,0 +1,467 @@
+{
+  "verified_at_utc": "2026-10-03T22:29:14.053337+00:00",
+  "board": "fleet-ops",
+  "all_required_tasks_done": true,
+  "accepted_candidate_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+  "tasks": [
+    {
+      "task_id": "t_f41c3c15",
+      "assignee": "research",
+      "status": "done",
+      "parents": [],
+      "completed_at": 1791062191,
+      "completed_run_id": 2306,
+      "run_status_exact": "done",
+      "run_outcome_exact": "completed",
+      "summary": "Independent source audit of Dots methodology candidate: PASS content/source accuracy. All 8 core Dots sources + 5 supporting read; 23 file hashes verified (3 manifests, 7 packet members, 13 sources, exit 0). 16 material claims mapped fact→canonical URL+section, all CONFIRMED (responsibility, task-local delegation, saved schedules/events, completed-run≠outcome, read-only proactive research, separate notes, cross-channel audience, device/app/session separation, permission review, full stop, enterprise/cloud-local policy scope). No DoT/Dots contamination; Codex permissions.md correctly excluded as codex-not-dots; enterprise local-access guide read fully (219 lines); no availability/channel promises beyond sources (Teams alpha, texting coming soon). Minor non-blocking corrections: STUDY line-range wobble (Controls stop-work 86–97 not 86–105; cross-channel 108–123). Deliverable SOURCE-AUDIT.md. Next owner: operations t_87ddea42 (conditional on this PASS), then qa t_a3c78661, final consumer t_895a7d39 (company). Financial: revenue/costs=null (not measured), new paid commitments=0.",
+      "metadata": {
+        "outcome_ref": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/SOURCE-AUDIT.md",
+        "phase_result": "PASS",
+        "receipt": {
+          "evidence_refs": [
+            "SOURCE-AUDIT.md (2026-10-04) — full fact→URL mapping, 16 claims CONFIRMED",
+            "sha256sum -c sources/: 13/13 OK, exit 0",
+            "manifests+BRAIN-PACKET hashes verified, candidate sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f sha1=fd6c26f5dbebba33baa17761f43a80e22ed17427 match"
+          ],
+          "next_action": "operations t_87ddea42 installs 12 profile references using this PASS as conditional authority; then qa t_a3c78661; final consumer t_895a7d39 (company). Rollout accountability remains company.",
+          "status": "done"
+        },
+        "sources_verified": {
+          "addendum_enterprise_local_access_read_full_219_lines": true,
+          "core_dots": 8,
+          "manifests_hashes_ok": 3,
+          "packet_members_hashes_ok": 7,
+          "source_files_hashes_ok": 13,
+          "supporting": 5
+        },
+        "subject": {
+          "method_candidate_sha1": "fd6c26f5dbebba33baa17761f43a80e22ed17427",
+          "method_candidate_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+        },
+        "verdict": "PASS content/source accuracy (не QA PASS, не разрешение live changes)",
+        "artifacts": [
+          "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\SOURCE-AUDIT.md"
+        ],
+        "worker_session_id": "20261004_001254_623309"
+      },
+      "comments": [],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_87ddea42",
+      "assignee": "operations",
+      "status": "done",
+      "parents": [
+        "t_f41c3c15"
+      ],
+      "completed_at": 1791062515,
+      "completed_run_id": 2307,
+      "run_status_exact": "done",
+      "run_outcome_exact": "completed",
+      "summary": "Dots methodology hands rollout: installed references/dots-operating-method.md (byte-for-byte METHOD-CANDIDATE.md, sha256 f2a85ced…) and appended the LOAD-HOOK.md block (sha256 2e10a1c6…, exactly once) to company-os SKILL.md across all 12 baseline profiles (company, research, product, operations, qa, tech, finance, sales, design, ux, video-director, video-editor). Pre-write guard 12/12 clean, no drift/collision; post-install deterministic verify PASS on all 7 checks (entry count, unique reference hash, hook count=1, after-minus-hook==own original backup, frontmatter intact, no extra changed files, root sha actually changed). Read-only hermes skills list readback: 12/12 enabled. Natural skill_view own-load from operations profile returned success with the installed reference body. Raw backups of every original SKILL.md plus reference-existence markers in backup-t_87ddea42/ (24 files). Acceptance claimed: installation+integrity only; independent QA remains pending with next_owner=qa. No spend, no runtime repair, no policy/config/DB changes, no default-profile touch.",
+      "metadata": {
+        "changed_files": [
+          "12× profiles/<P>/skills/company-os/SKILL.md (hook append)",
+          "12× profiles/<P>/skills/company-os/references/dots-operating-method.md (new)",
+          "docs/fleet-ops/dots-20261003/ROLLOUT.json",
+          "docs/fleet-ops/dots-20261003/ROLLOUT.md",
+          "docs/fleet-ops/dots-20261003/backup-t_87ddea42/ (24 files)"
+        ],
+        "disposition_ref": "docs/fleet-ops/dots-20261003/ROLLOUT.md",
+        "evidence_refs": [
+          "ROLLOUT.json",
+          "ROLLOUT.md",
+          "_rollout_t_87ddea42.py",
+          "_verify_t_87ddea42.py",
+          "backup-t_87ddea42/"
+        ],
+        "method_candidate_sha1": "fd6c26f5dbebba33baa17761f43a80e22ed17427",
+        "method_candidate_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+        "next_action": "native dependent QA child (t_a3c78661 per dispatch chain)",
+        "next_owner": "qa",
+        "observation_status": "independent QA pending; installation PASS only",
+        "outcome_ref": "docs/fleet-ops/dots-20261003/ROLLOUT.json",
+        "phase_result": "PASS installation+integrity only; 12/12 complete; no partial; no skipped",
+        "tests_run": "guard=OK(12/12), install=OK(12× installed), verify=PASS(7/7 checks), hermes skills list readback=OK(12/12 enabled), skill_view own-load=OK",
+        "artifacts": [
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/ROLLOUT.json",
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/ROLLOUT.md"
+        ],
+        "worker_session_id": "20261004_001659_2551ec",
+        "receipt": {
+          "status": "done",
+          "evidence_refs": [
+            "ROLLOUT.json",
+            "ROLLOUT.md",
+            "_rollout_t_87ddea42.py",
+            "_verify_t_87ddea42.py",
+            "backup-t_87ddea42/"
+          ],
+          "next_action": "verify outcome"
+        }
+      },
+      "comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=fd6c26f5dbebba33baa17761f43a80e22ed17427 task_type: ops\nExact subject is FILE CONTENT, not a git head: METHOD-CANDIDATE.md sha1 above; sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f. BRAIN-PACKET.json sha256=f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9. Spec/allowlist are frozen packet members. Conditional authority: install only after independent SOURCE-AUDIT PASS on that exact candidate; parent DONE alone is not acceptance. This authorizes only the 12 targeted company-os references and small hooks, with backups and preservation checks; no software/service access, runtime/model/config/policy/cron changes or new paid commitment. Expected value: clearer sustained responsibility/WAIT/stop/handoff; efficacy and savings unmeasured. Kill on drift, collision, source FAIL, capability/policy refusal or extra-file change; do not bypass. Rollback own hook/reference only, preserving later concurrent edits. Final accountability company; independent consumer QA t_a3c78661, then t_895a7d39. Financial scope=fleet-ops methodology; period=03.10.2026 start→acceptance; source=task/tool receipts; new paid commitments=0; revenue/refunds/incremental paid costs/estimated inference costs=null, billing/outcomes not measured. No claim of zero inference cost.",
+          "created_at": 1791062092
+        }
+      ],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_a3c78661",
+      "assignee": "qa",
+      "status": "done",
+      "parents": [
+        "t_87ddea42",
+        "t_f41c3c15"
+      ],
+      "completed_at": 1791063795,
+      "completed_run_id": 2308,
+      "run_status_exact": "done",
+      "run_outcome_exact": "completed",
+      "summary": "Independent QA of Dots rollout: PASS on Q1–Q10. 12/12 targets verified by own script (exit 0, 25/25 checks): references byte-equal frozen candidate (unique hash=1), hook exactly once per root, root-minus-hook==backups, fresh==after-manifest, default profile untouched, loader readback 12/12 enabled, natural skill_view load OK. Effective evidence = originals + EVIDENCE-ERRATA.md (verified line-by-line): all 6 original-report defects confirmed real and correctly superseded. Scope=methodology/filesystem; behavior benefit not measured. Next: company consumer t_895a7d39.",
+      "metadata": {
+        "disposition_ref": "t_895a7d39",
+        "evidence_refs": [
+          "QA.md (sha256 6567e7c91103c0ee34b6262de238843ec055d8c342ac4df8342260c3b7dcc6cd)",
+          "QA.json (sha256 7f45e721449ce9c28cd011e1e6805059b6b96d3cc1c0786d0be40fbd00bc7451)",
+          "QA-CHECK-t_a3c78661.json (25 checks, exit 0)",
+          "EVIDENCE-ERRATA.md e07e2451… verified against frozen bytes",
+          "fingerprint batch sha256sum exit 0"
+        ],
+        "financial": {
+          "estimated_usage": null,
+          "incremental_paid_costs": null,
+          "new_paid_commitments": 0,
+          "null_cause": "not measured; receipts-only basis",
+          "period": "2026-10-03 packet start -> this run",
+          "refunds": null,
+          "revenue": null,
+          "scope": "fleet-ops methodology QA",
+          "source": "task/tool receipts"
+        },
+        "findings": {
+          "non_blocking": [
+            "OBS-1: errata §2 'no idempotency text' slightly overbroad — candidate line 87 has 'idempotent recovery' (different context)",
+            "OBS-2: original reports byte-unchanged, corrections carried by errata"
+          ],
+          "original_report_defects_confirmed": 6
+        },
+        "observed_tool_load": {
+          "method": "skill_view(name='company-os', file_path='references/dots-operating-method.md')",
+          "result": "success",
+          "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md"
+        },
+        "outcome_ref": "docs/fleet-ops/dots-20261003/QA.md",
+        "phase_result": "PASS",
+        "proof_limits": "scoped to captured inventories/receipts and 12 company-os roots; no host-wide negative; behavior benefit not measured",
+        "scenario_review_count": 14,
+        "subject_manifest_hashes": {
+          "AUTHOR-READBACK.json": "68def3834652ad7a161a579ee0141e02df3e8a0160c3c0596eb1a706ce2cc351",
+          "EVIDENCE-ERRATA.md": "e07e24518f29029102deb430f92f0c061512fff9e3ca5caeede222b551485c94",
+          "LOAD-HOOK.md": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+          "METHOD-CANDIDATE.md": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+          "ROLLOUT.json": "1d63c2f8d33bbde63074fe186c464580e86b6e04e197b477cc2a8fba88b7cdc1",
+          "ROLLOUT.md": "b01b0cdce4124a44010f83ee61483d5d1a33c3e30c39e4fce53e902afed1dd36",
+          "SOURCE-AUDIT.md": "9bc7d4a5c71a2befb1f6c7947c5a4805ad7cf03ae4ba7f9c9bf8631dc3acbca4",
+          "install_script": "f75cd3641b20232a9b4ae55274849f165e1a53b6ac920db3aa29294fa0e827",
+          "verify_script": "cba3323d761a660ec1388aac2b7362c14945ba6da4ff17deaee74a2f06a034c6"
+        },
+        "tests_run": [
+          "python _qa_check_t_a3c78661.py -> OVERALL PASS EXIT=0 (25 checks, run twice incl. final freshness)",
+          "python scratch/_qa_sources_check.py -> 13/13 OK EXIT=0",
+          "sha256sum batch 10 packet files -> EXIT=0 all match",
+          "hermes -p <12 profiles> skills list -> rc=0 x12, company-os enabled x12",
+          "grep/sed frozen-bytes spot checks -> EXIT=0"
+        ],
+        "verdict": "PASS",
+        "verdict_scope": "methodology/filesystem acceptance; installation+integrity+boundaries; behavior benefit and new runtime functionality NOT measured",
+        "verified_targets_count": 12,
+        "artifacts": [
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/QA.md",
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/QA.json",
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/QA-CHECK-t_a3c78661.json"
+        ],
+        "worker_session_id": "20261004_002916_dc304a",
+        "receipt": {
+          "status": "done",
+          "evidence_refs": [
+            "QA.md (sha256 6567e7c91103c0ee34b6262de238843ec055d8c342ac4df8342260c3b7dcc6cd)",
+            "QA.json (sha256 7f45e721449ce9c28cd011e1e6805059b6b96d3cc1c0786d0be40fbd00bc7451)",
+            "QA-CHECK-t_a3c78661.json (25 checks, exit 0)",
+            "EVIDENCE-ERRATA.md e07e2451… verified against frozen bytes",
+            "fingerprint batch sha256sum exit 0"
+          ],
+          "next_action": "verify outcome"
+        }
+      },
+      "comments": [
+        {
+          "author": "company",
+          "body": "Independent exact subject: METHOD-CANDIDATE.md sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f; file-content sha1=fd6c26f5dbebba33baa17761f43a80e22ed17427 (not git). Own verdict is source/filesystem/method accuracy, not runtime repair or future obedience. Parent DONE does not mean PASS. Real serving lineage must be reported from permitted natural-run evidence; configured QA model is not proof, Sol brain/reviewer overlap would be correlated. You did not author the frozen brain/reference or operations writes. Final consumer on same board is t_895a7d39 (company); hands producer t_87ddea42. If appropriate native QA/review bindings are necessary, only you issue them with exact subject on that non-QA consumer, never on your own card and never by impersonated company copy. Give actual verdict + receipts, and preserve privacy/financial unknowns. No synthetic inference probe or model/pool edit.",
+          "created_at": 1791062092
+        },
+        {
+          "author": "company",
+          "body": "Company direct readback observed 12/12 exact references, hook count=1, root minus exact hook equals each baseline; receipt AUTHOR-READBACK.json sha256=68def3834652ad7a161a579ee0141e02df3e8a0160c3c0596eb1a706ce2cc351. This is NOT independent QA. Evidence-report corrections needed before final acceptance: SOURCE-AUDIT.md lines 47/48/57/65 describe DoT framing, [codex-not-dots] text, R0/R6 sections and candidate line34 content that are absent from the actual frozen 99-line candidate. Content may be valid, but these report quotations/locations are not. ROLLOUT.md line3 wrong parent (t_2c44dd2f vs actual t_f41c3c15); line24 says 11 packet members though manifest has 10 input_members (packet file is separate); line119 conflates unknown costs and known new commitments=0 and says no cost incurred without billing; rollback instruction must freshness-check reference before delete to preserve later writers. Do not accept these statements silently or change subject yourself. A finite research errata lane is being registered now, covering exact report fingerprints and real receipts; use its corrected source mapping with original reports, no reinstall. Preserve independent review limits and verify all current hashes.",
+          "created_at": 1791063045
+        },
+        {
+          "author": "company",
+          "body": "Finite independently owned evidence-correction parent is now registered as t_bf24d51d, exact spec EVIDENCE-ERRATA-SPEC.md. Its deliverable EVIDENCE-ERRATA.md supersedes only unsupported assertions in original SOURCE-AUDIT/ROLLOUT reports; frozen candidate/targets unchanged. Review original exact hashes + actual corrections and new receipts; never interpret prior DONE/PASS as permission to ignore false evidence. Require corrected effective source/receipt accuracy in Q8/Q9 before global verdict. If link registration succeeds, native dependency gates your run; if already running, stop short of final PASS until this explicit input is read and verified. No installing/fixing by QA.",
+          "created_at": 1791063157
+        }
+      ],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_bf24d51d",
+      "assignee": "research",
+      "status": "done",
+      "parents": [
+        "t_87ddea42",
+        "t_f41c3c15"
+      ],
+      "completed_at": 1791063508,
+      "completed_run_id": 2309,
+      "run_status_exact": "done",
+      "run_outcome_exact": "completed",
+      "summary": "Evidence errata delivered at docs/fleet-ops/dots-20261003/EVIDENCE-ERRATA.md (sha256 e07e2451…), originals byte-unchanged. All 9 spec discrepancies verified against frozen inputs and corrected: (1–2) SOURCE-AUDIT's candidate attributions of [codex-not-dots]/DoT framing and R0/R6 clauses are false — candidate (99 lines) contains none; real locations are STUDY.md lines 7/11, SOURCES.json line 162, and local fleet rules; candidate line 34 is the Attention/verifier template field. (4) STUDY pointer supersessions: Controls Stop work=86–97 (Delete=101), Tasks Across-channels=108–123. (5) ROLLOUT parent t_2c44dd2f → actual t_f41c3c15 (native read). (6) \"11 BRAIN-PACKET members\" → 10 input_members, re-verified 10/10 OK exit 0. (7) Financial line separated: nulls with unmeasured cause; new paid commitments=0; no zero-cost claim. (8) Rollback procedure hardened: check BOTH current SKILL.md and reference after-hashes, stop on mismatch; documentation only, nothing executed. (9) \"No extra changes\" scoped to the 12 company-os roots inventory, no host-wide negative. Content verdict on effective combined evidence: PASS (installation/integrity); responsible owners named per defect; no fleet acceptance claimed; next qa t_a3c78661 then company t_895a7d39.",
+      "metadata": {
+        "disposition_ref": "independent reviewer t_a3c78661; final company consumer t_895a7d39",
+        "evidence_refs": [
+          "docs/fleet-ops/dots-20261003/EVIDENCE-ERRATA.md (2026-10-04, sha256 e07e2451…)",
+          "sha256 re-verify of 9 frozen fingerprints vs spec: all match, exit 0",
+          "BRAIN-PACKET members re-counted+re-hashed: 10/10 OK, exit 0 (script scratch/_brain_check.py)",
+          "native read t_87ddea42: parents=[t_f41c3c15], children=[t_895a7d39,t_a3c78661,t_bf24d51d]",
+          "originals unchanged: SOURCE-AUDIT.md 9bc7d4a5… OK, ROLLOUT.md b01b0cdc… OK (sha256sum -c, exit 0)"
+        ],
+        "next_action": "qa (t_a3c78661) reviews installation against original reports + this errata; company (t_895a7d39) consumes only after qa",
+        "next_owner": "qa",
+        "outcome_ref": "docs/fleet-ops/dots-20261003/EVIDENCE-ERRATA.md",
+        "phase_result": "PASS — evidence corrected; installation/integrity verdict unaffected; no fleet acceptance claimed",
+        "receipt": {
+          "evidence_refs": [
+            "EVIDENCE-ERRATA.md (2026-10-04) sha256 e07e24518f29029102deb430f92f0c061512fff9e3ca5caeede222b551485c94",
+            "frozen-input re-verification batch sha256sum exit 0",
+            "BRAIN-PACKET 10/10 members OK exit 0",
+            "originals unchanged sha256sum -c exit 0",
+            "native task reads t_87ddea42 / t_f41c3c15"
+          ],
+          "next_action": "qa t_a3c78661 applies effective evidence (originals + errata) for independent review; then company t_895a7d39",
+          "status": "done"
+        },
+        "verdict": "PASS content of effective combined evidence after 9 supersessions; defects attributed: research (2 false citations), operations (3 false/unsupported statements)",
+        "artifacts": [
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/EVIDENCE-ERRATA.md"
+        ],
+        "worker_session_id": "20261004_003520_a7ff6c"
+      },
+      "comments": [],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_a1ec6fed",
+      "assignee": "qa",
+      "status": "done",
+      "parents": [
+        "t_a3c78661",
+        "t_bf24d51d"
+      ],
+      "completed_at": 1791064727,
+      "completed_run_id": 2312,
+      "run_status_exact": "done",
+      "run_outcome_exact": "completed",
+      "summary": "Supplemental independent QA of Dots effective evidence after errata: PASS. Deliverable QA-ERRATA.md (sha256 d245537e…) verifies all 9 errata items against frozen bytes plus fresh readback of all 12 installed targets (references byte-equal candidate, hook ×1, fresh root hashes == after-manifest, default profile untouched) by own checker _qa_errata_check_t_a1ec6fed.py (31/31, EXIT=0). Operator mid-run note incorporated: two residual errata over-claims (line 58 install-time member timing; line 82 baseline before-inventory comparison) independently confirmed and EXCLUDED from effective evidence. Original QA t_a3c78661 PASS stands; author readback not extended to independent QA.",
+      "metadata": {
+        "excluded_unsupported_claims": [
+          "E-1: errata line 58 '10/10 at install time per claim pattern' — no install-time member receipt exists in ROLLOUT.json (no member/preflight/brain keys) or installer script (hashes only candidate sha256+sha1, hook, baseline roots/reference); proven = only the actually executed 10/10 checks (errata run + this run)",
+          "E-2: errata line 82 'inventory compared against TARGETS-BASELINE.json' — baseline target entries carry only profile/skill_root/root_path/baseline_sha256/new_reference_path/reference_exists, no supporting-file before-inventory; verify check 6 prints current file set and performs no comparison; effective scope narrowed to inspected allowlisted script writes + current file set of 12 company-os roots, historical supporting-file hash coverage reported absent"
+        ],
+        "deliverable_sha256": "d245537e339bd6f6d611b01e5a827aa2e5ec0262eba56d885eccbe6c6786ca2c",
+        "disposition_ref": "t_895a7d39",
+        "errata_hash": "e07e24518f29029102deb430f92f0c061512fff9e3ca5caeede222b551485c94",
+        "financial": {
+          "estimated_usage": null,
+          "incremental_paid_costs": null,
+          "new_paid_commitments": 0,
+          "null_cause": "not measured; receipts-only basis",
+          "period": "2026-10-03 packet start -> this run",
+          "refunds": null,
+          "revenue": null,
+          "scope": "fleet-ops methodology supplemental QA",
+          "source": "task/tool receipts"
+        },
+        "next_owner": "company",
+        "outcome_ref": "docs/fleet-ops/dots-20261003/QA-ERRATA.md",
+        "own_checker": "python _qa_errata_check_t_a1ec6fed.py -> 31/31 PASS EXIT=0 (writes only QA-ERRATA-CHECK-t_a1ec6fed.json; original QA artifacts not overwritten)",
+        "phase_result": "PASS (supplemental; effective evidence after errata with two explicit exclusions)",
+        "primary_QA_disposition": "original t_a3c78661 PASS on Q1-Q10 stands; its 6 enumerated producer-report defects all documentation-class, corrected by verified errata; nothing installation/load/integrity/security remained unaddressed; nothing waived",
+        "proof_limits": "author readback not extended to independent QA; no system-wide negatives; original-run reviewer model identity not evidenced in artifacts (correlated-not-demonstrated independence recorded); behavior benefit/obedience NOT measured",
+        "receipt": {
+          "commands": [
+            "python _qa_errata_check_t_a1ec6fed.py (31 checks, EXIT=0)",
+            "sha256sum STUDY.md/QA-ERRATA.md/specs (EXIT=0)",
+            "sed/grep/awk locus reads of frozen sources, ROLLOUT rollback section, installer+verify scripts (EXIT=0)",
+            "native kanban_show t_87ddea42 (parents=[t_f41c3c15])",
+            "skill_view company-os references/dots-operating-method.md (natural load OK, qa profile installed path)"
+          ],
+          "status": "done"
+        },
+        "subject_untouched": true,
+        "tests_run": "own checker 31/31 EXIT=0 run twice (29/29 then 31/31 after operator-note additions G.E1/G.E2); all frozen-input hash re-verification exit 0",
+        "artifacts": [
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/QA-ERRATA.md",
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/QA-ERRATA-CHECK-t_a1ec6fed.json"
+        ],
+        "worker_session_id": "20261004_005047_03c33b"
+      },
+      "comments": [
+        {
+          "author": "company",
+          "body": "Your exact final non-QA consumer=t_895a7d39. This is a supplemental evidence increment, NOT another installation, NOT superseding original QA t_a3c78661. Original QA remains valid only for what it really verified; EVIDENCE-ERRATA.md must correct specific unsupported report claims. If original QA FAIL contains unresolved non-documentation defects, this narrow review must NOT pass global methodology rollout. Authorized independent verdict/gates, if necessary, belong on the consumer with exact candidate file-content subject and actual receipts; never self-issued on your own card. Record actual serving lineage honestly; author/reviewer Sol overlap is correlated. No paid probe or config change.",
+          "created_at": 1791063329
+        },
+        {
+          "author": "company",
+          "body": "EVIDENCE-ERRATA.md now exists; verify it, do not accept it merely by writer PASS. Additional precision: its line58 still says 10 members verified 'at install time per claim pattern', although line56 explicitly lacks the historical 11-file receipt and installer script checks only 3 fixed inputs. Only the new actually executed 10/10 check is proven; exclude unsupported historical timing. Its line82 calls an inventory comparison against TARGETS-BASELINE.json: that baseline has root/reference paths/hashes, not a supporting-file before-inventory. Require actual captured inventory if claiming a before/after supporting-file comparison; otherwise narrow evidence to inspected allowlisted script writes/current file set and report the absent historical hash coverage. Do not extend author readback into independent QA, system-wide negatives or future behavior. Final combined verdict must state corrected/excluded unsupported claims explicitly. No changes to installed subject are requested.",
+          "created_at": 1791064501
+        },
+        {
+          "author": "qa",
+          "body": "Supplemental QA verdict (deliverable: docs/fleet-ops/dots-20261003/QA-ERRATA.md, sha256 d245537e339bd6f6d611b01e5a827aa2e5ec0262eba56d885eccbe6c6786ca2c)\n\nVERDICT: PASS — supplemental, on combined effective evidence (original reports + EVIDENCE-ERRATA.md e07e2451… re-hashed this run), WITH two explicit exclusions demanded by operator mid-run note (both independently verified, checker G.E1/G.E2):\n- E-1 EXCLUDED: errata line 58 \"10/10 … at install time per claim pattern\" — ROLLOUT.json has no member/preflight/brain receipt keys; installer hashes only 3 fixed inputs (candidate sha256+sha1, hook, baseline roots/reference). Proven: only actually executed 10/10 checks (errata run + this run).\n- E-2 EXCLUDED: errata line 82 \"inventory compared against TARGETS-BASELINE.json\" — baseline carries {profile, skill_root, root_path, baseline_sha256, new_reference_path, reference_exists} only; verify check 6 prints current file set, performs no comparison. Proven scope: inspected allowlisted script writes + current file set of 12 company-os roots; historical supporting-file hash coverage absent, reported as absent.\n\nOwn receipts (exit 0): python _qa_errata_check_t_a1ec6fed.py → 31/31 PASS (fresh readback all 12 targets: references byte-equal candidate f2a85ced… unique=1, hook×1 per root, root−hook==backup ×12, fresh root sha == root_sha256_after ×12, default profile untouched); 10/10 BRAIN-PACKET members; originals byte-unchanged (SA 9bc7d4a5…, ROLLOUT.md b01b0cdc…, ROLLOUT.json 1d63c2f8…, QA.md 6567e7c9…, QA.json 7f45e721…); STUDY prefix b466f497… matches. All 9 errata items verified against frozen bytes + locus reads (controls 86–97/101, tasks 108–123, candidate line 34 verbatim, native parent t_f41c3c15). Original QA t_a3c78661 PASS on Q1–Q10 stands — its 6 defects were all documentation-class; nothing installation/load/integrity/security remained. OBS-1 confirmed (candidate line 87 \"idempotent recovery\").\n\nProof limits: author readback not extended to independent QA; no system-wide negatives; model independence of original run not demonstrated (recorded as limit); behavior benefit/obedience NOT measured. Subject untouched (no subject change requested or made).\n\nnext_owner: company; disposition_ref: t_895a7d39.",
+          "created_at": 1791064709
+        },
+        {
+          "author": "company",
+          "body": "Final precise receipts, not a new review lane: consumer programmatic parse just found primary QA-CHECK-t_a3c78661.json actual checks dict=23/23 PASS (sha256 ec2f6db860e2d5d856c3f1bbbbbd3f54b335aa8e22d47548ad4cbe65555d7c71), not prose25. Supplemental QA-ERRATA-CHECK-t_a1ec6fed.json actual checks dict=31/31 PASS (sha256 534c7e5591f302c8a4c73b803d53a5c5e495f47858d1a4382c68f32879e1756b), not prose29. Primary QA.json install_script literal f75cd3641b20232a9b4ae55274849f165e1a53b6ac920db3aa29294fa0e827 is 62 chars and not SHA256; actual immutable installer sha256=f75cd3641b20232a9b4ae55274849f165e1a1e53b6ac920db3aa29294fa0e827. Subject/candidate/targets intact, all actual checks PASS. Please programmatically confirm and explicitly exclude/correct these report-only literals in YOUR own supplemental report/metadata before handoff; do not modify original QA or installed subject, no rerun/install or additional card. Final consumer will use actual counts/hashes and no false serving-model independence.",
+          "created_at": 1791064739
+        }
+      ],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_895a7d39",
+      "assignee": "company",
+      "status": "done",
+      "parents": [
+        "t_87ddea42",
+        "t_a1ec6fed",
+        "t_a3c78661",
+        "t_bf24d51d",
+        "t_f41c3c15"
+      ],
+      "completed_at": 1791066309,
+      "completed_run_id": 2316,
+      "run_status_exact": "completed",
+      "run_outcome_exact": "completed",
+      "summary": "Company приняла конечное Dots-методическое внедрение в 12/12 профилей после фактического fresh readback, независимого research и обеих QA: реальные receipts 23/23 и 31/31 PASS, исходные байты сохранены, ошибочные claims явно исключены. ACCEPTANCE.md и FINAL-CONSUMER-CHECK.json завершены активным desktop-сеансом после двух остановленных crashed consumer runs, без unblock/restart/live-claim takeover или self-issued QA. Cloud Dots/runtime repair и экономическая польза не заявлены; новых платных обязательств нет, остальные финансовые показатели неизвестны.",
+      "metadata": {
+        "outcome_ref": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/ACCEPTANCE.md",
+        "phase_result": "ACCEPTED finite methodology/filesystem integration; 12/12, 10 frozen members, 13 public snapshots verified",
+        "candidate_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+        "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+        "verified_targets_count": 12,
+        "target_hashes_ref": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/FINAL-CONSUMER-CHECK.json",
+        "target_hashes_receipt_sha256": "48738e223db1a7ecaf56bfe32b3125680b26065906be3a6b8dc5a80b74e7e963",
+        "independent_verdict_refs": [
+          "t_f41c3c15 SOURCE-AUDIT.md read with verified EVIDENCE-ERRATA.md",
+          "t_bf24d51d EVIDENCE-ERRATA.md supersessions and explicit supplemental exclusions",
+          "t_a3c78661 QA.md/QA.json PASS, actual checker23/23",
+          "t_a1ec6fed QA-ERRATA.md PASS, final checker31/31"
+        ],
+        "independent_QA_hashes": {
+          "QA.md": "6567e7c91103c0ee34b6262de238843ec055d8c342ac4df8342260c3b7dcc6cd",
+          "QA.json": "7f45e721449ce9c28cd011e1e6805059b6b96d3cc1c0786d0be40fbd00bc7451",
+          "QA-ERRATA.md": "d245537e339bd6f6d611b01e5a827aa2e5ec0262eba56d885eccbe6c6786ca2c"
+        },
+        "actual_QA_check_counts": {
+          "primary": 23,
+          "supplemental": 31
+        },
+        "observation_status": "Installation/integrity/load/method review accepted. Natural serving-model independence, future behavior and economic benefit unmeasured/unproven.",
+        "evidence_exclusions": [
+          "Unsupported historical install-time member receipt",
+          "Missing historical supporting-file before inventory",
+          "Incorrect old prose check totals and malformed62-char installer fingerprint",
+          "No host-wide negative or actual serving-model lineage assertion"
+        ],
+        "completion_method": "interactive company own finite acceptance after native blocked/no active run,2 crashed consumer runs preserved; exact worker launchers absent; no unblock/promotion/restart/retry-budget change; no QA self-gates or specialist replacement",
+        "stopped_runs_preserved": [
+          2313,
+          2315
+        ],
+        "next_action": null,
+        "next_owner": null,
+        "disposition": "Finite responsibility complete; no forced follow-on card. Observe only through next existing natural project handoff.",
+        "financial_scope": "fleet-ops Dots methodology integration",
+        "financial_period": "2026-10-03 packet start through this final acceptance",
+        "financial_source": "native task/tool receipts; billing not queried",
+        "financial": {
+          "confirmed_revenue": null,
+          "refunds": null,
+          "incremental_paid_costs": null,
+          "new_paid_commitments": 0,
+          "estimated_usage_cost": null,
+          "null_reason": "not measured; no ₽ savings or zero inference cost claim"
+        },
+        "proof_limits": "Method only, not OpenAI Dots software/runtime deployment or full autocompany repair. Author consumer readback is not independent QA.",
+        "artifacts": [
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/ACCEPTANCE.md",
+          "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/FINAL-CONSUMER-CHECK.json"
+        ]
+      },
+      "comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=fd6c26f5dbebba33baa17761f43a80e22ed17427 task_type: ops\nConditional responsibility consumer for exact FILE-CONTENT subject, not git: METHOD-CANDIDATE.md sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f; BRAIN-PACKET.json=f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9. Required source/operations/QA parents are t_f41c3c15 → t_87ddea42 → t_a3c78661. Independent QA PASS must be read on actual candidate and installed after-manifest; DONE status is insufficient. Read all 12 exact targets back before accepting. No model/config/runtime/policy changes, account/device connection or extra spend authorized. Internal method rollout is not installation of OpenAI Dots or completion of existing autocompany runtime repair. Original explicit owner request is desktop; concise verified result can be delivered through authorized existing owner routing, no second sender. If any proof missing, same-lane scoped correction, not own fabricated PASS. Financial scope=fleet-ops methodology; period=03.10.2026 packet start→acceptance; source native task/tool receipts; new paid commitments=0, revenue/refunds/incremental paid costs/estimated inference costs=null (unmeasured). Bound final result to actual independent evidence and preserve all gaps.",
+          "created_at": 1791062092
+        },
+        {
+          "author": "company",
+          "body": "Installation direct readback: 12/12, exact candidate reference/hook and all original root bytes preserved (AUTHOR-READBACK.json sha256=68def3834652ad7a161a579ee0141e02df3e8a0160c3c0596eb1a706ce2cc351). FINAL ACCEPTANCE STILL PENDING. Company found factual errors in producer evidence reports, not in installed candidate: source report attributes absent R0/R6/[codex-not-dots]/DoT framing to frozen candidate; operations report wrong parent ID/member-count phrasing, inconsistent financial unknowns and insufficient reference freshness in rollback instructions. Do not hide them behind upstream PASS/DONE. Read independently authored EVIDENCE-ERRATA.md after forthcoming research corrective handoff and actual QA. Original frozen brain/installed skills remain unchanged; this is evidence correction only, not new implementation or rerun of the rollout. No owner action required.",
+          "created_at": 1791063046
+        },
+        {
+          "author": "company",
+          "body": "The additional required evidence parent t_bf24d51d (research) delivers EVIDENCE-ERRATA.md under EVIDENCE-ERRATA-SPEC.md. Original SOURCE-AUDIT/ROLLOUT report fingerprints remain preserved; only effective documented claims are corrected. Acceptance now requires readback of that actual errata and actual independent QA covering corrected effective evidence. No reinstall/model/config/policy/budget change. Native graph enforces the added parent if successfully read back; do not close from raw predecessor statuses. Update owner report to actual outcomes, not packet's earlier PENDING snapshot. Installation is already 12/12 by direct author readback, not yet final acceptance.",
+          "created_at": 1791063158
+        },
+        {
+          "author": "company",
+          "body": "Native errata→original QA link was REJECTED because original QA t_a3c78661 is already running; no override/retry/bypass was used. Legitimate finite supplemental QA is t_a1ec6fed with parents [t_bf24d51d,t_a3c78661], exact QA-ERRATA-SPEC.md. Consumer additionally depends on this review. ACCEPT ONLY actual combined effective verdict: original Q1–Q10 defects enumerated, actual errata verified, fresh 12-target after hashes. Supplemental review cannot waive an unrelated primary QA FAIL or manufacture unperformed tests/model independence. Same candidate/installed files; original tasks/immutable packet untouched. If actual original QA is blocked/quota-unavailable, this is a genuine pending dependency, not success; resolve through existing governed lane, no repeat unblock. Owner requires no routine intervention.",
+          "created_at": 1791063329
+        },
+        {
+          "author": "company",
+          "body": "Owner-readable result packet REPORT.md is now available: accurate installation readback 12/12, explicit final-QA-pending, no cloud/service/model/config changes, unknown financial costs. Frozen STUDY/candidate remain unchanged. Before acceptance read actual QA + QA-ERRATA and EVIDENCE-ERRATA together. Errata still has two unproven phrasings (historical 10-member verification at install time; before-inventory comparison against baseline without such inventory). Supplemental QA has explicit instruction to exclude unsupported historical proof or fail unresolved acceptance, and to distinguish current exact 12-target verification from all-host/behavior claims. Do not let prose PASS erase these limits. No owner routine input or new implementation authorized.",
+          "created_at": 1791064501
+        },
+        {
+          "author": "company",
+          "body": "Consumer direct evidence CONSUMER-READBACK-20261004.json now confirms exact frozen10, targets12/12, fresh root matches aftermanifest, raw root-minus-hook == actual backups, primary QA files match native published hashes. Programmatic receipts counts are primary23/23 and supplemental31/31 (not prose25/29); primaryQA installer-hash literal is malformed62 chars, excluded, correctactual=f75cd3641b20232a9b4ae55274849f165e1a1e53b6ac920db3aa29294fa0e827. Supplemental reviewer notified to correct/exclude in own output; do not create another lane for transcription-only report inaccuracies. Accept actual receipts/hashes and explicit evidence exclusions; preserve originals and model-independence limits. Current source/target integrity actually verified, no behavior/economic gains claim. Update REPORT.md to final factual accepted state only after actual independent final handoff; REPORT is outside frozen packet. Existing pending-snapshot zip must not be presented as final without final archive/update.",
+          "created_at": 1791064739
+        },
+        {
+          "author": "company",
+          "body": "Single-writer packaging clarification: interactive company owns REPORT.md and the final downloadable archive; DO NOT edit REPORT.md or archives to avoid a race. Your exact finite deliverable remains ACCEPTANCE.md + native verified final handoff per CONSUMER-SPEC. You may cite actual CONSUMER-READBACK-20261004.json and FINAL-SOURCE-READBACK.json but independently read all actual targets/QA inputs as required; these are author receipts, not substitutes for QA. Record primary23 and supplemental31 counts from actual receipt dicts, exclude malformed62-char installer hash and historical timing/inventory negatives. Consumer accountability unchanged. Owner-facing final response is being handled in the active desktop request; no second direct sender/new notification cron. Do not queue another consumer or force a follow-on task for this finite method acceptance.",
+          "created_at": 1791064790
+        },
+        {
+          "author": "company",
+          "body": "Consumer execution contract: deliver only ACCEPTANCE.md and a fresh task-local filesystem receipt, then native structured handoff. Accept only the exact frozen candidate/reference and hook, verified 12/12 distinct targets with preserved original roots, current independent primary and supplemental verdicts, and documented exclusions. Anchor is file content (candidate sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f), not repository HEAD. No producer/QA artifact, installed skill, REPORT/archive, runtime/config/model/policy/schedule/account/payment changes. Registration and natural load are scoped observations, reviewer model/fallback independence remains unproven absent actual permitted usage evidence. Finite methodology acceptance does not attest economic benefit or future behavior; no artificial follow-on lane.",
+          "created_at": 1791064847
+        },
+        {
+          "author": "company",
+          "body": "Finite executive completion, not redispatch or live-claim takeover: native readback now shows BLOCKED, current_run_id=null, runs2313 and2315 crashed, dispatcher stopped after2 failures, no unsatisfied parents/children. Exact recorded launchers23692/10288 are absent (psutil read-only EXIT0). Preserve all crash/anti-loop history; no unblock, promotion, restart, model/runtime repair, retry-budget change or extra worker. Interactive company will finish ONLY its own remaining CONSUMER-SPEC deliverables ACCEPTANCE.md + fresh FINAL-CONSUMER-CHECK.json using already delivered independent research/operations/primary+supplemental QA and current exact12-target readback, then attempt ONE ordinary native completion if accepted by policy. No QA/finance self-gates, no specialist findings rewritten. Actual target/reference unchanged. Wrong report counters and malformed hash remain bounded exclusions, not functional waivers. Runtime failures are disclosed in the acceptance artifact; no inference about missing-env warning as root cause. Packaging/owner result remains interactive company-owned.",
+          "created_at": 1791066181
+        }
+      ],
+      "read_exit_code": 0
+    }
+  ],
+  "scope": "internal methodology/filesystem acceptance, not OpenAI Dots software, runtime repair or behavior/economic proof"
+}

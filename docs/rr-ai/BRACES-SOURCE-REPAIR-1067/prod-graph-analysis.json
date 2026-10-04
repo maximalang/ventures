@@ -1,0 +1,138 @@
+{
+  "rootDeps": 299,
+  "rootDevDeps": [
+    "husky",
+    "ts-node"
+  ],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "wsDirs": [
+    "packages/db",
+    "apps/web"
+  ],
+  "bracesNodes": [
+    {
+      "key": "node_modules/braces",
+      "version": "3.0.3",
+      "dev": false
+    }
+  ],
+  "prodBracesCount": 1,
+  "directProdDepsReachingBraces": [
+    "babel-jest",
+    "braces",
+    "create-jest",
+    "expect",
+    "jest-circus",
+    "jest-cli",
+    "jest-config",
+    "jest-environment-jsdom",
+    "jest-environment-node",
+    "jest-haste-map",
+    "jest-message-util",
+    "jest-resolve",
+    "jest-resolve-dependencies",
+    "jest-runner",
+    "jest-runtime",
+    "jest-snapshot",
+    "jest-watcher",
+    "micromatch"
+  ],
+  "pathSamples": [
+    [
+      "<root>",
+      "braces@3.0.3"
+    ],
+    [
+      "<root>",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<orphan>",
+      "jest@29.7.0",
+      "@jest/core@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<root>",
+      "jest-cli@29.7.0",
+      "@jest/core@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<orphan>",
+      "jest@29.7.0",
+      "jest-cli@29.7.0",
+      "@jest/core@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<root>",
+      "jest-cli@29.7.0",
+      "@jest/core@29.7.0",
+      "@jest/transform@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<orphan>",
+      "jest@29.7.0",
+      "jest-cli@29.7.0",
+      "@jest/core@29.7.0",
+      "@jest/transform@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<root>",
+      "jest-cli@29.7.0",
+      "@jest/core@29.7.0",
+      "@jest/reporters@29.7.0",
+      "@jest/transform@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<orphan>",
+      "jest@29.7.0",
+      "jest-cli@29.7.0",
+      "@jest/core@29.7.0",
+      "@jest/reporters@29.7.0",
+      "@jest/transform@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<root>",
+      "babel-jest@29.7.0",
+      "@jest/transform@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<root>",
+      "jest-config@29.7.0",
+      "babel-jest@29.7.0",
+      "@jest/transform@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ],
+    [
+      "<root>",
+      "jest-cli@29.7.0",
+      "@jest/core@29.7.0",
+      "jest-config@29.7.0",
+      "babel-jest@29.7.0",
+      "@jest/transform@29.7.0",
+      "micromatch@4.0.8",
+      "braces@3.0.3"
+    ]
+  ],
+  "pathCount": 68
+}

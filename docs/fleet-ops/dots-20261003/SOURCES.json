@@ -1,0 +1,227 @@
+{
+  "packet_created_at_utc": "2026-10-03T20:55:39.375764+00:00",
+  "core_source_count": 7,
+  "source_count": 12,
+  "sources": [
+    {
+      "name": "dots-overview",
+      "class": "dots-core",
+      "url": "https://learn.chatgpt.com/docs/dots.md",
+      "final_url": "https://learn.chatgpt.com/docs/dots.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:34:46.377618+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-overview.md",
+      "file_bytes": 17871,
+      "file_sha256": "63bab8760b1419055f4dbd256bad8d75d4dc69561cb8bc42eba12ef7b7324c05",
+      "normalized_text_sha256": "2dd16a1beab72dac1e70eff29e79fee52d27831ef58adc56228e8bc93ecac6eb",
+      "source_declared_text_sha256": "2dd16a1beab72dac1e70eff29e79fee52d27831ef58adc56228e8bc93ecac6eb"
+    },
+    {
+      "name": "dots-getting-started",
+      "class": "dots-core",
+      "url": "https://learn.chatgpt.com/codex/dots/getting-started.md",
+      "final_url": "https://learn.chatgpt.com/docs/dots/getting-started.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:36:22.274497+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-getting-started.md",
+      "file_bytes": 4230,
+      "file_sha256": "6d588a2a015e3b6dcb148fd2187dc6dc76505462d90a0579ff26c58a33b39c28",
+      "normalized_text_sha256": "651233b87a737da52c4178712df1a47c5d08ebc0c77163608f2d080610485ec6",
+      "source_declared_text_sha256": "651233b87a737da52c4178712df1a47c5d08ebc0c77163608f2d080610485ec6"
+    },
+    {
+      "name": "dots-tasks-memory",
+      "class": "dots-core",
+      "url": "https://learn.chatgpt.com/codex/dots/tasks-and-memory.md",
+      "final_url": "https://learn.chatgpt.com/docs/dots/tasks-and-memory.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:34:50.189351+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-tasks-memory.md",
+      "file_bytes": 7677,
+      "file_sha256": "c5900e990dd3d2cb6e00df27de2789d35f783e0e7eed56cc1a834c1bc0b3e40d",
+      "normalized_text_sha256": "190a71e142ebef3033362ca4ba566664034504e0c05fab5118850314c4e1eff7",
+      "source_declared_text_sha256": "190a71e142ebef3033362ca4ba566664034504e0c05fab5118850314c4e1eff7"
+    },
+    {
+      "name": "dots-controls",
+      "class": "dots-core",
+      "url": "https://learn.chatgpt.com/codex/dots/controls.md",
+      "final_url": "https://learn.chatgpt.com/docs/dots/controls.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:34:52.985054+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-controls.md",
+      "file_bytes": 5725,
+      "file_sha256": "3dd935a75f6ec9bffb01b246260c2f45e8e4a8f4b31a92fb5fedff3353db5700",
+      "normalized_text_sha256": "a8ff50ccb4b54d24dddea8658bc6ca2eecfff16715c3fe913d40c9d9e62df12f",
+      "source_declared_text_sha256": "a8ff50ccb4b54d24dddea8658bc6ca2eecfff16715c3fe913d40c9d9e62df12f"
+    },
+    {
+      "name": "dots-computers-apps",
+      "class": "dots-core",
+      "url": "https://learn.chatgpt.com/codex/dots/computers-and-apps.md",
+      "final_url": "https://learn.chatgpt.com/docs/dots/computers-and-apps.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:34:55.713446+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-computers-apps.md",
+      "file_bytes": 5752,
+      "file_sha256": "42791a20d6a95b927ad41fc437c51528d8e8b896358b8922cc4c867957e2f758",
+      "normalized_text_sha256": "0b71214666f05bf7d4f438da5a2efd2ba2ccbd92196858ec83308e3cf4a6e537",
+      "source_declared_text_sha256": "0b71214666f05bf7d4f438da5a2efd2ba2ccbd92196858ec83308e3cf4a6e537"
+    },
+    {
+      "name": "dots-channels",
+      "class": "dots-core",
+      "url": "https://learn.chatgpt.com/codex/dots/channels.md",
+      "final_url": "https://learn.chatgpt.com/docs/dots/channels.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:34:58.488014+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-channels.md",
+      "file_bytes": 2497,
+      "file_sha256": "1fde5facf50f0a3f289277a46700ab83f110fc9f60998a3f4e8403790354cd31",
+      "normalized_text_sha256": "e14692f7b354a049a3715ad2c2e30da461c252e2bd556925203cdc93f5a44e0b",
+      "source_declared_text_sha256": "e14692f7b354a049a3715ad2c2e30da461c252e2bd556925203cdc93f5a44e0b"
+    },
+    {
+      "name": "dots-enterprise-admin",
+      "class": "dots-core",
+      "url": "https://learn.chatgpt.com/codex/enterprise/dots-admin-guide.md",
+      "final_url": "https://learn.chatgpt.com/docs/enterprise/dots-admin-guide.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:36:25.145184+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-enterprise-admin.md",
+      "file_bytes": 13883,
+      "file_sha256": "bb0c3074751adb16bc0e4715099206c3c7cea56edd31ec1b3f82b450cc251b02",
+      "normalized_text_sha256": "11ceb2436a65d7410760f889c46542f4d0daf63fcda4328d29b9711c1873dc1c",
+      "source_declared_text_sha256": "11ceb2436a65d7410760f889c46542f4d0daf63fcda4328d29b9711c1873dc1c"
+    },
+    {
+      "name": "chatgpt-docs-index",
+      "class": "supporting",
+      "url": "https://learn.chatgpt.com/llms.txt",
+      "final_url": "https://learn.chatgpt.com/docs/llms.txt",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:53:54.716194+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\chatgpt-docs-index.md",
+      "file_bytes": 31354,
+      "file_sha256": "876747a42df18177663b73ad1dd7b7f6a677a9f807de576c3aa583fbadf0dea0",
+      "normalized_text_sha256": "454fed7019e5383fb92a6fa21a7fa94891352314a36a707e375027a813fb22f6",
+      "source_declared_text_sha256": "454fed7019e5383fb92a6fa21a7fa94891352314a36a707e375027a813fb22f6"
+    },
+    {
+      "name": "hermes-docs-index",
+      "class": "supporting",
+      "url": "https://hermes-agent.nousresearch.com/docs/llms.txt",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/llms.txt",
+      "http_status": 200,
+      "retrieved_at_utc": null,
+      "retrieved_at_limit": "Original fetch did not record a per-source timestamp; only packet creation time is known.",
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\hermes-docs-index.md",
+      "file_bytes": 45249,
+      "file_sha256": "eddf3134e6dccb6f22f898dc3a94fb44b3834f72bdd01a0ddff8ad348ac84b5f",
+      "normalized_text_sha256": "2bf8ad0d316af0a71f668e27f336ed746c80929f7cce5450c18ec4d23bc1b2dc",
+      "source_declared_text_sha256": "2bf8ad0d316af0a71f668e27f336ed746c80929f7cce5450c18ec4d23bc1b2dc"
+    },
+    {
+      "name": "hermes-kanban",
+      "class": "supporting",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:36:29.824539+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\hermes-kanban.md",
+      "file_bytes": 119863,
+      "file_sha256": "325e932295fb02bd0963cd23237ec8fc5d4657a9f48d046a19174eabb78054e4",
+      "normalized_text_sha256": "d8f27fcdbcac2e16bfa2629bc32f95e6d6e52acecd54dcd784437cf89eab76ba",
+      "source_declared_text_sha256": "d8f27fcdbcac2e16bfa2629bc32f95e6d6e52acecd54dcd784437cf89eab76ba"
+    },
+    {
+      "name": "hermes-memory",
+      "class": "supporting",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/memory",
+      "final_url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/memory",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:36:30.963366+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\hermes-memory.md",
+      "file_bytes": 30169,
+      "file_sha256": "259b905e6512b356c2e4d8c13c093a3d7e866cea1aa8a363225e20780dcbcbf6",
+      "normalized_text_sha256": "fcbc09ce8937aef2ecedebe10d1a635e7fe7ed5b6dfd9a6027b7f17a9002d52a",
+      "source_declared_text_sha256": "fcbc09ce8937aef2ecedebe10d1a635e7fe7ed5b6dfd9a6027b7f17a9002d52a"
+    },
+    {
+      "name": "chatgpt-permissions",
+      "class": "codex-not-dots",
+      "url": "https://learn.chatgpt.com/codex/permissions.md",
+      "final_url": "https://learn.chatgpt.com/docs/permissions.md",
+      "http_status": 200,
+      "retrieved_at_utc": "2026-10-03T20:36:28.050349+00:00",
+      "retrieved_at_limit": null,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\chatgpt-permissions.md",
+      "file_bytes": 38976,
+      "file_sha256": "8d87fa5b5dcd7d22b13e34680e4bb1cd0d1e33c94f3fd5028da49eec70f9746a",
+      "normalized_text_sha256": "efd27769ace3daafef5be62e1f3d605fd918baeafe0fa0e77466a619c206250f",
+      "source_declared_text_sha256": "efd27769ace3daafef5be62e1f3d605fd918baeafe0fa0e77466a619c206250f"
+    }
+  ],
+  "dots_index_lines": [
+    "## Dots",
+    "- [Meet dots](https://learn.chatgpt.com/docs/dots.md): An always-on agent that keeps work moving and asks for your input when a decision needs you.",
+    "- [Connect computers and apps to your dot](https://learn.chatgpt.com/docs/dots/computers-and-apps.md): Use your dot's cloud computer, connect your own computer, and manage app access.",
+    "- [Control your dot](https://learn.chatgpt.com/docs/dots/controls.md): Review work, set custom rules, manage permissions, and stop or delete your dot.",
+    "- [Get started with your dot](https://learn.chatgpt.com/docs/dots/getting-started.md): Set up your dot and learn how to work with it over time.",
+    "- [Message your dot](https://learn.chatgpt.com/docs/dots/channels.md): Message or call your dot in ChatGPT, and connect other contact methods.",
+    "- [Tasks and memory](https://learn.chatgpt.com/docs/dots/tasks-and-memory.md): Understand assigned work, recurring tasks, and your dot's context",
+    "- [Local computer access for Work Cloud and dots](https://learn.chatgpt.com/docs/enterprise/cloud-local-access.md): Review shared policies and compatibility, then enable local computer access separately for Work and dots"
+  ],
+  "unavailable_sources": [
+    {
+      "name": "openai-introducing-dots",
+      "url": "https://openai.com/index/introducing-dots",
+      "status": "UNAVAILABLE",
+      "attempts": [
+        {
+          "route": "direct",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        },
+        {
+          "route": "approved-local-http-proxy",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        }
+      ]
+    },
+    {
+      "name": "dots-help-getting-started",
+      "url": "https://help.openai.com/en/articles/20001530",
+      "status": "UNAVAILABLE",
+      "attempts": [
+        {
+          "route": "direct",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        },
+        {
+          "route": "approved-local-http-proxy",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        }
+      ],
+      "retrieved_at_utc": "2026-10-03T20:53:57.475813+00:00"
+    }
+  ],
+  "limits": [
+    "Public docs only; no Dots account, UI, entitlement, inference, cloud computer or app authorization tested.",
+    "OpenAI announcement extraction was partial; it is not an authoritative full-content snapshot.",
+    "Codex permissions.md is supporting context about a DIFFERENT product; do not import its settings as Dots/Hermes settings."
+  ]
+}

@@ -1,0 +1,1137 @@
+▶ not activated — using HERMES_PYTHON: C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe
+▶ running per-file parallel test suite via run_tests_parallel.py
+  (TZ=UTC LANG=C.UTF-8 PYTHONHASHSEED=0; clean env)
+▶ pre-compiling bytecode cache
+▶ launching test runner
+Discovered 10 test files (~65 tests) under ['tests\\gateway\\test_channel_overrides.py', 'tests\\gateway\\test_empty_model_recovery.py', 'tests\\gateway\\test_empty_model_fallback.py', 'tests\\gateway\\test_model_command_profile_config.py', 'tests\\gateway\\test_model_switch_persistence.py', 'tests\\gateway\\test_agent_cache.py', 'tests\\gateway\\test_agent_cache_release_profile_scope.py', 'tests\\gateway\\test_busy_session_profile_scope.py', 'tests\\gateway\\test_handoff_secondary_profile_adapter.py', 'tests\\gateway\\test_model_command_custom_providers.py']; running with -j 18
+[  1.5% |     1/~65 | ✓1 | ✗0] ✓ tests\gateway\test_empty_model_recovery.py (1✓, 10.0s)
+[ 10.8% |     7/~65 | ✓7 | ✗0] ✓ tests\gateway\test_channel_overrides.py (6✓, 10.2s)
+[ 12.3% |     8/~65 | ✓8 | ✗0] ✓ tests\gateway\test_model_command_profile_config.py (1✓, 10.2s)
+[ 13.8% |     9/~65 | ✓9 | ✗0] ✓ tests\gateway\test_model_command_custom_providers.py (1✓, 10.2s)
+[ 21.5% |    14/~65 | ✓14 | ✗ 0] ✓ tests\gateway\test_agent_cache_release_profile_scope.py (5✓, 10.2s)
+[ 27.7% |    18/~65 | ✓18 | ✗ 0] ✓ tests\gateway\test_handoff_secondary_profile_adapter.py (4✓, 10.5s)
+[ 40.0% |    26/~65 | ✓18 | ✗ 0] ✗ tests\gateway\test_empty_model_fallback.py (8 tests, 11.8s)
+
+  ╔╍ Failed: tests\gateway\test_empty_model_fallback.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 961, in pytest_sessionfinish
+  ║     result = yield
+  ║              ^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+  ║     teardown.throw(exception)
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 119, in pytest_sessionfinish
+  ║     return (yield)
+  ║             ^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+  ║     res = hook_impl.function(*args)
+  ║           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 112, in pytest_sessionfinish
+  ║     session._setupstate.teardown_exact(None)
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 579, in teardown_exact
+  ║     raise exceptions[0]
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 568, in teardown_exact
+  ║     fin()
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1166, in finish
+  ║     raise exceptions[0]
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1156, in finish
+  ║     fin()
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1014, in _teardown_yield_fixture
+  ║     next(it)
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 305, in tmp_path
+  ║     result_dict = request.node.stash[tmppath_result_key]
+  ║                   ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\stash.py", line 84, in __getitem__
+  ║     return cast(T, self._storage[key])
+  ║                    ~~~~~~~~~~~~~^^^^^
+  ║ KeyError: <_pytest.stash.StashKey object at 0x00000274C4C18C00>
+  ║
+  ║  Repro: python -m pytest tests\gateway\test_empty_model_fallback.py
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+[ 86.2% |    56/~65 | ✓18 | ✗ 0] ✗ tests\gateway\test_agent_cache.py (30 tests, 12.1s)
+
+  ╔╍ Failed: tests\gateway\test_agent_cache.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 961, in pytest_sessionfinish
+  ║     result = yield
+  ║              ^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+  ║     teardown.throw(exception)
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 119, in pytest_sessionfinish
+  ║     return (yield)
+  ║             ^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+  ║     res = hook_impl.function(*args)
+  ║           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 112, in pytest_sessionfinish
+  ║     session._setupstate.teardown_exact(None)
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 579, in teardown_exact
+  ║     raise exceptions[0]
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 568, in teardown_exact
+  ║     fin()
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1166, in finish
+  ║     raise exceptions[0]
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1156, in finish
+  ║     fin()
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1014, in _teardown_yield_fixture
+  ║     next(it)
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 305, in tmp_path
+  ║     result_dict = request.node.stash[tmppath_result_key]
+  ║                   ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\stash.py", line 84, in __getitem__
+  ║     return cast(T, self._storage[key])
+  ║                    ~~~~~~~~~~~~~^^^^^
+  ║ KeyError: <_pytest.stash.StashKey object at 0x0000024679168C00>
+  ║
+  ║  Repro: python -m pytest tests\gateway\test_agent_cache.py
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+[ 98.5% |    64/~65 | ✓18 | ✗ 0] ✗ tests\gateway\test_model_switch_persistence.py (8 tests, 12.2s)
+
+  ╔╍ Failed: tests\gateway\test_model_switch_persistence.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║     te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+  ║          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 728, in __init__
+  ║     self.stack = StackSummary._extract_from_extended_frame_gen(
+  ║                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 433, in _extract_from_extended_frame_gen
+  ║     f.line
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 318, in line
+  ║     self._line = linecache.getline(self.filename, self.lineno)
+  ║                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 30, in getline
+  ║     lines = getlines(filename, module_globals)
+  ║             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 46, in getlines
+  ║     return updatecache(filename, module_globals)
+  ║            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 93, in updatecache
+  ║     stat = os.stat(fullname)
+  ║            ^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+  ║     self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  ║   File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+  ║     self.refuse(value)
+  ║   File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+  ║     raise AssertionError(
+  ║ AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py
+  ║ Use the isolated HERMES_HOME or a temporary fixture instead.
+  ║ 
+  ║ 
+  ║ ============================ no tests ran in 1.09s ============================
+  ║
+  ║  Repro: python -m pytest tests\gateway\test_model_switch_persistence.py
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+[100.0% |    65/~65 | ✓18 | ✗ 0] ✗ tests\gateway\test_busy_session_profile_scope.py (1 tests, 12.2s)
+
+  ╔╍ Failed: tests\gateway\test_busy_session_profile_scope.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║     te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+  ║          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 728, in __init__
+  ║     self.stack = StackSummary._extract_from_extended_frame_gen(
+  ║                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 433, in _extract_from_extended_frame_gen
+  ║     f.line
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 318, in line
+  ║     self._line = linecache.getline(self.filename, self.lineno)
+  ║                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 30, in getline
+  ║     lines = getlines(filename, module_globals)
+  ║             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 46, in getlines
+  ║     return updatecache(filename, module_globals)
+  ║            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 93, in updatecache
+  ║     stat = os.stat(fullname)
+  ║            ^^^^^^^^^^^^^^^^^
+  ║   File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+  ║     self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  ║   File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+  ║     self.refuse(value)
+  ║   File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+  ║     raise AssertionError(
+  ║ AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py
+  ║ Use the isolated HERMES_HOME or a temporary fixture instead.
+  ║ 
+  ║ 
+  ║ ============================ no tests ran in 1.11s ============================
+  ║
+  ║  Repro: python -m pytest tests\gateway\test_busy_session_profile_scope.py
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+
+=== Summary: 10 files, 18 tests passed, 0 failed (100% complete) in 12.4s (18 workers) ===
+  Durations cached to test_durations.json (6 files)
+
+=== Per-file subprocess time distribution ===
+  Files:   10
+  Total subprocess CPU-wall: 109.6s  (runner wall: 12.4s, parallelism: 18x)
+  P50: 10.49s  P90: 12.25s  P95: 12.25s  P99: 12.25s  Max: 12.25s
+  <1s: 0 files (0%)  <2s: 0 files (0%)
+  Top 10 slowest:
+     12.25s  tests\gateway\test_busy_session_profile_scope.py
+     12.17s  tests\gateway\test_model_switch_persistence.py
+     12.06s  tests\gateway\test_agent_cache.py
+     11.84s  tests\gateway\test_empty_model_fallback.py
+     10.49s  tests\gateway\test_handoff_secondary_profile_adapter.py
+     10.22s  tests\gateway\test_agent_cache_release_profile_scope.py
+     10.20s  tests\gateway\test_model_command_custom_providers.py
+     10.19s  tests\gateway\test_model_command_profile_config.py
+     10.16s  tests\gateway\test_channel_overrides.py
+      9.97s  tests\gateway\test_empty_model_recovery.py
+
+=== Failure output ===
+
+--- tests\gateway\test_empty_model_fallback.py ---
+============================= test session starts =============================
+platform win32 -- Python 3.11.16, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 8 items
+
+tests\gateway\test_empty_model_fallback.py Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 384, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\logging.py", line 816, in pytest_runtestloop
+    return (yield)  # Run all the tests.
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 708, in pytest_runtestloop
+    result = yield
+             ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 90, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\assertion\__init__.py", line 205, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unittest.py", line 612, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\faulthandler.py", line 102, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 132, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 254, in call_and_report
+    report: TestReport = ihook.pytest_runtest_makereport(item=item, call=call)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 347, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\skipping.py", line 280, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 385, in pytest_runtest_makereport
+    return TestReport.from_item_and_call(item, call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 438, in from_item_and_call
+    longrepr = _format_failed_longrepr(item, call, excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 266, in _format_failed_longrepr
+    longrepr = item._repr_failure_py(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\nodes.py", line 448, in _repr_failure_py
+    return excinfo.getrepr(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 774, in getrepr
+    return fmt.repr_excinfo(self)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1224, in repr_excinfo
+    reprtraceback = self.repr_traceback(excinfo_)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1131, in repr_traceback
+    traceback = filter_excinfo_traceback(self.tbfilter, excinfo)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1628, in filter_excinfo_traceback
+    return tbfilter(excinfo)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\python.py", line 1717, in _traceback_filter
+    ntraceback = traceback.cut(path=path, firstlineno=firstlineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 398, in cut
+    codepath = code.path
+               ^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 94, in path
+    if not p.exists():
+           ^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1235, in exists
+    self.stat()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1013, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\zoneinfo\__init__.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 350, in wrap_session
+    config.notify_exception(excinfo, config.option)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 1264, in notify_exception
+    excrepr = excinfo.getrepr(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 755, in getrepr
+    format_exception(
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 139, in format_exception
+    te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 728, in __init__
+    self.stack = StackSummary._extract_from_extended_frame_gen(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 433, in _extract_from_extended_frame_gen
+    f.line
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 318, in line
+    self._line = linecache.getline(self.filename, self.lineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 30, in getline
+    lines = getlines(filename, module_globals)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 46, in getlines
+    return updatecache(filename, module_globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 93, in updatecache
+    stat = os.stat(fullname)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+    return wrap_session(config, _main)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 365, in wrap_session
+    config.hook.pytest_sessionfinish(
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\logging.py", line 888, in pytest_sessionfinish
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 961, in pytest_sessionfinish
+    result = yield
+             ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 119, in pytest_sessionfinish
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 112, in pytest_sessionfinish
+    session._setupstate.teardown_exact(None)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 579, in teardown_exact
+    raise exceptions[0]
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 568, in teardown_exact
+    fin()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1166, in finish
+    raise exceptions[0]
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1156, in finish
+    fin()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1014, in _teardown_yield_fixture
+    next(it)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 305, in tmp_path
+    result_dict = request.node.stash[tmppath_result_key]
+                  ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\stash.py", line 84, in __getitem__
+    return cast(T, self._storage[key])
+                   ~~~~~~~~~~~~~^^^^^
+KeyError: <_pytest.stash.StashKey object at 0x00000274C4C18C00>
+
+--- tests\gateway\test_agent_cache.py ---
+============================= test session starts =============================
+platform win32 -- Python 3.11.16, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 32 items
+
+tests\gateway\test_agent_cache.py Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 384, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\logging.py", line 816, in pytest_runtestloop
+    return (yield)  # Run all the tests.
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 708, in pytest_runtestloop
+    result = yield
+             ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 90, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\assertion\__init__.py", line 205, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unittest.py", line 612, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\faulthandler.py", line 102, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 132, in runtestprotocol
+    rep = call_and_report(item, "setup", log)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 254, in call_and_report
+    report: TestReport = ihook.pytest_runtest_makereport(item=item, call=call)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 347, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\skipping.py", line 280, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 385, in pytest_runtest_makereport
+    return TestReport.from_item_and_call(item, call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 438, in from_item_and_call
+    longrepr = _format_failed_longrepr(item, call, excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 266, in _format_failed_longrepr
+    longrepr = item._repr_failure_py(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\nodes.py", line 448, in _repr_failure_py
+    return excinfo.getrepr(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 774, in getrepr
+    return fmt.repr_excinfo(self)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1224, in repr_excinfo
+    reprtraceback = self.repr_traceback(excinfo_)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1131, in repr_traceback
+    traceback = filter_excinfo_traceback(self.tbfilter, excinfo)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1628, in filter_excinfo_traceback
+    return tbfilter(excinfo)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\python.py", line 1717, in _traceback_filter
+    ntraceback = traceback.cut(path=path, firstlineno=firstlineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 398, in cut
+    codepath = code.path
+               ^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 94, in path
+    if not p.exists():
+           ^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1235, in exists
+    self.stat()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1013, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\zoneinfo\__init__.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 350, in wrap_session
+    config.notify_exception(excinfo, config.option)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 1264, in notify_exception
+    excrepr = excinfo.getrepr(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 755, in getrepr
+    format_exception(
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 139, in format_exception
+    te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 728, in __init__
+    self.stack = StackSummary._extract_from_extended_frame_gen(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 433, in _extract_from_extended_frame_gen
+    f.line
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 318, in line
+    self._line = linecache.getline(self.filename, self.lineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 30, in getline
+    lines = getlines(filename, module_globals)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 46, in getlines
+    return updatecache(filename, module_globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 93, in updatecache
+    stat = os.stat(fullname)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+    return wrap_session(config, _main)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 365, in wrap_session
+    config.hook.pytest_sessionfinish(
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\logging.py", line 888, in pytest_sessionfinish
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 961, in pytest_sessionfinish
+    result = yield
+             ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 119, in pytest_sessionfinish
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 112, in pytest_sessionfinish
+    session._setupstate.teardown_exact(None)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 579, in teardown_exact
+    raise exceptions[0]
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 568, in teardown_exact
+    fin()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1166, in finish
+    raise exceptions[0]
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1156, in finish
+    fin()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\fixtures.py", line 1014, in _teardown_yield_fixture
+    next(it)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 305, in tmp_path
+    result_dict = request.node.stash[tmppath_result_key]
+                  ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\stash.py", line 84, in __getitem__
+    return cast(T, self._storage[key])
+                   ~~~~~~~~~~~~~^^^^^
+KeyError: <_pytest.stash.StashKey object at 0x0000024679168C00>
+
+--- tests\gateway\test_model_switch_persistence.py ---
+============================= test session starts =============================
+platform win32 -- Python 3.11.16, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 8 items
+
+tests\gateway\test_model_switch_persistence.py Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 384, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\logging.py", line 816, in pytest_runtestloop
+    return (yield)  # Run all the tests.
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 708, in pytest_runtestloop
+    result = yield
+             ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 90, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\assertion\__init__.py", line 205, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unittest.py", line 612, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\faulthandler.py", line 102, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 254, in call_and_report
+    report: TestReport = ihook.pytest_runtest_makereport(item=item, call=call)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 347, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\skipping.py", line 280, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 385, in pytest_runtest_makereport
+    return TestReport.from_item_and_call(item, call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 438, in from_item_and_call
+    longrepr = _format_failed_longrepr(item, call, excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 263, in _format_failed_longrepr
+    longrepr = item.repr_failure(excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\python.py", line 1749, in repr_failure
+    return self._repr_failure_py(excinfo, style=style)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\nodes.py", line 448, in _repr_failure_py
+    return excinfo.getrepr(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 774, in getrepr
+    return fmt.repr_excinfo(self)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1224, in repr_excinfo
+    reprtraceback = self.repr_traceback(excinfo_)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1149, in repr_traceback
+    entries = [
+              ^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1150, in <listcomp>
+    self.repr_traceback_entry(entry, excinfo if last == entry else None)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1106, in repr_traceback_entry
+    entry_path = entry.path
+                 ^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 276, in path
+    return self.frame.code.path
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 94, in path
+    if not p.exists():
+           ^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1235, in exists
+    self.stat()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1013, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+    return wrap_session(config, _main)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 350, in wrap_session
+    config.notify_exception(excinfo, config.option)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 1264, in notify_exception
+    excrepr = excinfo.getrepr(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 755, in getrepr
+    format_exception(
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 139, in format_exception
+    te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 728, in __init__
+    self.stack = StackSummary._extract_from_extended_frame_gen(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 433, in _extract_from_extended_frame_gen
+    f.line
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 318, in line
+    self._line = linecache.getline(self.filename, self.lineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 30, in getline
+    lines = getlines(filename, module_globals)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 46, in getlines
+    return updatecache(filename, module_globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 93, in updatecache
+    stat = os.stat(fullname)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+
+============================ no tests ran in 1.09s ============================
+
+--- tests\gateway\test_busy_session_profile_scope.py ---
+============================= test session starts =============================
+platform win32 -- Python 3.11.16, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1 item
+
+tests\gateway\test_busy_session_profile_scope.py Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 330, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+                         ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 384, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\logging.py", line 816, in pytest_runtestloop
+    return (yield)  # Run all the tests.
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\terminal.py", line 708, in pytest_runtestloop
+    result = yield
+             ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 408, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\warnings.py", line 90, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\assertion\__init__.py", line 205, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unittest.py", line 612, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\faulthandler.py", line 102, in pytest_runtest_protocol
+    return (yield)
+            ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 118, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 139, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 254, in call_and_report
+    report: TestReport = ihook.pytest_runtest_makereport(item=item, call=call)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\tmpdir.py", line 347, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\skipping.py", line 280, in pytest_runtest_makereport
+    rep = yield
+          ^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\runner.py", line 385, in pytest_runtest_makereport
+    return TestReport.from_item_and_call(item, call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 438, in from_item_and_call
+    longrepr = _format_failed_longrepr(item, call, excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\reports.py", line 263, in _format_failed_longrepr
+    longrepr = item.repr_failure(excinfo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\python.py", line 1749, in repr_failure
+    return self._repr_failure_py(excinfo, style=style)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\nodes.py", line 448, in _repr_failure_py
+    return excinfo.getrepr(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 774, in getrepr
+    return fmt.repr_excinfo(self)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1224, in repr_excinfo
+    reprtraceback = self.repr_traceback(excinfo_)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1131, in repr_traceback
+    traceback = filter_excinfo_traceback(self.tbfilter, excinfo)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 1628, in filter_excinfo_traceback
+    return tbfilter(excinfo)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\python.py", line 1717, in _traceback_filter
+    ntraceback = traceback.cut(path=path, firstlineno=firstlineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 398, in cut
+    codepath = code.path
+               ^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 94, in path
+    if not p.exists():
+           ^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1235, in exists
+    self.stat()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py", line 1013, in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pytest\__main__.py", line 9, in <module>
+    raise SystemExit(_console_main())
+                     ^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 253, in _console_main
+    code = _main(prog=_get_prog_name(sys.argv))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 229, in _main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+    raise exception
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 377, in pytest_cmdline_main
+    return wrap_session(config, _main)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\main.py", line 350, in wrap_session
+    config.notify_exception(excinfo, config.option)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\config\__init__.py", line 1264, in notify_exception
+    excrepr = excinfo.getrepr(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\_code\code.py", line 755, in getrepr
+    format_exception(
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 139, in format_exception
+    te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 728, in __init__
+    self.stack = StackSummary._extract_from_extended_frame_gen(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 433, in _extract_from_extended_frame_gen
+    f.line
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\traceback.py", line 318, in line
+    self._line = linecache.getline(self.filename, self.lineno)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 30, in getline
+    lines = getlines(filename, module_globals)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 46, in getlines
+    return updatecache(filename, module_globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\linecache.py", line 93, in updatecache
+    stat = os.stat(fullname)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 167, in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 107, in check
+    self.refuse(value)
+  File "C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\base-r2301\tests\home_io_guard.py", line 140, in refuse
+    raise AssertionError(
+AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\pathlib.py
+Use the isolated HERMES_HOME or a temporary fixture instead.
+
+
+============================ no tests ran in 1.11s ============================
+
+=== 4 files where no tests ran (collection/import error, timeout before collection, etc.) ===
+  tests\gateway\test_empty_model_fallback.py
+  tests\gateway\test_agent_cache.py
+  tests\gateway\test_model_switch_persistence.py
+  tests\gateway\test_busy_session_profile_scope.py

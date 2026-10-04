@@ -1,0 +1,318 @@
+{
+  "packet": "HUB-PACKET",
+  "task": "t_cef261ac",
+  "date": "2026-10-03",
+  "anchor_profile": "C:/Users/max/AppData/Local/hermes/profiles/company",
+  "skills": {
+    "hermes-agent": "autonomous-ai-agents/hermes-agent",
+    "fleet-token-economy": "fleet-ops/fleet-token-economy"
+  },
+  "before_tree": {
+    "hermes-agent": [
+      {
+        "path": "SKILL.md",
+        "bytes": 13580,
+        "chars": 13494,
+        "sha256": "a21232e109527dc470bb2271bd43fa10a99de681732260f8bed762eaa44888dc"
+      },
+      {
+        "path": "references/background-systems.md",
+        "bytes": 7347,
+        "chars": 7335,
+        "sha256": "9bf0a9eb7f60354efc9960a2b063a01a6db20186079db2c82d25b550a35293c7"
+      },
+      {
+        "path": "references/cli-reference.md",
+        "bytes": 6492,
+        "chars": 6481,
+        "sha256": "339563a94249b8422ffc1eb165ba43af0297bd24d67aa4023a95a77e24d0973c"
+      },
+      {
+        "path": "references/configuration.md",
+        "bytes": 4248,
+        "chars": 4236,
+        "sha256": "d18d4781266563ebdb6602df3b89af760c027ca54281e7714572802969f90331"
+      },
+      {
+        "path": "references/contributor-guide.md",
+        "bytes": 6546,
+        "chars": 6396,
+        "sha256": "7349d28caba6b7b60b863825391e3bc8c7e3cfc82b8550dcc34119b07c06bd79"
+      },
+      {
+        "path": "references/delegate-task-concurrency-diagnosis.md",
+        "bytes": 4660,
+        "chars": 4640,
+        "sha256": "41019dd37c0c048b002d3639fe01455513b5c9aba142a21ff9c3bd4c7718a77b"
+      },
+      {
+        "path": "references/desktop-plugins.md",
+        "bytes": 12147,
+        "chars": 12041,
+        "sha256": "102963f51005b17e724e208baf50fd61d82139ddd13afdc18532960fb782b3f3"
+      },
+      {
+        "path": "references/fleet-patches-update-badge.md",
+        "bytes": 8412,
+        "chars": 8308,
+        "sha256": "ed74312598279b9719d72fb76cbceab917443eb6522efba4d5b86bef0e845048"
+      },
+      {
+        "path": "references/layer-canon-v3.md",
+        "bytes": 19462,
+        "chars": 14653,
+        "sha256": "ca4c7f589758af6ea60e0bfa8b9396b6f200726b8a3450c2809002233813a906"
+      },
+      {
+        "path": "references/native-mcp.md",
+        "bytes": 12094,
+        "chars": 12086,
+        "sha256": "46406b679c0c2dca6aa0a3285a167951e39696203806793991ad2c3a3f7ced1b"
+      },
+      {
+        "path": "references/petdex.md",
+        "bytes": 3244,
+        "chars": 3217,
+        "sha256": "2254eabf40c360efb54e4df482f3b84820b54a15e6954c4a7e9e7fee4eb90f77"
+      },
+      {
+        "path": "references/portal-auth-for-third-party-apps.md",
+        "bytes": 6563,
+        "chars": 6531,
+        "sha256": "ca9e357ae5be6e10b677f4de3fd7a09d1efc423fe157dcda5b5a2ce7d39dee2a"
+      },
+      {
+        "path": "references/project-context-files.md",
+        "bytes": 2184,
+        "chars": 2180,
+        "sha256": "cf34f2f3448a6de1040fcde5659bca99c92ab61c4dba19881a53d5c2fab64500"
+      },
+      {
+        "path": "references/providers-and-models.md",
+        "bytes": 3381,
+        "chars": 3377,
+        "sha256": "41c9c8e9de3a66c5e7f12c6fe39916d58a13e315be1dfd712fbf8cdaab4af203"
+      },
+      {
+        "path": "references/security-privacy.md",
+        "bytes": 3393,
+        "chars": 3373,
+        "sha256": "f27913f7775915d8065b2dea782197907ff90cf37f07b865135c7f61aee98e83"
+      },
+      {
+        "path": "references/slash-commands.md",
+        "bytes": 5379,
+        "chars": 5367,
+        "sha256": "690dc6c2543dfa028bbf2918c229f27f4962e9d897fce25ebb1de67d56f3b822"
+      },
+      {
+        "path": "references/themes.md",
+        "bytes": 6887,
+        "chars": 6820,
+        "sha256": "f5a8269a7312173f0caa6736156a3f76d32e56b4e15511e84dc2e902f48e8157"
+      },
+      {
+        "path": "references/troubleshooting.md",
+        "bytes": 4756,
+        "chars": 4736,
+        "sha256": "caf39aed2c8c730f604387e43b8644fa838b9d3b585759a0330aa1dae1a8361e"
+      },
+      {
+        "path": "references/tui-widgets.md",
+        "bytes": 6484,
+        "chars": 6392,
+        "sha256": "20e21aabb757a9d3c7d895db8f05a3782fe8b28feef3768ac5550c8860b4a3db"
+      },
+      {
+        "path": "references/webhooks.md",
+        "bytes": 7923,
+        "chars": 7896,
+        "sha256": "a4ef792943b03fbd1769e5176703a1f356c23756554abd37e0070f3885582489"
+      },
+      {
+        "path": "references/windows-pm-update-recovery.md",
+        "bytes": 6042,
+        "chars": 6042,
+        "sha256": "50e4708ae7f9c3827236a716cfde4e092c65dddbafe692d87f907bb1d9dc65ae"
+      },
+      {
+        "path": "references/windows-quirks.md",
+        "bytes": 2496,
+        "chars": 2482,
+        "sha256": "69addbf56f70671a97d5abc8d88e90d46681b8d8cdc3d26d2fa90abc210f64cd"
+      },
+      {
+        "path": "templates/clock.mjs",
+        "bytes": 1423,
+        "chars": 1422,
+        "sha256": "44ec25d560e16c7815a633039a783ddbba2d8e8cf1659560c0cd1cddec83f89d"
+      },
+      {
+        "path": "templates/plugin.js",
+        "bytes": 3141,
+        "chars": 3045,
+        "sha256": "a63c8f879756854b45373f5d6b1ae0a7fefcdd4a5af840be8a60d83b64724744"
+      },
+      {
+        "path": "templates/skin.yaml",
+        "bytes": 1389,
+        "chars": 1375,
+        "sha256": "bc8fddd7e5373b074c1c7dd423bb59d6e04769977e8a18354e3a6b3983209994"
+      }
+    ],
+    "fleet-token-economy": [
+      {
+        "path": "SKILL.md",
+        "bytes": 22714,
+        "chars": 19878,
+        "sha256": "2d6a90ced0f9e297dad1ee711e58f34e1f5c531123593ca76c54bf6134e817b8"
+      },
+      {
+        "path": "references/audit-recipes.md",
+        "bytes": 9002,
+        "chars": 8932,
+        "sha256": "109db189f7f59b7fed25a32e3dfd05bfcd0cdff929c55d208ab7f287c93059f2"
+      },
+      {
+        "path": "references/harness-efficiency.md",
+        "bytes": 6534,
+        "chars": 4442,
+        "sha256": "104de2dd958845bab092024c51584afda3648f9fa0e0bb9ff45a7600a3518628"
+      },
+      {
+        "path": "scripts/skill_usage_audit.py",
+        "bytes": 2784,
+        "chars": 2784,
+        "sha256": "5547d1682a0f14364206aa1383ed2d7ea10fc4986b1b31a8b5aaa119c206af74"
+      }
+    ]
+  },
+  "candidate_tree": {
+    "hermes-agent": [
+      {
+        "path": "SKILL.md",
+        "bytes": 6559,
+        "chars": 6515,
+        "sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0"
+      },
+      {
+        "path": "references/product-overview.md",
+        "bytes": 3958,
+        "chars": 3922,
+        "sha256": "b0b1caa5cd0a92069852d4c05e4af5ddcfdf035e36975d54f09e742510003b24"
+      },
+      {
+        "path": "references/quickstart-and-paths.md",
+        "bytes": 1976,
+        "chars": 1966,
+        "sha256": "c4cd378d9c280b4811702f9add7bf8e57d4725e653c2c42e0fdc021f0e218711"
+      },
+      {
+        "path": "references/spawning-instances.md",
+        "bytes": 3856,
+        "chars": 3834,
+        "sha256": "1e1cdc1d11a11af811d222ea90a8cfbc2f65abb6f7821ef5ce9b109b5fa340fd"
+      }
+    ],
+    "fleet-token-economy": [
+      {
+        "path": "SKILL.md",
+        "bytes": 6369,
+        "chars": 6008,
+        "sha256": "f4853d61aed45b57598ca11682558810d493823773d7e4117f8784b9ffb24b58"
+      },
+      {
+        "path": "references/audit-to-program.md",
+        "bytes": 1809,
+        "chars": 1760,
+        "sha256": "488cdf1d73943f875f9d1821845f08fb41dc71d1fb409479e284e18a2789f688"
+      },
+      {
+        "path": "references/levers-playbook.md",
+        "bytes": 3680,
+        "chars": 3333,
+        "sha256": "ed0e81d9d2fc365355a422c2cbd90aeca11b8fc53ed67a23da1b7f195ff85cce"
+      },
+      {
+        "path": "references/measure-first-details.md",
+        "bytes": 2287,
+        "chars": 2063,
+        "sha256": "d724f33562717ecb07b5fd4b8c52fe7c978d71fddfcb54e0d217605f3db246bc"
+      },
+      {
+        "path": "references/mechanics-pitfalls.md",
+        "bytes": 7201,
+        "chars": 7106,
+        "sha256": "da24439e22474546dca9f967c69aff9696d031fbd5d192ebf44e64843cd09bd2"
+      },
+      {
+        "path": "references/prompt-audit-lane.md",
+        "bytes": 6870,
+        "chars": 4729,
+        "sha256": "a3eb73959b8f735498afe698f56be6f79ae01dc298d89a45e2fa971ea250df06"
+      },
+      {
+        "path": "references/routing-audit-safeguards.md",
+        "bytes": 2244,
+        "chars": 2236,
+        "sha256": "f47a0f801d999fa3b5ddf6eed7f93fffc3cfe2cbc19a917d22b08a184a8d04c9"
+      }
+    ]
+  },
+  "hub_reduction": {
+    "combined_bytes_before": 36294,
+    "combined_bytes_candidate": 12928,
+    "combined_bytes_reduction_pct": 64.38,
+    "combined_chars_before": 33372,
+    "combined_chars_candidate": 12523,
+    "combined_chars_reduction_pct": 62.47,
+    "note": "chars/bytes are NOT tokens. PRODUCT-BRIEF cites 33,078 source chars; measured here 33,372 chars / 36,294 bytes from anchored sha256 bytes (294-char method delta noted, reduction computed from measured anchor)."
+  },
+  "rollback_snapshots": [
+    {
+      "dest": "autonomous-ai-agents/hermes-agent/SKILL.md",
+      "packet_file": "rollback/hermes-agent.SKILL.md",
+      "sha256": "a21232e109527dc470bb2271bd43fa10a99de681732260f8bed762eaa44888dc"
+    },
+    {
+      "dest": "fleet-ops/fleet-token-economy/SKILL.md",
+      "packet_file": "rollback/fleet-token-economy.SKILL.md",
+      "sha256": "2d6a90ced0f9e297dad1ee711e58f34e1f5c531123593ca76c54bf6134e817b8"
+    }
+  ],
+  "corrections": {
+    "C1a": {
+      "skill": "fleet-token-economy",
+      "before": "are IGNORED by the current kernel",
+      "after": "are ignored by the bare kernel (UPDATE 2026-10-03 per evidence-root DECISION-AND-CONTRACT.md: plugin hermes-session-reset-policy 0.3.0 IS installed on this host and implements session_reset — the old blanket «reset keys are inert» advice is incomplete here; owner directive 2026-10-03: do NOT shorten/reset/archive sessions as an economy shortcut — this correction is not a permission to reset/restart)",
+      "rationale": "Obsolete blanket default must not override active owner directive; contract line 13 documents installed reset-policy plugin.",
+      "evidence": "DECISION-AND-CONTRACT.md §'Evidence already collected' line 13; profiles/company/plugins/hermes-session-reset-policy exists (ls).",
+      "dest": "references/levers-playbook.md"
+    },
+    "C1b": {
+      "skill": "fleet-token-economy",
+      "before": "(grep it in config_defaults.py / runtime)",
+      "after": "(grep it in config_defaults.py / runtime / installed plugins)",
+      "rationale": "Consumer verification must include installed plugins, not only kernel source.",
+      "evidence": "DECISION-AND-CONTRACT.md line 13 + line 17 ('Check installed consumers, not documentation alone').",
+      "dest": "references/levers-playbook.md"
+    },
+    "C2": {
+      "skill": "fleet-token-economy",
+      "before": "config applies to NEW sessions only;",
+      "after": "application varies per key — «NEW sessions only» is not blanket-true (UPDATE 2026-10-03: the official configuration snapshot in the evidence root documents gateway hot-reload of compression/context length; verify the installed consumer for the specific key);",
+      "rationale": "PRODUCT-BRIEF.md: fix obsolete blanket advice about 'only new sessions'; hot reload must be checked against installed consumer.",
+      "evidence": "hermes-configuration-official.txt line 2532 'Gateway hot-reload of compression and context length'; PRODUCT-BRIEF.md §delta.",
+      "dest": "references/mechanics-pitfalls.md"
+    }
+  },
+  "routing_addition": {
+    "skill": "hermes-agent",
+    "anchor_row": "| Connecting a messaging platform (Telegram, Discord, Slack, WhatsApp, …) | docs: `/user-guide/messaging` |",
+    "inserted_rows": [
+      "| What Hermes is, differentiators, surfaces (desktop/dashboard/TUI/proxy) | `references/product-overview.md` |",
+      "| Install, quick start, key paths (`~/.hermes`, `$HERMES_HOME`, profiles) | `references/quickstart-and-paths.md` |",
+      "| Spawning extra Hermes processes (one-shot, tmux PTY, multi-agent, resume) | `references/spawning-instances.md` |"
+    ]
+  }
+}

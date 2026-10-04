@@ -1,0 +1,355 @@
+{
+  "task_id": "t_87ddea42",
+  "started_at_utc": "2026-10-03T21:18:53Z",
+  "finished_at_utc": "2026-10-03T21:18:53Z",
+  "subject": {
+    "method_candidate_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "method_candidate_sha1": "fd6c26f5dbebba33baa17761f43a80e22ed17427",
+    "load_hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9"
+  },
+  "entries": [
+    {
+      "profile": "company",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "43bfa18f524f7ee3eec9924e7ed8345b9c0bf73a27c94f62880d6825bf92b954",
+      "baseline_root_sha256": "43bfa18f524f7ee3eec9924e7ed8345b9c0bf73a27c94f62880d6825bf92b954",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\company.SKILL.md.original",
+        "sha256": "43bfa18f524f7ee3eec9924e7ed8345b9c0bf73a27c94f62880d6825bf92b954",
+        "bytes": 15431
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\company.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "root_bytes_after": 15889,
+      "root_bytes_before": 15431,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "research",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "f15d886338ac184f81b38d07655ee1d32c09c4ff2c709bc33f844e920c42b53f",
+      "baseline_root_sha256": "f15d886338ac184f81b38d07655ee1d32c09c4ff2c709bc33f844e920c42b53f",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\research.SKILL.md.original",
+        "sha256": "f15d886338ac184f81b38d07655ee1d32c09c4ff2c709bc33f844e920c42b53f",
+        "bytes": 3143
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\research.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "root_bytes_after": 3601,
+      "root_bytes_before": 3143,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "product",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\product.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\product.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "operations",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\operations.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\operations.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "qa",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\qa.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\qa.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "tech",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\tech.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\tech.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "finance",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\finance.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\finance.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "sales",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\sales.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\sales.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "design",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\design.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\design.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "ux",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\ux.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\ux.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "video-director",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\video-director.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\video-director.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    },
+    {
+      "profile": "video-editor",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md",
+      "original_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "baseline_root_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "root_fresh": true,
+      "reference_existed_before": false,
+      "backup_root": {
+        "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\video-editor.SKILL.md.original",
+        "sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+        "bytes": 1592
+      },
+      "backup_reference_marker": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\backup-t_87ddea42\\video-editor.reference.existence.json",
+      "reference_sha256_after": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "reference_bytes_after": 12995,
+      "root_sha256_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "root_bytes_after": 2050,
+      "root_bytes_before": 1592,
+      "hook_sha256": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+      "hook_appended_count": 1,
+      "commands": [
+        "read C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+        "write tmp ref + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md",
+        "append LOAD-HOOK.md bytes to tmp root + atomic replace -> C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md"
+      ],
+      "result": "installed"
+    }
+  ],
+  "summary": {
+    "targets": 12,
+    "installed": 12,
+    "skipped_root_drift": 0,
+    "skipped_reference_collision": 0,
+    "failed": 0
+  }
+}

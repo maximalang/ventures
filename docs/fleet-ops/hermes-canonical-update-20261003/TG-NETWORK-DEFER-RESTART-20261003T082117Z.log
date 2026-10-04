@@ -1,0 +1,56 @@
+=== TG-NETWORK-DEFER-RESTART 20261003T082117Z ===
+
+UTC now: 2026-10-03T08:21:17Z
+Local now: 2026-10-03 11:21:17 RTZ
+
+## Config change (persisted, NOT yet applied to running adapter)
+Pre-change readback: 'Config key not set: telegram.proxy_url' (exit 1)
+Set: hermes -p company config set telegram.proxy_url http://127.0.0.1:10809 (exit 0)
+Post-change readback: http://127.0.0.1:10809 (exit 0)
+Persisted to: C:\Users\max\AppData\Local\hermes\profiles\company\config.yaml line 723-724
+  telegram:
+    proxy_url: http://127.0.0.1:10809
+
+## Why adapter restart is REQUIRED
+Code path (plugins/platforms/telegram/adapter.py:7530-7533):
+  if 'proxy_url' in telegram_cfg:
+      extras.setdefault('proxy_url', str(telegram_cfg['proxy_url']).strip())
+      _set_env('TELEGRAM_PROXY', str(telegram_cfg['proxy_url']).strip())
+This runs at adapter CONSTRUCTION (bootstrap). Current adapter built 05:00:06
+before config write at 11:19:33 UTC. Reconciliation (gateway.run_profile_reconcile)
+only re-wires MCP servers, not Telegram transport.
+
+Current adapter still on direct sticky IPv4 149.154.166.110 (log 11:09:46).
+
+## Why hot restart DEFERRED per spec
+Spec section 3: 'If a Telegram owner conversation is active, defer hot restart
+and report rather than interrupt it.'
+
+Evidence of active owner conversation:
+  11:17:13 inbound msg='изучи и возьми на вооружение для работы с gpt'
+  11:19:21 inbound msg='это мусорный скилл, его функционал должен быть не в скилле'
+  11:20:52 agent.log API call #3 in progress (model=gpt-6.1-sol, tool reads active)
+
+Restarting company gateway now would interrupt the owner's live in-flight message.
+Deferring hot restart until owner conversation reaches idle.
+
+## Pre-change probes (3 samples each, bounded)
+Direct api.telegram.org: HTTP302 in 1.398-1.417s
+Via http://127.0.0.1:10809: HTTP302 in 1.352-1.535s
+Proxy listener: TCP 127.0.0.1:10809 LISTENING pid 8264
+
+## Rollback
+hermes -p company config unset telegram.proxy_url
+(config set already rewrites; no other state changed)
+
+## What is verified vs unverified
+VERIFIED: native config persisted, readback matches, proxy listener alive
+VERIFIED: current adapter is connected, polling healthy (generation 1 at 11:09:57)
+UNVERIFIED: proxy actually applied to running adapter (requires restart)
+UNVERIFIED: 5-minute polling proof on proxy path (requires restart first)
+UNVERIFIED: owner inbound/reply round trip (still in flight)
+
+## Next action
+Wait for owner conversation to reach idle (no new inbound for ~60s), then
+execute documented hot secondary-profile restart: hermes -p company gateway restart
+Then capture 5-minute polling observation per spec section 4.

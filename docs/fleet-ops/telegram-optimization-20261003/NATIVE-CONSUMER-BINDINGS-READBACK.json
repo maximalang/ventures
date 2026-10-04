@@ -1,0 +1,202 @@
+{
+  "task": {
+    "id": "t_ee2ad6bf",
+    "title": "Telegram optimization: apply accepted native context cap and quiet tools",
+    "body": "task_type: ops\nApply exactly two independently accepted native company settings from NATIVE-CONFIG-CANDIDATE.json hash d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 in C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003. Full contract DECISION-AND-CONTRACT.md. Parent t_8a81338c must have positive independent exact-hash source/config verdict; terminal parent status alone is not acceptance. Preserve all listed keys/model/route/history and other profiles. Capture allowlisted before+rollback/source identity; if candidate/before drift or negative QA, NO application, durable specific report. Use official hermes config set compression.threshold_tokens 128000 and display.platforms.telegram.tool_progress off only after exact company binding and independent gates on THIS consumer. No force/whole-config copy/restart/update/delete/canary sends/secret reads. Verify exact stored+resolved values and hot-load consumer; distinguish naturally loaded vs merely stored. Output ROLLOUT-RECEIPT.json and short ROLLOUT.md with commands/exits/hashes/time. Baseline already saved; do not rerun seven-day scan. Real economic scope=company Telegram config, no purchase/new commitment; provider cash savings unknown. Completion=bounded truthful application/readback (or justified no-change); 10-call savings/e2e remain separate observation.",
+    "assignee": "operations",
+    "status": "running",
+    "priority": 220,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_ee2ad6bf",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1791016985,
+    "started_at": 1791022276,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": 1200,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "20261003_112457_c18754",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": null,
+  "parents": [
+    "t_8a81338c",
+    "t_e87dad43"
+  ],
+  "children": [
+    "t_38a4b49e"
+  ],
+  "comments": [
+    {
+      "author": "company",
+      "body": "decision:company=go\nhead=d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105\ntask_type: ops\n\nConditional exact-artifact authorization: apply *** two native allowlisted settings after independent QA/review for THESE exact candidate bytes. No QA PASS=*** application; changed candidate = require new company binding. No protected source/other profile/restart/history mutation. Hypothesis: bounded context growth and quieter Telegram tool bubbles while preserving alerts/steering/tail; rollback exact allowlisted originals if context retention/latency/format/routing regresses. Profile-wide company compaction includes Desktop/cron and is not mislabeled Telegram-only. No purchase authorized; confirmed revenue/refunds/provider incremental cost/estimated usage cost=null (not investigated/unpriced), new commitments0, source config manifest+natural receipts; period rollout+24h/48h observation.",
+      "created_at": 1791017023
+    },
+    {
+      "author": "company",
+      "body": "Application remains withheld: prerequisite independent QA run2197 exited75 quota wall and was natively requeued ready; no verdict/PASS exists. Artifact preparation and child methodological review are not substitutes for actual independent gates. Preserve consumer no-op until QA genuinely accepted. Do not initiate correlated/paid synthetic fallback tests or config/model changes to bypass availability. Current measurement refinements saved in MEASUREMENT-REVIEW.md; candidate bytes remain original exact hash.",
+      "created_at": 1791017931
+    },
+    {
+      "author": "qa",
+      "body": "[EVIDENCE: exact-artifact QA PASS from independent qa source review t_8a81338c run 2214 — authorized publication per company anchor comment on this card; task type of consuming card: ops]\n\nExact candidate bytes: NATIVE-CONFIG-CANDIDATE.json sha256 d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 (recomputed from file this run).\n\nInstalled head bound: 9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f (= installed_head_at_capture in the candidate). Candidate-relevant consumer files verified clean vs this head; verdict is exact-artifact AND exact-head bound.\n\nResult: independent QA found no defect in the two-key candidate. Recomputed and probe-verified on the installed head, offline, no inference:\n- compression.threshold_tokens 128000 parses into CompressionSettings alongside the existing company compression section (protect_last 10, protect_first 3, lean tail, prune 48000/8000/4096, enabled, target_ratio 0.15) with every other key byte-equal; baseline for gpt-6.1-sol on openai-codex is ratio 0.85 + no token cap, so on the current 272K window the cap dominates and yields the intended earlier semantic compaction; (\"compression\",\"threshold_tokens\") is in _CACHE_BUSTING_CONFIG_KEYS (gateway/run.py L4399-4415) so a mid-gateway change invalidates the cached agent.\n- display.platforms.telegram.tool_progress new→off resolves explicit on the real company config (resolver normalises 'off', explicit YAML wins), disables Telegram tool-progress bubbles only (run_turn.py L3001 tool_progress_enabled = progress_mode not in {\"off\",\"log\"}); discord/global CLI surfaces stay 'all'; preserve set intact: grouping accumulate, busy_ack_detail false, busy_steer_ack true, interim true, long_running true, suppress_warning false, show_reasoning false, display.streaming true, rich_messages/rich_all true.\n- Profile-wide scope confirmed and honestly declared by the candidate (company profile incl. Telegram/Desktop/cron; not Telegram-only). Not a hard per-call cap; no cash-savings asserted.\n\nServing lineage independence for this review (author company gpt-6.1-sol; reviewer this run): session_model_usage readback shows MAIN glm-5.3 + glm-5.3-flash (zai) only, zero auxiliary/compression LLM rows (probes offline), zero sol/gpt rows in this session → no authorSol6.1 overlap.\n\nConditions unchanged: this satisfies ONLY the source-QA prerequisite. Application of these exact bytes remains gated on ALL prerequisites of this card, including the bounded alternate qa t_e87dad43 (qwen/custom). Changed candidate bytes require a new company binding and fresh review. Durable verdict with commands/exits/findings: QA-CONFIG-VERDICT.md in the t_8a81338c workspace.",
+      "created_at": 1791020904
+    },
+    {
+      "author": "qa",
+      "body": "ALTERNATE QA REVIEW PUBLISHED (per company directive 2026-10-03 13:03 and QA-NATIVE-RECOVERY.md):\nReviewer card: t_e87dad43 (task_type review), alternate reviewer qwen3.8-max/custom, run 2216.\nTyped result: SOURCE_PASS for exact candidate bytes sha256 d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 on installed head 9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f, consuming task_type ops (this card).\nIndependence: natural serving lineage of both alternate sessions (qa state.db session_model_usage, RO readback) = qwen3.8-max/custom only; zero Sol6.1 main/auxiliary rows → independent of author.\nEvidence: QA-CONFIG-ALTERNATE-VERDICT.md sha256 eb43d32b4f59afeab5143f584c4ff19c46ece4e47a97d0937044fca93f399d1f + probe logs at C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/workspaces/t_e87dad43/evidence/ (cap-dominance probe exit 0: 128000 dominates @272K=231200 ratio; clamped @100K→85000; fixture reruns PROBE2/PROBE3 ASSERTS_OK exit 0; pytest 15 passed exit 0; all consumers clean vs HEAD; cache-busting key (\"compression\",\"threshold_tokens\") present in gateway/run.py L4399-4415).\nPrerequisite status: primary SOURCE_PASS (t_8a81338c run2214, QA-CONFIG-PRIMARY-VERDICT.md sha256 86e6e65554c264f9d956d279a34be236f7b502a0472023ef93c2ed8b0a9c4171) + this alternate both delivered. Ops application remains bound to company's exact binding; any candidate/head drift voids both verdicts. No live writes were made by this review.",
+      "created_at": 1791022248
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "operations",
+        "status": "todo",
+        "parents": [
+          "t_8a81338c"
+        ],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1791016985,
+      "run_id": null
+    },
+    {
+      "kind": "dependency_wait",
+      "payload": {
+        "reason": "parent_not_done",
+        "parent": "t_8a81338c"
+      },
+      "created_at": 1791016985,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 904
+      },
+      "created_at": 1791017024,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 511
+      },
+      "created_at": 1791017931,
+      "run_id": null
+    },
+    {
+      "kind": "linked",
+      "payload": {
+        "parent": "t_e87dad43",
+        "child": "t_ee2ad6bf"
+      },
+      "created_at": 1791019879,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "qa",
+        "len": 2666
+      },
+      "created_at": 1791020904,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "qa",
+        "len": 1451
+      },
+      "created_at": 1791022248,
+      "run_id": null
+    },
+    {
+      "kind": "promoted",
+      "payload": null,
+      "created_at": 1791022275,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791023176,
+        "run_id": 2218
+      },
+      "created_at": 1791022276,
+      "run_id": 2218
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 9212,
+        "started_at": "|179102227682"
+      },
+      "created_at": 1791022276,
+      "run_id": 2218
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791022298,
+      "run_id": 2218
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791022358,
+      "run_id": 2218
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791022418,
+      "run_id": 2218
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791022478,
+      "run_id": 2218
+    }
+  ],
+  "runs": [
+    {
+      "id": 2218,
+      "profile": "operations",
+      "step_key": null,
+      "status": "running",
+      "outcome": null,
+      "summary": null,
+      "error": null,
+      "metadata": null,
+      "worker_pid": 9212,
+      "started_at": 1791022276,
+      "ended_at": null
+    }
+  ]
+}

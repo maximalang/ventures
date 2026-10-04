@@ -1,0 +1,41 @@
+[
+  {
+    "task": "t_ee2ad6bf",
+    "expected_note": "decision:company=go",
+    "present": true,
+    "comment_keys": [
+      [
+        "author",
+        "body",
+        "created_at"
+      ]
+    ],
+    "state": "todo"
+  },
+  {
+    "task": "t_8a81338c",
+    "expected_note": "t_ee2ad6bf",
+    "present": true,
+    "comment_keys": [
+      [
+        "author",
+        "body",
+        "created_at"
+      ]
+    ],
+    "state": "running"
+  },
+  {
+    "task": "t_b3e6c428",
+    "expected_note": "explicit overlap split",
+    "present": true,
+    "comment_keys": [
+      [
+        "author",
+        "body",
+        "created_at"
+      ]
+    ],
+    "state": "running"
+  }
+]

@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="13" skipped="3" tests="23" time="26.672" timestamp="2026-10-01T01:45:26.629313+03:00" hostname="laptop"><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_old_process_new_git_tree_completes_in_fresh_python[None]" time="6.202"><failure message="assert 1 == 0">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_old_process_new_git_tree_0\\home', 'branch': 'main', ...})
+tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/test_old_process_new_git_tree_0')
+bom_boundary = None
+
+    @pytest.mark.parametrize("bom_boundary", [None, "request", "receipt"])
+    def test_old_process_new_git_tree_completes_in_fresh_python(transition, tmp_path, bom_boundary):
+        from hermes_cli import update_completion
+    
+        root, git, old, new, request = transition
+        request["pre_update_version"] = "日本 café"
+        if bom_boundary == "receipt":
+            request["receipt"]["encoding"] = "utf-8-sig"
+        # Copy executable code, not its text shape: the process exercises the real transport.
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        git("add", ".")
+        git("-c", "commit.gpgsign=false", "commit", "-m", "completion entrypoint")
+        new = git("rev-parse", "HEAD")
+        git("checkout", old)
+        driver = (
+            "import importlib.util, json, os, subprocess, sys\n"
+            "spec = importlib.util.spec_from_file_location('transport', sys.argv[1])\n"
+            "transport = importlib.util.module_from_spec(spec); spec.loader.exec_module(transport)\n"
+            f"if {bom_boundary == 'request'!r}:\n"
+            "    transport._write_json = lambda path, data: path.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8-sig')\n"
+            "import pm\nassert pm.OLD_API\n"
+            "subprocess.run(['git', 'checkout', sys.argv[2]], check=True)\n"
+            "result = transport.run_completion(json.loads(sys.argv[3]))\n"
+            "assert pm.OLD_API, 'transport mutated old module graph'\n"
+            "print('RESULT=' + json.dumps(result))\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", driver, update_completion.__file__, new, json.dumps(request)],
+            cwd=root, env={**os.environ, "PYTHONPATH": str(root), "HERMES_HOME": request["home"]},
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        response = json.loads(result.stdout.split("RESULT=")[1])
+&gt;       assert response["exit_code"] == 0
+E       assert 1 == 0
+
+tests\hermes_cli\test_update_completion_process.py:199: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_old_process_new_git_tree_completes_in_fresh_python[request]" time="1.848"><failure message="assert 1 == 0">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_old_process_new_git_tree_1\\home', 'branch': 'main', ...})
+tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/test_old_process_new_git_tree_1')
+bom_boundary = 'request'
+
+    @pytest.mark.parametrize("bom_boundary", [None, "request", "receipt"])
+    def test_old_process_new_git_tree_completes_in_fresh_python(transition, tmp_path, bom_boundary):
+        from hermes_cli import update_completion
+    
+        root, git, old, new, request = transition
+        request["pre_update_version"] = "日本 café"
+        if bom_boundary == "receipt":
+            request["receipt"]["encoding"] = "utf-8-sig"
+        # Copy executable code, not its text shape: the process exercises the real transport.
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        git("add", ".")
+        git("-c", "commit.gpgsign=false", "commit", "-m", "completion entrypoint")
+        new = git("rev-parse", "HEAD")
+        git("checkout", old)
+        driver = (
+            "import importlib.util, json, os, subprocess, sys\n"
+            "spec = importlib.util.spec_from_file_location('transport', sys.argv[1])\n"
+            "transport = importlib.util.module_from_spec(spec); spec.loader.exec_module(transport)\n"
+            f"if {bom_boundary == 'request'!r}:\n"
+            "    transport._write_json = lambda path, data: path.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8-sig')\n"
+            "import pm\nassert pm.OLD_API\n"
+            "subprocess.run(['git', 'checkout', sys.argv[2]], check=True)\n"
+            "result = transport.run_completion(json.loads(sys.argv[3]))\n"
+            "assert pm.OLD_API, 'transport mutated old module graph'\n"
+            "print('RESULT=' + json.dumps(result))\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", driver, update_completion.__file__, new, json.dumps(request)],
+            cwd=root, env={**os.environ, "PYTHONPATH": str(root), "HERMES_HOME": request["home"]},
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        response = json.loads(result.stdout.split("RESULT=")[1])
+&gt;       assert response["exit_code"] == 0
+E       assert 1 == 0
+
+tests\hermes_cli\test_update_completion_process.py:199: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_old_process_new_git_tree_completes_in_fresh_python[receipt]" time="1.933"><failure message="assert 1 == 0">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_old_process_new_git_tree_2\\home', 'branch': 'main', ...})
+tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/test_old_process_new_git_tree_2')
+bom_boundary = 'receipt'
+
+    @pytest.mark.parametrize("bom_boundary", [None, "request", "receipt"])
+    def test_old_process_new_git_tree_completes_in_fresh_python(transition, tmp_path, bom_boundary):
+        from hermes_cli import update_completion
+    
+        root, git, old, new, request = transition
+        request["pre_update_version"] = "日本 café"
+        if bom_boundary == "receipt":
+            request["receipt"]["encoding"] = "utf-8-sig"
+        # Copy executable code, not its text shape: the process exercises the real transport.
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        git("add", ".")
+        git("-c", "commit.gpgsign=false", "commit", "-m", "completion entrypoint")
+        new = git("rev-parse", "HEAD")
+        git("checkout", old)
+        driver = (
+            "import importlib.util, json, os, subprocess, sys\n"
+            "spec = importlib.util.spec_from_file_location('transport', sys.argv[1])\n"
+            "transport = importlib.util.module_from_spec(spec); spec.loader.exec_module(transport)\n"
+            f"if {bom_boundary == 'request'!r}:\n"
+            "    transport._write_json = lambda path, data: path.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8-sig')\n"
+            "import pm\nassert pm.OLD_API\n"
+            "subprocess.run(['git', 'checkout', sys.argv[2]], check=True)\n"
+            "result = transport.run_completion(json.loads(sys.argv[3]))\n"
+            "assert pm.OLD_API, 'transport mutated old module graph'\n"
+            "print('RESULT=' + json.dumps(result))\n"
+        )
+        result = subprocess.run(
+            [sys.executable, "-c", driver, update_completion.__file__, new, json.dumps(request)],
+            cwd=root, env={**os.environ, "PYTHONPATH": str(root), "HERMES_HOME": request["home"]},
+            capture_output=True, text=True, timeout=30,
+        )
+        assert result.returncode == 0, result.stdout + result.stderr
+        response = json.loads(result.stdout.split("RESULT=")[1])
+&gt;       assert response["exit_code"] == 0
+E       assert 1 == 0
+
+tests\hermes_cli\test_update_completion_process.py:199: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_missing_child_result_fails_boundary_receipt_and_releases_lock[0]" time="0.896"><failure message="AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py&#10;Use the isolated HERMES_HOME or a temporary fixture instead.">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_missing_child_result_fail0\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB6441D50&gt;
+code = 0
+
+    @pytest.mark.parametrize("code", [0, 23])
+    def test_missing_child_result_fails_boundary_receipt_and_releases_lock(transition, monkeypatch, code):
+        from types import SimpleNamespace
+        from hermes_cli import main, update_cmd, update_receipt, update_lock
+    
+        root, git, old, new, request = transition
+        (root / "hermes_cli/update_completion.py").write_text(f"import os\nos._exit({code})\n")
+        monkeypatch.setenv("HERMES_HOME", request["home"])
+        monkeypatch.setattr(main, "_update_preflight_handled", lambda args: False)
+        monkeypatch.setattr(main, "_install_hangup_protection", lambda **kw: None)
+        monkeypatch.setattr(main, "_finalize_update_output", lambda state: None)
+    
+        def complete(args, gateway_mode):
+            update_receipt.begin_update_receipt()
+            request["receipt"] = update_receipt._current.get().data
+            update_cmd._complete_source_update(request)
+    
+        monkeypatch.setattr(update_cmd, "_cmd_update_impl", complete)
+        with pytest.raises(SystemExit) as error:
+&gt;           main.cmd_update(SimpleNamespace(gateway=True))
+
+tests\hermes_cli\test_update_completion_process.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:81: in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+hermes_cli\main.py:2496: in cmd_update
+    retarget_to_owning_install(PROJECT_ROOT)
+hermes_cli\update_owning_install.py:67: in retarget_to_owning_install
+    owner = owning_install_root(project_root)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\update_owning_install.py:34: in owning_install_root
+    owner = venv.parent if (venv.parent / "hermes_cli" / "main.py").is_file() else _pm_environment_owner(venv)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/hermes_cli/main.py')
+
+    @staticmethod
+    def refuse(value):
+&gt;       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_missing_child_result_fails_boundary_receipt_and_releases_lock[23]" time="0.761"><failure message="AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py&#10;Use the isolated HERMES_HOME or a temporary fixture instead.">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_missing_child_result_fail1\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5F2A4D0&gt;
+code = 23
+
+    @pytest.mark.parametrize("code", [0, 23])
+    def test_missing_child_result_fails_boundary_receipt_and_releases_lock(transition, monkeypatch, code):
+        from types import SimpleNamespace
+        from hermes_cli import main, update_cmd, update_receipt, update_lock
+    
+        root, git, old, new, request = transition
+        (root / "hermes_cli/update_completion.py").write_text(f"import os\nos._exit({code})\n")
+        monkeypatch.setenv("HERMES_HOME", request["home"])
+        monkeypatch.setattr(main, "_update_preflight_handled", lambda args: False)
+        monkeypatch.setattr(main, "_install_hangup_protection", lambda **kw: None)
+        monkeypatch.setattr(main, "_finalize_update_output", lambda state: None)
+    
+        def complete(args, gateway_mode):
+            update_receipt.begin_update_receipt()
+            request["receipt"] = update_receipt._current.get().data
+            update_cmd._complete_source_update(request)
+    
+        monkeypatch.setattr(update_cmd, "_cmd_update_impl", complete)
+        with pytest.raises(SystemExit) as error:
+&gt;           main.cmd_update(SimpleNamespace(gateway=True))
+
+tests\hermes_cli\test_update_completion_process.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:81: in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+hermes_cli\main.py:2496: in cmd_update
+    retarget_to_owning_install(PROJECT_ROOT)
+hermes_cli\update_owning_install.py:67: in retarget_to_owning_install
+    owner = owning_install_root(project_root)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\update_owning_install.py:34: in owning_install_root
+    owner = venv.parent if (venv.parent / "hermes_cli" / "main.py").is_file() else _pm_environment_owner(venv)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/hermes_cli/main.py')
+
+    @staticmethod
+    def refuse(value):
+&gt;       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[None]" time="0.841"><failure message="AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py&#10;Use the isolated HERMES_HOME or a temporary fixture instead.">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_interrupt_after_child_suc0\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5E17710&gt;
+cleanup_failure = None
+
+    @pytest.mark.parametrize("cleanup_failure", [None, "kill", "wait"])
+    def test_interrupt_after_child_success_demotes_gateway_marker_at_boundary(transition, monkeypatch, cleanup_failure):
+        import io
+        from types import SimpleNamespace
+        from hermes_cli import main, update_cmd, update_lock, update_receipt
+    
+        root, git, old, new, request = transition
+        marker = Path(request["home"]) / ".update_exit_code"
+        (root / "hermes_cli/update_completion.py").write_text(
+            "import os, pathlib, time\n"
+            "(pathlib.Path(os.environ['HERMES_HOME']) / '.update_exit_code').write_text('0\\n')\n"
+            "print('SUCCESS_PUBLISHED', flush=True)\n"
+            "time.sleep(30)\n"
+        )
+        monkeypatch.setenv("HERMES_HOME", request["home"])
+        monkeypatch.setattr(main, "_update_preflight_handled", lambda args: False)
+        monkeypatch.setattr(main, "_install_hangup_protection", lambda **kw: None)
+        monkeypatch.setattr(main, "_finalize_update_output", lambda state: None)
+        interrupted = False
+        cleanup_error = (OSError("retained-handle kill failed") if cleanup_failure == "kill"
+                         else subprocess.TimeoutExpired("completion", 5))
+        waits = []
+        children = []
+        popen = subprocess.Popen
+    
+        def capture_child(*args, **kwargs):
+            proc = popen(*args, **kwargs)
+            # Hook the completion child itself: arming the host obligation may probe the checkout
+            # identity through git first (#125952), and that probe is not the process under test.
+            if not children and str(root / "hermes_cli/update_completion.py") in args[0]:
+                children.append(proc)
+                wait = proc.wait
+                kill = proc.kill
+    
+                def cleanup_kill():
+                    kill()
+                    if cleanup_failure == "kill":
+                        raise cleanup_error
+    
+                def cleanup_wait(timeout=None):
+                    waits.append(timeout)
+                    # Inject faults after real cleanup so a regression cannot leak the child.
+                    result = wait(timeout=5)
+                    if cleanup_failure == "wait":
+                        raise cleanup_error
+                    return result
+    
+                monkeypatch.setattr(proc, "kill", cleanup_kill)
+                monkeypatch.setattr(proc, "wait", cleanup_wait)
+            return proc
+    
+        class Interrupt(io.StringIO):
+            def write(self, value):
+                nonlocal interrupted
+                result = super().write(value)
+                if not interrupted and "SUCCESS_PUBLISHED" in self.getvalue():
+                    assert marker.read_text().strip() == "0"
+                    interrupted = True
+                    raise KeyboardInterrupt()
+                return result
+    
+        def complete(args, gateway_mode):
+            update_receipt.begin_update_receipt()
+            request["receipt"] = update_receipt._current.get().data
+            monkeypatch.setattr(subprocess, "Popen", capture_child)
+            update_cmd._complete_source_update(request)
+    
+        monkeypatch.setattr(sys, "stdout", Interrupt())
+        monkeypatch.setattr(update_cmd, "_cmd_update_impl", complete)
+        with pytest.raises(KeyboardInterrupt) as error:
+&gt;           main.cmd_update(SimpleNamespace(gateway=True))
+
+tests\hermes_cli\test_update_completion_process.py:318: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:81: in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+hermes_cli\main.py:2496: in cmd_update
+    retarget_to_owning_install(PROJECT_ROOT)
+hermes_cli\update_owning_install.py:67: in retarget_to_owning_install
+    owner = owning_install_root(project_root)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\update_owning_install.py:34: in owning_install_root
+    owner = venv.parent if (venv.parent / "hermes_cli" / "main.py").is_file() else _pm_environment_owner(venv)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/hermes_cli/main.py')
+
+    @staticmethod
+    def refuse(value):
+&gt;       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[kill]" time="0.718"><failure message="AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py&#10;Use the isolated HERMES_HOME or a temporary fixture instead.">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_interrupt_after_child_suc1\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5EE1ED0&gt;
+cleanup_failure = 'kill'
+
+    @pytest.mark.parametrize("cleanup_failure", [None, "kill", "wait"])
+    def test_interrupt_after_child_success_demotes_gateway_marker_at_boundary(transition, monkeypatch, cleanup_failure):
+        import io
+        from types import SimpleNamespace
+        from hermes_cli import main, update_cmd, update_lock, update_receipt
+    
+        root, git, old, new, request = transition
+        marker = Path(request["home"]) / ".update_exit_code"
+        (root / "hermes_cli/update_completion.py").write_text(
+            "import os, pathlib, time\n"
+            "(pathlib.Path(os.environ['HERMES_HOME']) / '.update_exit_code').write_text('0\\n')\n"
+            "print('SUCCESS_PUBLISHED', flush=True)\n"
+            "time.sleep(30)\n"
+        )
+        monkeypatch.setenv("HERMES_HOME", request["home"])
+        monkeypatch.setattr(main, "_update_preflight_handled", lambda args: False)
+        monkeypatch.setattr(main, "_install_hangup_protection", lambda **kw: None)
+        monkeypatch.setattr(main, "_finalize_update_output", lambda state: None)
+        interrupted = False
+        cleanup_error = (OSError("retained-handle kill failed") if cleanup_failure == "kill"
+                         else subprocess.TimeoutExpired("completion", 5))
+        waits = []
+        children = []
+        popen = subprocess.Popen
+    
+        def capture_child(*args, **kwargs):
+            proc = popen(*args, **kwargs)
+            # Hook the completion child itself: arming the host obligation may probe the checkout
+            # identity through git first (#125952), and that probe is not the process under test.
+            if not children and str(root / "hermes_cli/update_completion.py") in args[0]:
+                children.append(proc)
+                wait = proc.wait
+                kill = proc.kill
+    
+                def cleanup_kill():
+                    kill()
+                    if cleanup_failure == "kill":
+                        raise cleanup_error
+    
+                def cleanup_wait(timeout=None):
+                    waits.append(timeout)
+                    # Inject faults after real cleanup so a regression cannot leak the child.
+                    result = wait(timeout=5)
+                    if cleanup_failure == "wait":
+                        raise cleanup_error
+                    return result
+    
+                monkeypatch.setattr(proc, "kill", cleanup_kill)
+                monkeypatch.setattr(proc, "wait", cleanup_wait)
+            return proc
+    
+        class Interrupt(io.StringIO):
+            def write(self, value):
+                nonlocal interrupted
+                result = super().write(value)
+                if not interrupted and "SUCCESS_PUBLISHED" in self.getvalue():
+                    assert marker.read_text().strip() == "0"
+                    interrupted = True
+                    raise KeyboardInterrupt()
+                return result
+    
+        def complete(args, gateway_mode):
+            update_receipt.begin_update_receipt()
+            request["receipt"] = update_receipt._current.get().data
+            monkeypatch.setattr(subprocess, "Popen", capture_child)
+            update_cmd._complete_source_update(request)
+    
+        monkeypatch.setattr(sys, "stdout", Interrupt())
+        monkeypatch.setattr(update_cmd, "_cmd_update_impl", complete)
+        with pytest.raises(KeyboardInterrupt) as error:
+&gt;           main.cmd_update(SimpleNamespace(gateway=True))
+
+tests\hermes_cli\test_update_completion_process.py:318: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:81: in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+hermes_cli\main.py:2496: in cmd_update
+    retarget_to_owning_install(PROJECT_ROOT)
+hermes_cli\update_owning_install.py:67: in retarget_to_owning_install
+    owner = owning_install_root(project_root)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\update_owning_install.py:34: in owning_install_root
+    owner = venv.parent if (venv.parent / "hermes_cli" / "main.py").is_file() else _pm_environment_owner(venv)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/hermes_cli/main.py')
+
+    @staticmethod
+    def refuse(value):
+&gt;       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[wait]" time="0.836"><failure message="AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py&#10;Use the isolated HERMES_HOME or a temporary fixture instead.">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_interrupt_after_child_suc2\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5EA0110&gt;
+cleanup_failure = 'wait'
+
+    @pytest.mark.parametrize("cleanup_failure", [None, "kill", "wait"])
+    def test_interrupt_after_child_success_demotes_gateway_marker_at_boundary(transition, monkeypatch, cleanup_failure):
+        import io
+        from types import SimpleNamespace
+        from hermes_cli import main, update_cmd, update_lock, update_receipt
+    
+        root, git, old, new, request = transition
+        marker = Path(request["home"]) / ".update_exit_code"
+        (root / "hermes_cli/update_completion.py").write_text(
+            "import os, pathlib, time\n"
+            "(pathlib.Path(os.environ['HERMES_HOME']) / '.update_exit_code').write_text('0\\n')\n"
+            "print('SUCCESS_PUBLISHED', flush=True)\n"
+            "time.sleep(30)\n"
+        )
+        monkeypatch.setenv("HERMES_HOME", request["home"])
+        monkeypatch.setattr(main, "_update_preflight_handled", lambda args: False)
+        monkeypatch.setattr(main, "_install_hangup_protection", lambda **kw: None)
+        monkeypatch.setattr(main, "_finalize_update_output", lambda state: None)
+        interrupted = False
+        cleanup_error = (OSError("retained-handle kill failed") if cleanup_failure == "kill"
+                         else subprocess.TimeoutExpired("completion", 5))
+        waits = []
+        children = []
+        popen = subprocess.Popen
+    
+        def capture_child(*args, **kwargs):
+            proc = popen(*args, **kwargs)
+            # Hook the completion child itself: arming the host obligation may probe the checkout
+            # identity through git first (#125952), and that probe is not the process under test.
+            if not children and str(root / "hermes_cli/update_completion.py") in args[0]:
+                children.append(proc)
+                wait = proc.wait
+                kill = proc.kill
+    
+                def cleanup_kill():
+                    kill()
+                    if cleanup_failure == "kill":
+                        raise cleanup_error
+    
+                def cleanup_wait(timeout=None):
+                    waits.append(timeout)
+                    # Inject faults after real cleanup so a regression cannot leak the child.
+                    result = wait(timeout=5)
+                    if cleanup_failure == "wait":
+                        raise cleanup_error
+                    return result
+    
+                monkeypatch.setattr(proc, "kill", cleanup_kill)
+                monkeypatch.setattr(proc, "wait", cleanup_wait)
+            return proc
+    
+        class Interrupt(io.StringIO):
+            def write(self, value):
+                nonlocal interrupted
+                result = super().write(value)
+                if not interrupted and "SUCCESS_PUBLISHED" in self.getvalue():
+                    assert marker.read_text().strip() == "0"
+                    interrupted = True
+                    raise KeyboardInterrupt()
+                return result
+    
+        def complete(args, gateway_mode):
+            update_receipt.begin_update_receipt()
+            request["receipt"] = update_receipt._current.get().data
+            monkeypatch.setattr(subprocess, "Popen", capture_child)
+            update_cmd._complete_source_update(request)
+    
+        monkeypatch.setattr(sys, "stdout", Interrupt())
+        monkeypatch.setattr(update_cmd, "_cmd_update_impl", complete)
+        with pytest.raises(KeyboardInterrupt) as error:
+&gt;           main.cmd_update(SimpleNamespace(gateway=True))
+
+tests\hermes_cli\test_update_completion_process.py:318: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:81: in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+hermes_cli\main.py:2496: in cmd_update
+    retarget_to_owning_install(PROJECT_ROOT)
+hermes_cli\update_owning_install.py:67: in retarget_to_owning_install
+    owner = owning_install_root(project_root)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\update_owning_install.py:34: in owning_install_root
+    owner = venv.parent if (venv.parent / "hermes_cli" / "main.py").is_file() else _pm_environment_owner(venv)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/hermes_cli/main.py')
+
+    @staticmethod
+    def refuse(value):
+&gt;       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_killed_selected_python_returns_signal_exit_status" time="0.000"><skipped type="pytest.skip" message="platforms(posix); host is win32">C:\Users\max\Documents\hermes-update-test-fixtures-20261001\standalone-baseline\tests\hermes_cli\test_update_completion_process.py:336: platforms(posix); host is win32</skipped></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_failed_build_preserves_exit_status_without_maintenance" time="1.488"><failure message="assert 1 == 23">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_failed_build_preserves_ex0\\home', 'branch': 'main', ...})
+
+    def test_failed_build_preserves_exit_status_without_maintenance(transition):
+        from hermes_cli import update_completion
+    
+        root, git, old, new, request = transition
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        (root / "hermes_cli/source_build.py").write_text(
+            "import subprocess\n"
+            "def build_update_products(*a, **kw): raise subprocess.CalledProcessError(23, ['builder'])\n"
+        )
+        result = update_completion.run_completion(request)
+&gt;       assert result["exit_code"] == 23
+E       assert 1 == 23
+
+tests\hermes_cli\test_update_completion_process.py:361: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_prepare_failure_preserves_correlated_pm_receipt" time="0.755"><failure message="AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py&#10;Use the isolated HERMES_HOME or a temporary fixture instead.">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_prepare_failure_preserves0\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5F28FD0&gt;
+
+    def test_prepare_failure_preserves_correlated_pm_receipt(transition, monkeypatch):
+        from types import SimpleNamespace
+        from hermes_cli import main, update_cmd, update_completion, update_receipt
+    
+        root, git, old, new, request = transition
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        (root / "pm/__init__.py").write_text(
+            "def sync_venv(**kw): raise RuntimeError('dependency refused')\n"
+        )
+        with (root / "pm/receipt.py").open("a") as stream:
+            stream.write("last_for_update = lambda update_id: {'update_id': update_id, 'outcome': 'refused', 'refusal': {'reason': 'dependency refused'}}\n")
+        monkeypatch.setenv("HERMES_HOME", request["home"])
+        monkeypatch.setattr(main, "_update_preflight_handled", lambda args: False)
+        monkeypatch.setattr(main, "_install_hangup_protection", lambda **kw: None)
+        monkeypatch.setattr(main, "_finalize_update_output", lambda state: None)
+    
+        def complete(args, gateway_mode):
+            update_receipt.begin_update_receipt()
+            request["receipt"] = update_receipt._current.get().data
+            update_cmd._complete_source_update(request)
+    
+        monkeypatch.setattr(update_cmd, "_cmd_update_impl", complete)
+        with pytest.raises(SystemExit) as error:
+&gt;           main.cmd_update(SimpleNamespace(gateway=True))
+
+tests\hermes_cli\test_update_completion_process.py:393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\contextlib.py:81: in inner
+    return func(*args, **kwds)
+           ^^^^^^^^^^^^^^^^^^^
+hermes_cli\main.py:2496: in cmd_update
+    retarget_to_owning_install(PROJECT_ROOT)
+hermes_cli\update_owning_install.py:67: in retarget_to_owning_install
+    owner = owning_install_root(project_root)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\update_owning_install.py:34: in owning_install_root
+    owner = venv.parent if (venv.parent / "hermes_cli" / "main.py").is_file() else _pm_environment_owner(venv)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/hermes_cli/main.py')
+
+    @staticmethod
+    def refuse(value):
+&gt;       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_bootstrap_does_not_initialize_old_site_packages" time="1.451"><failure message="assert 1 == 0">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_bootstrap_does_not_initia0\\home', 'branch': 'main', ...})
+tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/test_bootstrap_does_not_initia0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5EB3310&gt;
+
+    def test_bootstrap_does_not_initialize_old_site_packages(transition, tmp_path, monkeypatch):
+        from hermes_cli import update_completion
+    
+        root, git, old, new, request = transition
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        obsolete = tmp_path / "obsolete-python"
+        venv.EnvBuilder(with_pip=False).create(obsolete)
+        site = obsolete / ("Lib/site-packages" if os.name == "nt" else
+                           f"lib/python{sys.version_info.major}.{sys.version_info.minor}/site-packages")
+        trap = tmp_path / "old-site-loaded"
+        (site / "application.pth").write_text(f"import pathlib; pathlib.Path({str(trap)!r}).touch()\n")
+        monkeypatch.setattr(sys, "executable", str(obsolete / ("Scripts/python.exe" if os.name == "nt" else "bin/python")))
+        result = update_completion.run_completion(request)
+&gt;       assert result["exit_code"] == 0
+E       assert 1 == 0
+
+tests\hermes_cli\test_update_completion_process.py:414: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_progress_is_forwarded_before_held_stage_is_released[prepare]" time="1.440"><failure message="assert 1 == 0">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_progress_is_forwarded_bef0\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5FDD710&gt;
+stage = 'prepare'
+
+    @pytest.mark.parametrize("stage", ["prepare", "selected"])
+    def test_progress_is_forwarded_before_held_stage_is_released(transition, monkeypatch, stage):
+        import io
+        import threading
+        from hermes_cli import update_completion
+    
+        root, git, old, new, request = transition
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        release = root / "release"
+        released = root / "released"
+        held_body = (
+            "    print('STAGE_READY')\n"  # Deliberately no flush: -I ignores PYTHONUNBUFFERED.
+            "    deadline = time.monotonic() + 20\n"
+            "    while not Path('release').exists():\n"
+            "        if time.monotonic() &gt;= deadline: raise TimeoutError('stage was not released')\n"
+            "        time.sleep(0.02)\n"
+            "    Path('released').touch()\n"
+        )
+        module, definition = (
+            ("pm/__init__.py", "def sync_venv(**kw):\n") if stage == "prepare" else
+            ("hermes_cli/source_build.py", "def build_update_products(*a, **kw):\n")
+        )
+        (root / module).write_text("import time\nfrom pathlib import Path\n" + definition + held_body)
+        observed = threading.Event()
+    
+        class Output(io.StringIO):
+            def write(self, value):
+                result = super().write(value)
+                if "STAGE_READY" in self.getvalue():
+                    observed.set()
+                return result
+    
+        output = Output()
+        monkeypatch.setattr(sys, "stdout", output)
+        responses, errors = [], []
+    
+        def run():
+            try:
+                responses.append(update_completion.run_completion(request))
+            except BaseException as exc:
+                errors.append(exc)
+    
+        worker = threading.Thread(target=run, daemon=True)
+        worker.start()
+        try:
+            assert observed.wait(10), f"{stage} progress remained buffered: {output.getvalue()}"
+            assert worker.is_alive(), "completion finished instead of waiting for release"
+            assert not released.exists(), "stage passed its gate before progress was observed"
+        finally:
+            release.touch()
+            worker.join(timeout=30)
+        assert not worker.is_alive(), "completion did not stop after release"
+        assert not errors
+        assert released.exists()
+&gt;       assert responses[0]["exit_code"] == 0
+E       assert 1 == 0
+
+tests\hermes_cli\test_update_completion_process.py:472: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_progress_is_forwarded_before_held_stage_is_released[selected]" time="1.283"><failure message="assert 1 == 0">transition = (WindowsPath('C:/Users/max/Documents/hermes-update-test-fixtures-20261001/baseline-v5/test_update_completion_process/t...-20261001\\baseline-v5\\test_update_completion_process\\test_progress_is_forwarded_bef1\\home', 'branch': 'main', ...})
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x0000022AB5D66010&gt;
+stage = 'selected'
+
+    @pytest.mark.parametrize("stage", ["prepare", "selected"])
+    def test_progress_is_forwarded_before_held_stage_is_released(transition, monkeypatch, stage):
+        import io
+        import threading
+        from hermes_cli import update_completion
+    
+        root, git, old, new, request = transition
+        shutil.copy2(update_completion.__file__, root / "hermes_cli/update_completion.py")
+        release = root / "release"
+        released = root / "released"
+        held_body = (
+            "    print('STAGE_READY')\n"  # Deliberately no flush: -I ignores PYTHONUNBUFFERED.
+            "    deadline = time.monotonic() + 20\n"
+            "    while not Path('release').exists():\n"
+            "        if time.monotonic() &gt;= deadline: raise TimeoutError('stage was not released')\n"
+            "        time.sleep(0.02)\n"
+            "    Path('released').touch()\n"
+        )
+        module, definition = (
+            ("pm/__init__.py", "def sync_venv(**kw):\n") if stage == "prepare" else
+            ("hermes_cli/source_build.py", "def build_update_products(*a, **kw):\n")
+        )
+        (root / module).write_text("import time\nfrom pathlib import Path\n" + definition + held_body)
+        observed = threading.Event()
+    
+        class Output(io.StringIO):
+            def write(self, value):
+                result = super().write(value)
+                if "STAGE_READY" in self.getvalue():
+                    observed.set()
+                return result
+    
+        output = Output()
+        monkeypatch.setattr(sys, "stdout", output)
+        responses, errors = [], []
+    
+        def run():
+            try:
+                responses.append(update_completion.run_completion(request))
+            except BaseException as exc:
+                errors.append(exc)
+    
+        worker = threading.Thread(target=run, daemon=True)
+        worker.start()
+        try:
+            assert observed.wait(10), f"{stage} progress remained buffered: {output.getvalue()}"
+            assert worker.is_alive(), "completion finished instead of waiting for release"
+            assert not released.exists(), "stage passed its gate before progress was observed"
+        finally:
+            release.touch()
+            worker.join(timeout=30)
+        assert not worker.is_alive(), "completion did not stop after release"
+        assert not errors
+        assert released.exists()
+&gt;       assert responses[0]["exit_code"] == 0
+E       assert 1 == 0
+
+tests\hermes_cli\test_update_completion_process.py:472: AssertionError</failure></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interactive_configuration_keeps_terminal_input" time="0.000"><skipped type="pytest.skip" message="platforms(posix); host is win32">C:\Users\max\Documents\hermes-update-test-fixtures-20261001\standalone-baseline\tests\hermes_cli\test_update_completion_process.py:475: platforms(posix); host is win32</skipped></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_reaps_completion_descendants_before_return" time="0.000"><skipped type="pytest.skip" message="platforms(posix); host is win32">C:\Users\max\Documents\hermes-update-test-fixtures-20261001\standalone-baseline\tests\hermes_cli\test_update_completion_process.py:515: platforms(posix); host is win32</skipped></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_taskkill_failure_still_reaps_child_and_preserves_interrupt[launch]" time="0.209" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_taskkill_failure_still_reaps_child_and_preserves_interrupt[timeout]" time="0.122" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_taskkill_failure_still_reaps_child_and_preserves_interrupt[nonzero]" time="0.191" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8]" time="0.973" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8-sig]" time="1.141" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8]" time="0.944" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8-sig]" time="1.118" /></testsuite></testsuites>

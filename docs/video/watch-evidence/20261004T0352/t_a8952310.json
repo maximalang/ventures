@@ -1,0 +1,113 @@
+{
+  "task": {
+    "id": "t_a8952310",
+    "title": "Пилотная публикация роликов 1-2 V7 (WD-V7-02, WD-V7-03) на готовые каналы — ГО владельца 28.09",
+    "body": "task_type: ops\nПилотная публикация роликов 1-2 V7 (ГО владельца 28.09: ролик 1 — 7/10 «можно выкладывать», ролик 2 — та же оценка; вердикт: C:/Users/max/Documents/video-quality-upgrade/V7/OWNER_VERDICT_V7_2809.md). Файлы: WD-V7-02_final.mp4 и WD-V7-03_final.mp4 (SHA в OWNER_PACK_V7.md, раздел «Финалы»). Ролик 3 NG-V7-01 НЕ публиковать (NO-GO).\nКаналы: готовые Д0 (TG×3, YT gaming @respawn24_ru, Pinterest×2) + каналы волны 1 из CHANNELS_WAVE1.md, отмеченные готовыми в CHANNELS_READY_2809.md (доделка каналов — отдельные карты, СТАРТ ТОЛЬКО ПОСЛЕ unblock компанией). Klipni: перед публикацией live-refresh правил кампании (snapshot не доказательство); не подходит — пропустить и указать в отчёте.\nГраницы: без масс-автопостинга вне волнового плана, без новых регистраций, TikTok исключён (DEFAULT C), erid для рекламных интеграций, телефон/SMS = стоп+эскалация. Мелкие доделки оформления каналов допустимы после публикации (директива 28.09).\nDeliverable: PUBLICATION_REPORT_2809.md в ventures/docs/video/ — на каждый канал: URL публикации, время, SHA файла, live-проверка ссылки; итог комментарием на карту простыми словами.\nБюджет: 40 вызовов.\n",
+    "assignee": "operations",
+    "status": "blocked",
+    "priority": 0,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": null,
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "user",
+    "created_at": 1790629136,
+    "started_at": null,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": null,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": null,
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": "Ждём доделку каналов волны 1 (t_d9c24d40 IG, t_2e6829d8 YT, t_afe35c1f VK). ГО владельца 28.09 получено. Company разблокирует по готовности: Д0+YT+IG минимально готовы; VK опционален — phone-gate не держит публикацию.",
+  "parents": [],
+  "children": [],
+  "comments": [
+    {
+      "author": "company",
+      "body": "BLOCKED: Ждём доделку каналов волны 1 (t_d9c24d40 IG, t_2e6829d8 YT, t_afe35c1f VK). ГО владельца 28.09 получено. Company разблокирует по готовности: Д0+YT+IG минимально готовы; VK опционален — phone-gate не держит публикацию.",
+      "created_at": 1790629178
+    },
+    {
+      "author": "company",
+      "body": "Уточнение скоупа (29.09): после готовности каналов добавить (1) TikTok TT1 ruspawn — когда владелец завершит rename @maxi285078→ruspawn; (2) VK-сообщества — после ГО владельца по неймингу (t_afe35c1f). Директива владельца: сначала доделать каналы и видеомонтаж, потом публикация; мелкие доделки оформления допустимы сразу после.",
+      "created_at": 1790674196
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "operations",
+        "status": "ready",
+        "parents": [],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1790629136,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 226
+      },
+      "created_at": 1790629178,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "Ждём доделку каналов волны 1 (t_d9c24d40 IG, t_2e6829d8 YT, t_afe35c1f VK). ГО владельца 28.09 получено. Company разблокирует по готовности: Д0+YT+IG минимально готовы; VK опционален — phone-gate не держит публикацию.",
+        "kind": "needs_input",
+        "recurrences": 1,
+        "source_status": "ready",
+        "requested_kind": "dependency",
+        "rekind_reason": "no_open_parent"
+      },
+      "created_at": 1790629178,
+      "run_id": 291
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 328
+      },
+      "created_at": 1790674196,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 291,
+      "profile": "operations",
+      "step_key": null,
+      "status": "blocked",
+      "outcome": "blocked",
+      "summary": "Ждём доделку каналов волны 1 (t_d9c24d40 IG, t_2e6829d8 YT, t_afe35c1f VK). ГО владельца 28.09 получено. Company разблокирует по готовности: Д0+YT+IG минимально готовы; VK опционален — phone-gate не держит публикацию.",
+      "error": null,
+      "metadata": null,
+      "worker_pid": null,
+      "started_at": 1790629178,
+      "ended_at": 1790629178
+    }
+  ]
+}

@@ -1,0 +1,2460 @@
+== probe ==
+C:\Users\max\Documents\hermes-update-lock-recovery\pm\install.py
+bda33b601d194fb8a43e5660c57542aad14aa372
+== pytest affected: stage_only + worker_publication + installed_package ==
+...sss.EEEEEEEEEEEE.EEEEEEEEEEEEEEEEEEEEEEEEE..s                         [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_worker_publishes_selection_even_when_dependencies_are_current _
+
+fixturedef = <FixtureDef argname='isolated_python' scope='module' baseid='tests/pm/test_worker_publication.py'>
+request = <SubRequest 'isolated_python' for <Function test_worker_publishes_selection_even_when_dependencies_are_current>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\pm\_fixtures.py:122: in isolated_python
+    python = stage_runtime(Path(uv), Path(sys.executable), root)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+---------------------------- Captured stderr setup ----------------------------
+  → Installing Python dependencies…
+  ✗ Installing Python dependencies failed; last 2 lines of output:
+      Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+      error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`)
+_ ERROR at setup of test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[existing-False] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[existing-True] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[missing-False] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[missing-True] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_selection_refuses_config_edits_during_preparation[sibling] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_selection_refuses_config_edits_during_preparation[active] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[name: [] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[manifest_version: 999] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[requires_hermes: '>=999'] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[name: other] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_additional_candidates_are_discovered_by_sync_and_passive_probe _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[selection-False-journal] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[selection-False-payload] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[selection-False-commit] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[selection-True-journal] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[selection-True-payload] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[selection-True-commit] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-journal] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-payload] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-commit] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-journal] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-payload] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-commit] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-backup] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-tree] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-backup] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-tree] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_publication_refuses_concurrent_input_edits[metadata] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_publication_refuses_concurrent_input_edits[target] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_publication_refuses_concurrent_input_edits[staged] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_publication_refuses_concurrent_input_edits[sibling-manifest] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_staged_publication_preserves_a_concurrent_sibling_install_record _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_inactive_portable_publication_does_not_inspect_unrelated_dependency_manifests _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_selection_preserves_yaml11_values_and_quotes_plugin_names _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+_ ERROR at setup of test_explicit_publication_keeps_its_intent_through_tool_acquisition _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+__ ERROR at setup of test_stale_enablement_cannot_replace_a_newer_selection ___
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DD6FDA2150>, _basetemp=WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def isolated_python(tmp_path_factory):
+        from pm.runtime_stage import stage_runtime
+    
+        root = tmp_path_factory.mktemp("pm-python")
+        uv = shutil.which("uv")
+        assert uv, "the worker contract requires real uv"
+>       python = stage_runtime(Path(uv), Path(sys.executable), root)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\_fixtures.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+pm\runtime_stage.py:40: in stage_runtime
+    environment.sync(snapshot, locked=True, no_default_groups=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = PythonEnvironment(uv=WindowsPath('C:/Users/max/AppData/Local/hermes/bin/uv.EXE'), python=WindowsPath('C:/Users/max/App...apper name='<tempfile._TemporaryFileWrapper object at 0x000001DD6F462F90>' mode='r+' encoding='utf-8'>, no_config=True)
+source = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1943/pm-project-le13hud7')
+extras = (), groups = (), timeout = 600, frozen = True, all_extras = False
+no_install_project = True, locked = True, no_default_groups = True
+
+    def sync(self, source: Path, *, extras: Sequence[str] = (), groups: Sequence[str] = (),
+             timeout: int = 1800, frozen: bool = True, all_extras: bool = False,
+             no_install_project: bool = False, locked: bool = False,
+             no_default_groups: bool = False) -> None:
+        """Install the root and every member; resolve only in a writable workspace.
+    
+        ``frozen=False`` is reserved for the caller-owned generated workspace,
+        never the original project's lock. Seed/replay policy belongs to PM.
+        """
+        if not frozen:
+            self.lock(source, timeout=timeout)
+        # Locking members alone is insufficient: plain sync only installs root deps.
+        # uv writes no __pycache__ (pip does): without --compile-bytecode the first import
+        # of every module in the foreground of a user request compiles it (#100461).
+        command = ["sync", "--locked" if locked else "--frozen", "--all-packages",
+                   "--python", str(self.python), "--compile-bytecode"]
+        if no_default_groups:
+            command.append("--no-default-groups")
+        if all_extras:
+            from pm.features import opt_in_extras
+    
+            command.append("--all-extras")
+            for extra in opt_in_extras(source):
+                command += ["--no-extra", extra]
+        if no_install_project:
+            # --all-packages has no single selected project in uv, so
+            # --no-install-project alone does not exclude the root. Name it
+            # explicitly without dropping member dependencies or installations.
+            command += ["--no-install-project", "--no-install-package", _project_name(source)]
+        for extra in sorted(set(extras)):
+            command += ["--extra", extra]
+        for group in sorted(set(groups)):
+            command += ["--group", group]
+        result = self._run(command, cwd=source, timeout=timeout)
+        if result.returncode:
+>           raise classify_uv_failure("sync", result.returncode, result.stderr or result.stdout)
+E           pm.package.InstallError: venv: uv sync exited 2: Using CPython 3.11.9 interpreter at: C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+E           error: The requested interpreter resolved to Python 3.11.9, which is incompatible with the project's Python requirement: `==3.14.*` (from `project.requires-python`) — retry, or run `hermes pm doctor`
+
+pm\environment.py:386: InstallError
+=========================== short test summary info ===========================
+ERROR tests/pm/test_worker_publication.py::test_worker_publishes_selection_even_when_dependencies_are_current
+ERROR tests/pm/test_worker_publication.py::test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[existing-False]
+ERROR tests/pm/test_worker_publication.py::test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[existing-True]
+ERROR tests/pm/test_worker_publication.py::test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[missing-False]
+ERROR tests/pm/test_worker_publication.py::test_staged_plugin_publication_uses_installed_identity_and_local_dependencies[missing-True]
+ERROR tests/pm/test_worker_publication.py::test_selection_refuses_config_edits_during_preparation[sibling]
+ERROR tests/pm/test_worker_publication.py::test_selection_refuses_config_edits_during_preparation[active]
+ERROR tests/pm/test_worker_publication.py::test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[name: []
+ERROR tests/pm/test_worker_publication.py::test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[manifest_version: 999]
+ERROR tests/pm/test_worker_publication.py::test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[requires_hermes: '>=999']
+ERROR tests/pm/test_worker_publication.py::test_worker_rejects_unloadable_staged_plugin_without_app_dependencies[name: other]
+ERROR tests/pm/test_worker_publication.py::test_additional_candidates_are_discovered_by_sync_and_passive_probe
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[selection-False-journal]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[selection-False-payload]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[selection-False-commit]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[selection-True-journal]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[selection-True-payload]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[selection-True-commit]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-journal]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-payload]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-commit]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-journal]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-payload]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-commit]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-backup]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-False-tree]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-backup]
+ERROR tests/pm/test_worker_publication.py::test_worker_death_recovers_at_each_durable_publication_boundary[tree-True-tree]
+ERROR tests/pm/test_worker_publication.py::test_staged_publication_refuses_concurrent_input_edits[metadata]
+ERROR tests/pm/test_worker_publication.py::test_staged_publication_refuses_concurrent_input_edits[target]
+ERROR tests/pm/test_worker_publication.py::test_staged_publication_refuses_concurrent_input_edits[staged]
+ERROR tests/pm/test_worker_publication.py::test_staged_publication_refuses_concurrent_input_edits[sibling-manifest]
+ERROR tests/pm/test_worker_publication.py::test_staged_publication_preserves_a_concurrent_sibling_install_record
+ERROR tests/pm/test_worker_publication.py::test_inactive_portable_publication_does_not_inspect_unrelated_dependency_manifests
+ERROR tests/pm/test_worker_publication.py::test_selection_preserves_yaml11_values_and_quotes_plugin_names
+ERROR tests/pm/test_worker_publication.py::test_explicit_publication_keeps_its_intent_through_tool_acquisition
+ERROR tests/pm/test_worker_publication.py::test_stale_enablement_cannot_replace_a_newer_selection
+7 passed, 4 skipped, 37 errors in 3.24s
+pytest_exit=1

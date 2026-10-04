@@ -1,0 +1,905 @@
+{
+  "task": {
+    "id": "t_f78e4b19",
+    "title": "V9-SYN: PRODUCTION_PLAYBOOK A-to-Z (сборка R1-R5) + QA-чек-лист + подготовка пилота",
+    "body": "task_type: ops\n\nSYNTHESIS (company): собрать R1-R5 в ЕДИНЫЙ производственный плейбук A-to-Z и пилот строго по нему.\n\nВход: V9/research/R1_HOOK_RETENTION.md, R2_EDIT_CAPTIONS_SOUND.md, R3_AVATAR_PRODUCTION.md, R4_FACELESS_PLAYBOOK.md, R5_BENCHMARKS.md (+templates).\n\nDeliverable:\n1. V9/PRODUCTION_PLAYBOOK.md — A-to-Z конвейер: тема(evidence-гейт) → скрипт(формула+плотность) → VO(канон) → видео-слой (вердикт R3: аватар-стек ИЛИ VO+motion-graphics/шаблоны R4 — точные инструменты/настройки/тарифы) → субтитры(точные числа R2) → звук(LUFS/уровни R2) → упаковка. Каждый шаг: инструмент, параметр, источник-практика, время.\n2. QA-чек-лист пилота: покадровый, по всем осям (hook/retention/субтитры/звук/плотность/подача) — из R1/R2/R5.\n3. Пилотный ролик по плейбуку (ФОНОВИСА-история или тема из evidence-гейта) — production-карта создаётся отдельно после playbook.\n4. Пакет владельцу: playbook-резюме 1 страница + пилот + что нужно от владельца (бюджет на стек, если R3/R4 покажут платный оптимум).\n\nПравило: производство пилота НЕ начинается до готовности playbook. Уровень «бесплатный lipsync на фото» и прочие self-invented поделки запрещены — только практики с источниками.",
+    "assignee": "company",
+    "status": "blocked",
+    "priority": 1,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_f78e4b19",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1790953643,
+    "started_at": 1791052151,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": null,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": null,
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": "FLEET POLICY BLOCKED [budget_exhausted] pattern=unknown call_index=0",
+  "parents": [
+    "t_18b12f91",
+    "t_a0c11f3e",
+    "t_ae5a0c3b",
+    "t_c171671f",
+    "t_dd7212d5"
+  ],
+  "children": [],
+  "comments": [
+    {
+      "author": "company",
+      "body": "Приоритет следующего concept-pack изменён 03.10 по реплике владельца: «что там по концептам видео? мне кажется начать надо с warbogs». Первой — существующая игровая линия Wardogs, Facts/Psych следом; аккаунты/handles не переименовывать. Durable addendum: C:/Users/max/Desktop/all/ventures/docs/video/WARDOGS_FIRST_0310.md.\n\nСохраняем исходный deliverable A-to-Z playbook и независимый QA. Перед production-картой — WARDOGS_CONCEPTS.md: до трёх реально подтверждённых кандидатов с URL/локальным исходником/таймкодами, изученным gaming-reference и смысловым payoff; если кандидатов меньше, не добивать квоту выдумкой. Старые Hot Zone и rescue — historical reusable basis (V7: 7/10 владельцем), НЕ новые концепты. Прежний Fonovisa-пилот больше не первый.\n\nR1 blocked и существующие prerequisites сохраняются; этот приоритет не снимает отрицательные verdicts и policy hold. Производство до готового playbook запрещено; публикация и новые расходы этим решением не разрешены. Текущая проверенная стадия: research-материалы R2–R5 delivered, общий проверенный concept/playbook ещё не готов. Финансовые scope/period/source и unknowns — в addendum.",
+      "created_at": 1791018720
+    },
+    {
+      "author": "video-director",
+      "body": "Вход для Wardogs-first SYN от t_d55fa84a готов: C:/Users/max/Documents/video-quality-upgrade/V9/WARDOGS_CONCEPTS.md; manifest: WARDOGS_CONCEPTS.manifest.json; evidence: WARDOGS_CONCEPTS_EVIDENCE.zip в той же V9. Рекомендован ровно 1 новый C01 (обзор+потенциальная база, S1 33.86–49.72, hookscore 73); ещё два места не заполнены повтором Hot Zone/rescue. Hash концепта 74dd1ec3cfff8a9f433c2ad89095bfe3c01414add17350b273decbf1b1b3bbbf, 26 входов +16 evidence проверены. Важные gaps: body говорит GTA5 RP, файлы — реальная игра WARDOGS; новый внешний gaming-vertical benchmark недоступен, 2 local-source breakdown явно ограничены и не объявлены доказанно вирусными; установка FOB/ПВО и игровой выигрыш не показаны. Подробный бриф/kill/источники дефицита в пакете. Production и QA readiness не присвоены; R1/playbook/существующий DAG сохраняются. Эта стадия не создавала и не армит новые QA/production карты.",
+      "created_at": 1791020660
+    },
+    {
+      "author": "company",
+      "body": "UNBLOCK + SCOPED CONTRACT (company, 03.10 ~19:5x). Все 5 research-родителей (R1–R5) done; Wardogs-first приоритет зафиксирован (WARDOGS_FIRST_0310.md); WARDOGS_CONCEPTS.md доставлен режиссёром (sha256 74dd1ec3…, manifest 43/43 совпадений пересчитан company); независимый concept-review APPROVED (qa run 350, GLM-5.3-flash, запись в t_1899f80e). Карта стояла в blocked без причины с момента создания — это дефект маршрутизации, исправляю.\n\nОстаточный скоуп (не расширять):\n1. Собрать V9/PRODUCTION_PLAYBOOK.md из готовых R1–R5: тема(evidence-гейт) → скрипт(формула+плотность) → VO → видео-слой → субтитры(точные числа R2: Netflix RU 17cps/42ch, safe-зоны) → звук(-14 LUFS/-1 dBTP) → упаковка. Каждый шаг: инструмент, параметр, источник-практика, время. Хребет — MoneyPrinterTurbo + аватар-SaaS по директиве 01.10, не самописный движок.\n2. QA-чек-лист пилота (покадровый, все оси из R1/R2/R5).\n3. Wardogs-first очередь: первым применять плейбук к C01 «Вышка» (33.86–49.72 S1, hook 73 STRONG) — production-карта создаётся ОТДЕЛЬНО после готовности плейсбука, не в этом ране.\n4. Пакет владельцу: 1-страничное резюме плейбука + что нужно от владельца (бюджет на стек, если R3/R4 покажут платный оптимум).\n\nЗапреты: рендер пилота в этом ране; публикация; платные покупки; регистрация/переименование аккаунтов; обход policy deny (первый новый deny = стоп+handoff); литералы gate-маркеров и task-тегов в комментариях не писать (лексический яд).\ndecision:company=go\nhead=WARDOGS_CONCEPTS 74dd1ec3cfff8a9f433c2ad89095bfe3c01414add17350b273decbf1b1b3bbbf",
+      "created_at": 1791052101
+    },
+    {
+      "author": "company",
+      "body": "Рабочий контракт SYN: сдаю PRODUCTION_PLAYBOOK.md, PILOT_QA_CHECKLIST.md и одностраничное OWNER_PLAYBOOK_SUMMARY.md в V9, с manifest SHA-256 входов/выходов и реальным отчётом документарных проверок. Acceptance: все семь стадий имеют инструмент, параметры, источник и оценку времени; числовые caption/audio/safe-zone правила R2 перенесены без смешения со статистикой; C01 «Вышка» связан с точным утверждённым концептом и S1 33.86–49.72; неизвестные функции/лицензии/retention не выдаются за проверенные. Anchor — board video, company как автор синтеза, frozen WARDOGS_CONCEPTS 74dd1ec3cfff8a9f433c2ad89095bfe3c01414add17350b273decbf1b1b3bbbf. Границы: без пилотного рендера, новых production-карт, публикаций, платных операций, регистрации, изменения профилей или обходов отказа. Независимая приёмка плейбука не присваивается автором; после локальной верификации — передача на review. Существующие концепт/research артефакты не изменяются.",
+      "created_at": 1791060099
+    },
+    {
+      "author": "company",
+      "body": "Поправка evidence-binding: перечитан первичный вердикт qa run 350 в t_1899f80e. Он принимает Fonovisa C-HYBRID (snapshot 35d7e3f7…), НЕ WARDOGS_CONCEPTS 74dd1ec3…. C01 остаётся замороженной рекомендацией с отдельной независимой приёмкой впереди; формулировку «утверждённый концепт» в прежнем рабочем контракте не использую как разрешение производства. SYN продолжается только как документальная сборка; неверную привязку фиксирую в playbook и передаче reviewer.",
+      "created_at": 1791061104
+    },
+    {
+      "author": "company",
+      "body": "Документы PRODUCTION_PLAYBOOK.md, PILOT_QA_CHECKLIST.md и OWNER_PLAYBOOK_SUMMARY.md записаны; пилот не рендерился. На попытке только прочитать и сократить длинный native Kanban-result инструмент execute_code получил FLEET POLICY BLOCKED [worker_code_execution], call_index=123. Вызов не повторяю и не переношу его control-plane часть в shell/internal API. Остаются разрешённые локальные read_file/terminal проверки SHA/чисел и native Kanban handoff; отказ фиксируется в verification/handoff. Обхода policy, платежей, новых production-карт и изменений frozen inputs нет.",
+      "created_at": 1791063330
+    },
+    {
+      "author": "company",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [budget_exhausted] pattern=unknown call_index=0",
+      "created_at": 1791064647
+    },
+    {
+      "author": "company",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [budget_exhausted] pattern=budget_exhausted call_index=156 next_step=hard-бюджет исчерпан; продолжение = новый scoped-ран по контракту компании (самовозобновление запрещено) [continues: company]",
+      "created_at": 1791064655
+    },
+    {
+      "author": "company",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [budget_exhausted] pattern=budget_exhausted call_index=157 next_step=hard-бюджет исчерпан; продолжение = новый scoped-ран по контракту компании (самовозобновление запрещено) [continues: company]",
+      "created_at": 1791064726
+    },
+    {
+      "author": "company",
+      "body": "BLOCKED: FLEET POLICY BLOCKED [budget_exhausted] pattern=budget_exhausted call_index=158 next_step=hard-бюджет исчерпан; продолжение = новый scoped-ран по контракту компании (самовозобновление запрещено) [continues: company]",
+      "created_at": 1791064757
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "company",
+        "status": "blocked",
+        "parents": [],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1790953643,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "initial_status",
+        "status": "blocked",
+        "actor": "company"
+      },
+      "created_at": 1790953643,
+      "run_id": null
+    },
+    {
+      "kind": "linked",
+      "payload": {
+        "parent": "t_a0c11f3e",
+        "child": "t_f78e4b19"
+      },
+      "created_at": 1790953646,
+      "run_id": null
+    },
+    {
+      "kind": "linked",
+      "payload": {
+        "parent": "t_c171671f",
+        "child": "t_f78e4b19"
+      },
+      "created_at": 1790953650,
+      "run_id": null
+    },
+    {
+      "kind": "linked",
+      "payload": {
+        "parent": "t_dd7212d5",
+        "child": "t_f78e4b19"
+      },
+      "created_at": 1790953654,
+      "run_id": null
+    },
+    {
+      "kind": "linked",
+      "payload": {
+        "parent": "t_ae5a0c3b",
+        "child": "t_f78e4b19"
+      },
+      "created_at": 1790953658,
+      "run_id": null
+    },
+    {
+      "kind": "linked",
+      "payload": {
+        "parent": "t_18b12f91",
+        "child": "t_f78e4b19"
+      },
+      "created_at": 1790953662,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 1138
+      },
+      "created_at": 1791018720,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "video-director",
+        "len": 904
+      },
+      "created_at": 1791020660,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 1543
+      },
+      "created_at": 1791052101,
+      "run_id": null
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1791052106,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791053051,
+        "run_id": 367
+      },
+      "created_at": 1791052151,
+      "run_id": 367
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 20556,
+        "started_at": "|179105215172"
+      },
+      "created_at": 1791052151,
+      "run_id": 367
+    },
+    {
+      "kind": "crashed",
+      "payload": {
+        "pid": 20556,
+        "claimer": "laptop:26200",
+        "exit_kind": "terminal_provider",
+        "exit_code": 78,
+        "terminal_provider": true,
+        "worker_output": "n `hermes pm install` Запрос: work kanban task t_f78e4b19 \u001b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\u001b[0m \u001b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\u001b[0m \u001b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \u001b[0m \u001b[1;31m`hermes -p company model` to re-authenticate.\u001b[0m Goodbye! ☤",
+        "retry_status": "ready"
+      },
+      "created_at": 1791052214,
+      "run_id": 367
+    },
+    {
+      "kind": "gave_up",
+      "payload": {
+        "failures": 1,
+        "effective_limit": 2,
+        "limit_source": "dispatcher",
+        "error": "pid 20556 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'n `hermes pm install` Запрос: work kanban task t_f78e4b19 \\x1b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\\x1b[0m \\x1b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\\x1b[0m \\x1b[1;31m`hermes -p company auth add openai-codex --type oauth` to re",
+        "trigger_outcome": "crashed",
+        "retry_status": "ready",
+        "sticky": true,
+        "pid": 20556,
+        "claimer": "laptop:26200",
+        "terminal_provider": true
+      },
+      "created_at": 1791052214,
+      "run_id": null
+    },
+    {
+      "kind": "unblocked",
+      "payload": null,
+      "created_at": 1791059513,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791060415,
+        "run_id": 373
+      },
+      "created_at": 1791059515,
+      "run_id": 373
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 3792,
+        "started_at": "|179105951528"
+      },
+      "created_at": 1791059515,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059543,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059606,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059669,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059729,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059803,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059870,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059930,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791059990,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060050,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Синтез документов: собираю playbook и покадровый чек-лист из R1–R5; рендер, производство и расходы не запускаются."
+      },
+      "created_at": 1791060099,
+      "run_id": 373
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 938
+      },
+      "created_at": 1791060099,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060112,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060232,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060292,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060352,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060412,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060472,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060532,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060605,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060665,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060725,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060785,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060845,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060905,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791060990,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Сборка playbook: исходный концепт WARDOGS заморожен и ещё не принят QA; отделяю его от старого Fonovisa. Новые документы без рендера и расходов."
+      },
+      "created_at": 1791061046,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061052,
+      "run_id": 373
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 461
+      },
+      "created_at": 1791061104,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061136,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061216,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061278,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061338,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061398,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061458,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061520,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061580,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061640,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061700,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061760,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061820,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061915,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791061975,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062035,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062095,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062155,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062215,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062276,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062336,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062400,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Основной playbook записан; оформляю покадровый QA и краткий owner-пакет, затем проверю manifest/числа/неизменность входов. Рендера, платежей и новых production-карт нет."
+      },
+      "created_at": 1791062444,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062475,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062535,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062595,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062655,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062719,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062782,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062842,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062906,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791062966,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063026,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063086,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063146,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063217,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063286,
+      "run_id": 373
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 569
+      },
+      "created_at": 1791063330,
+      "run_id": null
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063364,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063441,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063517,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Все три документа созданы; завершаю механическую проверку входных/выходных SHA, frozen manifest, параметров MPT и отрицательных числовых контролей. Независимую QA-печать не ставлю."
+      },
+      "created_at": 1791063562,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063599,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063660,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063720,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063794,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063857,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063922,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791063983,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064060,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064146,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064206,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064266,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064326,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064386,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064446,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064506,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064566,
+      "run_id": 373
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791064644,
+      "run_id": 373
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 77
+      },
+      "created_at": 1791064647,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "FLEET POLICY BLOCKED [budget_exhausted] pattern=unknown call_index=0",
+        "kind": "policy_denied",
+        "recurrences": 1,
+        "source_status": "ready"
+      },
+      "created_at": 1791064647,
+      "run_id": 373
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 224
+      },
+      "created_at": 1791064655,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 224
+      },
+      "created_at": 1791064726,
+      "run_id": null
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 224
+      },
+      "created_at": 1791064757,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 367,
+      "profile": "company",
+      "step_key": null,
+      "status": "crashed",
+      "outcome": "crashed",
+      "summary": null,
+      "error": "pid 20556 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'n `hermes pm install` Запрос: work kanban task t_f78e4b19 \\x1b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\\x1b[0m \\x1b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\\x1b[0m \\x1b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \\x1b[0m \\x1b[1;31m`hermes -p company model` to re-authenticate.\\x1b[0m Goodbye! ☤'",
+      "metadata": {
+        "pid": 20556,
+        "claimer": "laptop:26200",
+        "exit_kind": "terminal_provider",
+        "exit_code": 78,
+        "terminal_provider": true,
+        "worker_output": "n `hermes pm install` Запрос: work kanban task t_f78e4b19 \u001b[1;31mCodex refresh token was already consumed by another client (e.g. Codex CLI or VS\u001b[0m \u001b[1;31mCode extension). Run `codex` in your terminal to generate fresh tokens, then run\u001b[0m \u001b[1;31m`hermes -p company auth add openai-codex --type oauth` to re-authenticate. Run \u001b[0m \u001b[1;31m`hermes -p company model` to re-authenticate.\u001b[0m Goodbye! ☤",
+        "retry_status": "ready",
+        "receipt": {
+          "status": "crashed",
+          "evidence_refs": [
+            "error:pid 20556 exited on a terminal provider error (exit 78): the provider rejected this profile's credential or model — fix the configuration, then unblock. Worker's last output: 'n `hermes pm install` Запрос: work kanban task t_f78e4b19 \\x1b[1"
+          ],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791052151,
+      "ended_at": 1791052214
+    },
+    {
+      "id": 373,
+      "profile": "company",
+      "step_key": null,
+      "status": "blocked",
+      "outcome": "policy_denied",
+      "summary": "FLEET POLICY BLOCKED [budget_exhausted] pattern=unknown call_index=0",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "policy_denied",
+          "evidence_refs": [],
+          "next_action": "apply remediation route in the block reason; retry only after the denied precondition changes"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791059515,
+      "ended_at": 1791064647
+    }
+  ]
+}

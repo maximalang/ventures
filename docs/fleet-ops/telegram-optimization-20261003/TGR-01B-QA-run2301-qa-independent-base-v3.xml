@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="20" skipped="0" tests="28" time="1.606" timestamp="2026-10-03T20:17:27.439446+00:00" hostname="laptop"><testcase classname="test_qa_tgr_routing" name="test_fresh_company_entrypoint[dm]" time="0.002"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_fresh_company_entrypoint[negative-forum]" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_fresh_company_entrypoint[new-topic-one]" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_fresh_company_entrypoint[new-topic-two]" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint
+    assert_route(runner(), source(chat=chat, thread=thread), QWEN)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_specialist_same_forum_isolation[own-rule]" time="0.001"><failure message="AssertionError: {'expected': ('qa-specialist/v2', 'qa-tech', 'https://qa-tech.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qa-speciali....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qa-specialist/v2'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:106: in test_specialist_same_forum_isolation
+    assert_route(runner(served=served), source("tech", FORUM, "qa-new-993"), expected)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qa-specialist/v2', 'qa-tech', 'https://qa-tech.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qa-speciali....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qa-specialist/v2'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_specialist_same_forum_isolation[own-global]" time="0.001"><failure message="AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:106: in test_specialist_same_forum_isolation
+    assert_route(runner(served=served), source("tech", FORUM, "qa-new-993"), expected)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_unknown_and_unserved_fail_safe[unknown-identity]" time="0.001"><failure message="AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_unknown_and_unserved_fail_safe[unknown-source]" time="0.001"><failure message="AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_unknown_and_unserved_fail_safe[unserved]" time="0.001"><failure message="AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_unknown_and_unserved_fail_safe[missing-cache]" time="0.001"><failure message="AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe
+    assert_route(r, s, GLOBALS)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_bare_routed_source_is_supported" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:117: in test_bare_routed_source_is_supported
+    assert_route(runner(), source(identity=False), QWEN)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_authoritative_identity_beats_conflicting_source_profile" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:123: in test_authoritative_identity_beats_conflicting_source_profile
+    assert_route(runner(), s, QWEN)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_primary_and_standalone_unchanged[primary]" time="0.001" /><testcase classname="test_qa_tgr_routing" name="test_primary_and_standalone_unchanged[unrouted]" time="0.001" /><testcase classname="test_qa_tgr_routing" name="test_primary_and_standalone_unchanged[standalone-identity]" time="0.001" /><testcase classname="test_qa_tgr_routing" name="test_explicit_session_pin_has_priority[sol]" time="0.001" /><testcase classname="test_qa_tgr_routing" name="test_explicit_session_pin_has_priority[astra]" time="0.001" /><testcase classname="test_qa_tgr_routing" name="test_ordinary_next_turn_and_signature_follow_cache_replacement" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:146: in test_ordinary_next_turn_and_signature_follow_cache_replacement
+    m1, rt1 = assert_route(r, s, QWEN)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_a_b_a_no_mutation_or_config_borrowing" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:162: in test_a_b_a_no_mutation_or_config_borrowing
+    assert_route(r, s, QWEN)
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_slash_override_helper_matches_turn[dm]" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:173: in test_slash_override_helper_matches_turn
+    model, rt = assert_route(r, s, QWEN)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_slash_override_helper_matches_turn[forum]" time="0.001"><failure message="AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}&#10;assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')&#10;  &#10;  At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:173: in test_slash_override_helper_matches_turn
+    model, rt = assert_route(r, s, QWEN)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+..\test_qa_tgr_routing.py:95: in assert_route
+    assert actual == expected, {"expected": expected, "actual": actual}
+E   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}
+E   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')
+E     
+E     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_real_model_listing_agrees_with_effective_turn[dm]" time="0.011"><failure message="AssertionError: {'turn': ('qa-launch/v3', 'qa-launcher'), 'slash_reply': 'gateway.model.current_label {&quot;model&quot;: &quot;gpt-6.1-sol&quot;, &quot;provid...odex&quot;}&#10;  &#10;  gateway.model.usage_switch_model {}&#10;  gateway.model.usage_switch_provider {}&#10;  gateway.model.usage_persist {}'}&#10;assert ('qa-launch/v3' in 'gateway.model.current_label {&quot;model&quot;: &quot;gpt-6.1-sol&quot;, &quot;provider&quot;: &quot;openai-codex&quot;}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')">..\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn
+    assert model in reply and rt["provider"] in reply, {"turn": (model, rt["provider"]), "slash_reply": reply}
+E   AssertionError: {'turn': ('qa-launch/v3', 'qa-launcher'), 'slash_reply': 'gateway.model.current_label {"model": "gpt-6.1-sol", "provid...odex"}
+E     
+E     gateway.model.usage_switch_model {}
+E     gateway.model.usage_switch_provider {}
+E     gateway.model.usage_persist {}'}
+E   assert ('qa-launch/v3' in 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "openai-codex"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_real_model_listing_agrees_with_effective_turn[forum]" time="0.005"><failure message="AssertionError: {'turn': ('qa-launch/v3', 'qa-launcher'), 'slash_reply': 'gateway.model.current_label {&quot;model&quot;: &quot;gpt-6.1-sol&quot;, &quot;provid...odex&quot;}&#10;  &#10;  gateway.model.usage_switch_model {}&#10;  gateway.model.usage_switch_provider {}&#10;  gateway.model.usage_persist {}'}&#10;assert ('qa-launch/v3' in 'gateway.model.current_label {&quot;model&quot;: &quot;gpt-6.1-sol&quot;, &quot;provider&quot;: &quot;openai-codex&quot;}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')">..\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn
+    assert model in reply and rt["provider"] in reply, {"turn": (model, rt["provider"]), "slash_reply": reply}
+E   AssertionError: {'turn': ('qa-launch/v3', 'qa-launcher'), 'slash_reply': 'gateway.model.current_label {"model": "gpt-6.1-sol", "provid...odex"}
+E     
+E     gateway.model.usage_switch_model {}
+E     gateway.model.usage_switch_provider {}
+E     gateway.model.usage_persist {}'}
+E   assert ('qa-launch/v3' in 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "openai-codex"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_real_telegram_picker_agrees_with_effective_turn[dm]" time="0.064"><failure message="AssertionError: assert (None, None) == ('qa-launch/v...'qa-launcher')&#10;  &#10;  At index 0 diff: None != 'qa-launch/v3'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:212: in test_real_telegram_picker_agrees_with_effective_turn
+    assert (captured.get("current_model"), captured.get("current_provider")) == (model, rt["provider"])
+E   AssertionError: assert (None, None) == ('qa-launch/v...'qa-launcher')
+E     
+E     At index 0 diff: None != 'qa-launch/v3'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_real_telegram_picker_agrees_with_effective_turn[forum]" time="0.005"><failure message="AssertionError: assert (None, None) == ('qa-launch/v...'qa-launcher')&#10;  &#10;  At index 0 diff: None != 'qa-launch/v3'&#10;  Use -v to get more diff">..\test_qa_tgr_routing.py:212: in test_real_telegram_picker_agrees_with_effective_turn
+    assert (captured.get("current_model"), captured.get("current_provider")) == (model, rt["provider"])
+E   AssertionError: assert (None, None) == ('qa-launch/v...'qa-launcher')
+E     
+E     At index 0 diff: None != 'qa-launch/v3'
+E     Use -v to get more diff</failure></testcase><testcase classname="test_qa_tgr_routing" name="test_system_prompt_legacy_scope_and_fallback_preserved" time="0.001" /><testcase classname="test_qa_tgr_routing" name="test_no_source_keeps_global_route" time="0.001" /><testcase classname="test_qa_tgr_routing" name="test_status_entrypoint_scope_locator" time="0.000" /></testsuite></testsuites>

@@ -1,0 +1,38 @@
+{
+  "captured_at": "2026-10-03T20:43:56+03:00",
+  "scope": "read-only serving attestation from native profile agent.log stamps; no message/session content read",
+  "hub_ops_author_run2231": {
+    "task": "t_ede77548",
+    "profile": "operations",
+    "worker_session_id": "20261003_185323_65fe8a",
+    "serving_model": "kimi-k3",
+    "serving_provider": "custom(DashScope-compatible)",
+    "config_default": "kimi-k3/custom",
+    "api_calls_observed": "13+ consecutive model=kimi-k3 provider=custom stamps 18:53:32-18:55:56",
+    "rate_limited": false,
+    "outcome": "done/completed, 97/97 assertions, CRLF real-file probe"
+  },
+  "hub_qa_run2246": {
+    "task": "t_e2999d71",
+    "profile": "qa",
+    "card_override": "gpt-6.1-sol/openai-codex",
+    "worker_session_id": "20261003_201051_325946",
+    "observed": "20:11:00 turn started model=gpt-6.1-sol provider=openai-codex; 20:11:02 HTTP429 usage_limit_reached (codex Plus); 20:11:02 fallback skip: zai/glm-5.3-flash pool exhausted (all entries cooldown)"
+  },
+  "qa_profile_default": "glm-5.3/zai; 5h usage wall earlier, provider reset label 2026-10-04 00:46:08",
+  "brain_independence": {
+    "hub": "author=kimi-k3/custom vs QA=gpt-6.1-sol/openai-codex: different providers/models -> independent",
+    "tgr": "author=tech profile (see below) vs QA backup=gpt-6.1-sol/openai-codex: independent"
+  },
+  "tgr01b_author": {
+    "task": "t_ced9d357",
+    "profile": "tech",
+    "worker_session_id": "20261003_194421_d5f14b",
+    "stamps": [
+      "2026-10-03 19:44:29,832 INFO [20261003_194421_d5f14b] agent.turn_context: conversation turn: session=20261003_194421_d5f14b model=qwen3.8-max provider=custom platform=cli history=0 msg='work kanban task t_ced9d357'",
+      "2026-10-03 20:04:28,145 INFO [20261003_194421_d5f14b] agent.conversation_loop: Turn ended: reason=text_response(finish_reason=stop) model=qwen3.8-max api_calls=15/500 budget=15/500 tool_turns=14 last_msg_role=assistant response_len=2820 session=20261003_194421_d5f14b",
+      "2026-10-03 20:04:28,206 INFO [20261003_194421_d5f14b] agent.turn_context: conversation turn: session=20261003_194421_d5f14b model=qwen3.8-max provider=custom platform=cli history=46 msg='Review the conversation above and update the skill library. Be ACTIVE — most ses...' origin=background_review"
+    ]
+  },
+  "limits": "attestation is stamps only; card model_override labels are scheduler intent, actual serving stamps above are the evidence"
+}
