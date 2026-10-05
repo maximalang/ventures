@@ -49,7 +49,9 @@ REMEDIATIONS: dict[str, tuple[str, str]] = {
         "worker",
     ),
     "missing_or_unknown_task_type": (
-        "первая строка тела карты должна быть 'task_type: research|code|review|ops' — запроси company-правку тела и повтори",
+        "первая строка тела карты должна быть 'task_type: research|code|review|ops' — запроси company-правку тела и повтори; "
+        "lifecycle-инструменты (kanban_comment/block/heartbeat/show) остаются доступными: верни карту company с diagnosis, "
+        "state-changing работа запрещена до правки тела",
         "company",
     ),
     "task_type_conflict": (
@@ -73,9 +75,13 @@ REMEDIATIONS: dict[str, tuple[str, str]] = {
         "worker",
     ),
     "policy_control_plane_mutation": (
-        "правка самой политики запрещена; READ-доступ к control-plane у воркера есть "
-        "(read_file; одиночный SELECT через sqlite3 -readonly; gh api GET; version-пробы; "
-        "сложные пробы — скрипт-файлом, не python -c); на диагностику/правки оформи отдельную tech-карту",
+        "правка/деплой control-plane воркеру запрещены: деплой выполняет operator-сессия company "
+        "из тега repo (scripts/deploy_policy.sh, runbook docs/fleet-ops/fleet-policy-deploy-runbook.md). "
+        "Маршрут воркера: подготовить bundle+runbook (build_release_bundle → verify-bundle) "
+        "и заблокировать карту [continues: company]. READ-доступ к control-plane у воркера есть "
+        "(read_file; одиночный SELECT через sqlite3 -readonly; python -m fleet_policy.cli "
+        "status/show/events/task; gh api GET; version-пробы); на правки ИСХОДНИКОВ в repo "
+        "(src/, не живой control plane) оформи отдельную tech-карту",
         "company",
     ),
     "worker_self_approval": (

@@ -55,6 +55,37 @@ class FleetPolicyRuntime:
     _BINDING_ARTIFACT = re.compile(r"(?i)\bartifact[=:\s]+([^\s]+)")
     _NO_GO = "decision:company=no-go"
 
+    # v1.2.38 FP-literal-traps (card t_e393b6e8, RR-4c): marker-shaped lines
+    # inside fenced code blocks or markdown blockquotes are QUOTED DATA —
+    # incident echoes, anchors cited for verification, examples of the
+    # canonical form. They never arm a gate, never set the expected head and
+    # never trigger the write-guard. The only legal literal form is the bare
+    # binding line of an authorized author. Live FP 04-05.10: run 55
+    # (t_9eb08cc4 — body-literal echo denied as gate_forgery) and the QA
+    # verdict cards t_85547708/t_38c0f11a denied for echoing the company
+    # anchor inside their report text.
+    _FENCE_LINE = re.compile(r"^\s*(?:```|~~~)")
+
+    @classmethod
+    def _attestation_lines(cls, body: Any) -> list[str]:
+        """Stripped lowercase lines of `body` that are NOT quoted data:
+        fenced code blocks (```/~~~ toggled per line) and blockquote lines
+        (`>` prefix) are skipped. Unterminated fences keep every following
+        line quoted (fail-closed: fewer attestation candidates)."""
+        lines: list[str] = []
+        in_fence = False
+        for raw in str(body or "").splitlines():
+            if cls._FENCE_LINE.match(raw):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
+            stripped = raw.strip()
+            if stripped.startswith(">"):
+                continue
+            lines.append(stripped.lower())
+        return lines
+
     def missing_gates(self, category: str, context: dict[str, Any]) -> list[str]:
         """v1.2.10 item G — order-sensitive gate evaluation.
 
@@ -102,7 +133,9 @@ class FleetPolicyRuntime:
                 if str(record.get("author") or "").lower() != "company":
                     continue
                 rec_body = str(record.get("body") or "")
-                rec_lines = [ln.strip().lower() for ln in rec_body.splitlines()]
+                # v1.2.38: quoted anchor echoes (fenced/blockquote) never set
+                # the expected head — only the company's bare binding line.
+                rec_lines = self._attestation_lines(rec_body)
                 if not any(ln == "decision:company=go" or ln.startswith("decision:company=go ")
                            for ln in rec_lines):
                     continue
@@ -117,8 +150,9 @@ class FleetPolicyRuntime:
         for record in records:
             if str(record.get("author") or "").lower() != "company":
                 continue
-            company_body = str(record.get("body") or "").strip().lower()
-            company_lines = [line.strip() for line in company_body.splitlines()]
+            # v1.2.38: go/no-go are read from the company's bare lines only;
+            # quoted (fenced/blockquote) echoes of an anchor are data.
+            company_lines = self._attestation_lines(record.get("body"))
             if any(line.startswith(self._NO_GO) for line in company_lines):
                 no_go_seen, go_seen = True, False  # later no-go replaces a go
             elif any(
@@ -141,7 +175,11 @@ class FleetPolicyRuntime:
                 if gate in {"review", "qa"} and author == assignee:
                     continue
                 body = str(record.get("body") or "")
-                lines = [line.strip().lower() for line in body.splitlines()]
+                # v1.2.38: markers inside fenced blocks / blockquotes are
+                # quoted data — they neither arm nor revoke a gate. The bare
+                # binding line of an authorized author stays the only legal
+                # attestation form (head/type bindings below unchanged).
+                lines = self._attestation_lines(body)
                 if any(line == fail_prefix or line.startswith(fail_prefix) for line in lines):
                     state = "fail"
                     continue
@@ -190,7 +228,11 @@ class FleetPolicyRuntime:
         # Match the line-level attestation syntax consumed by missing_gates.
         # A marker quoted in ordinary prose cannot arm a gate and must not
         # prevent a worker from reporting which independent verdict it needs.
-        lines = [line.strip().lower() for line in text.splitlines()]
+        # v1.2.38: fenced blocks and blockquote lines are quoted DATA (anchor
+        # echoes in verdict reports, canonical-form examples) — they never
+        # count as attestation attempts and never trigger this write-guard;
+        # the bare marker line stays the only policed literal form.
+        lines = self._attestation_lines(text)
         gates = [
             match.group(1)
             for line in lines
@@ -307,6 +349,19 @@ class FleetPolicyRuntime:
 
         if worker and context.get("task_context_error"):
             result = Classification("state_change", "task_context_unavailable", "deny", str(context["task_context_error"]))
+        elif worker and task_error and is_lifecycle_tool(tool_name):
+            # v1.2.38 FP-literal-traps (RR-4c): a card with a missing/corrupt
+            # task_type marker keeps its board-coordination channel — comment/
+            # block/heartbeat/show — so the worker can hand the poison back to
+            # company instead of the card dying silently forever. Live FP
+            # 04.10: t_78852bc1 / t_4971a23c / t_b46df615 fenced EVERY call,
+            # including lifecycle, with no way to report. State-changing WORK
+            # (and non-lifecycle reads, per the v1.2.10 F contract asserted by
+            # test_runtime) stays denied until company fixes the body.
+            result = Classification(
+                "read", "lifecycle_coordination", "allow",
+                f"lifecycle coordination despite task_type marker problem ({task_error}); state-changing work stays denied until company fixes the body",
+            )
         elif worker and task_error:
             result = Classification("state_change", "missing_or_unknown_task_type", "deny", task_error)
         else:
@@ -321,7 +376,14 @@ class FleetPolicyRuntime:
 
         if worker:
             flat_args = str(arguments)
-            if tool_name.lower() in {"terminal", "shell", "bash", "exec"} and re.search(r"(?i)hermes\s+kanban[^\n]*comment[^\n]*(?:gate:|decision:company=go)", flat_args):
+            # v1.2.38 FP-literal-traps (RR-4c, live run-55 shape): the CLI
+            # forgery heuristic requires the ACTUAL write form — the comment
+            # SUBCOMMAND adjacent to `kanban` — and a full pass/go marker.
+            # The old shape (`kanban`…`comment`…`gate:` anywhere on the line)
+            # denied READ probes such as
+            #   hermes kanban show t_x --json | python -c "…comments…gate:…"
+            # that merely inspect/echo marker text (t_9eb08cc4, 05.10 15:21).
+            if tool_name.lower() in {"terminal", "shell", "bash", "exec"} and re.search(r"(?i)hermes\b[^\n]{0,40}?\bkanban\s+comment\b[^\n]*(?:gate:[a-z_]+=pass|decision:company=go)", flat_args):
                 result = Classification("state_change", "gate_forgery", "deny", "role gates must be written through kanban_comment by the current profile")
             elif tool_name.lower() == "kanban_comment":
                 text = str(arguments.get("text") or arguments.get("body") or arguments.get("comment") or "")
