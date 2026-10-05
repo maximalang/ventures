@@ -15,6 +15,36 @@ TASK_LINE = re.compile(r"(?im)^\s*task_type\s*:\s*([a-z_-]+)\s*$")
 TASK_TAG = re.compile(r"(?i)(?:^|[\s,;])task_type\s*=\s*([a-z_-]+)(?=$|[\s,;])")
 TASK_SKILL = re.compile(r"(?i)(?:^|[\s,;])task-type-(research|code|review|ops)(?=$|[\s,;])")
 
+# v1.2.37 FP-literal-traps (card t_e393b6e8, RECOVERY-PROGRAM RR-4c): a
+# task-type token inside an EXPLICIT QUOTE (markdown blockquote line, fenced
+# code block, «…» / "…" / `…` inline span) or inside a SANCTIONED emission
+# binding line (any line carrying a head=<hex> binding — company anchors,
+# gate verdicts quoted for verification) is DATA: an echo of an incident,
+# another card or an attestation contract. It never classifies THIS card.
+# The only literal that establishes a class is the bare marker line the
+# company writes into the body; the only legal literal form in a comment is
+# the authorized author's binding line, consumed by missing_gates — never
+# by this inference. Live POISON 04.10.2026: quoted markers classified
+# cards into the wrong class or fenced them as "unknown task_type" forever.
+_EMIT_BINDING_LINE = re.compile(r"(?im)^.*\bhead[=:\s]+[0-9a-f]{7,64}\b.*$")
+_BLOCKQUOTE_LINE = re.compile(r"(?m)^\s*>.*$")
+_FENCED_CODE_BLOCK = re.compile(r"(?ms)^[ \t]*(?:```|~~~).*?^[ \t]*(?:```|~~~)[ \t]*$")
+_INLINE_QUOTE_SPAN = re.compile(r"«[^»\n]*»|\"[^\"\n]*\"|`[^`\n]*`")
+
+
+def _mask_quoted_marker_text(text: str) -> str:
+    """Blank quoted/binding spans so their task-type tokens cannot classify.
+
+    Length-preserving (masked spans become spaces, fences keep their
+    newlines), so no new token adjacency is fabricated and match positions
+    stay stable. An unterminated fence is NOT masked — malformed bodies
+    fail closed to the historical first-marker behavior.
+    """
+    masked = _FENCED_CODE_BLOCK.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), text)
+    masked = _EMIT_BINDING_LINE.sub(lambda m: " " * len(m.group(0)), masked)
+    masked = _BLOCKQUOTE_LINE.sub(lambda m: " " * len(m.group(0)), masked)
+    return _INLINE_QUOTE_SPAN.sub(lambda m: " " * len(m.group(0)), masked)
+
 CANONICAL_PUBLIC_POLICY_DOC = (
     "c:/users/max/desktop/all/ventures/" + "app" + "rovals.md"
 )
@@ -46,12 +76,17 @@ def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
     create a class for an unmarked body nor poison or switch an existing one.
     Within the body, the FIRST marker whose value is a canonical task type
     decides; non-canonical markers are reported only when the body carries
-    no canonical marker at all."""
+    no canonical marker at all.
+
+    v1.2.37 FP-literal-traps: quoted spans (blockquotes, fenced blocks,
+    «…»/"…"/`…`) and emission binding lines (head=<hex>) are masked out
+    BEFORE matching — their task-type tokens are data, never class markers.
+    """
     body = values[0] if values else None
     first_noncanonical: str | None = None
     items = body if isinstance(body, (list, tuple, set)) else [body]
     for item in items:
-        text = str(item or "")
+        text = _mask_quoted_marker_text(str(item or ""))
         matches: list[tuple[int, str]] = []
         for pattern in (TASK_LINE, TASK_TAG, TASK_SKILL):
             matches.extend((match.start(1), match.group(1)) for match in pattern.finditer(text))
