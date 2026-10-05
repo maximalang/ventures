@@ -1,5 +1,89 @@
 # Changelog
 
+## [1.2.37] - 2026-10-05
+
+Card t_e393b6e8 (fleet-ops, RECOVERY-PROGRAM RR-3/RR-4 root-fix). Live
+evidence: policy-store deny events of the 04–05.10 activation incident —
+t_9eb08cc4 (worker control-plane deploy loop run 61 call_index=5;
+gate_forgery on a READ probe `hermes kanban show … | python -c …` at
+15:21Z), t_85547708/t_38c0f11a (QA verdict reports denied gate_forgery for
+echoing the company anchor), t_78852bc1/t_4971a23c/t_b46df615 (cards fenced
+by a broken task_type marker, every call denied), t_90c07896 run 41
+(`ls` of a sessions tree denied secret_read_or_write),
+t_b8752c3f/t_22153d76/t_c7312fde/t_e9ef9cc1 (sqlite heredoc read-probe deny
+loops against board/policy stores).
+
+### Fixed — FP-read-lane (RR-3, RR-4a, RR-4b)
+- Sanctioned read-only diagnostics route for policy state: new CLI
+  subcommands `events`, `task`, `show` (sqlite `mode=ro` only — no migrate,
+  no store or board writes) join `status`; the READ_COMMAND allowlist
+  accepts `fleet-policy status|show|events|task` and
+  `python -m fleet_policy.cli status|show|events|task` (global `--root`
+  tolerated). Mutating verbs never inherit the lane, and the
+  worker_self_approval guard now sees through the same `--root` gap.
+- Heredoc/multiline read probes stay fail-closed, but a READ-shaped denied
+  control-plane call now points at the sanctioned lane (CLI route;
+  single-statement `sqlite3 -readonly` SELECT; read_file; gh api GET).
+  SQL write verbs suppress the hint so denied writes get no read advice.
+- Directory-family secret patterns (sessions / request_dump / dumps) no
+  longer deny pure ENUMERATION: bare `ls`/`dir` stages or
+  `search_files(target=files)` pass as name listings. Every content read
+  (cat/grep/head/read_file/content search, redirects) and every hard-secret
+  FILE name (.env*, auth.json, *credential*, *secret*) stays denied.
+
+### Fixed — FP-literal-traps (RR-4c)
+- `infer_task_type` masks explicit quotes (blockquote lines, fenced code
+  blocks, «…»/"…"/`…` inline spans) and emission binding lines (any line
+  carrying `head=<hex>`) before matching: quoted task-type tokens are DATA
+  and can no longer classify a card. POISON regressions: a card does not
+  die from a quote; conflicting quoted markers do not count; the bare
+  company marker decides.
+- Gate-attestation literals inside fenced blocks / blockquotes are quoted
+  data in every consumer: they never arm a gate, never set the expected
+  head, and never trigger the gate_forgery write-guard. The bare binding
+  line of an authorized author stays the only legal attestation form;
+  other-role attestation, self-attestation and unanchored PASS markers stay
+  fail-closed (runs 58/60 behavior preserved).
+- The terminal forgery heuristic now requires the actual write form
+  (`hermes kanban comment` adjacency + a full `=pass`/`decision:company=go`
+  marker): READ probes piping `hermes kanban show` through scripts that
+  mention marker text are no longer denied (run 55 shape).
+- A card with a missing/corrupt task_type marker keeps its board lifecycle
+  channel (comment/block/heartbeat/show) so the worker can hand the poison
+  back to company instead of the card dying silently forever. State-changing
+  work and non-lifecycle reads stay denied (v1.2.10 F contract unchanged).
+
+### Changed — truthful remediation (RR-3)
+- `policy_control_plane_mutation` remediation now names the REAL route:
+  control-plane deploy is an operator action of the company session
+  (scripts/deploy_policy.sh, tag-only); the worker prepares bundle+runbook
+  and blocks with [continues: company]. The tech-card advice is scoped to
+  repo SOURCE changes (src/), not the live plane.
+- `missing_or_unknown_task_type` remediation documents the surviving
+  lifecycle channel.
+
+### Added
+- scripts/deploy_policy.sh — operator-only tag-based control-plane deploy:
+  tag resolution + worktree proof (full tests, build-bundle, verify-bundle),
+  RR-1 fail-closed drift gate (a dirty live tree deploys only when its
+  content is identical to the tag, otherwise aborts without --force),
+  detached checkout in the live plugin clone (.state/ survives), profile
+  symlink audit, JSON manifest with prev/new SHAs and rollback command.
+  Proven on disposable clones: clean dry-run, identical-drift dry-run,
+  dirty abort (exit 1), real checkout 287e86c→2f2f5ee.
+- docs/fleet-ops/fleet-policy-deploy-runbook.md — roles/contract, deploy
+  preconditions, command, post-deploy verification, rollback, worker
+  read-only diagnostics route.
+
+### Tests
+- tests/test_v1234_fp_corpus.py: v1.2.37 section — CLI read-lane allow +
+  mutator/self-approval TP controls (incl. `--root` forms), sessions
+  enumeration FP/TP matrix, sqlite-heredoc deny + CLI-route reason, control-
+  plane write without read-lane advice, POISON-quote inference regressions,
+  run-55 terminal read probe, run-58 other-role attestation, run-60
+  unanchored fail-closed, run-61 worker deploy deny + truthful remediation,
+  broken-marker lifecycle channel, bare-attestation control.
+
 ## [1.2.34] - 2026-10-02
 
 Card t_d94dde9d (fleet-ops). Live evidence: run 2125 of this card produced
