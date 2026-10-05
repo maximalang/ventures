@@ -55,7 +55,7 @@ class FleetPolicyRuntime:
     _BINDING_ARTIFACT = re.compile(r"(?i)\bartifact[=:\s]+([^\s]+)")
     _NO_GO = "decision:company=no-go"
 
-    # v1.2.37 FP-literal-traps (card t_e393b6e8, RR-4c): marker-shaped lines
+    # v1.2.38 FP-literal-traps (card t_e393b6e8, RR-4c): marker-shaped lines
     # inside fenced code blocks or markdown blockquotes are QUOTED DATA —
     # incident echoes, anchors cited for verification, examples of the
     # canonical form. They never arm a gate, never set the expected head and
@@ -133,7 +133,7 @@ class FleetPolicyRuntime:
                 if str(record.get("author") or "").lower() != "company":
                     continue
                 rec_body = str(record.get("body") or "")
-                # v1.2.37: quoted anchor echoes (fenced/blockquote) never set
+                # v1.2.38: quoted anchor echoes (fenced/blockquote) never set
                 # the expected head — only the company's bare binding line.
                 rec_lines = self._attestation_lines(rec_body)
                 if not any(ln == "decision:company=go" or ln.startswith("decision:company=go ")
@@ -150,7 +150,7 @@ class FleetPolicyRuntime:
         for record in records:
             if str(record.get("author") or "").lower() != "company":
                 continue
-            # v1.2.37: go/no-go are read from the company's bare lines only;
+            # v1.2.38: go/no-go are read from the company's bare lines only;
             # quoted (fenced/blockquote) echoes of an anchor are data.
             company_lines = self._attestation_lines(record.get("body"))
             if any(line.startswith(self._NO_GO) for line in company_lines):
@@ -175,7 +175,7 @@ class FleetPolicyRuntime:
                 if gate in {"review", "qa"} and author == assignee:
                     continue
                 body = str(record.get("body") or "")
-                # v1.2.37: markers inside fenced blocks / blockquotes are
+                # v1.2.38: markers inside fenced blocks / blockquotes are
                 # quoted data — they neither arm nor revoke a gate. The bare
                 # binding line of an authorized author stays the only legal
                 # attestation form (head/type bindings below unchanged).
@@ -228,7 +228,7 @@ class FleetPolicyRuntime:
         # Match the line-level attestation syntax consumed by missing_gates.
         # A marker quoted in ordinary prose cannot arm a gate and must not
         # prevent a worker from reporting which independent verdict it needs.
-        # v1.2.37: fenced blocks and blockquote lines are quoted DATA (anchor
+        # v1.2.38: fenced blocks and blockquote lines are quoted DATA (anchor
         # echoes in verdict reports, canonical-form examples) — they never
         # count as attestation attempts and never trigger this write-guard;
         # the bare marker line stays the only policed literal form.
@@ -350,7 +350,7 @@ class FleetPolicyRuntime:
         if worker and context.get("task_context_error"):
             result = Classification("state_change", "task_context_unavailable", "deny", str(context["task_context_error"]))
         elif worker and task_error and is_lifecycle_tool(tool_name):
-            # v1.2.37 FP-literal-traps (RR-4c): a card with a missing/corrupt
+            # v1.2.38 FP-literal-traps (RR-4c): a card with a missing/corrupt
             # task_type marker keeps its board-coordination channel — comment/
             # block/heartbeat/show — so the worker can hand the poison back to
             # company instead of the card dying silently forever. Live FP
@@ -376,7 +376,7 @@ class FleetPolicyRuntime:
 
         if worker:
             flat_args = str(arguments)
-            # v1.2.37 FP-literal-traps (RR-4c, live run-55 shape): the CLI
+            # v1.2.38 FP-literal-traps (RR-4c, live run-55 shape): the CLI
             # forgery heuristic requires the ACTUAL write form — the comment
             # SUBCOMMAND adjacent to `kanban` — and a full pass/go marker.
             # The old shape (`kanban`…`comment`…`gate:` anywhere on the line)

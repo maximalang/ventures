@@ -47,7 +47,7 @@ def default_root(arguments: dict | argparse.Namespace) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# v1.2.37 FP-read-lane (card t_e393b6e8, RR-3/RR-4a): sanctioned READ-ONLY
+# v1.2.38 FP-read-lane (card t_e393b6e8, RR-3/RR-4a): sanctioned READ-ONLY
 # diagnostics route for policy state. Workers must never need ad-hoc
 # heredoc/multiline sqlite probes against control-plane stores (they fail
 # closed by design and burned whole runs on 04.10). These commands open the
@@ -316,7 +316,7 @@ def parser() -> argparse.ArgumentParser:
     attestation_build.add_argument("--output", required=True, help="Destination path for RELEASE-ATTESTATION.json (atomic write).")
     attestation_verify = sub.add_parser("verify-release-attestation")
     attestation_verify.add_argument("--input", required=True, help="Attestation artifact to verify.")
-    # v1.2.37 FP-read-lane: sanctioned read-only diagnostics (no migrate, no
+    # v1.2.38 FP-read-lane: sanctioned read-only diagnostics (no migrate, no
     # store writes — mode=ro only).
     events = sub.add_parser("events", help="Read-only: list policy events as NDJSON.")
     events.add_argument("--task", default=None, help="Filter by task_id.")
@@ -375,7 +375,7 @@ def main(argv: list[str] | None = None) -> int:
                          ensure_ascii=False, sort_keys=True))
         return 0
 
-    # v1.2.37 FP-read-lane: read-only views never construct FleetPolicyRuntime
+    # v1.2.38 FP-read-lane: read-only views never construct FleetPolicyRuntime
     # (its store.migrate() writes); they open the store mode=ro directly.
     if args.command == "events":
         return cmd_events(args)

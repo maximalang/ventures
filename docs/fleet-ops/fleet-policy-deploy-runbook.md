@@ -1,6 +1,6 @@
 # Runbook: деплой control-plane fleet-policy (operator-only)
 
-Статус: нормативный маршрут деплоя (v1.2.37, карта t_e393b6e8,
+Статус: нормативный маршрут деплоя (v1.2.38, карта t_e393b6e8,
 RECOVERY-PROGRAM RR-3, правило PROGRAM 1 и 5 от 04.10.2026).
 
 ## Роли и контракт
@@ -30,7 +30,7 @@ RECOVERY-PROGRAM RR-3, правило PROGRAM 1 и 5 от 04.10.2026).
 ```bash
 bash scripts/deploy_policy.sh \
   --repo  C:/Users/max/Desktop/all/ventures \
-  --tag   v1.2.37
+  --tag   v1.2.38
 ```
 
 Флаги: `--plugin-dir` (по умолчанию

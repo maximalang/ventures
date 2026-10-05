@@ -493,7 +493,7 @@ def test_w3_self_attestation_still_fails_closed(runtime):
 
 
 # ---------------------------------------------------------------------------
-# v1.2.37 (card t_e393b6e8): FP classes of the 04-05.10 activation incident
+# v1.2.38 (card t_e393b6e8): FP classes of the 04-05.10 activation incident
 # (RECOVERY-PROGRAM RR-3/RR-4). Live evidence: policy store deny events of
 # t_9eb08cc4 / t_85547708 / t_38c0f11a / t_78852bc1 / t_4971a23c / t_90c07896.
 #   RR-3  — sanctioned read-only CLI route joins the read lane; the deploy
@@ -518,7 +518,7 @@ SESSIONS_TREE = "C:/Users/max/AppData/Local/hermes/profiles/tech/sessions/"
     "fleet-policy.exe task --id t_x --board default",
     "python -m fleet_policy.cli events --task t_x && python -m fleet_policy.cli status",
 ])
-def test_v1237_cli_read_commands_are_read_only(config, command):
+def test_v1238_cli_read_commands_are_read_only(config, command):
     result = _classify(command, config)
     assert (result.effect, result.decision) == ("read", "allow"), result
 
@@ -532,21 +532,21 @@ def test_v1237_cli_read_commands_are_read_only(config, command):
     "fleet-policy revoke rule-key --by tech",
     "fleet-policy --root . override-expected-failure t_x sig",
 ])
-def test_v1237_cli_mutators_never_read_lane_and_guard_covers_root_flag(config, command):
+def test_v1238_cli_mutators_never_read_lane_and_guard_covers_root_flag(config, command):
     # mutating verbs are not whitelisted AND the worker_self_approval guard
-    # sees through the global --root option (v1.2.37 hardening)
+    # sees through the global --root option (v1.2.38 hardening)
     result = _classify(command, config)
     assert (result.decision, result.category) == ("deny", "worker_self_approval"), result
 
 
-def test_v1237_ls_sessions_tree_is_enumeration_not_secret(config):
+def test_v1238_ls_sessions_tree_is_enumeration_not_secret(config):
     # RR-4b live FP (t_90c07896 run 41): name listing denied as a secret op
     for command in (f"ls {SESSIONS_TREE}", f"ls -la {SESSIONS_TREE}", f"dir {SESSIONS_TREE}"):
         result = _classify(command, config)
         assert (result.effect, result.decision) == ("read", "allow"), (command, result)
 
 
-def test_v1237_search_files_listing_sessions_allowed(config):
+def test_v1238_search_files_listing_sessions_allowed(config):
     result = classify(
         "search_files", {"path": SESSIONS_TREE, "pattern": "*", "target": "files"},
         config, worker=True,
@@ -563,20 +563,20 @@ def test_v1237_search_files_listing_sessions_allowed(config):
     ("search_files", {"path": SESSIONS_TREE, "pattern": "needle", "target": "content"}),
     ("search_files", {"path": SESSIONS_TREE, "pattern": "needle"}),
 ])
-def test_v1237_sessions_content_reads_stay_denied(config, tool, args):
+def test_v1238_sessions_content_reads_stay_denied(config, tool, args):
     # enumeration exempts NAMES only; every content read stays denied
     result = classify(tool, args, config, worker=True)
     assert (result.decision, result.category) == ("deny", RULE), (tool, args, result)
 
 
-def test_v1237_hard_secret_names_stay_non_enumerable(config):
+def test_v1238_hard_secret_names_stay_non_enumerable(config):
     # `ls` on hard-secret FILE names is reconnaissance, not enumeration
     for path in ("C:/x/.env.production", "C:/Users/max/.hermes/auth.json"):
         result = _classify(f"ls -la {path}", config)
         assert (result.decision, result.category) == ("deny", RULE), (path, result)
 
 
-def test_v1237_sqlite_heredoc_stays_denied_and_points_at_cli_route(config):
+def test_v1238_sqlite_heredoc_stays_denied_and_points_at_cli_route(config):
     # RR-4a live FP loops (t_b8752c3f, t_22153d76, t_c7312fde): heredoc
     # probes fail closed by design — but the deny must name the sanctioned
     # read lane instead of leaving the worker to guess
@@ -594,14 +594,14 @@ def test_v1237_sqlite_heredoc_stays_denied_and_points_at_cli_route(config):
     assert "sqlite3 -readonly" in result.reason
 
 
-def test_v1237_control_plane_write_gets_no_read_lane_advice(config):
+def test_v1238_control_plane_write_gets_no_read_lane_advice(config):
     result = _classify(f'sqlite3 {BOARD_DB} "UPDATE tasks SET status=\'x\'"', config)
     assert (result.decision, result.category) == ("deny", CONTROL_PLANE_RULE), result
     assert result.reason.startswith("policy-controlled files are immutable for the fleet")
     assert "fleet_policy.cli" not in result.reason
 
 
-def test_v1237_quoted_markers_never_classify_the_card():
+def test_v1238_quoted_markers_never_classify_the_card():
     # RR-4c POISON regression: blockquote / fence / inline-quote echoes of
     # other cards' markers must not classify THIS card; the bare marker wins
     from fleet_policy.policy import infer_task_type
@@ -619,13 +619,13 @@ def test_v1237_quoted_markers_never_classify_the_card():
     assert infer_task_type(body) == ("code", None)
 
 
-def test_v1237_conflicting_quoted_marker_does_not_win_by_position():
+def test_v1238_conflicting_quoted_marker_does_not_win_by_position():
     from fleet_policy.policy import infer_task_type
     body = '```\ntask_type: review\n```\n\ntask_type: ops\n'
     assert infer_task_type(body) == ("ops", None)
 
 
-def test_v1237_binding_line_token_does_not_classify():
+def test_v1238_binding_line_token_does_not_classify():
     # an emission binding line (head=<hex>) carries task_type as attestation
     # syntax — it never establishes the card class
     from fleet_policy.policy import infer_task_type
@@ -633,7 +633,7 @@ def test_v1237_binding_line_token_does_not_classify():
     assert infer_task_type(body) == (None, "missing task_type marker")
 
 
-def test_v1237_terminal_read_probe_echoing_markers_is_not_forgery(runtime, task_context):
+def test_v1238_terminal_read_probe_echoing_markers_is_not_forgery(runtime, task_context):
     # run 55 live shape (t_9eb08cc4, 05.10 15:21): a READ probe that pipes
     # `hermes kanban show` into python and mentions comments/gate markers in
     # the script text was denied gate_forgery by the loose CLI heuristic
@@ -646,7 +646,7 @@ def test_v1237_terminal_read_probe_echoing_markers_is_not_forgery(runtime, task_
     assert decision.rule_id != "gate_forgery", decision
 
 
-def test_v1237_cli_comment_forgery_still_denied(runtime, task_context):
+def test_v1238_cli_comment_forgery_still_denied(runtime, task_context):
     # the real CLI write form stays policed
     decision = runtime.pre_tool_call(
         "terminal",
@@ -656,7 +656,7 @@ def test_v1237_cli_comment_forgery_still_denied(runtime, task_context):
     assert (decision.decision, decision.rule_id) == ("deny", "gate_forgery")
 
 
-def test_v1237_other_role_attestation_stays_denied(runtime, task_context):
+def test_v1238_other_role_attestation_stays_denied(runtime, task_context):
     # run 58 shape: tech attests the review gate (authors: qa only)
     decision = runtime.pre_tool_call(
         "kanban_comment",
@@ -666,7 +666,7 @@ def test_v1237_other_role_attestation_stays_denied(runtime, task_context):
     assert (decision.decision, decision.rule_id) == ("deny", "gate_forgery")
 
 
-def test_v1237_quoted_anchor_and_marker_in_verdict_are_data(runtime):
+def test_v1238_quoted_anchor_and_marker_in_verdict_are_data(runtime):
     # live FP 05.10 (t_85547708 / t_38c0f11a): QA verdict reports echoing the
     # company anchor and the awaited independent form were denied gate_forgery
     ctx = {
@@ -694,20 +694,20 @@ def test_v1237_quoted_anchor_and_marker_in_verdict_are_data(runtime):
     )
 
 
-def test_v1237_bare_binding_attestation_still_arms(runtime):
+def test_v1238_bare_binding_attestation_still_arms(runtime):
     # control: the quote filter never weakens the canonical bare form
     missing = runtime.missing_gates("release_to_protected_branch", _ctx(_go_and_gate(_H64)))
     assert "ci" not in missing
 
 
-def test_v1237_pass_markers_without_go_anchor_stay_fail_closed(runtime):
+def test_v1238_pass_markers_without_go_anchor_stay_fail_closed(runtime):
     # run 60 shape: no company GO anchor — PASS markers arm nothing
     records = [{"author": "qa", "body": "gate:ci=pass head=" + _H64 + " task_type: ops"}]
     missing = runtime.missing_gates("deploy_external_runtime", _ctx(records))
     assert missing == ["ci", "qa", "backup", "rollback"]
 
 
-def test_v1237_worker_control_plane_deploy_denied_with_truthful_route(runtime, task_context):
+def test_v1238_worker_control_plane_deploy_denied_with_truthful_route(runtime, task_context):
     # run 61: the worker itself attempting the control-plane deploy stays
     # denied, and the remediation now names the REAL route (operator company
     # session, bundle+runbook, [continues: company]) — the tech-card advice
@@ -727,7 +727,7 @@ def test_v1237_worker_control_plane_deploy_denied_with_truthful_route(runtime, t
     assert "bundle" in how and "src/" in how
 
 
-def test_v1237_broken_marker_card_keeps_lifecycle_channel(runtime, task_context):
+def test_v1238_broken_marker_card_keeps_lifecycle_channel(runtime, task_context):
     # RR-4c "dies forever" regression (live: t_78852bc1 / t_4971a23c /
     # t_b46df615 fenced EVERY call incl. lifecycle): state-changing work
     # stays denied, but the card keeps comment/block/heartbeat/show to hand

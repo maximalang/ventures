@@ -15,7 +15,7 @@ TASK_LINE = re.compile(r"(?im)^\s*task_type\s*:\s*([a-z_-]+)\s*$")
 TASK_TAG = re.compile(r"(?i)(?:^|[\s,;])task_type\s*=\s*([a-z_-]+)(?=$|[\s,;])")
 TASK_SKILL = re.compile(r"(?i)(?:^|[\s,;])task-type-(research|code|review|ops)(?=$|[\s,;])")
 
-# v1.2.37 FP-literal-traps (card t_e393b6e8, RECOVERY-PROGRAM RR-4c): a
+# v1.2.38 FP-literal-traps (card t_e393b6e8, RECOVERY-PROGRAM RR-4c): a
 # task-type token inside an EXPLICIT QUOTE (markdown blockquote line, fenced
 # code block, «…» / "…" / `…` inline span) or inside a SANCTIONED emission
 # binding line (any line carrying a head=<hex> binding — company anchors,
@@ -78,7 +78,7 @@ def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
     decides; non-canonical markers are reported only when the body carries
     no canonical marker at all.
 
-    v1.2.37 FP-literal-traps: quoted spans (blockquotes, fenced blocks,
+    v1.2.38 FP-literal-traps: quoted spans (blockquotes, fenced blocks,
     «…»/"…"/`…`) and emission binding lines (head=<hex>) are masked out
     BEFORE matching — their task-type tokens are data, never class markers.
     """
@@ -177,7 +177,7 @@ def _is_control_plane_store_name(basename: str) -> bool:
     )
 
 
-# v1.2.37 FP-read-lane (card t_e393b6e8, RR-4b): ENUMERATION of a
+# v1.2.38 FP-read-lane (card t_e393b6e8, RR-4b): ENUMERATION of a
 # directory-family protected pattern (sessions / request_dump / dumps)
 # reveals NAMES, never contents — it is not a secret operation. Live FP
 # (t_90c07896 run 41): `ls <profiles>/tech/sessions/` denied as
@@ -531,7 +531,7 @@ READ_COMMAND = re.compile(
     # hard to bound lexically (-us/-ns/-Iseconds all cluster with 's'), so it
     # stays fail-closed. echo/printf never read or write files; redirects,
     # tee, command substitution and backticks still fail closed elsewhere.
-    # v1.2.37 FP-read-lane (card t_e393b6e8, RR-3/RR-4a): the sanctioned
+    # v1.2.38 FP-read-lane (card t_e393b6e8, RR-3/RR-4a): the sanctioned
     # read-only diagnostics route for policy state joins the read lane —
     # `fleet-policy status|show|events|task` (console script) and
     # `python -m fleet_policy.cli status|show|events|task`, with the global
@@ -1616,7 +1616,7 @@ def _exempt_quote_spans(command: str) -> list[tuple[int, int]]:
     return spans
 
 
-# v1.2.37 FP-read-lane (RR-4a): a denied control-plane call whose command
+# v1.2.38 FP-read-lane (RR-4a): a denied control-plane call whose command
 # TEXT shows read intent (mode=ro, sqlite3 -readonly, SELECT…FROM, kanban
 # show, CLI read verbs) keeps its fail-closed deny — heredocs/multiline
 # probes are never parsed — but the reason must point at the sanctioned
@@ -1681,7 +1681,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             if name in TERMINAL_TOOLS and _read_shaped_probe(
                 str(arguments.get("command") or arguments.get("cmd") or "")
             ):
-                # v1.2.37 FP-read-lane (RR-4a): the deny stands (heredoc /
+                # v1.2.38 FP-read-lane (RR-4a): the deny stands (heredoc /
                 # multiline / metachar probes fail closed), but a READ-shaped
                 # probe is pointed at the sanctioned read lane instead of
                 # leaving the worker to guess and loop.
@@ -1695,7 +1695,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             _enumerable_directory_pattern(matched)
             and _enumeration_only_read(name, arguments, effect)
         ):
-            # v1.2.37 FP-read-lane (RR-4b): listing a sessions/dumps/
+            # v1.2.38 FP-read-lane (RR-4b): listing a sessions/dumps/
             # request_dump tree reveals NAMES only — not a secret operation.
             # Any content read inside those trees stays denied below.
             continue

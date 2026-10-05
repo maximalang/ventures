@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.37] - 2026-10-05
+## [1.2.38] - 2026-10-05
 
 Card t_e393b6e8 (fleet-ops, RECOVERY-PROGRAM RR-3/RR-4 root-fix). Live
 evidence: policy-store deny events of the 04–05.10 activation incident —
@@ -76,7 +76,7 @@ loops against board/policy stores).
   read-only diagnostics route.
 
 ### Tests
-- tests/test_v1234_fp_corpus.py: v1.2.37 section — CLI read-lane allow +
+- tests/test_v1234_fp_corpus.py: v1.2.38 section — CLI read-lane allow +
   mutator/self-approval TP controls (incl. `--root` forms), sessions
   enumeration FP/TP matrix, sqlite-heredoc deny + CLI-route reason, control-
   plane write without read-lane advice, POISON-quote inference regressions,

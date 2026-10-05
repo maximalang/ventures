@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # deploy_policy.sh — OPERATOR-ONLY control-plane deploy of the fleet-policy
-# plugin (v1.2.37, card t_e393b6e8, RECOVERY-PROGRAM RR-3).
+# plugin (v1.2.38, card t_e393b6e8, RECOVERY-PROGRAM RR-3).
 #
 # WHO RUNS THIS: the company OPERATOR session (interactive, non-worker).
 # A dispatcher worker attempting this deploy is denied by the policy gate
@@ -38,7 +38,7 @@ usage: deploy_policy.sh --repo <path> --tag <tag> [--plugin-dir <path>]
                         [--profiles-root <path>] [--skip-tests] [--dry-run] [--force]
 
   --repo           local clone of maximalang/ventures containing the tag
-  --tag            release tag to deploy, e.g. v1.2.37 (deploy is tag-only)
+  --tag            release tag to deploy, e.g. v1.2.38 (deploy is tag-only)
   --plugin-dir     live plugin clone (default: profiles/company/plugins/fleet-policy)
   --profiles-root  hermes profiles root for the symlink audit
   --skip-tests     skip worktree test/bundle proof (tag already proven)
