@@ -1,0 +1,17 @@
+{
+  "created_at_utc": "2026-10-03T20:56:41.430912+00:00",
+  "additional_core_sources": [
+    {
+      "name": "dots-enterprise-local-access",
+      "url": "https://learn.chatgpt.com/docs/enterprise/cloud-local-access.md",
+      "final_url": "https://learn.chatgpt.com/docs/enterprise/cloud-local-access.md",
+      "retrieved_at_utc": "2026-10-03T20:56:23.207582+00:00",
+      "http_status": 200,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-enterprise-local-access.md",
+      "file_bytes": 23503,
+      "file_sha256": "96fb9588467b97c5fd641d93d949977455ed8be8e5aa171081c9880e26a366a4"
+    }
+  ],
+  "total_core_sources": 8,
+  "total_sources": 13
+}

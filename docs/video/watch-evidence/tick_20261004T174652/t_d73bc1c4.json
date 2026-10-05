@@ -1,0 +1,236 @@
+{
+  "task": {
+    "id": "t_d73bc1c4",
+    "title": "Fonovisa: подтвердить разрешённый маршрут полного просмотра и прослушивания → route evidence, не приёмка видео",
+    "body": "task_type: ops\nSpec: C:/Users/max/Documents/video-quality-upgrade/V9/FONOVISA_SENSORY_ROUTE_SPEC_20261004.md\nСдать ROUTE_READY/UNPROVEN + W1–W3 evidence. Не media acceptance; не рендерить; без inference/публикаций; 0₽.",
+    "assignee": "operations",
+    "status": "done",
+    "priority": 1,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_d73bc1c4",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1791114072,
+    "started_at": 1791114085,
+    "completed_at": 1791114901,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": 1200,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "cron_bea46eb9fd5b_20261004_142041",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": "ROUTE_UNPROVEN delivered for Fonovisa NG-V9-01. W1 listening: no authorized automated listening route evidenced; owner-listening package not executed. W2 vision: qa auxiliary vision custom/qwen-vl-max @ DashScope failed with 1211 Unknown Model (4 receipts in qa errors.log 2026-10-04); working fleet vision route exists on openai-codex/gpt-6-luna (company/operations/tech) but qa is not configured for it and this card prohibits config changes. W3 full watch: no continuous human-watch receipt exists. Residual F-3 duration conflict (59.833s vs owner 35-55s) remains unresolved; next owner company, subsequent sensory acceptance qa. No runtime/account/source mutation performed.",
+  "parents": [
+    "t_92eeba4a"
+  ],
+  "children": [],
+  "comments": [],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "operations",
+        "status": "ready",
+        "parents": [
+          "t_92eeba4a"
+        ],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1791114072,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:19968",
+        "expires": 1791114985,
+        "run_id": 392
+      },
+      "created_at": 1791114085,
+      "run_id": 392
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 10136,
+        "started_at": "|179111408568"
+      },
+      "created_at": 1791114085,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114112,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Reading immutable inputs per spec"
+      },
+      "created_at": 1791114144,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114172,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114235,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114295,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114362,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114422,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114482,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114542,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114616,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114676,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114738,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114798,
+      "run_id": 392
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791114858,
+      "run_id": 392
+    },
+    {
+      "kind": "completed",
+      "payload": {
+        "result_len": 0,
+        "summary": "ROUTE_UNPROVEN delivered for Fonovisa NG-V9-01. W1 listening: no authorized automated listening route evidenced; owner-listening package not executed. W2 vision: qa auxiliary vision custom/qwen-vl-max @ DashScope failed with 1211 Unknown Model (4 receipts in qa errors.log 2026-10-04); working fleet vision route exists on openai-codex/gpt-6-luna (company/operations/tech) but qa is not configured fo",
+        "artifacts": [
+          "C:/Users/max/Documents/video-quality-upgrade/V9/NG-V9-01/SENSORY_ROUTE_20261004/SENSORY_ROUTE.md",
+          "C:/Users/max/Documents/video-quality-upgrade/V9/NG-V9-01/SENSORY_ROUTE_20261004/SENSORY_ROUTE.json"
+        ]
+      },
+      "created_at": 1791114901,
+      "run_id": 392
+    }
+  ],
+  "runs": [
+    {
+      "id": 392,
+      "profile": "operations",
+      "step_key": null,
+      "status": "done",
+      "outcome": "completed",
+      "summary": "ROUTE_UNPROVEN delivered for Fonovisa NG-V9-01. W1 listening: no authorized automated listening route evidenced; owner-listening package not executed. W2 vision: qa auxiliary vision custom/qwen-vl-max @ DashScope failed with 1211 Unknown Model (4 receipts in qa errors.log 2026-10-04); working fleet vision route exists on openai-codex/gpt-6-luna (company/operations/tech) but qa is not configured for it and this card prohibits config changes. W3 full watch: no continuous human-watch receipt exists. Residual F-3 duration conflict (59.833s vs owner 35-55s) remains unresolved; next owner company, subsequent sensory acceptance qa. No runtime/account/source mutation performed.",
+      "error": null,
+      "metadata": {
+        "1211_class": "DashScope vendor Unknown Model; server-side refusal, not network/local crash",
+        "authority_boundary": "qa vision config change reserved to company/owner",
+        "deliverables": {
+          "SENSORY_ROUTE.json": {
+            "bytes": 5968,
+            "sha256": "748476e805e003d9834bbdd7c700af996e45004ef03e5e44a894a1b79b2a8028"
+          },
+          "SENSORY_ROUTE.md": {
+            "bytes": 6386,
+            "sha256": "ae2544bc0c5e8d3b88530f34d5f3f68788d1e8213a8588913ddcf37e990d435d"
+          }
+        },
+        "financial": {
+          "estimated_usage_cost": null,
+          "incremental_paid_costs_rub": 0,
+          "new_commitments_rub": 0
+        },
+        "master_sha256": "14bcbbec9bfb29d91c19ec3fa3fbdbd42d9f2d9f7841be480b1b15e17c854636",
+        "missing_capability": "working vision model on qa auxiliary slot or authorized reroute; owner-listening package execution",
+        "next_owner": "company",
+        "prohibitions_observed": [
+          "no probes",
+          "no uploads",
+          "no config changes",
+          "no deletions"
+        ],
+        "residual_f3": "59.833s vs owner 35-55s unresolved, next video-director/company",
+        "subsequent_sensory_owner": "qa",
+        "verdict": "ROUTE_UNPROVEN",
+        "w1": "UNPROVEN",
+        "w2": "UNPROVEN",
+        "w3": "UNPROVEN",
+        "artifacts": [
+          "C:/Users/max/Documents/video-quality-upgrade/V9/NG-V9-01/SENSORY_ROUTE_20261004/SENSORY_ROUTE.md",
+          "C:/Users/max/Documents/video-quality-upgrade/V9/NG-V9-01/SENSORY_ROUTE_20261004/SENSORY_ROUTE.json"
+        ],
+        "worker_session_id": "20261004_144135_5e53a7",
+        "receipt": {
+          "status": "done",
+          "evidence_refs": [],
+          "next_action": "verify outcome"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791114085,
+      "ended_at": 1791114901
+    }
+  ]
+}

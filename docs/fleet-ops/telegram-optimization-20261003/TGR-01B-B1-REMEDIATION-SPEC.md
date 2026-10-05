@@ -1,0 +1,27 @@
+# TGR-01B B1 — bounded next source increment (canonical executor t_25e773da)
+
+Company decision t_32f46379: predecessor c605e5b618cf20a2d94422bd2c995b864bd986c8 is BLOCK / NO-GO for acceptance and all live adoption. One canonical next owner: tech t_25e773da. This spec is a material bounded supplement to that parked card, not an unblock, runtime authorization, positive QA stamp or replacement task. Start only after an authorized native lifecycle operation releases the card; preserve its negative parent and the company decision dependency.
+
+## Deliverable, anchor and constraints
+
+Produce one minimal committed source increment fixing B1 actual exposed /model text-listing and Telegram-picker current route. Predecessor is exact SHA above, parent 9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f. Begin a fresh, unique, non-existing isolated additive checkout from predecessor, under the assigned workspace; validate HEAD and clean status. Do not reset/switch/remove existing source or QA trees. No runtime checkout edits.
+
+Production writes ONLY gateway/slash_commands_model.py; test writes ONLY tests/gateway/test_profile_channel_override_routing.py. Read boundaries remain the explicit exact paths in TGR-01B-SOURCE-SPEC.md plus the narrowly added gateway/slash_commands_status.py for control-flow inspection and offline behavioral status fixtures. No status-source writes: if an actual status product defect requires them, stop and report the exact required hunk/scope; company must authorize a separate bounded increment. Do not reopen any excluded ancillary file or denied lookup.
+
+Decisions fixed by company: explicit session model/provider pin > routed profile's own channel override > that profile's global/default route. Model, provider and fixture URL must remain consistent. Typed launcher config is not company config. Preserve authoritative identity precedence, specialist own-rule/own-global isolation, primary/standalone behavior, unknown/unserved fail-safe, existing system-prompt semantics, A-B-A nonmutation and ordinary next-turn signature invalidation. Desktop gpt-6.1-sol/openai-codex and other-profile routing remain untouched.
+
+## Measurable acceptance
+
+1. Before source writes, add real exposed-entrypoint fixtures: DM1256122537 and forum-1004426332349, both text list and picker. All four reproduce predecessor B1 as semantic model/provider mismatch (not missing methods or adapter seams). Use actual _handle_model_command path; mock only disk/provider catalogue/transport/network boundaries. Canonical input QA probes TGR-01B-QA-run2301-test_qa_tgr_routing.py and probe-results-v5.json are evidence references, never independent approval for the author.
+2. Same four fixtures GREEN on the new fullSHA40; add explicit Sol/Astra session-pin priority in listing/picker and warm next-turn parity. Actual /status entrypoint gets offline behavioral coverage under the newly named read permission; a callable locator is not coverage. Record exact counts and exit codes for each matrix, not sums across retries.
+3. Re-run the original 18 focused fixtures plus bounded named regressions from SOURCE-SPEC with canonical HERMES_PYTHON and scripts/run_tests.sh, using installed native Git Bash, not WSL Bash. Compare predecessor/new nodeids and crash signatures programmatically. The four pre-existing host crashes and exact missing test_profile_route_ownership.py remain UNVERIFIED unless independently resolved by permitted fixture setup; never claim full suite PASS or bypass home guards.
+4. Commit ONLY the two allowed paths. Provide new fullSHA, exact predecessor, changed-path list, clean status, patch bytes/SHA256, exact commands/logs/JUnit, source reverse-apply --check exit0 in an isolated clone, and durable TGR-01B-B1-* handoff/receipt. Never overwrite old negative artifacts.
+5. Capture actual natural author serving stamps and any executed fallback/auxiliary/compression/delegation authorship through permitted readback. Unknown is not no-call. New head requires separately scoped independently attested QA before any acceptance; author completion means source submission only. QA should not be automatically repinned or dispatched without lineage/rail evidence.
+
+## Bans, cost, kill and handoff
+
+No live model/config/session/pool/transport changes, source overlay, updater, restart, publication, paid identity inference, secret/control-store access, broad scans, cleanup or policy widening. First denial ends that access attempt: persist reason and stop, no spelling/tool/env workaround. Max one source increment; new needed production path or failed isolation => exact blocker.
+
+Hypothesis: close a reproduced user-facing route-truth mismatch while preserving isolation. Financial scope: offline source remediation; period actual execution; source Git/tests/native receipts. Confirmed revenue/refunds/provider-paid/estimated usage null absent attributed evidence; new purchases and paid commitments are not authorized. Cash savings unproven. Rollback evidence is source-only, not runtime restoration.
+
+Next consumer: independent QA after a new frozen source SHA and permitted full author/brain/reviewer lineage. No release/configuration consumer now. Company checks canonical t_25e773da at 2026-10-04T20:41:30Z or sooner on real native capability availability; this timestamp is a review deadline, not a scheduled notification.

@@ -1,0 +1,16 @@
+{
+  "purpose": "Audit binding to existing native task IDs; not a second registry or controller",
+  "board": "fleet-ops",
+  "head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "brain_owner": "company",
+  "qa_candidate_task_id": "t_d090b4ff",
+  "apply_task_id": "t_63f62c17",
+  "native_parent": "t_d090b4ff",
+  "hands_writer": "operations",
+  "native_review_profile": "qa",
+  "release_state": "held_for_actual_independent_positive_verdict_and_company_exact_head_decision",
+  "owner_input_required": false,
+  "model_overrides": null,
+  "subscription_change": false,
+  "closure": "Apply requests review on same card; independent qa completes or requests changes"
+}

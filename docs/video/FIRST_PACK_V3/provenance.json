@@ -1,0 +1,33 @@
+{
+  "status": "draft_not_published",
+  "campaign_id": "cmtpoafsx0boq1mm6n3xr069f",
+  "campaign_live_checked": "2026-09-21",
+  "banner": {
+    "path": "C:/Users/max/AppData/Local/hermes/kanban/boards/video/workspaces/wardogs-first-pack-v2/assets/banner_wardogs_ru.png",
+    "sha256": "ec2c49d41de33eff3e8d8f17c997e153c45261a5a2af9e9bc51d0e1aa3b54751",
+    "overlay": "900px wide, x=90, y=20, 100% duration"
+  },
+  "clips": [
+    {
+      "id": "WD-V2-02",
+      "output": "out/WD-V2-02_draft.mp4",
+      "sha256": "fa89e8f7301e466ea67671a34e920a5b4d32da121d32400945627b59114f0dc8",
+      "source_url": "https://www.youtube.com/watch?v=8Fl-mRN1HmE",
+      "source_sha256": "ba40bc8b3d826d3b93e47929fea8c3a7ed55665a6917c0c25bee04d6ed3c0490",
+      "source_ranges": ["13.47-24.65", "6.43-13.31", "24.87-32.09"],
+      "transformation": "narrative reorder, original campaign banner, new hook/checklist overlay, -14 LUFS normalization"
+    },
+    {
+      "id": "WD-V2-03",
+      "output": "out/WD-V2-03_draft.mp4",
+      "sha256": "c8c3c8dc1061d3b10b02d257629b47d7fd42fa496c006fb19e05ac6db43643be",
+      "source_url": "https://www.youtube.com/watch?v=i8nNPIUgu7U",
+      "source_sha256": "a49b7a4603d93a6458376b6a1a83e0f272b02810a9d360b29c5e3c453bd7f486",
+      "source_ranges": ["28.00-45.50"],
+      "transformation": "selected rescue arc, original campaign banner, new hook/story overlay, -14 LUFS normalization"
+    }
+  ],
+  "rejected": [{"id": "WD-V2-01", "reason": "legacy master contains burned captions/EOF damage; attempted delogo introduced unacceptable artifacts; director explicitly permitted shortage to two fresh clips"}],
+  "rights_basis": "Klipni Wardogs RU campaign explicitly authorizes clips from listed community YouTube/Twitch sources and requires the supplied banner.",
+  "publish_gate": "independent QA then explicit owner GO on these exact hashes"
+}

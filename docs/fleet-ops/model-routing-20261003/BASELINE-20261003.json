@@ -1,0 +1,2326 @@
+{
+  "captured_at": "2026-10-03T19:31:10.094284+00:00",
+  "window_note": "cumulative boundary snapshot",
+  "spec": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/model-routing-20261003/SPEC-baseline-freeze.md",
+  "method": "sqlite3 URI mode=ro&immutable=0, GROUP BY (model, provider, cost_status)",
+  "per_profile": {
+    "company": {
+      "custom|unknown|unknown": {
+        "MiniMax-M2.5": {
+          "input": 3755,
+          "output": 45,
+          "cache_read": 0,
+          "reasoning": 37,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "deepseek-v4-flash": {
+          "input": 151563,
+          "output": 8401,
+          "cache_read": 221056,
+          "reasoning": 5018,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "deepseek-v4-flash-0731": {
+          "input": 4231,
+          "output": 55,
+          "cache_read": 0,
+          "reasoning": 51,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "deepseek-v4-pro": {
+          "input": 4148,
+          "output": 21,
+          "cache_read": 0,
+          "reasoning": 16,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "deepseek-v4-pro-0813": {
+          "input": 102132,
+          "output": 6834,
+          "cache_read": 307200,
+          "reasoning": 5102,
+          "calls": 12,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "glm-5.2-fast-preview": {
+          "input": 3900,
+          "output": 19,
+          "cache_read": 0,
+          "reasoning": 15,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "glm-5.3": {
+          "input": 29972,
+          "output": 3,
+          "cache_read": 256,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "glm-5.3-free": {
+          "input": 35021,
+          "output": 14,
+          "cache_read": 28160,
+          "reasoning": 0,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-astra": {
+          "input": 4782375,
+          "output": 88086,
+          "cache_read": 51019520,
+          "reasoning": 34530,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "kimi-k2.7-code": {
+          "input": 3487,
+          "output": 28,
+          "cache_read": 0,
+          "reasoning": 25,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "kimi-k3": {
+          "input": 12298063,
+          "output": 110772,
+          "cache_read": 67669760,
+          "reasoning": 13571,
+          "calls": 70,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen-vl-max": {
+          "input": 84,
+          "output": 189,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-flash": {
+          "input": 4166,
+          "output": 21,
+          "cache_read": 0,
+          "reasoning": 16,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 198846846,
+          "output": 53751272,
+          "cache_read": 4824673152,
+          "reasoning": 41827465,
+          "calls": 772,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "opencode-zen|unknown|unknown": {
+        "big-pickle": {
+          "input": 31191,
+          "output": 15,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "ling-3.0-flash-fin-free": {
+          "input": 6326,
+          "output": 71,
+          "cache_read": 0,
+          "reasoning": 69,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "mimo-v2.5-free": {
+          "input": 8069,
+          "output": 52,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nemotron-3-ultra-free": {
+          "input": 31710,
+          "output": 29,
+          "cache_read": 0,
+          "reasoning": 28,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "1|unknown|unknown": {
+        "claude-fable-5": {
+          "input": 585940,
+          "output": 13325,
+          "cache_read": 2956542,
+          "reasoning": 4649,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-astra": {
+          "input": 4390481,
+          "output": 78161,
+          "cache_read": 30891930,
+          "reasoning": 31698,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "ollama-cloud|unknown|unknown": {
+        "gemma4:31b": {
+          "input": 6878,
+          "output": 219,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nemotron-3-nano:30b": {
+          "input": 6936,
+          "output": 5172,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|unknown|unknown": {
+        "glm-5.3": {
+          "input": 2060704,
+          "output": 608442,
+          "cache_read": 30016064,
+          "reasoning": 464140,
+          "calls": 11,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "glm-5.3-flash": {
+          "input": 45618926,
+          "output": 5698185,
+          "cache_read": 410410048,
+          "reasoning": 4335431,
+          "calls": 204,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|chat_completions|unknown": {
+        "glm-5.3": {
+          "input": 2986949,
+          "output": 510193,
+          "cache_read": 96036288,
+          "reasoning": 305241,
+          "calls": 6,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "glm-5.3-flash": {
+          "input": 20905805,
+          "output": 1745204,
+          "cache_read": 471269248,
+          "reasoning": 946303,
+          "calls": 33,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 106387,
+          "output": 64282,
+          "cache_read": 0,
+          "reasoning": 34103,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol": {
+          "input": 81084,
+          "output": 17911,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol-900k": {
+          "input": 100378,
+          "output": 29784,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 1557,
+          "output": 261,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "kimi-k3": {
+          "input": 18528,
+          "output": 20845,
+          "cache_read": 0,
+          "reasoning": 6246,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nemotron-3-ultra-free": {
+          "input": 1124,
+          "output": 187,
+          "cache_read": 0,
+          "reasoning": 188,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+          "input": 41810,
+          "output": 265741,
+          "cache_read": 0,
+          "reasoning": 185800,
+          "calls": 8,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 31163,
+          "output": 55628,
+          "cache_read": 0,
+          "reasoning": 32408,
+          "calls": 19,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "z-ai/glm-5.2:free": {
+          "input": 587,
+          "output": 227,
+          "cache_read": 0,
+          "reasoning": 187,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|codex_responses|unknown": {
+        "glm-5.3-flash": {
+          "input": 546577,
+          "output": 25543,
+          "cache_read": 2031168,
+          "reasoning": 19546,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|subscription_included|unknown": {
+        "glm-5.3-flash": {
+          "input": 984086,
+          "output": 99897,
+          "cache_read": 14700224,
+          "reasoning": 69206,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "copilot|unknown|unknown": {
+        "gpt-4o-mini": {
+          "input": 3846,
+          "output": 101,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.5": {
+          "input": 29502,
+          "output": 56,
+          "cache_read": 29184,
+          "reasoning": 34,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-luna": {
+          "input": 66162,
+          "output": 280,
+          "cache_read": 0,
+          "reasoning": 39,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol": {
+          "input": 97660189,
+          "output": 3868634,
+          "cache_read": 1244623232,
+          "reasoning": 1775462,
+          "calls": 93,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 139937,
+          "output": 327,
+          "cache_read": 110592,
+          "reasoning": 190,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-astra": {
+          "input": 27248878,
+          "output": 1130225,
+          "cache_read": 225826944,
+          "reasoning": 194850,
+          "calls": 42,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-luna": {
+          "input": 1397949,
+          "output": 124367,
+          "cache_read": 5361664,
+          "reasoning": 108331,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 9837220,
+          "output": 638129,
+          "cache_read": 230956544,
+          "reasoning": 341037,
+          "calls": 11,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 25122255,
+          "output": 1820761,
+          "cache_read": 202145408,
+          "reasoning": 995574,
+          "calls": 57,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 1466391,
+          "output": 412032,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 24,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol-900k": {
+          "input": 842066,
+          "output": 271828,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 16,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-astra": {
+          "input": 116958,
+          "output": 38428,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-luna": {
+          "input": 49389,
+          "output": 6477,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 325446,
+          "output": 44561,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 9,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 452154,
+          "output": 33487,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|chat_completions|unknown": {
+        "kimi-k3": {
+          "input": 2271620,
+          "output": 60032,
+          "cache_read": 25920512,
+          "reasoning": 6784,
+          "calls": 6,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 41385400,
+          "output": 11722484,
+          "cache_read": 2023257472,
+          "reasoning": 8583234,
+          "calls": 66,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|codex_responses|unknown": {
+        "kimi-k3": {
+          "input": 406360,
+          "output": 17788,
+          "cache_read": 4780800,
+          "reasoning": 589,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 9828615,
+          "output": 2114264,
+          "cache_read": 390763136,
+          "reasoning": 1516850,
+          "calls": 12,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|subscription_included|unknown": {
+        "kimi-k3": {
+          "input": 2960524,
+          "output": 43995,
+          "cache_read": 103311360,
+          "reasoning": 0,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 12109264,
+          "output": 2067897,
+          "cache_read": 256946688,
+          "reasoning": 1594911,
+          "calls": 22,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "opencode-free|unknown|unknown": {
+        "laguna-s-2.1-free": {
+          "input": 2688,
+          "output": 4,
+          "cache_read": 224,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "ling-3.0-flash-fin-free": {
+          "input": 3248,
+          "output": 232,
+          "cache_read": 0,
+          "reasoning": 166,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "mimo-v2.5-free": {
+          "input": 3085,
+          "output": 149,
+          "cache_read": 1024,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nemotron-3-ultra-free": {
+          "input": 3274,
+          "output": 30,
+          "cache_read": 0,
+          "reasoning": 27,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "kilocode|unknown|estimated": {
+        "meituan/longcat-2.0-free": {
+          "input": 3041,
+          "output": 271,
+          "cache_read": 0,
+          "reasoning": 240,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "minimax/minimax-m2.7:free": {
+          "input": 4828,
+          "output": 326,
+          "cache_read": 3579,
+          "reasoning": 230,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 41668,
+          "output": 240,
+          "cache_read": 0,
+          "reasoning": 215,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "stepfun/step-3.7-flash:free": {
+          "input": 6663,
+          "output": 401,
+          "cache_read": 2816,
+          "reasoning": 387,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|unknown|unknown": {
+        "minimax/minimax-m3:free": {
+          "input": 3857,
+          "output": 4,
+          "cache_read": 128,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "tech": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 28850545,
+          "output": 5858686,
+          "cache_read": 317241728,
+          "reasoning": 4505463,
+          "calls": 233,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 10122,
+          "output": 8568,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 98697,
+          "output": 9797,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 27428,
+          "output": 12942,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-sol": {
+          "input": 1497667,
+          "output": 109255,
+          "cache_read": 13103104,
+          "reasoning": 34088,
+          "calls": 11,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 6813561,
+          "output": 403038,
+          "cache_read": 31577088,
+          "reasoning": 236802,
+          "calls": 44,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+          "input": 3527,
+          "output": 4675,
+          "cache_read": 0,
+          "reasoning": 4235,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 2165,
+          "output": 3908,
+          "cache_read": 2048,
+          "reasoning": 3753,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "qwen3.8-max": {
+          "input": 132085677,
+          "output": 46661583,
+          "cache_read": 1976002560,
+          "reasoning": 39184691,
+          "calls": 656,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|subscription_included|unknown": {
+        "qwen3.8-max": {
+          "input": 983518,
+          "output": 194847,
+          "cache_read": 10845184,
+          "reasoning": 154149,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|unknown|estimated": {
+        "z-ai/glm-5.2": {
+          "input": 12818,
+          "output": 94,
+          "cache_read": 21248,
+          "reasoning": 73,
+          "calls": 1,
+          "estimated_cost_usd": 0.0167726856,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "ux": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 68203,
+          "output": 24261,
+          "cache_read": 1141568,
+          "reasoning": 14655,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-sol": {
+          "input": 494400,
+          "output": 19184,
+          "cache_read": 4050688,
+          "reasoning": 8347,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 15125,
+          "output": 8,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "gpt-6-sol": {
+          "input": 340,
+          "output": 276,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 1488,
+          "output": 4031,
+          "cache_read": 0,
+          "reasoning": 1475,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-6-sol": {
+          "input": 23418,
+          "output": 5844,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 5874,
+          "output": 5114,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "qwen3.8-max": {
+          "input": 711645,
+          "output": 205788,
+          "cache_read": 9813120,
+          "reasoning": 151547,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "video-editor": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 1520763,
+          "output": 300646,
+          "cache_read": 5759168,
+          "reasoning": 234435,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 374,
+          "output": 458,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 10281,
+          "output": 902,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+          "input": 3225,
+          "output": 15812,
+          "cache_read": 0,
+          "reasoning": 11112,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 17529,
+          "output": 9706,
+          "cache_read": 0,
+          "reasoning": 3868,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 108968,
+          "output": 45980,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 123655,
+          "output": 13651,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 10,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 26156,
+          "output": 16446,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "qwen3.8-max": {
+          "input": 10260125,
+          "output": 5406959,
+          "cache_read": 176039168,
+          "reasoning": 4786359,
+          "calls": 31,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "qa": {
+      "custom|unknown|unknown": {
+        "glm-5.2": {
+          "input": 712983,
+          "output": 81097,
+          "cache_read": 12665856,
+          "reasoning": 50693,
+          "calls": 21,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "kimi-k3": {
+          "input": 6626578,
+          "output": 611855,
+          "cache_read": 110861312,
+          "reasoning": 68541,
+          "calls": 73,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 23184643,
+          "output": 7209417,
+          "cache_read": 234252160,
+          "reasoning": 5687336,
+          "calls": 210,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|unknown|unknown": {
+        "glm-5.3": {
+          "input": 32870157,
+          "output": 7437012,
+          "cache_read": 388629568,
+          "reasoning": 5525374,
+          "calls": 629,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "glm-5.3-flash": {
+          "input": 37386925,
+          "output": 5804212,
+          "cache_read": 206539904,
+          "reasoning": 4254298,
+          "calls": 369,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|subscription_included|unknown": {
+        "glm-5.3": {
+          "input": 303076,
+          "output": 15880,
+          "cache_read": 419392,
+          "reasoning": 14552,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "glm-5.3-flash": {
+          "input": 41945,
+          "output": 6703,
+          "cache_read": 206784,
+          "reasoning": 4401,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 7856,
+          "output": 2788,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "kimi-k3": {
+          "input": 22739,
+          "output": 5040,
+          "cache_read": 0,
+          "reasoning": 1437,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free": {
+          "input": 19361,
+          "output": 33624,
+          "cache_read": 0,
+          "reasoning": 22036,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 1486,
+          "output": 1807,
+          "cache_read": 1024,
+          "reasoning": 1693,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "z-ai/glm-5.2:free": {
+          "input": 245,
+          "output": 107,
+          "cache_read": 0,
+          "reasoning": 89,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 165634,
+          "output": 83221,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 345592,
+          "output": 34212,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 21,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 2129,
+          "output": 1539,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-sol": {
+          "input": 5626760,
+          "output": 300170,
+          "cache_read": 34706560,
+          "reasoning": 189900,
+          "calls": 45,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 7882986,
+          "output": 500395,
+          "cache_read": 36155904,
+          "reasoning": 301662,
+          "calls": 75,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 1314662,
+          "output": 93254,
+          "cache_read": 15667200,
+          "reasoning": 48925,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 7766027,
+          "output": 501684,
+          "cache_read": 43729792,
+          "reasoning": 212898,
+          "calls": 25,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|subscription_included|unknown": {
+        "kimi-k3": {
+          "input": 184723,
+          "output": 4475,
+          "cache_read": 582144,
+          "reasoning": 322,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 1039508,
+          "output": 184284,
+          "cache_read": 6394624,
+          "reasoning": 142587,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "research": {
+      "custom|unknown|unknown": {
+        "deepseek-v4-pro": {
+          "input": 268846,
+          "output": 27911,
+          "cache_read": 1504256,
+          "reasoning": 16957,
+          "calls": 9,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "kimi-k3": {
+          "input": 10509096,
+          "output": 914469,
+          "cache_read": 135991552,
+          "reasoning": 49553,
+          "calls": 104,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 7356773,
+          "output": 1084341,
+          "cache_read": 68511744,
+          "reasoning": 660973,
+          "calls": 37,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 6088956,
+          "output": 639251,
+          "cache_read": 52420160,
+          "reasoning": 346320,
+          "calls": 37,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-terra": {
+          "input": 1036511,
+          "output": 108417,
+          "cache_read": 4827648,
+          "reasoning": 60653,
+          "calls": 13,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-6.1-sol": {
+          "input": 6342,
+          "output": 2723,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "opencode-zen|unknown|unknown": {
+        "nemotron-3-ultra-free": {
+          "input": 570749,
+          "output": 6012,
+          "cache_read": 846720,
+          "reasoning": 1710,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|unknown|unknown": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 45835,
+          "output": 330,
+          "cache_read": 86400,
+          "reasoning": 145,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nvidia/nemotron-3.5-lightning:free": {
+          "input": 1951963,
+          "output": 138342,
+          "cache_read": 7311360,
+          "reasoning": 82465,
+          "calls": 13,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|unknown|estimated": {
+        "nvidia/nemotron-3.5-lightning:free": {
+          "input": 1137856,
+          "output": 51301,
+          "cache_read": 1253376,
+          "reasoning": 45324,
+          "calls": 8,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "qwen3.8-max": {
+          "input": 914,
+          "output": 695,
+          "cache_read": 0,
+          "reasoning": 632,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "finance": {
+      "custom|unknown|unknown": {
+        "deepseek-v4-pro": {
+          "input": 240474,
+          "output": 22058,
+          "cache_read": 2187776,
+          "reasoning": 7688,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "kimi-k3": {
+          "input": 1297981,
+          "output": 185054,
+          "cache_read": 11808768,
+          "reasoning": 7857,
+          "calls": 17,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 1390038,
+          "output": 285694,
+          "cache_read": 13168128,
+          "reasoning": 172650,
+          "calls": 12,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 1159714,
+          "output": 130845,
+          "cache_read": 7813376,
+          "reasoning": 74501,
+          "calls": 13,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-terra": {
+          "input": 115398,
+          "output": 6059,
+          "cache_read": 282112,
+          "reasoning": 4082,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 261181,
+          "output": 19093,
+          "cache_read": 1004800,
+          "reasoning": 2790,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "operations": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 13812722,
+          "output": 2964214,
+          "cache_read": 103284928,
+          "reasoning": 2251444,
+          "calls": 186,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 1815,
+          "output": 882,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-luna": {
+          "input": 499,
+          "output": 133,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 305,
+          "output": 197,
+          "cache_read": 0,
+          "reasoning": 176,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 15099,
+          "output": 7059,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-luna": {
+          "input": 1473,
+          "output": 639,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 120502,
+          "output": 15210,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 17,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-sol": {
+          "input": 947445,
+          "output": 72234,
+          "cache_read": 8120064,
+          "reasoning": 35352,
+          "calls": 13,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 3295015,
+          "output": 274560,
+          "cache_read": 14761472,
+          "reasoning": 182757,
+          "calls": 42,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "kimi-k3": {
+          "input": 23178397,
+          "output": 2690297,
+          "cache_read": 467006464,
+          "reasoning": 145683,
+          "calls": 269,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 13299002,
+          "output": 4070584,
+          "cache_read": 107007744,
+          "reasoning": 3241255,
+          "calls": 140,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|subscription_included|unknown": {
+        "kimi-k3": {
+          "input": 65208,
+          "output": 4716,
+          "cache_read": 642048,
+          "reasoning": 887,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "fallback_chain[0](openrouter)|unknown|unknown": {
+        "z-ai/glm-5.2:free": {
+          "input": 246,
+          "output": 119,
+          "cache_read": 0,
+          "reasoning": 100,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "product": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 1431682,
+          "output": 186355,
+          "cache_read": 8556160,
+          "reasoning": 127980,
+          "calls": 13,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|subscription_included|unknown": {
+        "glm-5.3-flash": {
+          "input": 317966,
+          "output": 41840,
+          "cache_read": 1522176,
+          "reasoning": 30709,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-sol": {
+          "input": 4819862,
+          "output": 289976,
+          "cache_read": 24530560,
+          "reasoning": 69048,
+          "calls": 39,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 14374,
+          "output": 23,
+          "cache_read": 0,
+          "reasoning": 13,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 2967439,
+          "output": 208141,
+          "cache_read": 10407808,
+          "reasoning": 84164,
+          "calls": 8,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "kimi-k3": {
+          "input": 271804,
+          "output": 22023,
+          "cache_read": 3210752,
+          "reasoning": 1436,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 717188,
+          "output": 134042,
+          "cache_read": 5213824,
+          "reasoning": 101123,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|subscription_included|unknown": {
+        "qwen3.8-max": {
+          "input": 175731,
+          "output": 15569,
+          "cache_read": 883072,
+          "reasoning": 10899,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "design": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 382335,
+          "output": 19689,
+          "cache_read": 2871936,
+          "reasoning": 6167,
+          "calls": 6,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-sol": {
+          "input": 469168,
+          "output": 20383,
+          "cache_read": 2420224,
+          "reasoning": 8667,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 15135,
+          "output": 8,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 426810,
+          "output": 47000,
+          "cache_read": 3040768,
+          "reasoning": 19104,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-6-luna": {
+          "input": 12199,
+          "output": 2479,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "kimi-k3": {
+          "input": 302579,
+          "output": 22192,
+          "cache_read": 2791680,
+          "reasoning": 557,
+          "calls": 9,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 1079655,
+          "output": 349628,
+          "cache_read": 19757056,
+          "reasoning": 185387,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "sales": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 220974,
+          "output": 19332,
+          "cache_read": 1042304,
+          "reasoning": 10588,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-terra": {
+          "input": 13481,
+          "output": 8,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "kimi-k3": {
+          "input": 93269,
+          "output": 7133,
+          "cache_read": 523776,
+          "reasoning": 73,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 907,
+          "output": 407,
+          "cache_read": 0,
+          "reasoning": 353,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "video-director": {
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 541536,
+          "output": 67049,
+          "cache_read": 8703616,
+          "reasoning": 25179,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-5.6-sol": {
+          "input": 66284,
+          "output": 47037,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 8,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-luna": {
+          "input": 11738,
+          "output": 1600,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-sol": {
+          "input": 44484,
+          "output": 5854,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 1052,
+          "output": 1313,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.6-sol": {
+          "input": 126192,
+          "output": 4917,
+          "cache_read": 532480,
+          "reasoning": 1446,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6-astra": {
+          "input": 4472236,
+          "output": 217460,
+          "cache_read": 25401728,
+          "reasoning": 27225,
+          "calls": 15,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 2419245,
+          "output": 174880,
+          "cache_read": 9643520,
+          "reasoning": 58928,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "kimi-k3": {
+          "input": 129665,
+          "output": 16157,
+          "cache_read": 2051072,
+          "reasoning": 9,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 14759,
+          "output": 29,
+          "cache_read": 8192,
+          "reasoning": 11,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "fallback_chain[0](custom)|unknown|unknown": {
+        "qwen-vl-max": {
+          "input": 4050,
+          "output": 7512,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    },
+    "default": {
+      "cloudflare|chat_completions|unknown": {
+        "@cf/qwen/qwen3.8-27b": {
+          "input": 28726,
+          "output": 136,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "moa|unknown|unknown": {
+        "default": {
+          "input": 26727,
+          "output": 2300,
+          "cache_read": 6720,
+          "reasoning": 1327,
+          "calls": 1,
+          "estimated_cost_usd": 0.00193314,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "unknown|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 13277,
+          "output": 11982,
+          "cache_read": 192,
+          "reasoning": 7768,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-luna": {
+          "input": 81840,
+          "output": 6611,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 5,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol-900k": {
+          "input": 91653,
+          "output": 15356,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "stealth/ox-alpha": {
+          "input": 31022,
+          "output": 21257,
+          "cache_read": 9536,
+          "reasoning": 0,
+          "calls": 13,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|unknown|unknown": {
+        "glm-5.3-flash": {
+          "input": 4939847,
+          "output": 866558,
+          "cache_read": 95469760,
+          "reasoning": 606480,
+          "calls": 53,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|chat_completions|unknown": {
+        "glm-5.3-flash": {
+          "input": 429757,
+          "output": 79351,
+          "cache_read": 4881792,
+          "reasoning": 55261,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|codex_responses|unknown": {
+        "glm-5.3-flash": {
+          "input": 154975,
+          "output": 23534,
+          "cache_read": 939776,
+          "reasoning": 15873,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "zai|subscription_included|unknown": {
+        "glm-5.3-flash": {
+          "input": 716307,
+          "output": 49649,
+          "cache_read": 7484032,
+          "reasoning": 21067,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|subscription_included|included": {
+        "gpt-5.5": {
+          "input": 43169,
+          "output": 67,
+          "cache_read": 0,
+          "reasoning": 53,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-luna": {
+          "input": 7314050,
+          "output": 322731,
+          "cache_read": 88938240,
+          "reasoning": 138444,
+          "calls": 17,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol": {
+          "input": 17377813,
+          "output": 685597,
+          "cache_read": 206879104,
+          "reasoning": 253450,
+          "calls": 22,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol-900k": {
+          "input": 3141331,
+          "output": 140951,
+          "cache_read": 35325440,
+          "reasoning": 53161,
+          "calls": 10,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 786062,
+          "output": 45057,
+          "cache_read": 5330176,
+          "reasoning": 26449,
+          "calls": 8,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-6.1-sol": {
+          "input": 369879,
+          "output": 30686,
+          "cache_read": 1848832,
+          "reasoning": 15885,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openai-codex|unknown|unknown": {
+        "gpt-5.6-luna": {
+          "input": 986288,
+          "output": 118093,
+          "cache_read": 12530944,
+          "reasoning": 16483,
+          "calls": 14,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol": {
+          "input": 352990,
+          "output": 56726,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-sol-900k": {
+          "input": 122009,
+          "output": 9124,
+          "cache_read": 315392,
+          "reasoning": 633,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "gpt-5.6-terra": {
+          "input": 31479,
+          "output": 8236,
+          "cache_read": 1747584,
+          "reasoning": 5335,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "ollama-cloud|chat_completions|unknown": {
+        "gpt-oss:120b": {
+          "input": 23970,
+          "output": 174,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "opencode-zen|unknown|unknown": {
+        "hy3-free": {
+          "input": 22005,
+          "output": 13,
+          "cache_read": 0,
+          "reasoning": 10,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nemotron-3-ultra-free": {
+          "input": 446721,
+          "output": 5668,
+          "cache_read": 505440,
+          "reasoning": 2128,
+          "calls": 4,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|unknown|unknown": {
+        "kimi-k3": {
+          "input": 69015,
+          "output": 3043,
+          "cache_read": 203008,
+          "reasoning": 314,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "mistral-medium-latest": {
+          "input": 461596,
+          "output": 257,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 6,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "qwen3.8-max": {
+          "input": 5089637,
+          "output": 1291363,
+          "cache_read": 60323968,
+          "reasoning": 993418,
+          "calls": 45,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "mistral|chat_completions|unknown": {
+        "mistral-small-latest": {
+          "input": 59057,
+          "output": 52,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "opencode-zen|subscription_included|unknown": {
+        "nemotron-3-ultra-free": {
+          "input": 185562,
+          "output": 2487,
+          "cache_read": 146880,
+          "reasoning": 975,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "kilocode|unknown|unknown": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 236955,
+          "output": 3524,
+          "cache_read": 289440,
+          "reasoning": 697,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "kilocode|unknown|estimated": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 30732,
+          "output": 80,
+          "cache_read": 0,
+          "reasoning": 55,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "tencent/hy3:free": {
+          "input": 22007,
+          "output": 13,
+          "cache_read": 0,
+          "reasoning": 10,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "kilocode|chat_completions|unknown": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 92418,
+          "output": 2847,
+          "cache_read": 138240,
+          "reasoning": 294,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "kilocode|subscription_included|unknown": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 85621,
+          "output": 2440,
+          "cache_read": 164160,
+          "reasoning": 1925,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|unknown|unknown": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 70923,
+          "output": 158,
+          "cache_read": 4320,
+          "reasoning": 26,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "nvidia/nemotron-3.5-lightning:free": {
+          "input": 40666,
+          "output": 4635,
+          "cache_read": 213248,
+          "reasoning": 4162,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "stealth/ox-alpha": {
+          "input": 66067193,
+          "output": 3454854,
+          "cache_read": 932315840,
+          "reasoning": 4874,
+          "calls": 41,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "z-ai/glm-5.3-flash": {
+          "input": 119820,
+          "output": 15470,
+          "cache_read": 1818816,
+          "reasoning": 8012,
+          "calls": 4,
+          "estimated_cost_usd": 0.040136240000000004,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|subscription_included|unknown": {
+        "nvidia/nemotron-3-ultra-550b-a55b:free": {
+          "input": 304265,
+          "output": 4223,
+          "cache_read": 898560,
+          "reasoning": 2134,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "stealth/ox-alpha": {
+          "input": 3320553,
+          "output": 173078,
+          "cache_read": 47010176,
+          "reasoning": 0,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|unknown|estimated": {
+        "nvidia/nemotron-3.5-lightning:free": {
+          "input": 298342,
+          "output": 3671,
+          "cache_read": 387328,
+          "reasoning": 1871,
+          "calls": 3,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "stealth/ox-alpha": {
+          "input": 3606896,
+          "output": 359266,
+          "cache_read": 90442432,
+          "reasoning": 0,
+          "calls": 13,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "z-ai/glm-5.3-flash": {
+          "input": 686336,
+          "output": 46755,
+          "cache_read": 8912640,
+          "reasoning": 21037,
+          "calls": 3,
+          "estimated_cost_usd": 0.1968535500000001,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "groq|unknown|unknown": {
+        "qwen/qwen3.8-27b": {
+          "input": 4345,
+          "output": 194,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 15,
+          "estimated_cost_usd": 0.0004936,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "alibaba|chat_completions|unknown": {
+        "qwen3.7-plus": {
+          "input": 6,
+          "output": 189,
+          "cache_read": 0,
+          "reasoning": 115,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|chat_completions|unknown": {
+        "qwen3.8-max": {
+          "input": 253334,
+          "output": 32743,
+          "cache_read": 4833280,
+          "reasoning": 25244,
+          "calls": 2,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|codex_responses|unknown": {
+        "qwen3.8-max": {
+          "input": 705778,
+          "output": 64427,
+          "cache_read": 8216448,
+          "reasoning": 43347,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "custom|subscription_included|unknown": {
+        "qwen3.8-max": {
+          "input": 1341090,
+          "output": 86469,
+          "cache_read": 26128640,
+          "reasoning": 62544,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|chat_completions|unknown": {
+        "stealth/ox-alpha": {
+          "input": 7572706,
+          "output": 484541,
+          "cache_read": 158087552,
+          "reasoning": 0,
+          "calls": 7,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "openrouter|subscription_included|estimated": {
+        "stealth/ox-alpha": {
+          "input": 115446,
+          "output": 7787,
+          "cache_read": 0,
+          "reasoning": 0,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        },
+        "z-ai/glm-5.3-flash": {
+          "input": 74099,
+          "output": 9238,
+          "cache_read": 4074944,
+          "reasoning": 2231,
+          "calls": 1,
+          "estimated_cost_usd": 0.068991085,
+          "actual_cost_usd": 0.0
+        }
+      },
+      "kilo|chat_completions|estimated": {
+        "tencent/hy3:free": {
+          "input": 28292,
+          "output": 206,
+          "cache_read": 0,
+          "reasoning": 88,
+          "calls": 1,
+          "estimated_cost_usd": 0.0,
+          "actual_cost_usd": 0.0
+        }
+      }
+    }
+  },
+  "kanban_7d": {
+    "window_start": "2026-09-26T22:32:59.567176",
+    "window_end": "2026-10-03T22:32:59.567176",
+    "boards": {
+      "fleet-ops": {
+        "done_7d": 44,
+        "done_total_open_window": 44,
+        "blocked_currently": 44,
+        "blocked_created_in_7d": 33
+      },
+      "portfolio": {
+        "done_7d": 0,
+        "done_total_open_window": 0,
+        "blocked_currently": 4,
+        "blocked_created_in_7d": 1
+      }
+    },
+    "note": "done counted by completed_at >= now-7d; blocked counted by created_at >= now-7d (list API has no updated_at); blocked_currently is current count regardless of when created"
+  },
+  "limitations": [
+    "insights --days 7 aggregates only the calling profile (operations); per_profile table above is the canonical fleet-wide baseline.",
+    "reasoning_tokens may already be included in output_tokens on some providers; do NOT sum them.",
+    "cost_status=included / 0 USD = subscription quota, NOT free. Paid rails identified by provider+billing_mode pairs: openrouter, custom (chat_completions), zai (chat_completions), kilocode, moa, groq, cloudflare, ollama-cloud, alibaba, copilot, opencode-zen, opencode-free, mistral.",
+    "kanban_7d blocked uses created_at (list API lacks updated_at); blocked_currently is current snapshot count.",
+    "insights cost section: only 1 session included (subscription), 114 unknown (no pricing data).",
+    "live drift after captured_at: fleet keeps writing to state.db; post-audit recount of the same profile will show higher counters (this kanban task itself added ~250k input tokens to operations between snapshot and audit). To reconcile, filter WHERE first_seen < captured_at."
+  ],
+  "errors": {},
+  "insights_7d_excerpt": {
+    "period": "Sep 27 - Oct 03, 2026 (operations profile only)",
+    "sessions": 115,
+    "messages": 9872,
+    "tool_calls": 5116,
+    "input_tokens": 11398940,
+    "output_tokens": 1318483,
+    "total_tokens": 257419119,
+    "active_time": "~20h 34m",
+    "note": "Insights CLI aggregates only the current profile (operations); use per_profile for fleet-wide cumulative boundary"
+  }
+}

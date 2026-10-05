@@ -1,0 +1,474 @@
+{
+  "created_at_utc": "2026-10-04T00:05:31.115367+00:00",
+  "native_task": "t_d090b4ff",
+  "run_id": 2318,
+  "session_id": "20261004_022802_f5a61c",
+  "typed_native_attempt_verdict": "WITHHELD",
+  "main_stamp_source": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+  "turn_task_join": [
+    {
+      "line": 5879,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "task": "t_d090b4ff",
+      "session": "20261004_022802_f5a61c"
+    }
+  ],
+  "api_stamps": [
+    {
+      "line": 5883,
+      "call": 1,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5901,
+      "call": 2,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5922,
+      "call": 3,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5924,
+      "call": 4,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5929,
+      "call": 5,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5947,
+      "call": 6,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5950,
+      "call": 7,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5953,
+      "call": 8,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5955,
+      "call": 9,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5957,
+      "call": 10,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5974,
+      "call": 11,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5977,
+      "call": 12,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 5979,
+      "call": 13,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6013,
+      "call": 14,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6017,
+      "call": 15,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6020,
+      "call": 16,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6037,
+      "call": 17,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6040,
+      "call": 18,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6042,
+      "call": 19,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6044,
+      "call": 20,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6046,
+      "call": 21,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6048,
+      "call": 22,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6065,
+      "call": 23,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6068,
+      "call": 24,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6086,
+      "call": 25,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6088,
+      "call": 26,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6122,
+      "call": 27,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6124,
+      "call": 28,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6126,
+      "call": 29,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6129,
+      "call": 30,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6146,
+      "call": 31,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6180,
+      "call": 32,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6182,
+      "call": 33,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6185,
+      "call": 34,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6187,
+      "call": 35,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6266,
+      "call": 36,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6268,
+      "call": 37,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6271,
+      "call": 38,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6291,
+      "call": 39,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6293,
+      "call": 40,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6296,
+      "call": 41,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6314,
+      "call": 42,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6318,
+      "call": 43,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6353,
+      "call": 44,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6357,
+      "call": 45,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6364,
+      "call": 46,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6400,
+      "call": 47,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6404,
+      "call": 48,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6442,
+      "call": 49,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6460,
+      "call": 50,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6462,
+      "call": 51,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6464,
+      "call": 52,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6483,
+      "call": 53,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6485,
+      "call": 54,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6487,
+      "call": 55,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6491,
+      "call": 56,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6508,
+      "call": 57,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    },
+    {
+      "line": 6510,
+      "call": 58,
+      "model": "glm-5.3",
+      "provider": "zai",
+      "session": "20261004_022802_f5a61c"
+    }
+  ],
+  "main_api_call_count": 58,
+  "actual_main_pairs": [
+    [
+      "glm-5.3",
+      "zai"
+    ]
+  ],
+  "observed_main_fallback_events": [],
+  "author_main_pairs": [
+    [
+      "gpt-6.1-sol",
+      "openai-codex"
+    ]
+  ],
+  "main_pair_overlap": false,
+  "limits": [
+    "Main stamp comparison only; not full auxiliary-chain attestation or final semantic QA",
+    "Original optional batch content search was denied; not replayed here",
+    "Stage checker enumerates historical other files, not a live preservation acceptance",
+    "No formal M01-M17/scenario artifacts or positive gate exist"
+  ],
+  "stage_profiles_count": 12,
+  "stage_failed_profiles": [],
+  "stage_expected_distinct_after_roots": 3,
+  "preserved_files": [
+    {
+      "source": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\cache\\scratch\\qa_dryrun_12targets.py",
+      "preserved": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\preserved-qa2318\\qa_dryrun_12targets.py",
+      "sha256": "08b95f890fc311dd16f4fed1f3d675b256d5844397dfa69fabcd197f0df3b4e7",
+      "bytes": 4725
+    },
+    {
+      "source": "C:\\Users\\max\\AppData\\Local\\Temp\\qa_dryrun_stage1.json",
+      "preserved": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-hermes-standard-20261004\\preserved-qa2318\\qa_dryrun_stage1.json",
+      "sha256": "f57b7dff65b5f0f6cb6ff80ba1f9b17de25e67911a9d66ab965dee5652ecb9ed",
+      "bytes": 9113
+    }
+  ],
+  "financial_scope": {
+    "scope": "fleet-ops method normalization partial QA",
+    "period_end_utc": "2026-10-04T00:05:31.115367+00:00",
+    "source": "native run2318, genuine stage file, natural main stamps; ledger not read",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": null,
+    "estimated_usage_cost": null,
+    "unknown_reason": "not measured; serving stamps are not billing records"
+  }
+}

@@ -1,0 +1,24 @@
+{
+ "movedCount": 18,
+ "moved": {
+  "babel-jest": "^29.7.0",
+  "braces": "^3.0.3",
+  "create-jest": "^29.7.0",
+  "expect": "^29.7.0",
+  "jest-circus": "^29.7.0",
+  "jest-cli": "^29.7.0",
+  "jest-config": "^29.7.0",
+  "jest-environment-jsdom": "^29.7.0",
+  "jest-environment-node": "^29.7.0",
+  "jest-haste-map": "^29.7.0",
+  "jest-message-util": "^29.7.0",
+  "jest-resolve": "^29.7.0",
+  "jest-resolve-dependencies": "^29.7.0",
+  "jest-runner": "^29.7.0",
+  "jest-runtime": "^29.7.0",
+  "jest-snapshot": "^29.7.0",
+  "jest-watcher": "^29.7.0",
+  "micromatch": "^4.0.8"
+ },
+ "devCount": 20
+}

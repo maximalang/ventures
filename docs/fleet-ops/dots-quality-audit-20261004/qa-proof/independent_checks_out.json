@@ -1,0 +1,205 @@
+{
+ "subject_head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+ "member_checks": [
+  {
+   "name": "audit_current.py",
+   "sha_match": true,
+   "bytes_match": true
+  },
+  {
+   "name": "AUDIT-EVIDENCE.json",
+   "sha_match": true,
+   "bytes_match": true
+  },
+  {
+   "name": "LIVE-SNAPSHOT.json",
+   "sha_match": true,
+   "bytes_match": true
+  },
+  {
+   "name": "NATIVE-SOURCE-PROBE.json",
+   "sha_match": true,
+   "bytes_match": true
+  },
+  {
+   "name": "KANBAN-READBACK.json",
+   "sha_match": true,
+   "bytes_match": true
+  },
+  {
+   "name": "FINDINGS-DRAFT.json",
+   "sha_match": true,
+   "bytes_match": true
+  }
+ ],
+ "members_all_ok": true,
+ "live_targets": 12,
+ "live_ok": 12,
+ "live_failures": [],
+ "live_checks_total": 120,
+ "inventory_count": 192,
+ "json_files": 26,
+ "json_defects": [
+  {
+   "path": "QA-CANDIDATE.json",
+   "parsed": true,
+   "dup": [
+    "checks_this_run",
+    "m01_m17",
+    "scenarios_s01_s17",
+    "reviewer_lineage_run_2319"
+   ]
+  }
+ ],
+ "python_ast_errors": [],
+ "dup_groups": 6,
+ "dup_redundant_bytes": 579689,
+ "dup_group_details": [
+  {
+   "sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+   "n": 36,
+   "bytes": 12995
+  },
+  {
+   "sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+   "n": 30,
+   "bytes": 2050
+  },
+  {
+   "sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+   "n": 4,
+   "bytes": 15889
+  },
+  {
+   "sha256": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+   "n": 3,
+   "bytes": 3601
+  },
+  {
+   "sha256": "65cce4b5b10de8d9fa7d35f0143feec74b73eb1254fd6d6b0a6e1fd6352d99d0",
+   "n": 2,
+   "bytes": 6106
+  },
+  {
+   "sha256": "6b3cd78beba7105fcf256455dfacca0196c51e2974e1de113458734a2dbfef75",
+   "n": 2,
+   "bytes": 4439
+  }
+ ],
+ "zip": {
+  "zip_sha256": "661c522692d2bd9c896a627bfe545531fa69db7c54d2e648e480a337c604e201",
+  "zip_bytes": 1309730,
+  "members_total": 158,
+  "manifest_payload_count": 157,
+  "manifest_entries": 157,
+  "manifest_self_excluded": true,
+  "crc_bad": null,
+  "bad_members": [],
+  "named_sources_missing": [
+   "qa2321_battery.py",
+   "qa2321_loader.py",
+   "QA-CHECKER-RUN2319.py",
+   "APPLY-run2320-20261004T012335Z.json",
+   "preserved-qa2318/qa_dryrun_12targets.py",
+   "preserved-qa2318/qa_dryrun_stage1.json"
+  ],
+  "rollback_direct_missing_total": 24,
+  "rollback_alt_all_exact": true,
+  "arithmetic_note": true
+ },
+ "local_files_not_archived_count": 34,
+ "local_files_not_archived": [
+  "_company_readback.py",
+  "_qa_verify.py",
+  "apply-backups/company/dots-operating-method.md",
+  "apply-backups/company/SKILL.md",
+  "apply-backups/design/dots-operating-method.md",
+  "apply-backups/design/SKILL.md",
+  "apply-backups/finance/dots-operating-method.md",
+  "apply-backups/finance/SKILL.md",
+  "apply-backups/operations/dots-operating-method.md",
+  "apply-backups/operations/SKILL.md",
+  "apply-backups/product/dots-operating-method.md",
+  "apply-backups/product/SKILL.md",
+  "apply-backups/qa/dots-operating-method.md",
+  "apply-backups/qa/SKILL.md",
+  "apply-backups/research/dots-operating-method.md",
+  "apply-backups/research/SKILL.md",
+  "apply-backups/sales/dots-operating-method.md",
+  "apply-backups/sales/SKILL.md",
+  "apply-backups/tech/dots-operating-method.md",
+  "apply-backups/tech/SKILL.md",
+  "apply-backups/ux/dots-operating-method.md",
+  "apply-backups/ux/SKILL.md",
+  "apply-backups/video-director/dots-operating-method.md",
+  "apply-backups/video-director/SKILL.md",
+  "apply-backups/video-editor/dots-operating-method.md",
+  "apply-backups/video-editor/SKILL.md",
+  "APPLY-run2320-20261004T012335Z.json",
+  "BOARD-STATE-NOW.json",
+  "PACKAGE-PREFLIGHT.json",
+  "preserved-qa2318/qa_dryrun_12targets.py",
+  "preserved-qa2318/qa_dryrun_stage1.json",
+  "QA-CHECKER-RUN2319.py",
+  "qa2321_battery.py",
+  "qa2321_loader.py"
+ ],
+ "native_helpers": [
+  {
+   "file": "kanban_db.py",
+   "file_sha256": "ed19affa223ddb49fd5afb55def54b85c89d7e4c40a39063df5078f72c9144f5",
+   "function": "add_comment",
+   "lines": [
+    1786,
+    1801
+   ]
+  },
+  {
+   "file": "kanban_db.py",
+   "file_sha256": "ed19affa223ddb49fd5afb55def54b85c89d7e4c40a39063df5078f72c9144f5",
+   "function": "_require_task",
+   "lines": [
+    1804,
+    1806
+   ]
+  },
+  {
+   "file": "kanban_db_graph.py",
+   "file_sha256": "b3aada2c8ec77fa0b4bcdcd6be084e2e91b9c9d57c68f7200b872232b94360ed",
+   "function": "initial_task_state",
+   "lines": [
+    25,
+    51
+   ]
+  }
+ ],
+ "native_fixture": [
+  {
+   "parent": "running",
+   "comment_ok": true,
+   "child_state": "todo"
+  },
+  {
+   "parent": "done",
+   "comment_ok": true,
+   "child_state": "ready"
+  },
+  {
+   "parent": "archived",
+   "comment_ok": true,
+   "child_state": "todo"
+  }
+ ],
+ "native_missing_controls": [
+  {
+   "function": "_require_task",
+   "raises": true,
+   "msg": "unknown task missing_fx"
+  },
+  {
+   "function": "initial_task_state",
+   "raises": true,
+   "msg": "unknown parent task(s): missing_fx"
+  }
+ ]
+}

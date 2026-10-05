@@ -1,0 +1,474 @@
+== probe ==
+3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]
+C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+C:\Users\max\Documents\hermes-update-lock-recovery\pm\install.py
+bda33b601d194fb8a43e5660c57542aad14aa372
+== pytest GREEN candidate (new regression file) ==
+........F.FF                                                             [100%]
+================================== FAILURES ===================================
+___________ test_retained_displaced_is_swept_once_the_hold_releases ___________
+
+pm_env = (WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_retained_displaced_is_swe0/repo-lock/lock...Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_retained_displaced_is_swe0/www'), 'http://127.0.0.1:56867')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016AFE554D90>
+
+    def test_retained_displaced_is_swept_once_the_hold_releases(pm_env, monkeypatch):
+        """Retention is bounded: once the hold releases, the NEXT install
+        reclaims the retained displaced garbage on its own — no permanent leak
+        and no manual step (gc deliberately preserves dot-dirs)."""
+        _repin(pm_env, "gen1.tar.gz", {"bin/faketool": "#!v1"})
+        _realize("install")
+        _repin(pm_env, "gen2.tar.gz", {"bin/faketool": "#!v2"})
+    
+        _failing_record(monkeypatch)
+        _block_removal(monkeypatch, ".displaced-")
+        with pytest.raises(InstallError, match="injected commit failure"):
+            _realize("install")
+        assert _store_dirs(".displaced-")
+    
+        monkeypatch.undo()  # the hold releases and the injected fault is repaired
+        digest3 = _repin(pm_env, "gen3.tar.gz", {"bin/faketool": "#!v3"})
+>       _realize("install")
+
+tests\pm\test_pm_locked_retired_recovery.py:395: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\pm\test_pm_locked_retired_recovery.py:62: in _realize
+    return ensure("faketool", explicit=True, base_env={})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:611: in ensure
+    _install(package, lockfile, facts, store, target, progress=progress,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+package = <tests.pm.test_pm_core.FakeTool object at 0x0000016AFE54B350>
+lockfile = <pm.lock.Lockfile object at 0x0000016AFE54B290>
+facts = <pm.lock.Facts object at 0x0000016AFE57AE50>
+store = <pm.store.Store object at 0x0000016AFE566890>, target = 'win32-x64'
+progress = None, pause_event = None, download_progress = None, copy_from = None
+_lock_held = False, _fresh_copy = False
+
+    def _install(
+        package: Package,
+        lockfile: Lockfile,
+        facts: Facts | None,
+        store: Store,
+        target: str,
+        progress=None,
+        pause_event: threading.Event | None = None,
+        download_progress: ProgressFn | None = None,
+        *,
+        copy_from: tuple[Facts, Store] | None = None,
+        _lock_held: bool = False,
+        _fresh_copy: bool = False,
+    ) -> Path:
+        """Realize one pin. Host installs commit facts; cross-target stages carry a marker."""
+        version = lockfile.version(package.name)
+        if version is None:
+>           raise InstallError(
+                package.name, "not in the lockfile", "add it with `hermes pm lock --bump`"
+            )
+E           pm.package.InstallError: faketool: not in the lockfile — add it with `hermes pm lock --bump`
+
+pm\install.py:449: InstallError
+---------------------------- Captured stderr call -----------------------------
+127.0.0.1 - - [01/Oct/2026 01:04:26] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:26] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:26] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:27] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:27] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:27] "GET /gen2.tar.gz HTTP/1.1" 200 -
+------------------------------ Captured log call ------------------------------
+WARNING  pm.install:install.py:264 retained C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1939\test_retained_displaced_is_swe0\runtime\.displaced-76b4504410ac41d2b023a554dfe7d6e6 (displaced entry after a completed rollback): [Errno 13] injected persistent hold: '.displaced-76b4504410ac41d2b023a554dfe7d6e6' — a later install retries reclamation
+___________ test_real_hard_hold_committed_publish_retry_and_release ___________
+
+self = <pm.lock.Facts object at 0x0000016AFE561850>
+args = ('faketool', '1.0', 'faketool-1.0-win32-x64', {'PATH': ['C:\\Users\\max\\AppData\\Local\\Temp\\pytest-of-max\\pytest-1...n']}, WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_hard_hold_committed_0/runtime'))
+kwargs = {'target': 'win32-x64', 'artifacts': ['3cd0592a1ffffe47ae5c9ab2e88a329aa80ca96f53200e61ee07f6ac57d75313'], 'digest': '0a50a503048e635b96e361790670d1ea4f70d9d31a3513eea6ccea7462febac1'}
+
+    def record_then_hold(self, *args, **kwargs):
+        result = real_record(self, *args, **kwargs)
+        # The publish already renamed the live entry aside; attach the hard
+        # hold to the retired tree like a still-running old binary would.
+>       state["kernel32"], state["handle"] = _open_hard(held)
+                                             ^^^^^^^^^^^^^^^^
+
+tests\pm\test_pm_locked_retired_recovery.py:473: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\pm\test_pm_locked_retired_recovery.py:159: in _open_hard
+    return _open_handle(path, _FILE_SHARE_READ)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_hard_hold_committed_0/runtime/.previous-faketool-1.0-win32-x64/share/spare')
+share = 1
+
+    def _open_handle(path: Path, share: int):
+        kernel32 = _kernel32()
+        handle = kernel32.CreateFileW(str(path), _GENERIC_READ, share, None, _OPEN_EXISTING, 0, None)
+        if handle is None or handle == _INVALID_HANDLE:
+>           raise ctypes.WinError(ctypes.get_last_error())
+E           FileNotFoundError: [WinError 3] Системе не удается найти указанный путь.
+
+tests\pm\test_pm_locked_retired_recovery.py:151: FileNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+pm_env = (WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_hard_hold_committed_0/repo-lock/lock...Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_hard_hold_committed_0/www'), 'http://127.0.0.1:56891')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016AFE0033D0>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x0000016AFE566CD0>
+
+    @pytest.mark.platforms("windows")
+    def test_real_hard_hold_committed_publish_retry_and_release(pm_env, monkeypatch, caplog):
+        """The spec's exact recipe: CreateFileW WITHOUT delete sharing, attached
+        to a file inside the retired tree right after the facts commit — delete
+        AND rename are refused while the handle is open (raw sharing violation,
+        WinError 32; the running-image WinError 5 shape is covered by the
+        LoadLibrary tests). The committed replacement still succeeds, the
+        retention is reported, a retry while held is safe/idempotent, and
+        release reclaims."""
+        digest1 = _repin(pm_env, "gen1.tar.gz", {"bin/faketool": "#!v1", "share/spare": "spare"})
+        _realize("install")
+        entry = _entry()
+        previous = entry.with_name(".previous-" + entry.name)
+        held = previous / "share/spare"
+        digest2 = _repin(pm_env, "gen2.tar.gz", {"bin/faketool": "#!v2"})
+    
+        real_record = Facts.record
+        state = {}
+    
+        def record_then_hold(self, *args, **kwargs):
+            result = real_record(self, *args, **kwargs)
+            # The publish already renamed the live entry aside; attach the hard
+            # hold to the retired tree like a still-running old binary would.
+            state["kernel32"], state["handle"] = _open_hard(held)
+            return result
+    
+        monkeypatch.setattr(Facts, "record", record_then_hold)
+        try:
+            with caplog.at_level(logging.WARNING, logger="pm.install"):
+                _realize("install")
+            assert "handle" in state, "the real hold was attached after the commit"
+            _assert_authoritative("install", digest2)
+            assert (entry / "bin/faketool").read_bytes() == b"#!v2"
+            assert previous.is_dir() and held.read_bytes() == b"spare"
+            assert any(str(previous) in r.getMessage() and "retain" in r.getMessage().lower()
+                       for r in caplog.records)
+    
+            # Kernel-level control: the hold really refuses deletion and rename.
+            with pytest.raises(PermissionError) as denied:
+                os.unlink(held)
+            assert denied.value.winerror == 32, "raw sharing violation from the real handle"
+            with pytest.raises(OSError):
+                previous.rename(previous.with_name(".probe-moved"))
+            assert previous.is_dir()
+    
+            # Retry while held: safe and idempotent (incident line 2531 died here).
+            facts_bytes = paths.facts_path().read_bytes()
+            entry_digest = tree_digest(entry)
+            _realize("install")
+            assert paths.facts_path().read_bytes() == facts_bytes
+            assert tree_digest(entry) == entry_digest
+            assert previous.is_dir(), "still retained — never claimed deleted"
+        finally:
+            if "handle" in state:
+                state["kernel32"].CloseHandle(state["handle"])
+    
+        digest3 = _repin(pm_env, "gen3.tar.gz", {"bin/faketool": "#!v3"})
+>       _realize("install")
+
+tests\pm\test_pm_locked_retired_recovery.py:507: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\pm\test_pm_locked_retired_recovery.py:62: in _realize
+    return ensure("faketool", explicit=True, base_env={})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:611: in ensure
+    _install(package, lockfile, facts, store, target, progress=progress,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+package = <tests.pm.test_pm_core.FakeTool object at 0x0000016AFE551D10>
+lockfile = <pm.lock.Lockfile object at 0x0000016AFE53AFD0>
+facts = <pm.lock.Facts object at 0x0000016AFE561850>
+store = <pm.store.Store object at 0x0000016AFE5605D0>, target = 'win32-x64'
+progress = None, pause_event = None, download_progress = None, copy_from = None
+_lock_held = False, _fresh_copy = False
+
+    def _install(
+        package: Package,
+        lockfile: Lockfile,
+        facts: Facts | None,
+        store: Store,
+        target: str,
+        progress=None,
+        pause_event: threading.Event | None = None,
+        download_progress: ProgressFn | None = None,
+        *,
+        copy_from: tuple[Facts, Store] | None = None,
+        _lock_held: bool = False,
+        _fresh_copy: bool = False,
+    ) -> Path:
+        """Realize one pin. Host installs commit facts; cross-target stages carry a marker."""
+        version = lockfile.version(package.name)
+        if version is None:
+            raise InstallError(
+                package.name, "not in the lockfile", "add it with `hermes pm lock --bump`"
+            )
+    
+        reason = package.missing_reason(target)
+        if reason is not None:
+            raise InstallError(package.name, f"unavailable on {target}: {reason}", "none")
+    
+        entry_name = package.store_entry(version, target)
+        entry = store.entry(entry_name)
+        if getattr(package, "pin_only", False):
+            return entry
+        artifacts = lockfile.artifacts(package.name, target)
+        pin = json.dumps({"target": target, "sha256": [a["sha256"] for a in artifacts]})
+    
+        with nullcontext() if _lock_held else store.install_lock():
+            if pause_event is not None and pause_event.is_set():
+                raise DownloadPaused("install paused")
+            if facts is not None:
+                facts.reload()
+            previous = facts.get(package.name) if facts is not None else None
+            previous_entry = store.entry(f".previous-{'stage-' if facts is None else ''}{entry_name}")
+            _settle_previous_entry(package, store, entry, previous_entry, previous, target)
+            if (_entry_current(package, lockfile, facts, store, entry, previous, version, pin, target)
+                    and not _fresh_copy):
+                _remove_downloads(store, artifacts)
+                return entry
+            if not artifacts:
+                raise InstallError(
+                    package.name,
+                    f"no artifact for {target} in the lockfile",
+                    "run `hermes pm lock --bump` for this package",
+                )
+            with store.scratch() as scratch:
+                staged = scratch / "tree"
+                try:
+                    if copy_from is not None:
+                        _copy_verified_source(package, lockfile, copy_from, staged, version, target)
+                    else:
+                        staged = _prepare_artifacts(package, store, scratch, artifacts, version, target,
+                                                    progress=progress, pause_event=pause_event,
+                                                    download_progress=download_progress)
+                    if pause_event is not None and pause_event.is_set():
+                        raise DownloadPaused("install paused")
+                    if progress is not None:
+                        progress("verify", 0, 0, "")
+                    reason = package.verify(staged, target)
+                    if reason:
+                        raise InstallError(package.name, f"staged entry failed verification: {reason}")
+                    if facts is None:
+                        (staged / ".pm-stage-pin.json").write_text(pin, encoding="utf-8")
+                    with _publish_entry(package, store, staged, entry, previous_entry, target):
+                        if facts is not None:
+                            facts.record(
+                                package.name, version, entry_name, package.env(entry, target), store.root,
+                                target=target, artifacts=[a["sha256"] for a in artifacts],
+                                digest=tree_digest(entry),
+                            )
+                    _remove_downloads(store, artifacts)
+                except (InstallError, DownloadPaused):
+                    raise
+                except Exception as e:
+>                   raise InstallError(package.name, f"install failed: {e}") from e
+E                   pm.package.InstallError: faketool: install failed: [WinError 3] Системе не удается найти указанный путь. — retry, or run `hermes pm doctor`
+
+pm\install.py:511: InstallError
+---------------------------- Captured stderr call -----------------------------
+127.0.0.1 - - [01/Oct/2026 01:04:32] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:32] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:32] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:32] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:32] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:32] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:34] "GET /gen3.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:34] "GET /gen3.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:34] "GET /gen3.tar.gz HTTP/1.1" 200 -
+------------------------------ Captured log call ------------------------------
+WARNING  pm.install:install.py:264 retained C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1939\test_real_hard_hold_committed_0\runtime\.previous-faketool-1.0-win32-x64 (retired entry after a committed publish): [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: 'C:\\Users\\max\\AppData\\Local\\Temp\\pytest-of-max\\pytest-1939\\test_real_hard_hold_committed_0\\runtime\\.previous-faketool-1.0-win32-x64\\share\\spare' — a later install retries reclamation
+____________ test_real_dll_hold_rollback_preserves_original_error _____________
+
+self = <pm.lock.Facts object at 0x0000016AFF71C150>
+args = ('faketool', '1.0', 'faketool-1.0-win32-x64', {'PATH': ['C:\\Users\\max\\AppData\\Local\\Temp\\pytest-of-max\\pytest-1...n']}, WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_dll_hold_rollback_pr0/runtime'))
+kwargs = {'target': 'win32-x64', 'artifacts': ['3ee052b63f9df210c5fc7384ce4f0a33cd24c2c7e03e43ba9fa34cf9e8af0601'], 'digest': '0a50a503048e635b96e361790670d1ea4f70d9d31a3513eea6ccea7462febac1'}
+
+    def record_hold_and_fail(self, *args, **kwargs):
+>       state["kernel32"], state["module"] = _load_library(entry / "vendor/hold.dll")
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\pm\test_pm_locked_retired_recovery.py:531: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_dll_hold_rollback_pr0/runtime/faketool-1.0-win32-x64/vendor/hold.dll')
+
+    def _load_library(path: Path):
+        kernel32 = _kernel32()
+        kernel32.LoadLibraryW.restype = ctypes.c_void_p
+        kernel32.LoadLibraryW.argtypes = [ctypes.c_wchar_p]
+        kernel32.FreeLibrary.argtypes = [ctypes.c_void_p]
+        kernel32.FreeLibrary.restype = ctypes.c_int
+        module = kernel32.LoadLibraryW(str(path))
+        if not module:
+>           raise ctypes.WinError(ctypes.get_last_error())
+E           OSError: [WinError 126] Не найден указанный модуль.
+
+tests\pm\test_pm_locked_retired_recovery.py:217: OSError
+
+The above exception was the direct cause of the following exception:
+
+pm_env = (WindowsPath('C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_dll_hold_rollback_pr0/repo-lock/lock...Users/max/AppData/Local/Temp/pytest-of-max/pytest-1939/test_real_dll_hold_rollback_pr0/www'), 'http://127.0.0.1:56906')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000016AFE54A850>
+
+    @pytest.mark.platforms("windows")
+    def test_real_dll_hold_rollback_preserves_original_error(pm_env, monkeypatch):
+        """REAL held rollback (incident line 2566: a displaced tree holding
+        DLLs/libcrypto-3-x64.dll): the commit fails while a loaded DLL sits in
+        the freshly published bytes. The restore renames must succeed (image
+        semantics), the ORIGINAL commit error must reach the caller unwrapped,
+        the displaced bytes must be retained, and the next install after release
+        sweeps them."""
+        digest1 = _repin(pm_env, "gen1.tar.gz", {"bin/faketool": "#!v1"})
+        _realize("install")
+        entry = _entry()
+        facts_before = paths.facts_path().read_bytes()
+        digest2 = _repin_bin(pm_env, "gen2.tar.gz",
+                             {"bin/faketool": "#!v2", "vendor/hold.dll": _dll_bytes()})
+    
+        state = {}
+    
+        def record_hold_and_fail(self, *args, **kwargs):
+            state["kernel32"], state["module"] = _load_library(entry / "vendor/hold.dll")
+            raise InstallError("faketool", "injected commit failure")
+    
+        monkeypatch.setattr(Facts, "record", record_hold_and_fail)
+        try:
+            with pytest.raises(InstallError, match="injected commit failure"):
+                _realize("install")
+            assert (entry / "bin/faketool").read_bytes() == b"#!v1", "rollback restored gen1"
+            assert paths.facts_path().read_bytes() == facts_before, "facts untouched"
+            displaced = _store_dirs(".displaced-")
+            assert displaced and (displaced[0] / "vendor/hold.dll").is_file(), \
+                "the held displaced tree is retained, not claimed deleted"
+        finally:
+            if "module" in state:
+                state["kernel32"].FreeLibrary(state["module"])
+    
+        digest3 = _repin(pm_env, "gen3.tar.gz", {"bin/faketool": "#!v3"})
+>       _realize("install")
+
+tests\pm\test_pm_locked_retired_recovery.py:548: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\pm\test_pm_locked_retired_recovery.py:62: in _realize
+    return ensure("faketool", explicit=True, base_env={})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pm\install.py:611: in ensure
+    _install(package, lockfile, facts, store, target, progress=progress,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+package = <tests.pm.test_pm_core.FakeTool object at 0x0000016AFE550E10>
+lockfile = <pm.lock.Lockfile object at 0x0000016AFE557B10>
+facts = <pm.lock.Facts object at 0x0000016AFF71C150>
+store = <pm.store.Store object at 0x0000016AFF71F890>, target = 'win32-x64'
+progress = None, pause_event = None, download_progress = None, copy_from = None
+_lock_held = False, _fresh_copy = False
+
+    def _install(
+        package: Package,
+        lockfile: Lockfile,
+        facts: Facts | None,
+        store: Store,
+        target: str,
+        progress=None,
+        pause_event: threading.Event | None = None,
+        download_progress: ProgressFn | None = None,
+        *,
+        copy_from: tuple[Facts, Store] | None = None,
+        _lock_held: bool = False,
+        _fresh_copy: bool = False,
+    ) -> Path:
+        """Realize one pin. Host installs commit facts; cross-target stages carry a marker."""
+        version = lockfile.version(package.name)
+        if version is None:
+            raise InstallError(
+                package.name, "not in the lockfile", "add it with `hermes pm lock --bump`"
+            )
+    
+        reason = package.missing_reason(target)
+        if reason is not None:
+            raise InstallError(package.name, f"unavailable on {target}: {reason}", "none")
+    
+        entry_name = package.store_entry(version, target)
+        entry = store.entry(entry_name)
+        if getattr(package, "pin_only", False):
+            return entry
+        artifacts = lockfile.artifacts(package.name, target)
+        pin = json.dumps({"target": target, "sha256": [a["sha256"] for a in artifacts]})
+    
+        with nullcontext() if _lock_held else store.install_lock():
+            if pause_event is not None and pause_event.is_set():
+                raise DownloadPaused("install paused")
+            if facts is not None:
+                facts.reload()
+            previous = facts.get(package.name) if facts is not None else None
+            previous_entry = store.entry(f".previous-{'stage-' if facts is None else ''}{entry_name}")
+            _settle_previous_entry(package, store, entry, previous_entry, previous, target)
+            if (_entry_current(package, lockfile, facts, store, entry, previous, version, pin, target)
+                    and not _fresh_copy):
+                _remove_downloads(store, artifacts)
+                return entry
+            if not artifacts:
+                raise InstallError(
+                    package.name,
+                    f"no artifact for {target} in the lockfile",
+                    "run `hermes pm lock --bump` for this package",
+                )
+            with store.scratch() as scratch:
+                staged = scratch / "tree"
+                try:
+                    if copy_from is not None:
+                        _copy_verified_source(package, lockfile, copy_from, staged, version, target)
+                    else:
+                        staged = _prepare_artifacts(package, store, scratch, artifacts, version, target,
+                                                    progress=progress, pause_event=pause_event,
+                                                    download_progress=download_progress)
+                    if pause_event is not None and pause_event.is_set():
+                        raise DownloadPaused("install paused")
+                    if progress is not None:
+                        progress("verify", 0, 0, "")
+                    reason = package.verify(staged, target)
+                    if reason:
+                        raise InstallError(package.name, f"staged entry failed verification: {reason}")
+                    if facts is None:
+                        (staged / ".pm-stage-pin.json").write_text(pin, encoding="utf-8")
+                    with _publish_entry(package, store, staged, entry, previous_entry, target):
+                        if facts is not None:
+                            facts.record(
+                                package.name, version, entry_name, package.env(entry, target), store.root,
+                                target=target, artifacts=[a["sha256"] for a in artifacts],
+                                digest=tree_digest(entry),
+                            )
+                    _remove_downloads(store, artifacts)
+                except (InstallError, DownloadPaused):
+                    raise
+                except Exception as e:
+>                   raise InstallError(package.name, f"install failed: {e}") from e
+E                   pm.package.InstallError: faketool: install failed: [WinError 126] Не найден указанный модуль. — retry, or run `hermes pm doctor`
+
+pm\install.py:511: InstallError
+---------------------------- Captured stderr call -----------------------------
+127.0.0.1 - - [01/Oct/2026 01:04:35] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:35] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:35] "GET /gen1.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:35] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:35] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:35] "GET /gen2.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:37] "GET /gen3.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:37] "GET /gen3.tar.gz HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 01:04:37] "GET /gen3.tar.gz HTTP/1.1" 200 -
+------------------------------ Captured log call ------------------------------
+WARNING  pm.install:install.py:264 retained C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1939\test_real_dll_hold_rollback_pr0\runtime\.displaced-a2ec77396a0349b9b587f1bbe60abfc3 (displaced entry after a completed rollback): [WinError 5] Отказано в доступе: 'C:\\Users\\max\\AppData\\Local\\Temp\\pytest-of-max\\pytest-1939\\test_real_dll_hold_rollback_pr0\\runtime\\.displaced-a2ec77396a0349b9b587f1bbe60abfc3\\vendor\\hold.dll' — a later install retries reclamation
+=========================== short test summary info ===========================
+FAILED tests/pm/test_pm_locked_retired_recovery.py::test_retained_displaced_is_swept_once_the_hold_releases
+FAILED tests/pm/test_pm_locked_retired_recovery.py::test_real_hard_hold_committed_publish_retry_and_release
+FAILED tests/pm/test_pm_locked_retired_recovery.py::test_real_dll_hold_rollback_preserves_original_error
+3 failed, 9 passed in 17.17s
+pytest_exit=1

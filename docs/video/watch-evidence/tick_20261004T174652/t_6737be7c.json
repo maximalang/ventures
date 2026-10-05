@@ -1,0 +1,233 @@
+{
+  "task": {
+    "id": "t_6737be7c",
+    "title": "WARD-C01 «Вышка»: режиссёрский запуск пилота по плейбуку → отдельный монтаж + QA",
+    "body": "task_type: research\nSpec: C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/DIRECTOR_SPEC.md\nПилотный handoff → отдельные editor+QA. Не финальный рендер. 0₽, без публикаций.",
+    "assignee": "video-director",
+    "status": "blocked",
+    "priority": 2,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_6737be7c",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1791089397,
+    "started_at": 1791090809,
+    "completed_at": null,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": 1800,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "cron_bea46eb9fd5b_20261004_073439",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": "missing_input G01, next owner company: требуется scoped admission-пакет для C01 — актуальные права/условия кампании exact S1, решение D1/P08 (полная речь не помещается в hard≤17 CPS на 15.86s) с независимой QA-приёмкой изменений/исключений, P04/D7 и отдельный production-допуск. Режиссёрский пакет и проверенные SHA сохранены в C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/; rights_ready=false, render_allowed=false, запуск video-editor запрещён до G01.",
+  "parents": [
+    "t_a5b1777b",
+    "t_d9d08a87",
+    "t_f78e4b19"
+  ],
+  "children": [],
+  "comments": [
+    {
+      "author": "video-director",
+      "body": "РЕШЕНИЕ → C01/S1 33.860–49.720, обзор → командная польза → потенциальная база рядом → полный payoff. ONE IDEA и hook не изменены; точный hook повторно измерен 73 STRONG на установленном kit HEAD 26c1b08287f5991cabc68ad86dd9dfebb9ace657. Четыре frozen SHA совпали, входы не изменены.\n\nСДАНО → C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/: C01_DIRECTION.md, C01_EDL_BEATS.json, C01_READINESS.json, C01_DIRECTION.manifest.json; evidence: C01_DIRECTION_HOOKSCORE.txt и C01_DIRECTION_SELF_CHECK.json. Исполненный documentary verifier завершился exit=0, прочитал обратно точные файлы и проверил manifest. Это самопроверка документов, НЕ независимый QA/медиа-приёмка.\n\nРИСК / NEXT OWNER → company, G01 missing_input: единый scoped admission-пакет перед передачей video-editor. В нём нужны current operations campaign/source/platform/CTA/branding grant, отдельное решение D1/P08 с независимым QA на исключения/изменения, решение P04 по дефициту demand, D7 и разрешённая production-карта P01. Это один gating-вход, НЕ утверждение, что достаточно только обновить права. Полная речь на 15.86s несовместима с hard≤17 CPS даже при наиболее благоприятных 301 знаках из QA; соединённый raw-ASR/нормализованный draft содержит 304 знака (19.168 CPS), фактические caption pages должны отдельно исключать межстраничные пробелы. Читать отдельный hook можно к 5.8s при15 CPS, но это не готовый комбинированный layout. D8 документально выбран −14±0.5 LUFS-I/TP≤−1 по scoped playbook и binding owner hard acceptance. D2–D6 переданы как точные NOT_RUN conform-действия, без выдуманного proof/слухового PASS.\n\nHANDOFF_METADATA:\n{\"task_type\":\"ops\",\"status\":\"INPUTS_MISSING\",\"direction_document_delivered\":true,\"direction_ready_for_editor_execution\":false,\"creative_ready\":true,\"creative_ready_basis\":\"qa/t_d9d08a87 APPROVE exact frozen concept only\",\"rights_ready\":false,\"render_allowed\":false,\"production_allowed\":false,\"publishing_allowed\":false,\"master_exists\":false,\"media_qa\":\"NOT_RUN\",\"next_owner\":\"company\",\"single_gating_prerequisite\":\"G01 scoped company production-admission packet\",\"eventual_owner\":\"video-editor\",\"tests_run\":\"bounded documentary verifier, exact input/output SHA readback and hookscore, exit0\",\"manifest_sha256\":\"8007f732130b033708961d10a5e745c4d7a43297f797399114757942f4eaddc4\",\"incremental_paid_costs_rub\":0,\"new_commitments_rub\":0,\"confirmed_revenue\":null,\"refunds\":null,\"estimated_usage_cost\":null,\"finance_null_reason\":\"ledger/billing not read; no purchases/contracts initiated\",\"created_cards\":[]}\n\nCampaign refresh, монтаж/рендер, MPT runtime, новые engine/suite/QA/editor карты, покупки и публикация не выполнялись. После G01 — разрешённый video-editor, затем режиссёрская приёмка смысла и независимый exact-media qa; самоприсвоения gate:qa нет.",
+      "created_at": 1791091480
+    },
+    {
+      "author": "company",
+      "body": "Company-readback 04.10: режиссёрские документы доставлены, но производство не разрешено. Реальный стоп подтверждён C01_READINESS.json и независимым C01_CONCEPT_REVIEW.json: текущие права/условия кампании отсутствуют; полная речь на окне 15.86s не помещается в hard≤17 CPS; остаются delivery-layout, дефицит demand evidence и CTA-решение. Это не лексический false-positive: повторный запуск без новых входов запрещён, готовый пакет не переделывать.\n\nОтдельное ограничение концепт-review: авторская модельная цепочка UNKNOWN, vision сообщил error 1211 Unknown Model, слуховая приёмка не выполнена. Поэтому творческий документальный APPROVE нельзя переносить на качество готового видео или считать независимой визуальной/слуховой приёмкой. Полный exact-file QA необходим после допустимого монтажа.\n\nЕдиный следующий вход остаётся за company: production-admission с актуальным разрешением на exact S1, явным допустимым delivery-планом и независимой проверкой его изменений. Историческая whitelist и готовность Fonovisa этого не заменяют. До такого входа удерживаем монтаж и публикацию; frozen материалы и отрицательные доказательства сохраняются. Это внутренний production-стоп, не новая просьба владельцу о SMS/платеже.\n\nФинансы: scope=этот readback video-board, period=04.10.2026 текущий тик, source=фактические операции и прочитанные durable receipts; новых оплат/обязательств нет; revenue/refunds/usage cost=null — ledger/billing не сверены.",
+      "created_at": 1791101390
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "video-director",
+        "status": "todo",
+        "parents": [
+          "t_d9d08a87",
+          "t_f78e4b19",
+          "t_a5b1777b"
+        ],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1791089397,
+      "run_id": null
+    },
+    {
+      "kind": "dependency_wait",
+      "payload": {
+        "reason": "parent_not_done",
+        "parent": "t_d9d08a87"
+      },
+      "created_at": 1791089397,
+      "run_id": null
+    },
+    {
+      "kind": "promoted",
+      "payload": null,
+      "created_at": 1791090792,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:19968",
+        "expires": 1791091709,
+        "run_id": 388
+      },
+      "created_at": 1791090809,
+      "run_id": 388
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 11736,
+        "started_at": "|179109080911"
+      },
+      "created_at": 1791090809,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090827,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090893,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090957,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091017,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091077,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091137,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091197,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091257,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091317,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091377,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "C01: frozen anchors и scorer проверены; сохраняю документальное задание/EDL/readiness с HOLD D1 и rights=false. Рендер и campaign refresh не выполняются."
+      },
+      "created_at": 1791091433,
+      "run_id": 388
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791091459,
+      "run_id": 388
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "video-director",
+        "len": 2777
+      },
+      "created_at": 1791091480,
+      "run_id": null
+    },
+    {
+      "kind": "blocked",
+      "payload": {
+        "reason": "missing_input G01, next owner company: требуется scoped admission-пакет для C01 — актуальные права/условия кампании exact S1, решение D1/P08 (полная речь не помещается в hard≤17 CPS на 15.86s) с независимой QA-приёмкой изменений/исключений, P04/D7 и отдельный production-допуск. Режиссёрский пакет и проверенные SHA сохранены в C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/; rights_ready=false, render_allowed=false, запуск video-editor запрещён до G01.",
+        "kind": "needs_input",
+        "recurrences": 1,
+        "source_status": "ready"
+      },
+      "created_at": 1791091490,
+      "run_id": 388
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "company",
+        "len": 1441
+      },
+      "created_at": 1791101390,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 388,
+      "profile": "video-director",
+      "step_key": null,
+      "status": "blocked",
+      "outcome": "blocked",
+      "summary": "missing_input G01, next owner company: требуется scoped admission-пакет для C01 — актуальные права/условия кампании exact S1, решение D1/P08 (полная речь не помещается в hard≤17 CPS на 15.86s) с независимой QA-приёмкой изменений/исключений, P04/D7 и отдельный production-допуск. Режиссёрский пакет и проверенные SHA сохранены в C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/; rights_ready=false, render_allowed=false, запуск video-editor запрещён до G01.",
+      "error": null,
+      "metadata": {
+        "receipt": {
+          "status": "blocked",
+          "evidence_refs": [],
+          "next_action": "review outcome and continue workflow"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791090809,
+      "ended_at": 1791091490
+    }
+  ]
+}

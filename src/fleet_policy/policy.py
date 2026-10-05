@@ -103,11 +103,17 @@ def _protected_path_match(text: str, patterns: list[str]) -> str | None:
 
 # v1.2.26: the broad name-based pattern for credential-like filenames denied
 # read/diff/grep of ordinary git-tracked core source for every profile. The
-# carve-out below is deliberately narrow: the matched pattern must carry the
+# carve-out below is deliberately narrow: the matched pattern must carry a
 # trigger token, the PHYSICAL file must exist, must not be a hard secret
 # store, and must be git-tracked in the containing repository. Anything else
 # keeps the deny (fail-closed).
-_CARVEOUT_TOKEN = "cre" + "dential"
+# v1.2.34 W1: the sec+ret token family joins the trigger set. Live FP class
+# (card t_d94dde9d case 4): git-tracked product source whose NAME merely
+# contains that token was denied for every profile, while the identical
+# credential-named case was carved out in v1.2.26. The fail-closed chain is
+# unchanged: untracked, nonexistent, symlinked/reparse, hard-secret (.env*,
+# auth.json, key material) and control-plane STORE names keep their deny.
+_CARVEOUT_TOKENS = ("cre" + "dential", "sec" + "ret")
 _HARD_SECRET_NAMES = {"auth.json", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"}
 _HARD_SECRET_SUFFIXES = (".pem", ".key", ".p12", ".pfx")
 
@@ -154,9 +160,13 @@ def _git_tracked_source_file(word: str, arguments: dict[str, Any]) -> bool:
         return False
     candidate = Path(raw)
     if not candidate.is_absolute():
-        base = str(arguments.get("workdir") or "")
-        if base:
-            candidate = Path(base) / raw
+        # v1.2.34 W1: explicit resolution base for tools that carry no
+        # workdir binding (read_file/search_files pass only `path`). The
+        # plugin executes in-process with the worker, so os.getcwd() IS the
+        # task workspace; making the base explicit keeps relative-operand
+        # resolution deterministic instead of implicit in Path.resolve().
+        base = str(arguments.get("workdir") or "") or os.getcwd()
+        candidate = Path(base) / raw
     # HIGH-1: store-name family is never plain source (check requested and
     # physical spellings; exact store substrings via _is_policy_controlled).
     if _is_policy_controlled(raw) or _is_policy_controlled(str(candidate)):
@@ -204,7 +214,7 @@ def _tracked_source_carveout(matched: str, subject: str, arguments: dict[str, An
     plain source does the guard stand down and let the ordinary effect
     classification decide (read_only / scoped_state_change).
     """
-    if _CARVEOUT_TOKEN not in matched.lower():
+    if not any(token in matched.lower() for token in _CARVEOUT_TOKENS):
         return False
     lowered_pattern = matched.lower()
     variants = [lowered_pattern]
@@ -477,8 +487,56 @@ _OUTPUT_REDIRECT = re.compile(r"&>>|&>|>>|>")
 
 
 def _simple_commands(command: str) -> list[str]:
-    """Split a command line into stages: chains, lists and pipes."""
-    return [part.strip() for part in re.split(r"&&|\|\||;|\|", command) if part.strip()]
+    """Split a command line into stages: chains, lists and pipes.
+
+    v1.2.34 W2(b): the split is quote-aware — `&&`, `||`, `;` and `|` inside
+    BALANCED single/double quotes are literal characters of one stage (the
+    shell never treats them as control operators), so `python -c "a; b"` and
+    `grep 'x|y' f` reach the stage classifier intact instead of being
+    shredded into unparseable fragments. An unbalanced quote state fails
+    closed to the historical quote-blind split, so a stray apostrophe can
+    never swallow a later mutating stage into a "quoted" span; the MUTATOR
+    and write-marker scans additionally run over the raw text.
+    """
+    stages: list[str] = []
+    current: list[str] = []
+    quote: str | None = None
+    index = 0
+    length = len(command)
+    while index < length:
+        char = command[index]
+        if quote is not None:
+            current.append(char)
+            if char == "\\" and quote == '"' and index + 1 < length:
+                current.append(command[index + 1])
+                index += 2
+                continue
+            if char == quote:
+                quote = None
+            index += 1
+            continue
+        if char in "\"'":
+            quote = char
+            current.append(char)
+            index += 1
+            continue
+        if command[index:index + 2] in ("&&", "||"):
+            stages.append("".join(current))
+            current = []
+            index += 2
+            continue
+        if char in ";|":
+            stages.append("".join(current))
+            current = []
+            index += 1
+            continue
+        current.append(char)
+        index += 1
+    if quote is not None:
+        # Unbalanced quoting: fall back to the historical blind split.
+        return [part.strip() for part in re.split(r"&&|\|\||;|\|", command) if part.strip()]
+    stages.append("".join(current))
+    return [part.strip() for part in stages if part.strip()]
 
 
 def _stage_tokens(segment: str) -> list[str]:
@@ -680,6 +738,197 @@ def _hash_stage_is_read_only(tokens: list[str]) -> bool:
         ) or "-a256" in args
     return program == "certutil" and len(tokens) > 1 and _clean_shell_token(tokens[1]).lower() == "-hashfile"
 
+# v1.2.34 W2(a): bare version probes join the read lane. A two-token stage
+# `<program> <flag>` with an exact per-program flag is a pure stdout read;
+# the map is deliberate — `python -v` is the verbose-import REPL, NOT a
+# version probe, and must not buy the read lane. Live FP (card t_d94dde9d
+# cases 1/5): a read-only diagnostics chain ending in `python --version`
+# flipped the whole command to state_change, and the path guard then
+# hard-denied the probe as a control-plane mutation.
+_VERSION_PROBE_FLAGS = {
+    "python": frozenset({"-V", "--version"}),
+    "py": frozenset({"-V", "--version"}),
+    "node": frozenset({"-v", "--version"}),
+    "npm": frozenset({"-v", "--version"}),
+    "uv": frozenset({"-V", "--version"}),
+    "git": frozenset({"--version"}),
+    "sqlite3": frozenset({"--version"}),
+    "gh": frozenset({"--version"}),
+    "jq": frozenset({"--version"}),
+}
+_VERSIONED_PYTHON_RE = re.compile(r"python\d+(?:\.\d+)*")
+
+
+def _version_probe_is_read_only(tokens: list[str]) -> bool:
+    if len(tokens) != 2:
+        return False
+    program = _program_name(tokens[0])
+    flags = _VERSION_PROBE_FLAGS.get(program)
+    if flags is None and _VERSIONED_PYTHON_RE.fullmatch(program):
+        flags = _VERSION_PROBE_FLAGS["python"]
+    return flags is not None and _clean_shell_token(tokens[1]) in flags
+
+
+# v1.2.34 W2(b): narrow lexical lane for in-process `python -c` read probes.
+# SUPERSEDES the v1.2.31 re-scope note ("in-process python -c sqlite form
+# stays denied") per the company decision of 02.10.2026 on card t_d94dde9d:
+# a mode=ro SELECT probe is a read, not a mutation. Fail-closed by design —
+# the stage must be exactly `python -c <one quoted code argument>`, every
+# `;`-separated statement must match an allowlisted shape, every SQL literal
+# must be a read verb (the v1.2.31 regexes), every gh argv must pass the
+# existing _gh_stage_is_read_only allowlist, and a global deny-token scan
+# rejects mutation/execution/filesystem/network tokens. Residual risk
+# (documented): the lane is lexical; string-concatenation obfuscation inside
+# an otherwise template-shaped probe is the pre-existing scanner-gap class.
+_PYTHON_C_PROGRAM_RE = re.compile(r"(?:python|py)(?:\d+(?:\.\d+)*)?")
+_CODE_DENY_TOKENS: tuple[str, ...] = (
+    "insert", "update", "delete", "drop", "alter", "create", "attach",
+    "detach", "replace", "vacuum", "reindex", "executescript", "commit",
+    "rollback", "open(", "os.", "subprocess", "eval", "exec(",
+    "__import__", "socket", "urllib", "requests", "shutil", "pathlib",
+    "write", "shell=true", "system(", "popen", "input(",
+)
+_QUOTED_LITERAL = re.compile(r"""(['"])([^'"]*)\1""")
+_SQLITE_CONNECT_STMT = re.compile(
+    r"""^(\w+)\s*=\s*sqlite3\.connect\(\s*(['"])(file:[^'"]*)\2\s*,\s*uri\s*=\s*True\s*\)$"""
+)
+_SQLITE_FETCH_STMT = re.compile(r"^(\w+)\s*=\s*(\w+)\.execute\(.+\)\.(?:fetchall|fetchone)\(\)$")
+_SQLITE_CLOSE_STMT = re.compile(r"^(\w+)\.close\(\)$")
+_SQLITE_PRINT_STMT = re.compile(r"^print\(.+\)$")
+_SQLITE_EXECUTE_CALL = re.compile(r"""\.execute\(\s*(['"])([^'"]*)\1\s*\)""")
+_GH_IMPORT_STMT = re.compile(r"^import\s+(.+)$")
+_GH_ALLOWED_IMPORTS = frozenset({"subprocess", "json", "sys"})
+_GH_RUN_STMT = re.compile(r"^(\w+)\s*=\s*subprocess\.run\(\s*\[([^\[\]]*)\]\s*(?:,\s*(.*?))?\s*\)$")
+_GH_RUN_BOOL_KWARGS = {"capture_output": {"true", "false"}, "text": {"true", "false"}}
+_GH_PRINT_STMT = re.compile(r"^print\(.+\)$")
+_GH_JSON_STMT = re.compile(r"^(\w+)\s*=\s*json\.loads\(\s*(\w+)\.stdout\s*\)$")
+
+
+def _code_deny_hit(code: str, *, allowed: frozenset[str] = frozenset()) -> str | None:
+    lowered = " ".join(code.lower().split())
+    for token in _CODE_DENY_TOKENS:
+        if token in allowed:
+            continue
+        if token in lowered:
+            return token
+    return None
+
+
+def _python_sqlite_probe_code(code: str) -> bool:
+    """T-sqlite: `import sqlite3` → conn assignment via a file: URI carrying
+    mode=ro with uri=True → read-verb execute/fetch → print → close. Every
+    `.execute(` occurrence must carry a quoted read-verb SQL literal (covers
+    print-wrapped calls too); any other statement shape fails closed."""
+    statements = [part.strip() for part in code.split(";") if part.strip()]
+    if not statements or statements[0] != "import sqlite3":
+        return False
+    conn_vars: set[str] = set()
+    for statement in statements[1:]:
+        connect = _SQLITE_CONNECT_STMT.match(statement)
+        if connect:
+            if "mode=ro" not in connect.group(3):
+                return False
+            conn_vars.add(connect.group(1))
+            continue
+        fetch = _SQLITE_FETCH_STMT.match(statement)
+        if fetch:
+            if fetch.group(2) not in conn_vars:
+                return False
+            continue
+        if _SQLITE_PRINT_STMT.match(statement):
+            continue
+        close = _SQLITE_CLOSE_STMT.match(statement)
+        if close and close.group(1) in conn_vars:
+            continue
+        return False
+    execute_calls = _SQLITE_EXECUTE_CALL.findall(code)
+    if code.count(".execute(") != len(execute_calls):
+        return False  # an execute whose argument is not a plain literal
+    for sql in (item[1] for item in execute_calls):
+        if not sql.strip():
+            return False
+        if not (_SQLITE_READ_STATEMENT.match(sql) or _SQLITE_READ_PRAGMA.match(sql)):
+            return False
+    return _code_deny_hit(code) is None
+
+
+def _python_gh_probe_code(code: str) -> bool:
+    """T-gh: imports from {subprocess, json, sys} → exactly one
+    subprocess.run([...gh argv...], capture_output/text/timeout kwargs only)
+    whose argv passes _gh_stage_is_read_only → json.loads / print. The deny
+    scan runs with quoted literals masked: the literals ARE the gh argv and
+    are validated structurally, so endpoint names (e.g. commits) must not
+    trip SQL-mutation tokens."""
+    statements = [part.strip() for part in code.split(";") if part.strip()]
+    if not statements:
+        return False
+    imported: set[str] = set()
+    run_var: str | None = None
+    for statement in statements:
+        import_match = _GH_IMPORT_STMT.match(statement)
+        if import_match:
+            names = [name.strip() for name in import_match.group(1).split(",")]
+            if not names or any(name not in _GH_ALLOWED_IMPORTS for name in names):
+                return False
+            imported.update(names)
+            continue
+        run_match = _GH_RUN_STMT.match(statement)
+        if run_match and run_var is None:
+            argv_pairs = _QUOTED_LITERAL.findall(run_match.group(2))
+            residue = _QUOTED_LITERAL.sub(" ", run_match.group(2))
+            if residue.strip(", \t") or not argv_pairs:
+                return False
+            argv = [text for _, text in argv_pairs]
+            if argv[0] != "gh" or not _gh_stage_is_read_only(argv):
+                return False
+            kwargs_body = (run_match.group(3) or "").strip()
+            if kwargs_body:
+                for chunk in kwargs_body.split(","):
+                    key, sep, value = chunk.strip().partition("=")
+                    key, value = key.strip(), value.strip().lower()
+                    if not sep:
+                        return False
+                    if key in _GH_RUN_BOOL_KWARGS:
+                        if value not in _GH_RUN_BOOL_KWARGS[key]:
+                            return False
+                    elif key == "timeout":
+                        if not value.isdigit():
+                            return False
+                    else:
+                        return False
+            run_var = run_match.group(1)
+            continue
+        if _GH_PRINT_STMT.match(statement):
+            continue
+        if _GH_JSON_STMT.match(statement):
+            continue
+        return False
+    if run_var is None or "subprocess" not in imported:
+        return False
+    if code.count("subprocess.run") != 1:
+        return False
+    masked = _QUOTED_LITERAL.sub(" ", code)
+    return _code_deny_hit(masked, allowed=frozenset({"subprocess"})) is None
+
+
+def _python_stage_is_read_only(tokens: list[str]) -> bool:
+    """Exactly `python -c <one quoted code argument>`; extra arguments,
+    unquoted code, other flags or other programs fail closed."""
+    if len(tokens) != 3:
+        return False
+    program = _program_name(tokens[0])
+    if not _PYTHON_C_PROGRAM_RE.fullmatch(program):
+        return False
+    if _clean_shell_token(tokens[1]) not in {"-c", "--command"}:
+        return False
+    raw_code = tokens[2]
+    if len(raw_code) < 3 or raw_code[0] not in "\"'" or raw_code[-1] != raw_code[0]:
+        return False
+    code = raw_code[1:-1]
+    if not code.strip():
+        return False
+    return _python_sqlite_probe_code(code) or _python_gh_probe_code(code)
+
 
 # v1.2.31: single-statement read-only SQL via the sqlite3 CLI joins the read
 # lane (owner re-scope: read-only diagnostics — SELECT included — must never
@@ -730,6 +979,8 @@ def _stage_is_read_only(segment: str) -> bool:
         _gh_stage_is_read_only(tokens)
         or _hash_stage_is_read_only(tokens)
         or _sqlite_stage_is_read_only(tokens)
+        or _version_probe_is_read_only(tokens)
+        or _python_stage_is_read_only(tokens)
     )
 
 
@@ -1194,6 +1445,91 @@ def _safe_rm_targets(command: str, binding: dict[str, Any] | None = None) -> boo
     return True
 
 
+# v1.2.34 W4: risk-regex span exemption. The hard-deny and rule-table scans
+# see the RAW command text, so a deny phrase QUOTED as data (echo/grep
+# arguments, git commit -m prose, gh --body text, heredoc lines) triggered
+# evidence-gated categories or hard denies for commands that execute
+# nothing — a live FP family (card t_d94dde9d case 2b: commit-message and
+# report prose). A risk-regex match lying entirely inside a shell-quoted
+# span is now exempt UNLESS the span is executable input: the token before
+# the opening quote is a code-flag form (-c/--command/-e/--eval or a short
+# cluster ending in c/e), or the span shares its line with an
+# interpreter/executor program (bash -c, ssh host "cmd", awk 'prog',
+# eval "x", sed scripts, heredoc opener lines). A span containing a URL
+# stays scanned (real target, matching the _risk_subject URL doctrine).
+# Unbalanced quoting disables every exemption (fail-closed). Untouched: the
+# path guard and its python -c code extraction (F5), the MUTATOR/write-
+# marker effect scans, and the runtime gate-forgery checks. Residual
+# (documented): string-concatenation obfuscation inside an executed span is
+# the pre-existing lexical-gap class (F4 free-text note).
+_CODE_FLAG_TOKENS = frozenset({"-c", "--command", "-e", "--eval"})
+_CODE_FLAG_CLUSTER = re.compile(r"^-[A-Za-z]*[ce]=?$")
+_INTERPRETER_PROGRAMS = frozenset({
+    "sh", "bash", "zsh", "ksh", "dash", "ash", "fish", "eval", "xargs",
+    "python", "python2", "python3", "py", "perl", "node", "deno", "bun",
+    "ruby", "php", "lua", "tclsh", "awk", "gawk", "mawk", "sed",
+    "powershell", "pwsh", "cmd", "wscript", "cscript", "mshta", "ssh",
+    "sqlite3", "psql", "mysql", "docker", "podman", "kubectl",
+})
+_VERSIONED_INTERPRETER_RE = re.compile(r"(?:python|py|node|ruby|php|lua)\d+(?:\.\d+)*")
+
+
+def _span_is_prose(command: str, open_at: int, close_at: int) -> bool:
+    if "://" in command[open_at + 1:close_at - 1]:
+        return False  # a quoted URL is a real target, never inert prose
+    preceding = command[:open_at].rstrip()
+    token_match = re.search(r"(\S+)$", preceding)
+    token = token_match.group(1) if token_match else ""
+    bare = token[:-1] if token.endswith("=") else token
+    if bare in _CODE_FLAG_TOKENS or _CODE_FLAG_CLUSTER.match(bare):
+        return False
+    line_start = command.rfind("\n", 0, open_at) + 1
+    line_head = command[line_start:open_at].split()
+    if line_head:
+        program = _program_name(line_head[0])
+        if program in _INTERPRETER_PROGRAMS or _VERSIONED_INTERPRETER_RE.fullmatch(program):
+            return False
+    return True
+
+
+def _exempt_quote_spans(command: str) -> list[tuple[int, int]]:
+    spans: list[tuple[int, int]] = []
+    index = 0
+    length = len(command)
+    quote: str | None = None
+    open_at = -1
+    while index < length:
+        char = command[index]
+        if quote is None:
+            if char in "\"'":
+                quote = char
+                open_at = index
+            index += 1
+            continue
+        if char == "\\" and quote == '"' and index + 1 < length:
+            index += 2
+            continue
+        if char == quote:
+            if _span_is_prose(command, open_at, index + 1):
+                spans.append((open_at, index + 1))
+            quote = None
+        index += 1
+    if quote is not None:
+        return []  # unbalanced quoting: no exemptions (fail-closed)
+    return spans
+
+
+def _mask_exempt_quote_spans(command: str) -> str:
+    spans = _exempt_quote_spans(command)
+    if not spans:
+        return command
+    chars = list(command)
+    for start, end in spans:
+        for position in range(start, min(end, len(chars))):
+            chars[position] = " "
+    return "".join(chars)
+
+
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
     name = _normalize_tool_name(tool_name)
     effect = _effect_for(name, arguments)
@@ -1231,6 +1567,12 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         return Classification(effect, PROTECTED_STORE_RULE, "deny", DENY_MSG)
 
     subject = _risk_subject(name, arguments)
+    # v1.2.34 W4: deny phrases quoted as DATA are exempt from the risk
+    # scans below; executable spans (code-flag values, interpreter lines,
+    # URLs) keep their raw text. Length-preserving masking, so no new token
+    # adjacency can be fabricated outside the masked spans.
+    if name in TERMINAL_TOOLS and subject:
+        subject = _mask_exempt_quote_spans(subject)
     lower = f"{name} {subject}".lower()
 
     # Hard-deny checks inspect command/target fields only. They must never scan

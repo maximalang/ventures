@@ -1,0 +1,1 @@
+normalized: core.autocrlf=false + git checkout-index -f -a in owned clone only; baseline bytes re-saved LF; prior CRLF baseline superseded (573 CR package.json / 7856 CR lock)

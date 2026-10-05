@@ -1,0 +1,57 @@
+{
+  "schema": "lineage_readback/v1",
+  "schema_version": 1,
+  "session_id": "20261002_194716_7e6e9b",
+  "found": true,
+  "profile": "tech",
+  "state_db": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\state.db",
+  "session": {
+    "id": "20261002_194716_7e6e9b",
+    "source": "kanban",
+    "profile_name": "tech",
+    "model": "qwen3.8-max",
+    "billing_provider": "custom",
+    "billing_mode": null,
+    "started_at": 1790959650.3932202,
+    "ended_at": 1790961909.433861,
+    "message_count": 88,
+    "api_call_count": 39,
+    "end_reason": "cli_close",
+    "started_at_iso": "2026-10-02T16:47:30+00:00",
+    "ended_at_iso": "2026-10-02T17:25:09+00:00"
+  },
+  "legacy_schema": false,
+  "lineage": [
+    {
+      "model": "qwen3.8-max",
+      "billing_provider": "custom",
+      "billing_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "billing_mode": "",
+      "task": "",
+      "api_call_count": 39,
+      "input_tokens": 208766,
+      "output_tokens": 70136,
+      "cache_read_tokens": 3399168,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 52922,
+      "first_seen": 1790959660.852362,
+      "last_seen": 1790961909.103559,
+      "class": "serving",
+      "first_seen_iso": "2026-10-02T16:47:40+00:00",
+      "last_seen_iso": "2026-10-02T17:25:09+00:00"
+    }
+  ],
+  "summary": {
+    "serving": [
+      "qwen3.8-max"
+    ],
+    "aux": [],
+    "compression": []
+  },
+  "scanned_profiles": [
+    "tech"
+  ],
+  "scan_notes": [],
+  "generated_at": "2026-10-02T19:56:59+00:00",
+  "source": "session_model_usage ledger (read-only)"
+}

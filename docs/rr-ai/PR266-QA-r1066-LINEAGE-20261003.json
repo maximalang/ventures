@@ -1,0 +1,76 @@
+{
+  "schema": "lineage_readback/v1",
+  "schema_version": 1,
+  "session_id": "20261003_142233_dafd1e",
+  "found": true,
+  "profile": "qa",
+  "state_db": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\state.db",
+  "session": {
+    "id": "20261003_142233_dafd1e",
+    "source": "kanban",
+    "profile_name": "qa",
+    "model": "glm-5.3",
+    "billing_provider": "zai",
+    "billing_mode": null,
+    "started_at": 1791026562.383752,
+    "ended_at": 1791028058.887142,
+    "message_count": 130,
+    "api_call_count": 65,
+    "end_reason": "cli_close",
+    "started_at_iso": "2026-10-03T11:22:42+00:00",
+    "ended_at_iso": "2026-10-03T11:47:38+00:00"
+  },
+  "legacy_schema": false,
+  "lineage": [
+    {
+      "model": "glm-5.3",
+      "billing_provider": "zai",
+      "billing_base_url": "https://api.z.ai/api/coding/paas/v4",
+      "billing_mode": "",
+      "task": "",
+      "api_call_count": 8,
+      "input_tokens": 34532,
+      "output_tokens": 4112,
+      "cache_read_tokens": 219264,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 2755,
+      "first_seen": 1791026575.4311705,
+      "last_seen": 1791026666.140212,
+      "class": "serving",
+      "first_seen_iso": "2026-10-03T11:22:55+00:00",
+      "last_seen_iso": "2026-10-03T11:24:26+00:00"
+    },
+    {
+      "model": "glm-5.3-flash",
+      "billing_provider": "zai",
+      "billing_base_url": "https://api.z.ai/api/coding/paas/v4/",
+      "billing_mode": "",
+      "task": "",
+      "api_call_count": 57,
+      "input_tokens": 77747,
+      "output_tokens": 40559,
+      "cache_read_tokens": 2980672,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 21784,
+      "first_seen": 1791026678.1021945,
+      "last_seen": 1791028058.515572,
+      "class": "serving",
+      "first_seen_iso": "2026-10-03T11:24:38+00:00",
+      "last_seen_iso": "2026-10-03T11:47:38+00:00"
+    }
+  ],
+  "summary": {
+    "serving": [
+      "glm-5.3",
+      "glm-5.3-flash"
+    ],
+    "aux": [],
+    "compression": []
+  },
+  "scanned_profiles": [
+    "qa"
+  ],
+  "scan_notes": [],
+  "generated_at": "2026-10-03T15:41:38+00:00",
+  "source": "session_model_usage ledger (read-only)"
+}

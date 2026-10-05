@@ -1,0 +1,45 @@
+{
+  "applied_at": "2026-10-03T21:51:31+03:00",
+  "packet_manifest_sha256": "aca8e05c554e5998b1b461e12ff182733140c4283b6b463be08805b31ee15e6c",
+  "consumer": "company (direct owner order 2026-10-03)",
+  "payload": "HUB-NATIVE-APPLY-WINDOWS-PAYLOAD.json",
+  "pre_apply_checks": {
+    "before_29_match": true,
+    "candidate_strings_11_match": true,
+    "new_paths_absent_9": true
+  },
+  "apply": {
+    "tool": "skill_manage atomic 11 ops + 1 corrective write_file (spawning-instances.md restored lost line)",
+    "results": "all success"
+  },
+  "post_state": {
+    "unchanged_27": "exact match",
+    "changed_11_identity": "11/11",
+    "forms": {
+      "autonomous-ai-agents/hermes-agent/SKILL.md": "exact",
+      "autonomous-ai-agents/hermes-agent/references/product-overview.md": "writer_omitted_final_newline",
+      "autonomous-ai-agents/hermes-agent/references/quickstart-and-paths.md": "writer_omitted_final_newline",
+      "autonomous-ai-agents/hermes-agent/references/spawning-instances.md": "writer_omitted_final_newline",
+      "fleet-ops/fleet-token-economy/SKILL.md": "exact",
+      "fleet-ops/fleet-token-economy/references/audit-to-program.md": "writer_omitted_final_newline",
+      "fleet-ops/fleet-token-economy/references/levers-playbook.md": "writer_omitted_final_newline",
+      "fleet-ops/fleet-token-economy/references/measure-first-details.md": "writer_omitted_final_newline",
+      "fleet-ops/fleet-token-economy/references/mechanics-pitfalls.md": "writer_omitted_final_newline",
+      "fleet-ops/fleet-token-economy/references/prompt-audit-lane.md": "writer_omitted_final_newline",
+      "fleet-ops/fleet-token-economy/references/routing-audit-safeguards.md": "writer_omitted_final_newline"
+    }
+  },
+  "writer_note": "skill_manage writes CRLF and may omit one final trailing newline; content identity verified byte-exact modulo that final newline; no content diffs",
+  "independent_qa": {
+    "source": "t_d5e37e14 SOURCE_PASS 2196ca2b02bfa7cfdf7edfa9e8cabc4b8ae1131d83b82242b4c7f9f3f5f9b98c",
+    "transport_wire": "t_e2999d71 NOT completed - provider quota walls; post-adoption check_at after reset 2026-10-04T00:46+03:00"
+  },
+  "finance": {
+    "revenue": null,
+    "refunds": null,
+    "provider_paid": null,
+    "estimated_usage": null,
+    "new_paid_commitments": 0
+  },
+  "claims": "no token/cash savings claim; effect_unverified until natural measurements per MEASUREMENT-REVIEW.md"
+}

@@ -1,0 +1,124 @@
+{
+  "verified_at_utc": "2026-10-03T21:16:14.377041+00:00",
+  "board": "fleet-ops",
+  "created_task_ids": [
+    "t_f41c3c15",
+    "t_87ddea42",
+    "t_a3c78661",
+    "t_895a7d39"
+  ],
+  "native_graph_verified": true,
+  "readiness_block_count": 0,
+  "accountable_owner": "company",
+  "brain_packet_sha256": "f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9",
+  "tasks": [
+    {
+      "task_id": "t_f41c3c15",
+      "assignee": "research",
+      "task_type": "research",
+      "title": "Dots: независимо проверить 8 первичных руководств и точную методику",
+      "status": "running",
+      "body": "task_type: research\nSpec: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/SOURCE-AUDIT-SPEC.md\nDeliverable: SOURCE-AUDIT.md; source verdict, not rollout.",
+      "body_chars": 168,
+      "parents": [],
+      "spec": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/SOURCE-AUDIT-SPEC.md",
+      "spec_sha256": "906ae6b7fb14d7dd6db4f58bb40f73a4afa10a4f11d7e57511421dbd749cf754",
+      "comments": [],
+      "current_run_id": null,
+      "read_exit_code": 0,
+      "readiness_defects": [
+        [
+          "WARN",
+          "missing_go_anchor",
+          "тело содержит gated-глагол (merge/deploy/publish/spend), но на карте нет decision:company=go с head=<sha>. Если карта САМА выполняет gated-действие — это BLOCK-корень (expected_head пуст, маркеры не вооружатся). Если только упоминает — игнорируй."
+        ]
+      ]
+    },
+    {
+      "task_id": "t_87ddea42",
+      "assignee": "operations",
+      "task_type": "ops",
+      "title": "Dots: внедрить принятую методику в company-os двенадцати профилей",
+      "status": "todo",
+      "body": "task_type: ops\nSpec: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/ROLLOUT-SPEC.md\nDeliverable: 12 scoped reference installations and integrity evidence; QA pending.",
+      "body_chars": 182,
+      "parents": [
+        "t_f41c3c15"
+      ],
+      "spec": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/ROLLOUT-SPEC.md",
+      "spec_sha256": "5cfea6cbb79ee1edd4c4ec04cea087be6194bab8cf91090c69649e1abc9f84d8",
+      "comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=fd6c26f5dbebba33baa17761f43a80e22ed17427 task_type: ops\nExact subject is FILE CONTENT, not a git head: METHOD-CANDIDATE.md sha1 above; sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f. BRAIN-PACKET.json sha256=f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9. Spec/allowlist are frozen packet members. Conditional authority: install only after independent SOURCE-AUDIT PASS on that exact candidate; parent DONE alone is not acceptance. This authorizes only the 12 targeted company-os references and small hooks, with backups and preservation checks; no software/service access, runtime/model/config/policy/cron changes or new paid commitment. Expected value: clearer sustained responsibility/WAIT/stop/handoff; efficacy and savings unmeasured. Kill on drift, collision, source FAIL, capability/policy refusal or extra-file change; do not bypass. Rollback own hook/reference only, preserving later concurrent edits. Final accountability company; independent consumer QA t_a3c78661, then t_895a7d39. Financial scope=fleet-ops methodology; period=03.10.2026 start→acceptance; source=task/tool receipts; new paid commitments=0; revenue/refunds/incremental paid costs/estimated inference costs=null, billing/outcomes not measured. No claim of zero inference cost.",
+          "created_at": 1791062092
+        }
+      ],
+      "current_run_id": null,
+      "read_exit_code": 0,
+      "readiness_defects": []
+    },
+    {
+      "task_id": "t_a3c78661",
+      "assignee": "qa",
+      "task_type": "review",
+      "title": "Dots: независимая приёмка точных файлов, загрузки и границ 12 профилей",
+      "status": "todo",
+      "body": "task_type: review\nSpec: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/QA-SPEC.md\nDeliverable: independent exact-file verdict and integrity/load checks.",
+      "body_chars": 168,
+      "parents": [
+        "t_87ddea42",
+        "t_f41c3c15"
+      ],
+      "spec": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/QA-SPEC.md",
+      "spec_sha256": "0a72c6f77ef623afd40985554095011805367a3524d5a467faf90276f79d9409",
+      "comments": [
+        {
+          "author": "company",
+          "body": "Independent exact subject: METHOD-CANDIDATE.md sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f; file-content sha1=fd6c26f5dbebba33baa17761f43a80e22ed17427 (not git). Own verdict is source/filesystem/method accuracy, not runtime repair or future obedience. Parent DONE does not mean PASS. Real serving lineage must be reported from permitted natural-run evidence; configured QA model is not proof, Sol brain/reviewer overlap would be correlated. You did not author the frozen brain/reference or operations writes. Final consumer on same board is t_895a7d39 (company); hands producer t_87ddea42. If appropriate native QA/review bindings are necessary, only you issue them with exact subject on that non-QA consumer, never on your own card and never by impersonated company copy. Give actual verdict + receipts, and preserve privacy/financial unknowns. No synthetic inference probe or model/pool edit.",
+          "created_at": 1791062092
+        }
+      ],
+      "current_run_id": null,
+      "read_exit_code": 0,
+      "readiness_defects": []
+    },
+    {
+      "task_id": "t_895a7d39",
+      "assignee": "company",
+      "task_type": "ops",
+      "title": "Dots: принять независимо проверенное внедрение и закрыть ответственность",
+      "status": "todo",
+      "body": "task_type: ops\nSpec: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/CONSUMER-SPEC.md\nDeliverable: verified methodology acceptance and concise owner result; no runtime repair.",
+      "body_chars": 190,
+      "parents": [
+        "t_87ddea42",
+        "t_a3c78661",
+        "t_f41c3c15"
+      ],
+      "spec": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/dots-20261003/CONSUMER-SPEC.md",
+      "spec_sha256": "2d57bce24a447c1a29b33704d24cfa2672425bfeb0cd460a418f766cca2fe0a3",
+      "comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=fd6c26f5dbebba33baa17761f43a80e22ed17427 task_type: ops\nConditional responsibility consumer for exact FILE-CONTENT subject, not git: METHOD-CANDIDATE.md sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f; BRAIN-PACKET.json=f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9. Required source/operations/QA parents are t_f41c3c15 → t_87ddea42 → t_a3c78661. Independent QA PASS must be read on actual candidate and installed after-manifest; DONE status is insufficient. Read all 12 exact targets back before accepting. No model/config/runtime/policy changes, account/device connection or extra spend authorized. Internal method rollout is not installation of OpenAI Dots or completion of existing autocompany runtime repair. Original explicit owner request is desktop; concise verified result can be delivered through authorized existing owner routing, no second sender. If any proof missing, same-lane scoped correction, not own fabricated PASS. Financial scope=fleet-ops methodology; period=03.10.2026 packet start→acceptance; source native task/tool receipts; new paid commitments=0, revenue/refunds/incremental paid costs/estimated inference costs=null (unmeasured). Bound final result to actual independent evidence and preserve all gaps.",
+          "created_at": 1791062092
+        }
+      ],
+      "current_run_id": null,
+      "read_exit_code": 0,
+      "readiness_defects": []
+    }
+  ],
+  "financial_scope": {
+    "scope": "fleet-ops methodology",
+    "period": "2026-10-03 packet start to verification time",
+    "source": "native task reads and scoped authoring receipts; billing not retrieved",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "estimated_usage_cost": null,
+    "new_paid_commitments": 0,
+    "unknown_reason": "No revenue experiment or billing/usage measurement."
+  }
+}

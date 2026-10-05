@@ -1,0 +1,215 @@
+▶ not activated — using HERMES_PYTHON: C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe
+▶ running per-file parallel test suite via run_tests_parallel.py
+  (TZ=UTC LANG=C.UTF-8 PYTHONHASHSEED=0; clean env)
+▶ pre-compiling bytecode cache
+▶ launching test runner
+Discovered 1 test files (~18 tests) under ['tests\\gateway\\test_profile_channel_override_routing.py']; running with -j 18
+[100.0% |    18/~18 | ✓ 6 | ✗12] ✗ tests\gateway\test_profile_channel_override_routing.py (6✓ 12✗, 7.1s)
+
+  ╔╍ Failed: tests\gateway\test_profile_channel_override_routing.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║ 
+  ║ >   ???
+  ║ E   AssertionError: assert 'openai-codex' == 'custom'
+  ║ E     
+  ║ E     - custom
+  ║ E     + openai-codex
+  ║ 
+  ║ tests\gateway\test_profile_channel_override_routing.py:277: AssertionError
+  ║ ____ TestSlashAndPromptParity.test_slash_channel_override_for_matches_turn ____
+  ║ 
+  ║ self = <tests.gateway.test_profile_channel_override_routing.TestSlashAndPromptParity object at 0x000002C4CE964810>
+  ║ 
+  ║ >   ???
+  ║ E   assert None is not None
+  ║ 
+  ║ tests\gateway\test_profile_channel_override_routing.py:289: AssertionError
+  ║ =========================== short test summary info ===========================
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_company_dm_inherits_company_rule
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_company_forum_root_message_inherits_forum_rule
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_company_forum_new_thread_inherits_forum_rule
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_source_profile_without_pinned_identity_scopes_override
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_pinned_identity_wins_over_stale_source_profile
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_specialist_same_forum_uses_own_rule
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_routed_profile_never_borrows_launcher_rule
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_unserved_routed_profile_falls_back_to_global
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_unknown_source_profile_falls_back_to_global
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestWarmCacheAndNextTurn::test_warm_agent_signature_changes_after_cache_replacement
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestWarmCacheAndNextTurn::test_ordinary_next_turn_runtime_picks_new_values
+  ║ FAILED tests/gateway/test_profile_channel_override_routing.py::TestSlashAndPromptParity::test_slash_channel_override_for_matches_turn
+  ║ ======================== 12 failed, 6 passed in 1.05s =========================
+  ║
+  ║  Repro: python -m pytest tests\gateway\test_profile_channel_override_routing.py
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+
+=== Summary: 1 files, 6 tests passed, 12 failed (100% complete) in 7.1s (18 workers) ===
+
+=== Per-file subprocess time distribution ===
+  Files:   1
+  Total subprocess CPU-wall: 7.1s  (runner wall: 7.1s, parallelism: 18x)
+  P50: 7.06s  P90: 7.06s  P95: 7.06s  P99: 7.06s  Max: 7.06s
+  <1s: 0 files (0%)  <2s: 0 files (0%)
+  Top 10 slowest:
+      7.06s  tests\gateway\test_profile_channel_override_routing.py
+
+=== Failure output ===
+
+--- tests\gateway\test_profile_channel_override_routing.py ---
+============================= test session starts =============================
+platform win32 -- Python 3.11.16, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\max\AppData\Local\hermes\hermes-agent\.worktrees\tg-qwen-profile-routing-bounded-20261003
+configfile: pyproject.toml
+plugins: anyio-4.12.1, asyncio-1.3.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 18 items
+
+tests\gateway\test_profile_channel_override_routing.py FFFFFF.FFF..FFF.. [ 94%]
+.                                                                        [100%]
+
+================================== FAILURES ===================================
+_________ TestRoutedCompanyRule.test_company_dm_inherits_company_rule _________
+
+self = <tests.gateway.test_profile_channel_override_routing.TestRoutedCompanyRule object at 0x000002C4CE93F250>
+
+>   ???
+E   AssertionError: assert 'gpt-6.1-sol' == 'qwen3.8-max'
+E     
+E     - qwen3.8-max
+E     + gpt-6.1-sol
+
+tests\gateway\test_profile_channel_override_routing.py:144: AssertionError
+__ TestRoutedCompanyRule.test_company_forum_root_message_inherits_forum_rule __
+
+self = <tests.gateway.test_profile_channel_override_routing.TestRoutedCompanyRule object at 0x000002C4CE954050>
+
+>   ???
+E   AssertionError: assert 'gpt-6.1-sol' == 'qwen3.8-max'
+E     
+E     - qwen3.8-max
+E     + gpt-6.1-sol
+
+tests\gateway\test_profile_channel_override_routing.py:151: AssertionError
+___ TestRoutedCompanyRule.test_company_forum_new_thread_inherits_forum_rule ___
+
+self = <tests.gateway.test_profile_channel_override_routing.TestRoutedCompanyRule object at 0x000002C4CE9546D0>
+
+>   ???
+E   AssertionError: assert 'gpt-6.1-sol' == 'qwen3.8-max'
+E     
+E     - qwen3.8-max
+E     + gpt-6.1-sol
+
+tests\gateway\test_profile_channel_override_routing.py:158: AssertionError
+_ TestRoutedCompanyRule.test_source_profile_without_pinned_identity_scopes_override _
+
+self = <tests.gateway.test_profile_channel_override_routing.TestRoutedCompanyRule object at 0x000002C4CE954D90>
+
+>   ???
+E   AssertionError: assert 'gpt-6.1-sol' == 'qwen3.8-max'
+E     
+E     - qwen3.8-max
+E     + gpt-6.1-sol
+
+tests\gateway\test_profile_channel_override_routing.py:167: AssertionError
+__ TestRoutedCompanyRule.test_pinned_identity_wins_over_stale_source_profile __
+
+self = <tests.gateway.test_profile_channel_override_routing.TestRoutedCompanyRule object at 0x000002C4CE955410>
+
+>   ???
+E   AssertionError: assert 'gpt-6.1-sol' == 'qwen3.8-max'
+E     
+E     - qwen3.8-max
+E     + gpt-6.1-sol
+
+tests\gateway\test_profile_channel_override_routing.py:176: AssertionError
+____ TestNoCrossProfileBorrowing.test_specialist_same_forum_uses_own_rule _____
+
+self = <tests.gateway.test_profile_channel_override_routing.TestNoCrossProfileBorrowing object at 0x000002C4CE955B50>
+
+>   ???
+E   AssertionError: assert 'gpt-6.1-sol' == 'tech-rule-model'
+E     
+E     - tech-rule-model
+E     + gpt-6.1-sol
+
+tests\gateway\test_profile_channel_override_routing.py:188: AssertionError
+_ TestNoCrossProfileBorrowing.test_routed_profile_never_borrows_launcher_rule _
+
+self = <tests.gateway.test_profile_channel_override_routing.TestNoCrossProfileBorrowing object at 0x000002C4CE956850>
+
+>   ???
+E   AssertionError: assert 'launcher/model' == 'qwen3.8-max'
+E     
+E     - qwen3.8-max
+E     + launcher/model
+
+tests\gateway\test_profile_channel_override_routing.py:207: AssertionError
+_ TestNoCrossProfileBorrowing.test_unserved_routed_profile_falls_back_to_global _
+
+self = <tests.gateway.test_profile_channel_override_routing.TestNoCrossProfileBorrowing object at 0x000002C4CE956F10>
+
+>   ???
+E   AssertionError: assert 'launcher/model' == 'gpt-6.1-sol'
+E     
+E     - gpt-6.1-sol
+E     + launcher/model
+
+tests\gateway\test_profile_channel_override_routing.py:217: AssertionError
+_ TestNoCrossProfileBorrowing.test_unknown_source_profile_falls_back_to_global _
+
+self = <tests.gateway.test_profile_channel_override_routing.TestNoCrossProfileBorrowing object at 0x000002C4CE956310>
+
+>   ???
+E   AssertionError: assert 'launcher/model' == 'gpt-6.1-sol'
+E     
+E     - gpt-6.1-sol
+E     + launcher/model
+
+tests\gateway\test_profile_channel_override_routing.py:229: AssertionError
+_ TestWarmCacheAndNextTurn.test_warm_agent_signature_changes_after_cache_replacement _
+
+self = <tests.gateway.test_profile_channel_override_routing.TestWarmCacheAndNextTurn object at 0x000002C4CE957BD0>
+
+>   ???
+E   AssertionError: assert ('gpt-6.1-sol...openai-codex') == ('qwen3.8-max', 'custom')
+E     
+E     At index 0 diff: 'gpt-6.1-sol' != 'qwen3.8-max'
+E     Use -v to get more diff
+
+tests\gateway\test_profile_channel_override_routing.py:267: AssertionError
+__ TestWarmCacheAndNextTurn.test_ordinary_next_turn_runtime_picks_new_values __
+
+self = <tests.gateway.test_profile_channel_override_routing.TestWarmCacheAndNextTurn object at 0x000002C4CE964050>
+
+>   ???
+E   AssertionError: assert 'openai-codex' == 'custom'
+E     
+E     - custom
+E     + openai-codex
+
+tests\gateway\test_profile_channel_override_routing.py:277: AssertionError
+____ TestSlashAndPromptParity.test_slash_channel_override_for_matches_turn ____
+
+self = <tests.gateway.test_profile_channel_override_routing.TestSlashAndPromptParity object at 0x000002C4CE964810>
+
+>   ???
+E   assert None is not None
+
+tests\gateway\test_profile_channel_override_routing.py:289: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_company_dm_inherits_company_rule
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_company_forum_root_message_inherits_forum_rule
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_company_forum_new_thread_inherits_forum_rule
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_source_profile_without_pinned_identity_scopes_override
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestRoutedCompanyRule::test_pinned_identity_wins_over_stale_source_profile
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_specialist_same_forum_uses_own_rule
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_routed_profile_never_borrows_launcher_rule
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_unserved_routed_profile_falls_back_to_global
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestNoCrossProfileBorrowing::test_unknown_source_profile_falls_back_to_global
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestWarmCacheAndNextTurn::test_warm_agent_signature_changes_after_cache_replacement
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestWarmCacheAndNextTurn::test_ordinary_next_turn_runtime_picks_new_values
+FAILED tests/gateway/test_profile_channel_override_routing.py::TestSlashAndPromptParity::test_slash_channel_override_for_matches_turn
+======================== 12 failed, 6 passed in 1.05s =========================
+
+=== 1 file with test failures (12 tests failed) ===
+  tests\gateway\test_profile_channel_override_routing.py  (12 tests failed)

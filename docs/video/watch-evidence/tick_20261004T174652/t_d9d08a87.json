@@ -1,0 +1,375 @@
+{
+  "task": {
+    "id": "t_d9d08a87",
+    "title": "WARD-C01 REVIEW: независимый вердикт концепта «Вышка» на frozen SHA; без рендера",
+    "body": "task_type: review\nSpec: C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/CONCEPT_REVIEW_SPEC.md\nВердикт концепта + evidence; не media-приёмка. 0₽, без публикаций.",
+    "assignee": "qa",
+    "status": "done",
+    "priority": 3,
+    "tenant": null,
+    "workspace_kind": "scratch",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\video\\workspaces\\t_d9d08a87",
+    "branch_name": null,
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1791089386,
+    "started_at": 1791089423,
+    "completed_at": 1791090792,
+    "result": null,
+    "skills": [],
+    "max_runtime_seconds": 1800,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "cron_bea46eb9fd5b_20261004_073439",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": "Независимый concept-review C01 «Вышка» выполнен за один bounded run. VERDICT word-form: APPROVE (только creative-concept scope): creative_ready=true, rights_ready=false, render_allowed=false, production/publishing not allowed. Все 4 входа byte-exact по SHA-256; окно 33.86–49.72 и контекст разобраны ffmpeg+ASR (beat-карта подтверждена пословно двумя независимыми прогонами). Ключевые findings: D1 (MAJOR) — полная дословная капитация 301 знак математически несовместима с CPS≤15/17 на окне 15.86s (нужно ≥17.71s), требуется scoped-решение; плюс MINOR D2–D4, NOTE D5–D8, LIMIT-1/2 (vision-провайдер недоступен, прослушивания не было). Render-only проверки NOT_RUN, мастер не существует, публикаций нет. Deliverables: C01_CONCEPT_REVIEW.md/.json/.manifest.json (98 evidence-файлов хешированы). Next owner: company (D1/D7/D8 решения, campaign refresh, production-карта), затем video-editor.",
+  "parents": [
+    "t_a5b1777b",
+    "t_d55fa84a",
+    "t_f78e4b19"
+  ],
+  "children": [
+    "t_6737be7c"
+  ],
+  "comments": [
+    {
+      "author": "qa",
+      "body": "Независимый concept-review C01 «Вышка» выполнен (run 2026-10-04, старт 04:52:36Z). VERDICT (word-form): APPROVE — только рассмотренный creative-concept scope. creative_ready=true; rights_ready=false; render_allowed=false; production_allowed=false; publishing_allowed=false. Завершение review-карты не является approval медиа/публикации.\n\nEvidence-хендофф:\n- Deliverables: V9/C01_PILOT_20261004/C01_CONCEPT_REVIEW.md, C01_CONCEPT_REVIEW.json, C01_CONCEPT_REVIEW.manifest.json (manifest SHA 2966e7a2b29dee3d8977c6fd2561b62eeb87d882eb5786afa5105bf781b68f39; 4 review-файла + 98 evidence-файлов хешированы).\n- Acceptance #1: все 4 входа byte-exact (concept 74dd1ec3…, playbook 773c168d…, checklist 02d9376f…, S1 2e267367…). Входы не изменялись.\n- Acceptance #2: окно 33.86–49.72 + контекст 31.5–53.1 разобраны ffmpeg 9.0 (контактные листы 5fps, 12 ключевых кадров, scene-cuts, ebur128 −10.3 LUFS, silencedetect — пауз нет) + независимый второй ASR faster_whisper small int8: beat-карта автора подтверждена пословно, квалификаторы «можно/может/рядом/матча» на месте. Лимиты рана: vision-провайдер недоступен (error 1211, 2 попытки incl. контрольный PNG) — семантика кадров остаётся producer-attested и кросс-проверена метриками; человеческого прослушивания не было (LIMIT-1/2).\n- Acceptance #3: хук 88 знаков в 3s не помещается — числа playbook §5.2 воспроизведены точно (страницы 18/28/40 → 1.059/1.647/2.353s @17 CPS); оба поддержанных решения оценены и поддержаны, без сокращения хука/речи.\n- Новая находка D1 (MAJOR, delivery-plan): полная дословная капитация 301 знак на окне 15.86s = 19.0 CPS ≥17; для профиля нужно ≥17.71s показа; гэпы фраз 2–5 кадров в запрещённой зоне. Требуется scoped-решение company+video-director — молчаливо не разрешено.\n- Прочие дефекты: D2 почти-чёрный кадр 34.06→out 0.20s; D3 статичный хвост ≥3.2s (46.06–49.26, MAE 2.97–4.49); D4 «фоб» p=0.699 — слуховой conform; D5 небо метрически 1.2–2.8/4.0–6.0s out; D6 выход в 0.06–0.08s от промо «А»; D7 CTA-конфликт V4-binding vs playbook; D8 LUFS −14 vs −16.\n- Acceptance #5/6: rights_ready=false (точное отсутствующее предусловие: live campaign refresh cmtpoafsx0boq1mm6n3xr069f + P01/P04/P07/P08/P09, owner operations по диспатчу company); lineage: reviewer qa ≠ author video-director по профилю/карте; producer model chain = UNKNOWN, передано company; инференс-проб не было.\n- NOT_RUN: все render/exact-media проверки (V/C/L/A/E), мастер не существует, ничего не рендерилось/не публиковалось.\n- Финансы рана: incremental paid costs 0 ₽, new commitments 0 ₽; revenue/refunds/usage cost = null (billing не читался).\n\nNext owner: company — scoped-решение D1 (с video-director), подтверждение D7/D8, диспатч campaign refresh и production-карты; затем video-editor.",
+      "created_at": 1791090777
+    },
+    {
+      "author": "qa",
+      "body": "CORRECTION to completion metadata (canonical files are correct; two hash typos in kanban_complete metadata only):\n\n- PRODUCTION_PLAYBOOK.md correct SHA-256: 773c168d915a9735a383939a6fa89890acff7d917c59d6418dc5852a5eccc276 (metadata contained an inserted space after «773c»).\n- S1 wardogs_hot_zone_8Fl-mRN1HmE.mp4 correct SHA-256: 2e2673675441fd8ec7d84063c1e8f6d21ab3d93161f03d3faa288aabf658b4ac (metadata contained «4168c2e8» instead of «4063c1e8»).\n\nAuthoritative hash sources: C01_CONCEPT_REVIEW.md §1, C01_CONCEPT_REVIEW.json frozen_inputs_verified, C01_CONCEPT_REVIEW.manifest.json inputs_untouched — все три согласованы и получены sha256sum/hashlib этого рана. Вердикт и остальные поля не меняются: APPROVE (creative concept scope only), creative_ready=true, rights_ready=false, render_allowed=false, next owner company.",
+      "created_at": 1791090808
+    }
+  ],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "qa",
+        "status": "ready",
+        "parents": [
+          "t_d55fa84a",
+          "t_f78e4b19",
+          "t_a5b1777b"
+        ],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "scratch",
+        "workspace_path": null,
+        "branch_name": null,
+        "project_id": null,
+        "skills": null,
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1791089386,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:19968",
+        "expires": 1791090323,
+        "run_id": 387
+      },
+      "created_at": 1791089423,
+      "run_id": 387
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 19980,
+        "started_at": "|179108942325"
+      },
+      "created_at": 1791089423,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089431,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089492,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089556,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089620,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089680,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089740,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089801,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089862,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089924,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791089984,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090044,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090105,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090166,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090227,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": {
+        "note": "Hashes byte-exact (A1 pass); concept/playbook/checklist read; independent ASR confirms beat-map word-for-word; vision provider down (error 1211) — objective frame/audio metrics used instead; black-blink + static-tail findings; next: CPS math, owner contracts, deliverables"
+      },
+      "created_at": 1791090262,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090287,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090349,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090409,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090469,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090530,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090591,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090651,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090716,
+      "run_id": 387
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791090776,
+      "run_id": 387
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "qa",
+        "len": 2737
+      },
+      "created_at": 1791090777,
+      "run_id": null
+    },
+    {
+      "kind": "completed",
+      "payload": {
+        "result_len": 0,
+        "summary": "Независимый concept-review C01 «Вышка» выполнен за один bounded run. VERDICT word-form: APPROVE (только creative-concept scope): creative_ready=true, rights_ready=false, render_allowed=false, production/publishing not allowed. Все 4 входа byte-exact по SHA-256; окно 33.86–49.72 и контекст разобраны ffmpeg+ASR (beat-карта подтверждена пословно двумя независимыми прогонами). Ключевые findings: D1 (M",
+        "artifacts": [
+          "C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/C01_CONCEPT_REVIEW.md",
+          "C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/C01_CONCEPT_REVIEW.json",
+          "C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/C01_CONCEPT_REVIEW.manifest.json"
+        ]
+      },
+      "created_at": 1791090792,
+      "run_id": 387
+    },
+    {
+      "kind": "commented",
+      "payload": {
+        "author": "qa",
+        "len": 825
+      },
+      "created_at": 1791090808,
+      "run_id": null
+    }
+  ],
+  "runs": [
+    {
+      "id": 387,
+      "profile": "qa",
+      "step_key": null,
+      "status": "done",
+      "outcome": "completed",
+      "summary": "Независимый concept-review C01 «Вышка» выполнен за один bounded run. VERDICT word-form: APPROVE (только creative-concept scope): creative_ready=true, rights_ready=false, render_allowed=false, production/publishing not allowed. Все 4 входа byte-exact по SHA-256; окно 33.86–49.72 и контекст разобраны ffmpeg+ASR (beat-карта подтверждена пословно двумя независимыми прогонами). Ключевые findings: D1 (MAJOR) — полная дословная капитация 301 знак математически несовместима с CPS≤15/17 на окне 15.86s (нужно ≥17.71s), требуется scoped-решение; плюс MINOR D2–D4, NOTE D5–D8, LIMIT-1/2 (vision-провайдер недоступен, прослушивания не было). Render-only проверки NOT_RUN, мастер не существует, публикаций нет. Deliverables: C01_CONCEPT_REVIEW.md/.json/.manifest.json (98 evidence-файлов хешированы). Next owner: company (D1/D7/D8 решения, campaign refresh, production-карта), затем video-editor.",
+      "error": null,
+      "metadata": {
+        "defects": [
+          {
+            "id": "D1",
+            "severity": "MAJOR",
+            "timecodes": "window 33.86-49.72",
+            "what": "full-verbatim captions 301 chars vs CPS<=15/17: needs >=17.71s on 15.86s window; phrase gaps 2-5 frames in forbidden 3-11 zone"
+          },
+          {
+            "id": "D2",
+            "severity": "MINOR",
+            "timecodes": "S1 34.06 -> output 0.20s"
+          },
+          {
+            "id": "D3",
+            "severity": "MINOR",
+            "timecodes": "S1 46.06-49.26 (MAE 2.97-4.49, no cuts)"
+          },
+          {
+            "id": "D4",
+            "severity": "MINOR",
+            "timecodes": "S1 41.18-41.48"
+          },
+          {
+            "id": "D5-D8+LIMIT-1/2",
+            "severity": "NOTE/LIMIT",
+            "timecodes": "see report"
+          }
+        ],
+        "run": {
+          "card": "t_d9d08a87",
+          "reviewer": "qa",
+          "review_start_utc": "2026-10-04T04:52:36Z"
+        },
+        "counts": {
+          "evidence_files_hashed": 98,
+          "review_files_hashed": 4
+        },
+        "finance": {
+          "confirmed_revenue": null,
+          "estimated_usage_cost": null,
+          "incremental_paid_costs_rub": 0,
+          "new_commitments_rub": 0,
+          "refunds": null
+        },
+        "hashes_verified_byte_exact": {
+          "PILOT_QA_CHECKLIST.md": "02d9376f079c1f06ca432240d7756441b3388733601141f1f6538c1560a7dc54",
+          "PRODUCTION_PLAYBOOK.md": "773c 168d915a9735a383939a6fa89890acff7d917c59d6418dc5852a5eccc276",
+          "S1_mp4": "2e2673675441fd8ec7d84168c2e86f6d21ab3d93161f03d3faa288aabf658b4ac",
+          "WARDOGS_CONCEPTS.md": "74dd1ec3cfff8a9f433c2ad89095bfe3c01414add17350b273decbf1b1b3bbbf"
+        },
+        "lineage": {
+          "producer_card": "t_d55fa84a video-director run 360",
+          "producer_model_chain": "UNKNOWN",
+          "reviewer_independent_of_author": true,
+          "reviewer_model": "GLM-5.3 (zai) natural session stamp"
+        },
+        "verdict": {
+          "creative_ready": true,
+          "next_owner": "company",
+          "publishing_allowed": false,
+          "render_allowed": false,
+          "rights_ready": false,
+          "scope": "reviewed creative concept only; not media acceptance, not publication approval",
+          "word_form": "APPROVE"
+        },
+        "blocking_render": [
+          "P01 production card",
+          "P04 topic/demand decision",
+          "P05 live campaign refresh cmtpoafsx0boq1mm6n3xr069f",
+          "P07 MPT conform",
+          "P08 hook layout conform",
+          "P09 media",
+          "D1 scoped caption/CPS decision"
+        ],
+        "artifacts": [
+          "C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/C01_CONCEPT_REVIEW.md",
+          "C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/C01_CONCEPT_REVIEW.json",
+          "C:/Users/max/Documents/video-quality-upgrade/V9/C01_PILOT_20261004/C01_CONCEPT_REVIEW.manifest.json"
+        ],
+        "worker_session_id": "20261004_075028_247941",
+        "receipt": {
+          "status": "done",
+          "evidence_refs": [],
+          "next_action": "verify outcome"
+        }
+      },
+      "worker_pid": null,
+      "started_at": 1791089423,
+      "ended_at": 1791090792
+    }
+  ]
+}

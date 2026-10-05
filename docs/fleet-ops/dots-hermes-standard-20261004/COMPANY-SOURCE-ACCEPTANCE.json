@@ -1,0 +1,50 @@
+{
+  "artifact": "COMPANY-SOURCE-ACCEPTANCE",
+  "date": "2026-10-04",
+  "head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "decision": "company=accept",
+  "source_candidate_acceptance": {
+    "verdict": "PASS",
+    "carrier": "QA-CANDIDATE-FIXED.json",
+    "carrier_sha256": "ed4d00c92f5b5574f22980f7b37db2c5d45008113e5e7efc192b6412f7ca75d3",
+    "consumer_checks": "8/8 (CONSUMER-ACCEPTANCE-RECEIPT.json sha256=30a1e12ed2eb612298f1c6ade32981934811d7fa934e14eaf928af7d4b14868d)",
+    "m01_m17": "17/17 confirmed",
+    "s01_s17": "17/17 consistent",
+    "defect_history": "original QA-CANDIDATE.json duplicate-key defect proven and preserved; corrected receipt issued by independent qa card t_29903deb run44"
+  },
+  "installation_acceptance": {
+    "verdict": "PASS",
+    "carrier": "FINAL-QA.json",
+    "battery": "QA2321-BATTERY.json 286/286",
+    "loader_probe": "QA2321-LOADER.json 12/12",
+    "apply_receipt": "APPLY-VERIFY.json 98/98; APPLY-LOADER.json 12/12"
+  },
+  "company_readback": {
+    "carrier": "NATIVE-FINAL-READBACK.json",
+    "carrier_sha256": "990985b359df442592b736536f811e8d75fac9d8c23fa26c0e07fb48b0c8eaad",
+    "targets_checked": 12,
+    "all_ok": true
+  },
+  "lineage_independence": {
+    "author": "gpt-6.1-sol/openai-codex",
+    "source_reviewer_run2319": "glm-5.3/zai",
+    "receipt_fixer_t_29903deb": "qa (mechanical, same lane)",
+    "apply_issuer_run2320": "kimi-k3/custom",
+    "final_reviewer_run2321": "glm-5.3/zai",
+    "pairwise_overlap": false
+  },
+  "claimed": {
+    "accepted": "static comparison, standardization inside existing workflow, installation across 12 targets",
+    "not_accepted": "future model obedience, live runtime behavior, stop behavior, economics"
+  },
+  "financial_scope": {
+    "period": "2026-10-03T22:33:54Z -> 2026-10-04 final acceptance",
+    "source": "natural run stamps and checker receipts; ledger not read",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": null,
+    "estimated_usage_cost": null,
+    "unknown_reason": "not measured; serving stamps are not billing records; not a zero-cost assertion"
+  }
+}

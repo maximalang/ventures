@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="5" failures="0" skipped="0" tests="5" time="1.083" timestamp="2026-10-01T00:57:19.773689+03:00" hostname="laptop"><testcase classname="tests.hermes_cli.test_update_fleet_completion" name="test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-current]" time="0.019"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-current]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_fleet_completion'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index &lt; len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+&gt;       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'
+
+tests\home_io_guard.py:169: FileNotFoundError</error></testcase><testcase classname="tests.hermes_cli.test_update_fleet_completion" name="test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[False-current]" time="0.001"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[False-current]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_fleet_completion'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index &lt; len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+&gt;       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'
+
+tests\home_io_guard.py:169: FileNotFoundError</error></testcase><testcase classname="tests.hermes_cli.test_update_fleet_completion" name="test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-stale]" time="0.001"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-stale]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_fleet_completion'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index &lt; len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+&gt;       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'
+
+tests\home_io_guard.py:169: FileNotFoundError</error></testcase><testcase classname="tests.hermes_cli.test_update_fleet_completion" name="test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-down]" time="0.001"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-down]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_fleet_completion'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index &lt; len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+&gt;       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'
+
+tests\home_io_guard.py:169: FileNotFoundError</error></testcase><testcase classname="tests.hermes_cli.test_update_fleet_completion" name="test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-None]" time="0.001"><error message="failed on setup with &quot;FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'&quot;">fixturedef = &lt;FixtureDef argname='tmp_path' scope='function' baseid=''&gt;
+request = &lt;SubRequest 'tmp_path' for &lt;Function test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-None]&gt;&gt;
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -&gt; object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+&gt;               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_fleet_completion'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index &lt; len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+&gt;       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_fleet_completion'
+
+tests\home_io_guard.py:169: FileNotFoundError</error></testcase></testsuite></testsuites>

@@ -1,0 +1,89 @@
+{
+ "loader_probe": {
+  "company": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "research": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "product": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "operations": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "qa": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "tech": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "finance": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "sales": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "design": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "ux": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "video-director": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  },
+  "video-editor": {
+   "loaded": true,
+   "names": [
+    "company-os"
+   ],
+   "description": "Use for portfolio, fleet-ops, and autonomous company work."
+  }
+ },
+ "all_loaded": true
+}

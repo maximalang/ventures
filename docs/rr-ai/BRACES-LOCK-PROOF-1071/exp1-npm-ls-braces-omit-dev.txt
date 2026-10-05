@@ -1,0 +1,6 @@
+recruiter-radar@1.0.0 C:\Users\max\Desktop\all\ventures\.worktrees\rr-braces-lock-1071-e1
+└─┬ ts-jest@29.4.11
+  └─┬ @jest/transform@29.7.0
+    └─┬ micromatch@4.0.8
+      └── braces@3.0.3
+

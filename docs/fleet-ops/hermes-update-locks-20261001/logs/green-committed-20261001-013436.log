@@ -1,0 +1,7 @@
+== probe ==
+C:\Users\max\Documents\hermes-update-lock-recovery\pm\install.py
+6f82d6d9ccc2659b621c7ccd93d24653afe2147d
+== pytest committed candidate 6f82d6d9cc: new regression file ==
+............                                                             [100%]
+12 passed in 16.97s
+pytest_exit=0

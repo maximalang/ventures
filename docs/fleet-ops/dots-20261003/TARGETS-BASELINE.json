@@ -1,0 +1,101 @@
+{
+  "created_at_utc": "2026-10-03T20:55:39.375764+00:00",
+  "targets": [
+    {
+      "profile": "company",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "43bfa18f524f7ee3eec9924e7ed8345b9c0bf73a27c94f62880d6825bf92b954",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "research",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "f15d886338ac184f81b38d07655ee1d32c09c4ff2c709bc33f844e920c42b53f",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "product",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "operations",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "qa",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "tech",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "finance",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "sales",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "design",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "ux",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "video-director",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    },
+    {
+      "profile": "video-editor",
+      "skill_root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+      "baseline_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "new_reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md",
+      "reference_exists": false
+    }
+  ]
+}

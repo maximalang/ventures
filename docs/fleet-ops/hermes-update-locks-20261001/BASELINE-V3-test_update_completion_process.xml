@@ -1,0 +1,783 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="17" failures="0" skipped="3" tests="23" time="4.872" timestamp="2026-10-01T01:02:06.909428+03:00" hostname="laptop"><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_old_process_new_git_tree_completes_in_fresh_python[None]" time="1.585"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_old_process_new_git_tree_0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_old_process_new_git_tree_0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_old_process_new_git_tree_completes_in_fresh_python[request]" time="0.137"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_old_process_new_git_tree_1')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_old_process_new_git_tree_1/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_old_process_new_git_tree_completes_in_fresh_python[receipt]" time="0.104"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_old_process_new_git_tree_2')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_old_process_new_git_tree_2/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_missing_child_result_fails_boundary_receipt_and_releases_lock[0]" time="0.096"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_missing_child_result_fail0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_missing_child_result_fail0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_missing_child_result_fails_boundary_receipt_and_releases_lock[23]" time="0.143"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_missing_child_result_fail1')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_missing_child_result_fail1/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[None]" time="0.115"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_interrupt_after_child_suc0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_interrupt_after_child_suc0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[kill]" time="0.103"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_interrupt_after_child_suc1')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_interrupt_after_child_suc1/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[wait]" time="0.104"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_interrupt_after_child_suc2')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_interrupt_after_child_suc2/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_killed_selected_python_returns_signal_exit_status" time="0.000"><skipped type="pytest.skip" message="platforms(posix); host is win32">C:\Users\max\Documents\hermes-update-baseline-20261001\tests\hermes_cli\test_update_completion_process.py:336: platforms(posix); host is win32</skipped></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_failed_build_preserves_exit_status_without_maintenance" time="0.136"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_failed_build_preserves_ex0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_failed_build_preserves_ex0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_prepare_failure_preserves_correlated_pm_receipt" time="0.124"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_prepare_failure_preserves0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_prepare_failure_preserves0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_bootstrap_does_not_initialize_old_site_packages" time="0.109"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_bootstrap_does_not_initia0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_bootstrap_does_not_initia0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_progress_is_forwarded_before_held_stage_is_released[prepare]" time="0.160"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_progress_is_forwarded_bef0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_progress_is_forwarded_bef0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_progress_is_forwarded_before_held_stage_is_released[selected]" time="0.106"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_progress_is_forwarded_bef1')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_progress_is_forwarded_bef1/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interactive_configuration_keeps_terminal_input" time="0.000"><skipped type="pytest.skip" message="platforms(posix); host is win32">C:\Users\max\Documents\hermes-update-baseline-20261001\tests\hermes_cli\test_update_completion_process.py:475: platforms(posix); host is win32</skipped></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_interrupt_reaps_completion_descendants_before_return" time="0.000"><skipped type="pytest.skip" message="platforms(posix); host is win32">C:\Users\max\Documents\hermes-update-baseline-20261001\tests\hermes_cli\test_update_completion_process.py:515: platforms(posix); host is win32</skipped></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_taskkill_failure_still_reaps_child_and_preserves_interrupt[launch]" time="0.140" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_taskkill_failure_still_reaps_child_and_preserves_interrupt[timeout]" time="0.142" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_taskkill_failure_still_reaps_child_and_preserves_interrupt[nonzero]" time="0.155" /><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8]" time="0.116"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_0')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_0/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8-sig]" time="0.141"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_1')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_1/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8]" time="0.135"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_2')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_2/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase><testcase classname="tests.hermes_cli.test_update_completion_process" name="test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8-sig]" time="0.128"><error message="failed on setup with &quot;RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.&quot;">tmp_path = WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_3')
+
+    @pytest.fixture
+    def transition(tmp_path):
+        root = tmp_path / "checkout"
+        root.mkdir()
+        home = tmp_path / "home"
+        home.mkdir()
+        package = root / "hermes_cli"
+        package.mkdir()
+        (package / "__init__.py").write_text("")
+        pm_package = root / "pm"
+        pm_package.mkdir()
+        (pm_package / "__init__.py").write_text("OLD_API = True\n")
+    
+        def git(*args):
+            return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+    
+        git("init", "-b", "main")
+        git("config", "user.name", "Completion test")
+        git("config", "user.email", "completion@example.invalid")
+&gt;       git("add", ".")
+
+tests\hermes_cli\test_update_completion_process.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\hermes_cli\test_update_completion_process.py:30: in git
+    return subprocess.run(["git", *args], cwd=root, text=True, capture_output=True, check=True).stdout.strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\_fixtures\live_system_guard.py:360: in _guarded
+    _check_subprocess_cmd(name, cmd, kwargs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'run', cmd = ['git', 'add', '.']
+kwargs = {'cwd': WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process/test_only_correlated_terminal_3/checkout'), 'text': True, 'capture_output': True, 'check': True}
+
+    def _check_subprocess_cmd(name, cmd, kwargs=None):
+        git_verb = blocked_git_mutation(cmd, kwargs, _LIVE_GUARD_PROTECTED_GIT_ROOTS)
+        if git_verb is not None:
+&gt;           raise RuntimeError(
+                f"tests/conftest.py live-system guard: blocked "
+                f"subprocess.{name}({cmd!r}) — `git {git_verb}` would mutate "
+                "the protected checkout. Use a temporary repository or mock "
+                "the update boundary; live_system_guard_bypass is for deliberate live tests."
+            )
+E           RuntimeError: tests/conftest.py live-system guard: blocked subprocess.run(['git', 'add', '.']) — `git add` would mutate the protected checkout. Use a temporary repository or mock the update boundary; live_system_guard_bypass is for deliberate live tests.
+
+tests\_fixtures\live_system_guard.py:271: RuntimeError</error></testcase></testsuite></testsuites>

@@ -1,0 +1,52 @@
+{
+  "run_id": 1067,
+  "session": "20261003_190033_67d885",
+  "task": "t_f7a640af",
+  "profile": "tech",
+  "spec": "C:/Users/max/Desktop/all/ventures/docs/rr-ai/BRACES-PROD-GRAPH-REPAIR-20261003.md",
+  "clone_dir": "C:/Users/max/Desktop/all/ventures/.worktrees/rr-braces-source-1067-a7c3",
+  "evidence_dir": "C:/Users/max/Desktop/all/ventures/docs/rr-ai/BRACES-SOURCE-REPAIR-1067",
+  "frozen_head": "ec77dadf72ed9ada28f1bd092587ab731b3b22f0",
+  "pr266_head_readback": "ec77dadf72ed9ada28f1bd092587ab731b3b22f0",
+  "pr266_state": "OPEN",
+  "main_readback": "1d7906ae45f9570d4c37d9f73fc6bd5100246f65",
+  "main_head_matches_observed": true,
+  "main_is_ancestor_of_head": true,
+  "repair_commit": null,
+  "patch_file": null,
+  "patch_sha256": null,
+  "verdict": "NO SAFE SOURCE REPAIR",
+  "ready_for_source_re_review": false,
+  "baseline_audit": {
+    "omit_dev_high_exit": 1,
+    "omit_dev_high_count": 29,
+    "full_high_exit": 1,
+    "full_high_count": 30,
+    "advisory_roots": ["GHSA-vfj7-8cjw-p6xm braces range=* (1 root + 28 dependent findings)"]
+  },
+  "moved_direct_deps_candidate": ["babel-jest","braces","create-jest","expect","jest-circus","jest-cli","jest-config","jest-environment-jsdom","jest-environment-node","jest-haste-map","jest-message-util","jest-resolve","jest-resolve-dependencies","jest-runner","jest-runtime","jest-snapshot","jest-watcher","micromatch"],
+  "manifest_move_diff": "18+/18- verified minimal (not committed; clone restored pristine)",
+  "lock_regeneration": {
+    "lock_only_partial": { "version_drift": 0, "dev_flags_recomputed": false, "omit_dev_high_after_exit": 1, "omit_dev_high_after_count": 28 },
+    "full_regenerate": { "version_changes": 89, "nodes_added": 156, "nodes_removed": 2, "accepted": false, "reason": "non-minimal version drift; violates no-version-change repair criterion" },
+    "custom_flag_model": { "written": false, "reason": "15 unexpected dev-to-prod flips; npm flag semantics not safely reproducible by hand" }
+  },
+  "cold_install": { "full": null, "production": null },
+  "checks": {
+    "web_check": null,
+    "jest_apps_web_full": null,
+    "web_build_standalone": null,
+    "db_adapter_parity": null,
+    "production_materialization": null,
+    "full_audit_residual": null
+  },
+  "not_performed_reason": "bounded 2700s run budget exhausted by analysis and lock-regeneration blocker; verification battery never started",
+  "lineage_readback": { "executed": false, "reason": "scripts/lineage_readback.py absent in frozen checkout; handoff+receipt+evidence-sha256.txt serve as lineage record" },
+  "archive": { "bundle": null, "clone_retained": true, "evidence_retained": true },
+  "rollback_anchor": "ec77dadf72ed9ada28f1bd092587ab731b3b22f0 (clone pristine, no commit to revert)",
+  "no_push_no_pr_mutation": true,
+  "no_waiver_no_spend": true,
+  "no_secret_or_env_access": true,
+  "budget_seconds": 2700,
+  "closeout_utc": "2026-10-03T16:30:42Z"
+}

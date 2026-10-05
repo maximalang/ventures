@@ -1,0 +1,58 @@
+{
+  "observed_at": "2026-10-03T13:11:13.991513+03:00",
+  "scope": "company Telegram optimization; config/pins/readiness only",
+  "source_anchor": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+  "primary_config_review": {
+    "task": "t_8a81338c",
+    "status": "done",
+    "phase": "SOURCE_PASS only",
+    "receipt": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\PRIMARY-QA-SOURCE-RECEIPT.json"
+  },
+  "live_config_readback": {
+    "compression": {
+      "exit_code": 0,
+      "output": "enabled: true\ncheckpoint_required: false\nprogress_notices: false\nthreshold: 0.5\nthreshold_tokens: null\ntarget_ratio: 0.15\ntail_mode: lean\nprotect_last_n: 10\nmin_tail_user_messages: 1\nmax_attempts: 3\nproactive_prune_tokens: 48000\nproactive_prune_min_result_chars: 8000\nproactive_prune_min_reclaim_tokens: 4096\nmicro_compact: false\nmicro_compact_every_n_turns: 1\nmicro_compact_defrag_threshold_tokens: 2000\nhygiene_hard_message_limit: 5000\nhygiene_timeout_seconds: 30\nhygiene_total_ceiling_seconds: 600\nhygiene_failure_cooldown_seconds: 300\nhygiene_max_turn_hold_seconds: 10\ncontext_timeout_seconds: 120\ncontext_total_ceiling_seconds: 600\nprotect_first_n: 3\nabort_on_summary_failure: false\ncodex_gpt55_autoraise: true\ncodex_gpt55_autoraise_notice: true\ncodex_app_server_auto: native\ncodex_responses_native: false\ncodex_responses_compact_threshold: null\nin_place: true\nmodel_thresholds: {}\nidle_compact_after_seconds: 0",
+      "stderr": "Config ref '${env:HERMES_CUSTOM_CUSTOM_API_KEY}': HERMES_CUSTOM_CUSTOM_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder\nConfig ref '${env:HERMES_CUSTOM_CUSTOM_API_KEY}': HERMES_CUSTOM_CUSTOM_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder\nConfig r"
+    },
+    "display.platforms.telegram.tool_progress": {
+      "exit_code": 0,
+      "output": "new",
+      "stderr": "Config ref '${env:HERMES_CUSTOM_CUSTOM_API_KEY}': HERMES_CUSTOM_CUSTOM_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder\nConfig ref '${env:HERMES_CUSTOM_CUSTOM_API_KEY}': HERMES_CUSTOM_CUSTOM_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder\nConfig r"
+    },
+    "model.default": {
+      "exit_code": 0,
+      "output": "gpt-6.1-sol",
+      "stderr": "Config ref '${env:HERMES_CUSTOM_CUSTOM_API_KEY}': HERMES_CUSTOM_CUSTOM_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder\nConfig ref '${env:HERMES_CUSTOM_CUSTOM_API_KEY}': HERMES_CUSTOM_CUSTOM_API_KEY is not set (check ~/.hermes/.env); keeping the literal placeholder\nConfig r"
+    }
+  },
+  "retirement": {
+    "live_applied": false,
+    "active_task_pin_count": 1,
+    "native_boards_checked": 9,
+    "native_active_tasks_checked": 212,
+    "pin_card": "t_4aabc1fb",
+    "pin_card_status": "todo",
+    "remaining_cron_job": "c92f4e39c75d",
+    "native_task_skill_edit_tool_exposed": false,
+    "constraint": "Unavailable native field edit is not permission for CLI/SQL lifecycle writes; do not delete skill while task/cron pin survives",
+    "snapshot": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\RETIREMENT-TASK-PINS-READBACK.json"
+  },
+  "pending_owners": {
+    "native_configuration": "operations via t_ee2ad6bf after alternate exact QA t_e87dad43",
+    "qwen_profile_routing_source": "tech t_e8c66b4a → qa t_fb38959c → company t_373184d0",
+    "compact_hubs": "tech t_cef261ac → qa t_d5e37e14 → company t_38a4b49e → one scoped ops consumer"
+  },
+  "next_evidence_check_at": "2026-10-03T13:41:13.991513+03:00",
+  "continuation_mechanism": "existing gated Kanban company consumers; no new recurring controller/paid probe",
+  "financial": {
+    "period": "2026-10-03 current continuation",
+    "scope": "native readbacks, source-verdict delivery and pin-readiness audit",
+    "source": "native CLI/Kanban + verified local artifacts; billing not inspected",
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": 0,
+    "estimated_usage_cost": null,
+    "unknown_reason": "revenue/refunds outside scope; invoice and provider attribution unavailable"
+  }
+}

@@ -1,0 +1,287 @@
+[
+  {
+    "id": "t_b8210384",
+    "status": "blocked",
+    "current_run_id": null,
+    "last_comments": [
+      {
+        "author": "operations",
+        "body": "## Auto-block (fleet-policy): secret_read_or_write deny #1 → task_already_blocked\n\n**Trigger**: `ls C:/Users/max/AppData/Local/hermes/profiles/company/sessions/` → policy classify \"secret\" via \"sessions\" substring (FALSE-POSITIVE — это session registry, не секреты; но правило существующее).\n\n**State discovered BEFORE deny (evidence-backed, все шаги логированы в events)**:\n\n### Consumer blocker — точный native code path\nФайл: `gateway/run_turn.py:253-268` + `gateway/run_config_loaders.py:101-125`.\n- `_get_channel_override(config=self.config, ...)` где `self.config` — GatewayConfig **launch-профиля**, не parked company.\n- `_profile_runtime_scope(profile_home)` переключает только `_hermes_home` (config.yaml path для `_resolve_gateway_model`), но **НЕ** `self.config`.\n- Вывод: `platforms.telegram.channel_overrides` в company/config.yaml **НЕ** применяются для parked company. Подтверждено чтением source @ `9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f`.\n\n### Host state (pre-action snapshot)\n- Host gateway PID **26200** (matched contract anchor), launch profile = **default**, multiplex ON, `host-gateway.json` (C:/Users/max/.local/state/hermes/gateway-locks/host-gateway.json, updated 2026-10-03T09:05:20Z) profiles served = `[default, design, finance, product, qa, research, sales, tech, ux, video-director, video-editor]`.\n- **company НЕ в served list** → паркнут. company/gateway.parked пустой marker; company/state/gateway.lifecycle.json phase=exited, pid=7420, exit_code=0, exited_at=2026-09-22T01:11:54Z (11 дней назад).\n- company profile config: `model.default=gpt-6.1-sol`, `model.provider=openai-codex`, providers.custom = DashScope qwen3.8-max (base_url=https://dashscope.aliyuncs.com/compatible-mode/v1), reasoning_overrides.qwen3.8-max=max. `platforms.telegram.channel_overrides` — **отсутствует**.\n- Launch (default) profile `C:/Users/max/AppData/Local/hermes/config.yaml` — вообще без `platforms.telegram` блока (только webhook). Значит даже если записать channel_overrides в company — multiplexer их не прочитает (читает default's config).\n\n### Что это значит для deliverable\n\"Company-only fresh-topic default to qwen3.8-max/custom\" через channel_overrides **native не поддержан** в текущем loaded multiplexer: единственный потребитель channel_overrides смотрит в launch-profile config, а не в company. Перечисленные альтернативы и почему каждая закрыта контрактом:\n1. **Изменить company `model.default` → qwen3.8-max + provider=custom** — затронет Desktop и cron company (запрещено контрактом: «no change to company Desktop default Sol6.1»).\n2. **channel_overrides в default profile** — это host-global для всех profiles (запрещено: «Do NOT write a host-global channel rule that unintentionally changes specialist bots in the same group»; default профиль вообще без Telegram, а channel_overrides там не привязаны к company's bot).\n3. **Per-session POST /api/sessions/{sid}/model** — лечит активные сессии, но **НЕ** fresh topics (новая сессия = дефолтный model resolver → gpt-6.1-sol). Контракт явно: «Session-only repair is not fresh-topic default».\n4. **Unpark+serve company через `hermes -p company gateway start`** (разрешено контрактом) — но даже когда company served, `_get_channel_override(self.config)` всё ещё читает **default's** GatewayConfig (мультиплексер держит один self.config). Source code это подтверждает: `self._profile_configs[profile_name] = profile_cfg` кэшируется для host-wide passes, но `_get_channel_override` использует `self.config` напрямую, не `_profile_configs`.\n\n### Blocker для company decision\nТочный consumer: `gateway/run_turn.py::_run_turn` line 253-268 + `gateway/run_config_loaders.py::_resolve_model_for_channel` line 101-125. Исправление — source patch в этих двух точках чтобы `_channel_override` читал routed profile's config из `_profile_configs`, а не launch config. Это — **source remediation**, не native config; контракт явно велит: «Stage source remediation separately with company decision if actually necessary».\n\n### Самое безопасное достигнутое перед deny\n- Полная диагностика + anchor confirmation (PID 26200 = anchor, host-gateway.json подтверждён).\n- Подтверждение, что company — parked (не активно обслуживается).\n- Подтверждение, что единственный native путь — company `model.default` switch (что запрещено контрактом) ИЛИ source patch (вне скоупа).\n\n### Чего не успел\n- Snapshot active session pins через sessions/registry (sessions/ dir read → policy deny).\n- Before/after readback per chat_id.\n- Любые writes (все были бы запрещены контрактом в любом случае до решения по consumer blocker).\n\n### Recovery path\nСо стороны company:\n- Вариант A (рекомендуется): company staging task на source remediation (gateway/run_turn.py + run_config_loaders.py читать routed profile's channel_overrides через _profile_configs). После мержа — эта задача может быть retry'нута для применения channel_overrides.\n- Вариант B (owner override): owner явно разрешает менять company `model.default` с пониманием что Desktop тоже перейдёт на qwen3.8-max. Контракт это запрещает, нужен owner override.\n- Вариант C (ограниченный scope): per-session pins на активные DM1256122537 + forum-1004426332349 sessions через `/model` или API. Это частичное решение: fresh topics всё равно получат gpt-6.1-sol.\n\nПомечаю карту needs_input через final text (kanban_block сам тоже будет denied — task уже blocked; recovery только через company bootstrap: binding comment + unblock + re-run per t_281fd2c3 precedent).\n\nblocker_kind: capability + needs_input (native unsupported + policy deny pre-block)",
+        "created_at": 1791020128
+      },
+      {
+        "author": "company",
+        "body": "Installed consumer caveat confirmed: GatewayRunner.config is launch profile config; _resolve_session_agent_runtime reads _get_channel_override(cfg,...). Secondary _profile_configs maps used elsewhere. Do not blindly store company channel_overrides and assert runtime proof in multiplex; prove correct profile-selected consumer. No undocumented gateway.model/platforms.telegram.model keys: _resolve_gateway_model only reads model.default. Root-host channel override could affect other specialist bots in same group: prohibited unless narrowly profile-scoped consumer is proven. Keep exact native default+active-session distinction; send no artificial LLM question. Source9aae3c23 still anchor at check.",
+        "created_at": 1791020213
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2207,
+        "profile": "operations",
+        "step_key": null,
+        "status": "blocked",
+        "outcome": "policy_denied",
+        "summary": "FLEET POLICY BLOCKED [secret_read_or_write] pattern=secret_read_or_write call_index=60 next_step=секреты вне правил; стоп, не повторяй вызов, пометь карту needs_input [continues: owner]",
+        "error": null,
+        "metadata": {
+          "receipt": {
+            "status": "policy_denied",
+            "evidence_refs": [],
+            "next_action": "apply remediation route in the block reason; retry only after the denied precondition changes"
+          }
+        },
+        "worker_pid": null,
+        "started_at": 1791019638,
+        "ended_at": 1791020053
+      }
+    ],
+    "latest_summary": "FLEET POLICY BLOCKED [secret_read_or_write] pattern=secret_read_or_write call_index=60 next_step=секреты вне правил; стоп, не повторяй вызов, пометь карту needs_input [continues: owner]",
+    "parents": []
+  },
+  {
+    "id": "t_e87dad43",
+    "status": "running",
+    "current_run_id": null,
+    "last_comments": [],
+    "latest_run": [
+      {
+        "id": 2210,
+        "profile": "qa",
+        "step_key": null,
+        "status": "running",
+        "outcome": null,
+        "summary": null,
+        "error": null,
+        "metadata": null,
+        "worker_pid": 22076,
+        "started_at": 1791019943,
+        "ended_at": null
+      }
+    ],
+    "latest_summary": null,
+    "parents": []
+  },
+  {
+    "id": "t_8a81338c",
+    "status": "running",
+    "current_run_id": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Runtime blocker evidence read back natively: QA run2197 exited75, outcome rate_limited; error='pid20772 exited rate-limited (quota wall) — requeued without counting a failure'; current card ready under native retry policy. This is provider availability, NOT a negative candidate verdict, NOT independent acceptance. Do not force retries, spawn duplicate QA, use correlated company self-review, downgrade/re-pin config, or treat child measurement audit as gate. Native cooldown/recovery only; if retry again fails, record same failure with native availability evidence and stop speculative attempts. Candidate unchanged. Application withheld until actual independent acceptance.",
+        "created_at": 1791017931
+      },
+      {
+        "author": "company",
+        "body": "Bounded alternate qa t_e87dad43 qwen/custom is now linked as an ADDITIONAL consumer prerequisite on t_ee2ad6bf. Your running source review may finish honestly; no gate substitution/self-approval. Check complete main+auxiliary lineage: any authorSol6.1 overlap prevents independent PASS even if tests green. If quota/no independent lineage, emit explicit completed source BLOCK/no-verdict with evidence; don't wait indefinitely for availability or force repeats. Alternate is for companySol-authored two-key config only, not Qwen-authored retirement/hubs. QA profile configs unchanged.",
+        "created_at": 1791020045
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2206,
+        "profile": "qa",
+        "step_key": null,
+        "status": "running",
+        "outcome": null,
+        "summary": null,
+        "error": null,
+        "metadata": null,
+        "worker_pid": 3520,
+        "started_at": 1791019272,
+        "ended_at": null
+      }
+    ],
+    "latest_summary": null,
+    "parents": []
+  },
+  {
+    "id": "t_ee2ad6bf",
+    "status": "todo",
+    "current_run_id": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "decision:company=go\nhead=d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105\ntask_type: ops\n\nConditional exact-artifact authorization: apply *** two native allowlisted settings after independent QA/review for THESE exact candidate bytes. No QA PASS=*** application; changed candidate = require new company binding. No protected source/other profile/restart/history mutation. Hypothesis: bounded context growth and quieter Telegram tool bubbles while preserving alerts/steering/tail; rollback exact allowlisted originals if context retention/latency/format/routing regresses. Profile-wide company compaction includes Desktop/cron and is not mislabeled Telegram-only. No purchase authorized; confirmed revenue/refunds/provider incremental cost/estimated usage cost=null (not investigated/unpriced), new commitments0, source config manifest+natural receipts; period rollout+24h/48h observation.",
+        "created_at": 1791017023
+      },
+      {
+        "author": "company",
+        "body": "Application remains withheld: prerequisite independent QA run2197 exited75 quota wall and was natively requeued ready; no verdict/PASS exists. Artifact preparation and child methodological review are not substitutes for actual independent gates. Preserve consumer no-op until QA genuinely accepted. Do not initiate correlated/paid synthetic fallback tests or config/model changes to bypass availability. Current measurement refinements saved in MEASUREMENT-REVIEW.md; candidate bytes remain original exact hash.",
+        "created_at": 1791017931
+      }
+    ],
+    "latest_run": [],
+    "latest_summary": null,
+    "parents": [
+      "t_8a81338c",
+      "t_e87dad43"
+    ]
+  },
+  {
+    "id": "t_6282d6b9",
+    "status": "done",
+    "current_run_id": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Owner says check+continue. Keep product delivery minimal: PRODUCT-BRIEF.md only, <=2pages/12 scenario tests. No PDF, browser, dependency/package capability scan or aesthetic artifacts required; all official sources already saved. Do not re-run full audits. Produce the Markdown decision brief, exact hash and evidence, then close source task. New separate owner-directed ops restores TG Qwen default; this does not change your GPT brain model or brief scope. Reduce work, not quality.",
+        "created_at": 1791019514
+      },
+      {
+        "author": "company",
+        "body": "Company bounded same-ID source closure: original asked deliverable is <=2page Markdown brief+12 authored scenario examples+final artifact hashes. PDF rerender and compound source-input hashing were unnecessary worker-added scope; do NOT retry denied source-input action or bypass policy. Company did NOT hash the denied source inputs: it verified only PRODUCT-BRIEF.md/SCENARIOS.json artifacts, preserved12 unique S01–S12 and5 templates, removed one absent SOURCE-ANCHORS.json link and supplied known official URLs in durable copy. Durable paths: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/PRODUCT-BRIEF.md, SCENARIOS.json, PRODUCT-DELIVERY.json. Brief SHA86faeddbefb392a9af1af6be5b1fc5c9b207a945fc4c985ca16fc0e551176cc1; scenario SHA286d72021b2eaf2f3f8b9646b43dc80f58049df6e7a067596e2b4422b923ee3d. Fixtures are authored expectations, NOT observed runtime tests/PASS; independent QA stays downstream. No live installation/secret/model/policy changes, no purchase; usage cost unknown.",
+        "created_at": 1791020213
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2212,
+        "profile": "product",
+        "step_key": null,
+        "status": "completed",
+        "outcome": "completed",
+        "summary": "Исходный продуктовый бриф доставлен: пять адаптивных шаблонов, маршрутизация и 12 структурно проверенных сценариев сохранены вне временного workspace. Закрыт только source-stage без повторения запрещённого действия: PDF и хэширование исходных документов не входили в исходный deliverable; живое применение и независимая QA ещё впереди.",
+        "error": null,
+        "metadata": {
+          "administrative_closure": true,
+          "artifact_hashes": {
+            "PRODUCT-BRIEF.md": "86faeddbefb392a9af1af6be5b1fc5c9b207a945fc4c985ca16fc0e551176cc1",
+            "SCENARIOS.json": "286d72021b2eaf2f3f8b9646b43dc80f58049df6e7a067596e2b4422b923ee3d"
+          },
+          "confirmed_revenue": null,
+          "financial_period": "2026-10-03 product-source delivery",
+          "financial_scope": "company Telegram communication brief only",
+          "incremental_paid_costs": null,
+          "independent_qa": "pending t_d5e37e14",
+          "live_installation": false,
+          "new_paid_commitments_rub": 0,
+          "policy_denied_action_retried": false,
+          "refunds": null,
+          "runtime_tests": null,
+          "scenario_count": 12,
+          "source": "durable PRODUCT-DELIVERY.json; native file write confirmations and structural assertions",
+          "template_count": 5,
+          "unknown_financial_reason": "usage/invoice attribution absent; revenue/refunds not investigated",
+          "worker_added_requirements_removed": [
+            "PDF rerender",
+            "compound source-input hashing"
+          ],
+          "artifacts": [
+            "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/PRODUCT-BRIEF.md",
+            "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/SCENARIOS.json",
+            "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/PRODUCT-DELIVERY.json"
+          ]
+        },
+        "worker_pid": null,
+        "started_at": 1791020232,
+        "ended_at": 1791020232
+      }
+    ],
+    "latest_summary": "Исходный продуктовый бриф доставлен: пять адаптивных шаблонов, маршрутизация и 12 структурно проверенных сценариев сохранены вне временного workspace. Закрыт только source-stage без повторения запрещённого действия: PDF и хэширование исходных документов не входили в исходный deliverable; живое применение и независимая QA ещё впереди.",
+    "parents": []
+  },
+  {
+    "id": "t_cef261ac",
+    "status": "ready",
+    "current_run_id": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Authoritative product source now durable at C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/PRODUCT-BRIEF.md + SCENARIOS.json + PRODUCT-DELIVERY.json. Use these, not soon-cleaned original worker scratch or stale PDF.5 templates/12 unique fixture IDs verified structurally, not runtime. No mandatory response-format skill/SOUL expansion. Two hub candidate source acceptance remains unchanged. Owner-directed Telegram Qwen restoration is separate ops t_b8210384 and does not change your hands model or hub filenames. Do not conflate route model restoration with measured static hub reduction.",
+        "created_at": 1791020213
+      }
+    ],
+    "latest_run": [],
+    "latest_summary": null,
+    "parents": [
+      "t_6282d6b9"
+    ]
+  },
+  {
+    "id": "t_b3e6c428",
+    "status": "done",
+    "current_run_id": null,
+    "last_comments": [
+      {
+        "author": "tech",
+        "body": "Lifecycle-статус от tech (сессия атрибутирована ядром к run 2200 / pid 23560):\n\n1. Работа ВЫПОЛНЕНА полностью: SOURCE-ONLY пакет зелёный (18 unittest exit 0; full-tree scan candidates=3 — все на offender, ноль FP; consumers.patch git apply --check exit 0; 7/7 якорей sha256; MANIFEST 2932437590ff…, 36 файлов). Ноль live-правок. Детали — комментарий 5499 (12:00) и candidate/README.md.\n2. Терминальные вызовы из этой сессии отклонены ядром: kanban_complete → crash-receipt run 2200 («pid 23560 not alive» — pid-атрибуция: run 2195 timed_out при sigkill=false, сессия продолжила работу и была записана на run 2200, затем объявлена crashed); kanban_request_review → «task is not in running/ready». Карта в blocked после gave_up (failures 2/2, limit dispatcher).\n3. Требуется действие владельца/company (из записей zombie-рана допустимы только комментарии): закрыть карту kanban_complete с handoff на QA t_45c34a6a (пакет готов к SOURCE_ONLY verdict) ЛИБО reset retry-лимита/разблокировать для нового run — новому воркеру пересобирать НЕЧЕГО, достаточно верификации (cd candidate && python -m unittest discover -s tests -v; сверка MANIFEST.sha256.json).\n4. Напоминание по rollout-гейтам: cron-пин report-delivery-trigger (c92f4e39c75d) неразрешён — блокирует только live-удаление скилла; kanban task-pins не swept; memory-операции предложены, не выполнены (MEMORY-OPERATIONS-NOTE.md).",
+        "created_at": 1791018271
+      },
+      {
+        "author": "company",
+        "body": "Company administrative SOURCE-ONLY closure scope clarified after owner 'check and continue'. Original deliverable is staged regression/retirement package, NOT live cron repin or runtime installation. Pending report-delivery-trigger pin is downstream rollout prerequisite, not a missing input to source package. Independently reran administrative source checks:36 manifest files matched; manifest2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62; isolated unittest18/18 exit0. Evidence: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/retirement-source-admin-check.json + retirement-source-admin-test.txt. No QA/review/production acceptance issued; t_45c34a6a must independently assess source before rollout. No live edits, gate weakening or owner input required for THIS source closure. Finance scope source check this run, revenue/refunds/paid usage estimate=null, new commitments0.",
+        "created_at": 1791019640
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2208,
+        "profile": "tech",
+        "step_key": null,
+        "status": "completed",
+        "outcome": "completed",
+        "summary": "SOURCE-ONLY пакет принят как доставленный: 36/36 хэшей подтверждены, изолированный повторный unittest — 18/18, exit 0. Неоднозначность cron-пина относится к будущему rollout, не к исходной реализации; независимая QA остаётся отдельной обязательной стадией, live не менялся.",
+        "error": null,
+        "metadata": {
+          "candidate_path": "C:/Users/max/AppData/Local/hermes/profiles/company/reports/skill-layer-20261003/candidate",
+          "closure_scope": "company administrative source delivery, not independent QA or live retirement",
+          "confirmed_revenue": null,
+          "evidence_paths": [
+            "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/retirement-source-admin-check.json",
+            "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/retirement-source-admin-test.txt"
+          ],
+          "financial_period": "this source verification run, 2026-10-03",
+          "financial_scope": "company Telegram skill retirement source packet only",
+          "incremental_paid_costs": null,
+          "independent_qa_task": "t_45c34a6a",
+          "live_changes": false,
+          "manifest_files_verified": 36,
+          "manifest_sha256": "2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62",
+          "new_paid_commitments_rub": 0,
+          "refunds": null,
+          "tests_exit_code": 0,
+          "tests_passed": 18,
+          "unknown_financial_reason": "revenue/refunds not investigated; provider usage/invoice attribution absent"
+        },
+        "worker_pid": null,
+        "started_at": 1791019658,
+        "ended_at": 1791019658
+      }
+    ],
+    "latest_summary": "SOURCE-ONLY пакет принят как доставленный: 36/36 хэшей подтверждены, изолированный повторный unittest — 18/18, exit 0. Неоднозначность cron-пина относится к будущему rollout, не к исходной реализации; независимая QA остаётся отдельной обязательной стадией, live не менялся.",
+    "parents": []
+  },
+  {
+    "id": "t_45c34a6a",
+    "status": "running",
+    "current_run_id": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Source package verified durable by company administrative check36/36 hashes, manifest2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62, actual isolated unittest18/18 exit0. This is readiness evidence, NOT independent QA. Source card's cron skill-pin ambiguity is a downstream live rollout prerequisite, not missing source permission; no need to read/rewrite cron storage. Review source-only retirement/executable regression independently; preserve original unique transport/style facts and owner safety. Candidate tests/logs/path in parent README. Verify own full runtime+auxiliary serving lineage independence before verdict; quota failure!=PASS. Do not apply live changes or require owner approval of ordinary source-stage metadata.",
+        "created_at": 1791019640
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2209,
+        "profile": "qa",
+        "step_key": null,
+        "status": "running",
+        "outcome": null,
+        "summary": null,
+        "error": null,
+        "metadata": null,
+        "worker_pid": 18540,
+        "started_at": 1791019699,
+        "ended_at": null
+      }
+    ],
+    "latest_summary": null,
+    "parents": [
+      "t_b3e6c428"
+    ]
+  }
+]

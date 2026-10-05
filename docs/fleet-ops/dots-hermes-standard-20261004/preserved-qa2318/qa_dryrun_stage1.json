@@ -1,0 +1,340 @@
+{
+ "results": [
+  {
+   "profile": "company",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 15431,
+   "cand_root_len": 16128,
+   "cand_root_sha": "7c498bbb691133583cc18147c843238870fae8b9b2f5e31a1b590e09b7189380",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 5,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+     15889
+    ],
+    [
+     "references/adaptive-product-organization.md",
+     "65cce4b5b10de8d9fa7d35f0143feec74b73eb1254fd6d6b0a6e1fd6352d99d0",
+     6106
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ],
+    [
+     "references/organization-audit.md",
+     "6da3b9b74024d3d109c295f94e8064a338c2d55e055fe64d26ad5dbc7b55892f",
+     9190
+    ],
+    [
+     "references/outcome-loop.md",
+     "6b3cd78beba7105fcf256455dfacca0196c51e2974e1de113458734a2dbfef75",
+     4439
+    ]
+   ],
+   "other_files_count": 3,
+   "other_files": [
+    [
+     "references/adaptive-product-organization.md",
+     "65cce4b5b10de8d9fa7d35f0143feec74b73eb1254fd6d6b0a6e1fd6352d99d0",
+     6106
+    ],
+    [
+     "references/organization-audit.md",
+     "6da3b9b74024d3d109c295f94e8064a338c2d55e055fe64d26ad5dbc7b55892f",
+     9190
+    ],
+    [
+     "references/outcome-loop.md",
+     "6b3cd78beba7105fcf256455dfacca0196c51e2974e1de113458734a2dbfef75",
+     4439
+    ]
+   ]
+  },
+  {
+   "profile": "research",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 3143,
+   "cand_root_len": 3840,
+   "cand_root_sha": "a1793d7c3a510bfe01c50fe2ac2d0d9376f0868e6692fc87bf88e8f5728b1fd9",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+     3601
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "product",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "operations",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "qa",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "tech",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "finance",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "sales",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "design",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "ux",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "video-director",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  },
+  {
+   "profile": "video-editor",
+   "old_hook_suffix": true,
+   "old_hook_count": 1,
+   "base_len": 1592,
+   "cand_root_len": 2289,
+   "cand_root_sha": "331ac2fb7f39fc9c5d6fa930e2233006e31f1fa12fda02fe9cd9202e822ce61a",
+   "live_root_same": true,
+   "live_ref_same": true,
+   "before_ref_frozen_ok": true,
+   "tree_file_count": 2,
+   "tree_files": [
+    [
+     "SKILL.md",
+     "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+     2050
+    ],
+    [
+     "references/dots-operating-method.md",
+     "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+     12995
+    ]
+   ],
+   "other_files_count": 0
+  }
+ ],
+ "failures": [],
+ "ref_sha": "80933ccf80e99e6b9d62b6f15c5c4f8cf69e9ee79ab1b2e9296173b99cdf4def",
+ "hook_sha": "40b6f5e5edad6b8349c3143e032e29d2d02fa5cd1362c9ba9c10dbdbc2bdc88d",
+ "old_hook_sha": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9"
+}

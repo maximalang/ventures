@@ -1,0 +1,120 @@
+{
+  "purpose": "Authoritative entry index for the dots-hermes-standard-20261004 phase. Kanban remains the task registry; this index adds no queue, coordinator or schema. Original accepted artifacts are unchanged.",
+  "generated_utc": "2026-10-04T10:06:04.395992+00:00",
+  "author": "company (post-audit remediation, owner-directed)",
+  "subject_head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "accepted_current": {
+    "SUBJECT.json": {
+      "sha256": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+      "role": "document head binding (exact subject)",
+      "note": "head=2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e"
+    },
+    "REFERENCE-CANDIDATE.md": {
+      "sha256": "80933ccf80e99e6b9d62b6f15c5c4f8cf69e9ee79ab1b2e9296173b99cdf4def",
+      "role": "accepted compact reference (installed on 12 profiles)"
+    },
+    "HOOK-CANDIDATE.md": {
+      "sha256": "40b6f5e5edad6b8349c3143e032e29d2d02fa5cd1362c9ba9c10dbdbc2bdc88d",
+      "role": "accepted conditional load hook (installed as paragraph in 12 SKILL.md roots)"
+    },
+    "BASELINE.json": {
+      "sha256": "5490e880fcd4d596029d127e1a1bf4011df7003b53e9faca3fef9680fa61f817",
+      "role": "frozen comparison baseline"
+    },
+    "QA-CANDIDATE-FIXED.json": {
+      "sha256": "ed4d00c92f5b5574f22980f7b37db2c5d45008113e5e7efc192b6412f7ca75d3",
+      "role": "accepted machine receipt of independent source QA (run2319 verdict PASS); consume by THIS explicit filename",
+      "provenance": "retains historical self-links naming QA-CANDIDATE.json / this file; do not follow them to the preserved defective original"
+    },
+    "CONSUMER-ACCEPTANCE-RECEIPT.json": {
+      "sha256": "30a1e12ed2eb612298f1c6ade32981934811d7fa934e14eaf928af7d4b14868d",
+      "role": "company consumer acceptance of corrected receipt, 8/8"
+    },
+    "COMPANY-GO.md": {
+      "sha256": "572b11bbac5af02e26ac8295c677286ba417bb99db947185a62a6c285fe876ba",
+      "role": "company exact-head GO decision"
+    },
+    "APPLY-VERIFY.json": {
+      "sha256": "ad995e18f2a8880aeab851777a2c295312140724465a369a11767dd23cd9a384",
+      "role": "apply verification 98/98"
+    },
+    "APPLY-LOADER.json": {
+      "sha256": "6d404de2bd06941163d21ca2849a60697176ed8793ee574d44ac9cae701e4655",
+      "role": "apply loader probe 12/12"
+    },
+    "FINAL-QA.json": {
+      "sha256": "0e474303b27f8212f576895015022cca94f54b7eb3c572932b79be9bf28f4dbb",
+      "role": "final installation QA receipt, typed PASS"
+    },
+    "QA2321-BATTERY.json": {
+      "sha256": "4b076762e4653d3dd178a2890834f0d15f2006fc51d6d321065dd7d4c5ab9097",
+      "role": "final QA battery 286/286 (historical; not re-run by audit)"
+    },
+    "QA2321-LOADER.json": {
+      "sha256": "37207752f35eebace727d937de3dd3d66b9ad98d92fdd744f887c0fcab480443",
+      "role": "final loader probe 12/12 on isolated copies"
+    },
+    "NATIVE-FINAL-READBACK.json": {
+      "sha256": "990985b359df442592b736536f811e8d75fac9d8c23fa26c0e07fb48b0c8eaad",
+      "role": "company read-only readback of live targets 12/12"
+    },
+    "FINAL-ACCEPTANCE.md": {
+      "sha256": "08e44363553a64c176388d4e0eec02eb11777cbce351b6e6f7cd0d8d1f341b24",
+      "role": "final company acceptance (company=accept)"
+    },
+    "COMPANY-SOURCE-ACCEPTANCE.json": {
+      "sha256": "10dfeb1e30161ddebfb91ad7f028c0ea757468d55e9da864333700aecd3e3801",
+      "role": "machine final acceptance"
+    },
+    "REPORT.md": {
+      "sha256": "b98847adeb07607aa114247551c7d0a8ba557bb7ae00883777e886809e1d6eef",
+      "role": "phase report, status ЗАВЕРШЕНО И ПРИНЯТО (frozen)"
+    }
+  },
+  "historical_do_not_consume_as_current": {
+    "QA-CANDIDATE.json": "defective original receipt (duplicate top-level keys: checks_this_run, m01_m17, scenarios_s01_s17, reviewer_lineage_run_2319); preserved as defect history; NOT for machine consumption",
+    "PRESERVED-QA-2318.json": "preserved run2318 WITHHELD snapshot (discovery-scope stop)",
+    "LANE.json": "pre-release lane snapshot (release_state=held, owner_input_required=false); SUPERSEDED by native done states of t_d090b4ff/t_63f62c17; audit-binding artifact, not live state",
+    "before/": "pre-apply whole-root/reference snapshots per profile; rollback evidence",
+    "apply-backups/": "documented per-profile rollback paths; bytes also packaged in the supplement zip with verified before/ alternates",
+    "PACKAGE-MANIFEST.json": "lives inside the original ZIP only (not a loose local file); 157 payload entries, manifest excludes itself; the 158th ZIP entry is the manifest itself"
+  },
+  "reproduction_tools": {
+    "_package_standard.py": "data-only packaging script for the original ZIP",
+    "qa2321_battery.py": "final QA battery generator/checker (also in supplement)",
+    "qa2321_loader.py": "loader probe source (also in supplement)",
+    "SUPPLEMENT-MANIFEST.json": "supplement manifest: 34 members + 24 verified rollback alternates"
+  },
+  "board_truth": {
+    "board": "fleet-ops",
+    "t_d090b4ff": "independent source QA (run2318/2319 chain) — done",
+    "t_63f62c17": "apply run2320 + final QA run2321 — done",
+    "t_29903deb": "mechanical receipt fix run44 — board: default (standalone), linked by this index",
+    "t_7638de4f": "quality audit run2333 — done",
+    "note": "no second queue/registry; LANE.json is historical"
+  },
+  "packages": {
+    "original_zip": {
+      "path": "dots-hermes-standard-20261004.zip",
+      "sha256": "661c522692d2bd9c896a627bfe545531fa69db7c54d2e648e480a337c604e201",
+      "bytes": 1309730,
+      "members": 158,
+      "status": "accepted, unchanged"
+    },
+    "supplement_zip": {
+      "path": "dots-hermes-standard-20261004-supplement.zip",
+      "sha256": "f82577f33d58477a46e8e003c9bb63d1d44bdda43e12dc56d80d66014ea7dfc8",
+      "bytes": 119261,
+      "members": 35,
+      "status": "post-audit reproducibility supplement; closes 6 named check sources + 24 documented rollback paths (byte-exact before/ alternates)"
+    }
+  },
+  "quality_audit": {
+    "dir": "../dots-quality-audit-20261004",
+    "report": "REPORT.md",
+    "independent_review": "INDEPENDENT-REVIEW.md/.json",
+    "consumer": "QA-CONSUMER-CHECK.json + CONSUMER-LIMITS.md",
+    "native_final_readback": "QA-NATIVE-FINAL-READBACK.json"
+  },
+  "financial_scope": "fleet-ops quality audit + post-audit remediation, 2026-10-04; source: local checks and natural serving metadata; billing/ledger not read. confirmed revenue/refunds/incremental paid costs/new commitments = null (none made); estimated usage cost not measured."
+}

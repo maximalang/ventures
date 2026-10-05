@@ -1,0 +1,151 @@
+{
+  "verified_at_utc": "2026-10-03T21:59:48.852360+00:00",
+  "core_count": 8,
+  "support_count": 5,
+  "total_count": 13,
+  "all_current_snapshot_hashes_match": true,
+  "source_scope": "published documented pages listed in manifests, not closed internals or account runtime availability",
+  "unavailable_sources": [
+    {
+      "name": "openai-introducing-dots",
+      "url": "https://openai.com/index/introducing-dots",
+      "status": "UNAVAILABLE",
+      "attempts": [
+        {
+          "route": "direct",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        },
+        {
+          "route": "approved-local-http-proxy",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        }
+      ]
+    },
+    {
+      "name": "dots-help-getting-started",
+      "url": "https://help.openai.com/en/articles/20001530",
+      "status": "UNAVAILABLE",
+      "attempts": [
+        {
+          "route": "direct",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        },
+        {
+          "route": "approved-local-http-proxy",
+          "error_type": "HTTPError",
+          "error": "HTTP Error 403: Forbidden"
+        }
+      ],
+      "retrieved_at_utc": "2026-10-03T20:53:57.475813+00:00"
+    }
+  ],
+  "sources": [
+    {
+      "name": "dots-overview",
+      "url": "https://learn.chatgpt.com/docs/dots.md",
+      "sha256": "63bab8760b1419055f4dbd256bad8d75d4dc69561cb8bc42eba12ef7b7324c05",
+      "byte_count": 17871,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-overview.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "dots-getting-started",
+      "url": "https://learn.chatgpt.com/docs/dots/getting-started.md",
+      "sha256": "6d588a2a015e3b6dcb148fd2187dc6dc76505462d90a0579ff26c58a33b39c28",
+      "byte_count": 4230,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-getting-started.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "dots-tasks-memory",
+      "url": "https://learn.chatgpt.com/docs/dots/tasks-and-memory.md",
+      "sha256": "c5900e990dd3d2cb6e00df27de2789d35f783e0e7eed56cc1a834c1bc0b3e40d",
+      "byte_count": 7677,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-tasks-memory.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "dots-controls",
+      "url": "https://learn.chatgpt.com/docs/dots/controls.md",
+      "sha256": "3dd935a75f6ec9bffb01b246260c2f45e8e4a8f4b31a92fb5fedff3353db5700",
+      "byte_count": 5725,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-controls.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "dots-computers-apps",
+      "url": "https://learn.chatgpt.com/docs/dots/computers-and-apps.md",
+      "sha256": "42791a20d6a95b927ad41fc437c51528d8e8b896358b8922cc4c867957e2f758",
+      "byte_count": 5752,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-computers-apps.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "dots-channels",
+      "url": "https://learn.chatgpt.com/docs/dots/channels.md",
+      "sha256": "1fde5facf50f0a3f289277a46700ab83f110fc9f60998a3f4e8403790354cd31",
+      "byte_count": 2497,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-channels.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "dots-enterprise-admin",
+      "url": "https://learn.chatgpt.com/docs/enterprise/dots-admin-guide.md",
+      "sha256": "bb0c3074751adb16bc0e4715099206c3c7cea56edd31ec1b3f82b450cc251b02",
+      "byte_count": 13883,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-enterprise-admin.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "chatgpt-docs-index",
+      "url": "https://learn.chatgpt.com/docs/llms.txt",
+      "sha256": "876747a42df18177663b73ad1dd7b7f6a677a9f807de576c3aa583fbadf0dea0",
+      "byte_count": 31354,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\chatgpt-docs-index.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "hermes-docs-index",
+      "url": "https://hermes-agent.nousresearch.com/docs/llms.txt",
+      "sha256": "eddf3134e6dccb6f22f898dc3a94fb44b3834f72bdd01a0ddff8ad348ac84b5f",
+      "byte_count": 45249,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\hermes-docs-index.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "hermes-kanban",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/kanban",
+      "sha256": "325e932295fb02bd0963cd23237ec8fc5d4657a9f48d046a19174eabb78054e4",
+      "byte_count": 119863,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\hermes-kanban.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "hermes-memory",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/features/memory",
+      "sha256": "259b905e6512b356c2e4d8c13c093a3d7e866cea1aa8a363225e20780dcbcbf6",
+      "byte_count": 30169,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\hermes-memory.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "chatgpt-permissions",
+      "url": "https://learn.chatgpt.com/docs/permissions.md",
+      "sha256": "8d87fa5b5dcd7d22b13e34680e4bb1cd0d1e33c94f3fd5028da49eec70f9746a",
+      "byte_count": 38976,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\chatgpt-permissions.md",
+      "hash_status": "PASS"
+    },
+    {
+      "name": "dots-enterprise-local-access",
+      "url": "https://learn.chatgpt.com/docs/enterprise/cloud-local-access.md",
+      "sha256": "96fb9588467b97c5fd641d93d949977455ed8be8e5aa171081c9880e26a366a4",
+      "byte_count": 23503,
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-20261003\\sources\\dots-enterprise-local-access.md",
+      "hash_status": "PASS"
+    }
+  ]
+}

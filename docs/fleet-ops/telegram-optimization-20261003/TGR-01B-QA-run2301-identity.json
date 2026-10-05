@@ -1,0 +1,230 @@
+{
+  "task_id": "t_307fc218",
+  "run_id": 2301,
+  "recorded_at": "2026-10-03T20:04:22.087944+00:00",
+  "head": "c605e5b618cf20a2d94422bd2c995b864bd986c8",
+  "base": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+  "direct_parent_matches_base": true,
+  "base_tree": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\base-r2301",
+  "head_tree": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+  "changed_paths": [
+    "gateway/run_config_loaders.py",
+    "gateway/run_turn.py",
+    "gateway/slash_commands_model.py",
+    "tests/gateway/test_profile_channel_override_routing.py"
+  ],
+  "untouched_paths_empty_diff": [
+    "gateway/run.py",
+    "gateway/run_adapters.py",
+    "gateway/run_profile_reconcile.py",
+    "gateway/run_agent_cache.py",
+    "gateway/session.py",
+    "gateway/session_identity.py",
+    "gateway/config.py",
+    "tests/gateway/test_channel_overrides.py",
+    "scripts/run_tests.sh"
+  ],
+  "patch_matches_submitted_bytes": true,
+  "patch_bytes": 21106,
+  "patch_sha256": "9b9a5cfb5c8f88be62efb7b464269a74af96434a77e650e083b9caa3a6629926",
+  "diff_sha256": "37a5e5b69383d7e0b84be6da9be0a77436011f404739a2605b9cc5231816aae5",
+  "missing_path": "tests/gateway/test_profile_route_ownership.py",
+  "missing_base": true,
+  "missing_head": true,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:/Users/max/AppData/Local/hermes/hermes-agent/.worktrees/tg-qwen-profile-routing-bounded-20261003",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "c605e5b618cf20a2d94422bd2c995b864bd986c8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:/Users/max/AppData/Local/hermes/hermes-agent/.worktrees/tg-qwen-profile-routing-bounded-20261003",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:/Users/max/AppData/Local/hermes/hermes-agent/.worktrees/tg-qwen-profile-routing-bounded-20261003",
+        "show",
+        "-s",
+        "--format=%P",
+        "c605e5b618cf20a2d94422bd2c995b864bd986c8"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "C:/Users/max/AppData/Local/hermes/hermes-agent",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\base-r2301"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Cloning into 'C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\base-r2301'...\ndone.\nUpdating files:   7% (1271/17145)\rUpdating files:   8% (1372/17145)\rUpdating files:   9% (1544/17145)\rUpdating files:  10% (1715/17145)\rUpdating files:  11% (1886/17145)\rUpdating files:  12% (2058/17145)\rUpdating files:  13% (2229/17145)\rUpdating files:  14% (2401/17145)\rUpdating files:  15% (2572/17145)\rUpdating files:  16% (2744/17145)\rUpdating files:  17% (2915/17145)\rUpdating files:  17% (2996/17145)\rUpdating files:  18% (3087/17145)\rUpdating files:  19% (3258/17145)\rUpdating files:  20% (3429/17145)\rUpdating files:  21% (3601/17145)\rUpdating files:  22% (3772/17145)\rUpdating files:  23% (3944/17145)\rUpdating files:  24% (4115/17145)\rUpdating files:  25% (4287/17145)\rUpdating files:  26% (4458/17145)\rUpdating files:  27% (4630/17145)\rUpdating files:  28% (4801/17145)\rUpdating files:  29% (4973/17145)\rUpdating files:  29% (5054/17145)\rUpdating files:  30% (5144/17145)\rUpdating files:  31% (5315/17145)\rUpdating files:  32% (5487/17145)\rUpdating files:  33% (5658/17145)\rUpdating files:  34% (5830/17145)\rUpdating files:  35% (6001/17145)\rUpdating files:  36% (6173/17145)\rUpdating files:  37% (6344/17145)\rUpdating files:  38% (6516/17145)\rUpdating files:  39% (6687/17145)\rUpdating files:  40% (6858/17145)\rUpdating files:  40% (6979/17145)\rUpdating files:  41% (7030/17145)\rUpdating files:  42% (7201/17145)\rUpdating files:  43% (7373/17145)\rUpdating files:  44% (7544/17145)\rUpdating files:  45% (7716/17145)\rUpdating files:  46% (7887/17145)\rUpdating files:  47% (8059/17145)\rUpdating files:  48% (8230/17145)\rUpdating files:  48% (8270/17145)\rUpdating files:  49% (8402/17145)\rUpdating files:  50% (8573/17145)\rUpdating files:  51% (8744/17145)\rUpdating files:  52% (8916/17145)\rUpdating files:  53% (9087/17145)\rUpdating files:  54% (9259/17145)\rUpdating files:  55% (9430/17145)\rUpdating files:  56% (9602/17145)\rUpdating files:  57% (9773/17145)\rUpdating files:  58% (9945/17145)\rUpdating files:  58% (9968/17145)\rUpdating files:  59% (10116/17145)\rUpdating files:  60% (10287/17145)\rUpdating files:  61% (10459/17145)\rUpdating files:  62% (10630/17145)\rUpdating files:  63% (10802/17145)\rUpdating files:  64% (10973/17145)\rUpdating files:  65% (11145/17145)\rUpdating files:  66% (11316/17145)\rUpdating files:  67% (11488/17145)\rUpdating files:  68% (11659/17145)\rUpdating files:  68% (11743/17145)\rUpdating files:  69% (11831/17145)\rUpdating files:  70% (12002/17145)\rUpdating files:  71% (12173/17145)\rUpdating files:  72% (12345/17145)\rUpdating files:  73% (12516/17145)\rUpdating files:  74% (12688/17145)\rUpdating files:  75% (12859/17145)\rUpdating files:  76% (13031/17145)\rUpdating files:  77% (13202/17145)\rUpdating files:  78% (13374/17145)\rUpdating files:  79% (13545/17145)\rUpdating files:  80% (13716/17145)\rUpdating files:  80% (13735/17145)\rUpdating files:  81% (13888/17145)\rUpdating files:  82% (14059/17145)\rUpdating files:  83% (14231/17145)\rUpdating files:  84% (14402/17145)\rUpdating files:  85% (14574/17145)\rUpdating files:  86% (14745/17145)\rUpdating files:  87% (14917/17145)\rUpdating files:  88% (15088/17145)\rUpdating files:  89% (15260/17145)\rUpdating files:  90% (15431/17145)\rUpdating files:  90% (15591/17145)\rUpdating files:  91% (15602/17145)\rUpdating files:  92% (15774/17145)\rUpdating files:  93% (15945/17145)\rUpdating files:  94% (16117/17145)\rUpdating files:  95% (16288/17145)\rUpdating files:  96% (16460/17145)\rUpdating files:  97% (16631/17145)\rUpdating files:  98% (16803/17145)\rUpdating files:  99% (16974/17145)\rUpdating files:  99% (17111/17145)\rUpdating files: 100% (17145/17145)\rUpdating files: 100% (17145/17145), done.\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\base-r2301",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "clone",
+        "--shared",
+        "--single-branch",
+        "--branch",
+        "wt/t_ced9d357",
+        "C:/Users/max/AppData/Local/hermes/hermes-agent",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Cloning into 'C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301'...\ndone.\nUpdating files:  14% (2438/17146)\rUpdating files:  15% (2572/17146)\rUpdating files:  16% (2744/17146)\rUpdating files:  17% (2915/17146)\rUpdating files:  18% (3087/17146)\rUpdating files:  19% (3258/17146)\rUpdating files:  20% (3430/17146)\rUpdating files:  21% (3601/17146)\rUpdating files:  22% (3773/17146)\rUpdating files:  23% (3944/17146)\rUpdating files:  24% (4116/17146)\rUpdating files:  25% (4287/17146)\rUpdating files:  26% (4458/17146)\rUpdating files:  27% (4630/17146)\rUpdating files:  27% (4764/17146)\rUpdating files:  28% (4801/17146)\rUpdating files:  29% (4973/17146)\rUpdating files:  30% (5144/17146)\rUpdating files:  31% (5316/17146)\rUpdating files:  32% (5487/17146)\rUpdating files:  33% (5659/17146)\rUpdating files:  34% (5830/17146)\rUpdating files:  35% (6002/17146)\rUpdating files:  36% (6173/17146)\rUpdating files:  37% (6345/17146)\rUpdating files:  38% (6516/17146)\rUpdating files:  39% (6687/17146)\rUpdating files:  40% (6859/17146)\rUpdating files:  41% (7030/17146)\rUpdating files:  41% (7113/17146)\rUpdating files:  42% (7202/17146)\rUpdating files:  43% (7373/17146)\rUpdating files:  44% (7545/17146)\rUpdating files:  45% (7716/17146)\rUpdating files:  46% (7888/17146)\rUpdating files:  47% (8059/17146)\rUpdating files:  48% (8231/17146)\rUpdating files:  49% (8402/17146)\rUpdating files:  50% (8573/17146)\rUpdating files:  51% (8745/17146)\rUpdating files:  51% (8794/17146)\rUpdating files:  52% (8916/17146)\rUpdating files:  53% (9088/17146)\rUpdating files:  54% (9259/17146)\rUpdating files:  55% (9431/17146)\rUpdating files:  56% (9602/17146)\rUpdating files:  56% (9610/17146)\rUpdating files:  57% (9774/17146)\rUpdating files:  58% (9945/17146)\rUpdating files:  59% (10117/17146)\rUpdating files:  60% (10288/17146)\rUpdating files:  61% (10460/17146)\rUpdating files:  62% (10631/17146)\rUpdating files:  63% (10802/17146)\rUpdating files:  63% (10878/17146)\rUpdating files:  64% (10974/17146)\rUpdating files:  65% (11145/17146)\rUpdating files:  66% (11317/17146)\rUpdating files:  67% (11488/17146)\rUpdating files:  68% (11660/17146)\rUpdating files:  69% (11831/17146)\rUpdating files:  70% (12003/17146)\rUpdating files:  71% (12174/17146)\rUpdating files:  72% (12346/17146)\rUpdating files:  73% (12517/17146)\rUpdating files:  74% (12689/17146)\rUpdating files:  75% (12860/17146)\rUpdating files:  76% (13031/17146)\rUpdating files:  76% (13053/17146)\rUpdating files:  77% (13203/17146)\rUpdating files:  78% (13374/17146)\rUpdating files:  79% (13546/17146)\rUpdating files:  80% (13717/17146)\rUpdating files:  81% (13889/17146)\rUpdating files:  82% (14060/17146)\rUpdating files:  83% (14232/17146)\rUpdating files:  84% (14403/17146)\rUpdating files:  85% (14575/17146)\rUpdating files:  86% (14746/17146)\rUpdating files:  87% (14918/17146)\rUpdating files:  88% (15089/17146)\rUpdating files:  88% (15218/17146)\rUpdating files:  89% (15260/17146)\rUpdating files:  90% (15432/17146)\rUpdating files:  91% (15603/17146)\rUpdating files:  92% (15775/17146)\rUpdating files:  93% (15946/17146)\rUpdating files:  94% (16118/17146)\rUpdating files:  95% (16289/17146)\rUpdating files:  96% (16461/17146)\rUpdating files:  97% (16632/17146)\rUpdating files:  98% (16804/17146)\rUpdating files:  98% (16915/17146)\rUpdating files:  99% (16975/17146)\rUpdating files: 100% (17146/17146)\rUpdating files: 100% (17146/17146), done.\n"
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "c605e5b618cf20a2d94422bd2c995b864bd986c8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\base-r2301",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+        "diff",
+        "--name-status",
+        "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+        "c605e5b618cf20a2d94422bd2c995b864bd986c8"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "M\tgateway/run_config_loaders.py\nM\tgateway/run_turn.py\nM\tgateway/slash_commands_model.py\nA\ttests/gateway/test_profile_channel_override_routing.py\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+        "diff",
+        "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+        "c605e5b618cf20a2d94422bd2c995b864bd986c8",
+        "--",
+        "gateway/run.py",
+        "gateway/run_adapters.py",
+        "gateway/run_profile_reconcile.py",
+        "gateway/run_agent_cache.py",
+        "gateway/session.py",
+        "gateway/session_identity.py",
+        "gateway/config.py",
+        "tests/gateway/test_channel_overrides.py",
+        "scripts/run_tests.sh"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+        "format-patch",
+        "-1",
+        "--stdout",
+        "c605e5b618cf20a2d94422bd2c995b864bd986c8"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "From c605e5b618cf20a2d94422bd2c995b864bd986c8 Mon Sep 17 00:00:00 2001\nFrom: teknium1 <127238744+teknium1@users.noreply.github.com>\nDate: Sat, 3 Oct 2026 18:39:41 +0300\nSubject: [PATCH] fix(gateway): scope channel overrides to the routed profile\n config (TGR-01B)\n\n---\n gateway/run_config_loaders.py                 |  48 +++\n gateway/run_turn.py                           |  13 +-\n gateway/slash_commands_model.py               |  15 +-\n .../test_profile_channel_override_routing.py  | 322 ++++++++++++++++++\n 4 files changed, 382 insertions(+), 16 deletions(-)\n create mode 100644 tests/gateway/test_profile_channel_override_routing.py\n\ndiff --git a/gateway/run_config_loaders.py b/gateway/run_config_loaders.py\nindex 5cd2a5d160..954558c93a 100644\n--- a/gateway/run_config_loaders.py\n+++ b/gateway/run_config_loaders.py\n@@ -42,6 +42,54 @@ DEFAULT_HUMAN_DELAY_RANGE_MS: tuple[int, int] = (800, 2500)\n _BUSY_INPUT_MODES = {\"interrupt\", \"queue\", \"steer\"}\n \n \n+def _routed_profile_for_override(runner: Any, source: Any) -> Optional[str]:\n+    \"\"\"The profile an inbound source is routed to, for channel-override scoping only.\n+\n+    The pinned :class:`~gateway.session_identity.RoutingIdentity` is authoritative; a bare\n+    ``source.profile`` (a routing result without a pinned identity) is the fallback.\n+    ``None`` means the launcher/primary scope.\"\"\"\n+    if source is None:\n+        return None\n+    from gateway.session_identity import identity_of\n+\n+    identity = identity_of(source)\n+    if identity is not None and identity.multiplexed:\n+        return identity.runtime_profile or None\n+    profile = getattr(source, \"profile\", None)\n+    return profile.strip() if isinstance(profile, str) and profile.strip() else None\n+\n+\n+def _get_channel_override_for_source(runner: Any, config: Any, source: Any) -> Optional[Any]:\n+    \"\"\"``_get_channel_override`` scoped to the config that actually owns *source*.\n+\n+    ``GatewayRunner.config`` is the LAUNCHER profile's typed config; under multiplex a routed\n+    (secondary) profile's chats must match ``channel_overrides`` in THAT profile's own served\n+    config from ``_profile_configs`` (populated/refreshed in run_adapters), never the\n+    launcher's rules. A missing/unknown/unserved routed profile falls back to NO override\n+    (the global default) \u2014 it must not borrow another profile's rule. Primary/standalone\n+    sources keep the launcher config. ``system_prompt`` resolution is deliberately untouched\n+    (different contract, keyed by platform/chat without a routed source).\"\"\"\n+    from gateway.run import _get_channel_override\n+\n+    platform = getattr(source, \"platform\", None)\n+    if source is None or platform is None:\n+        return None\n+    chat_id = str(getattr(source, \"chat_id\", \"\") or \"\")\n+\n+    def _lookup(cfg):\n+        return _get_channel_override(\n+            cfg, platform, chat_id,\n+            thread_id=str(source.thread_id) if getattr(source, \"thread_id\", None) else None,\n+            parent_id=str(source.parent_chat_id) if getattr(source, \"parent_chat_id\", None) else None,\n+        )\n+\n+    routed = _routed_profile_for_override(runner, source)\n+    primary = getattr(runner, \"_primary_profile_name\", None) or \"default\"\n+    if not routed or routed == primary:\n+        return _lookup(config)\n+    return _lookup((getattr(runner, \"_profile_configs\", None) or {}).get(routed))\n+\n+\n class GatewayConfigLoadersMixin:\n     \"\"\"Config/env loaders (busy modes, reasoning, service tier, timeouts, fallback) for GatewayRunner.\"\"\"\n \ndiff --git a/gateway/run_turn.py b/gateway/run_turn.py\nindex 66f895231e..8018ab913a 100644\n--- a/gateway/run_turn.py\n+++ b/gateway/run_turn.py\n@@ -177,7 +177,7 @@ class GatewayTurnMixin:\n         Priority (highest first): session ``/model`` \u2192 ``channel_overrides`` \u2192 global config/env\n         (``_resolve_gateway_model(user_config)`` and default provider resolution).\"\"\"\n         from gateway.run import (\n-            _credential_pool_for_provider, _get_channel_override, _resolve_gateway_model,\n+            _credential_pool_for_provider, _resolve_gateway_model,\n             _resolve_runtime_agent_kwargs, _resolve_runtime_agent_kwargs_for_provider,\n         )\n         skey = self._resolve_session_key_or_none(source, session_key)\n@@ -251,12 +251,11 @@ class GatewayTurnMixin:\n                 unavailable_override[\"provider\"], unavailable_override.get(\"model\"), runtime_kwargs.get(\"provider\"), model)\n \n         cfg = getattr(self, \"config\", None)  # getattr: bare object.__new__ test runners\n-        if cfg and source is not None:\n-            ch = _get_channel_override(\n-                cfg, source.platform, str(source.chat_id) if source.chat_id else \"\",\n-                thread_id=str(source.thread_id) if getattr(source, \"thread_id\", None) else None,\n-                parent_id=str(source.parent_chat_id) if getattr(source, \"parent_chat_id\", None) else None,\n-            )\n+        if source is not None:\n+            from gateway.run_config_loaders import _get_channel_override_for_source\n+            # Scoped to the routed profile's own served config under multiplex: runner.config\n+            # is launcher scope only, so a routed chat's rule lives in _profile_configs (TGR-01B).\n+            ch = _get_channel_override_for_source(self, cfg, source)\n             if ch:\n                 if ch.model:\n                     model = ch.model\ndiff --git a/gateway/slash_commands_model.py b/gateway/slash_commands_model.py\nindex 757df68700..52cdd8a08a 100644\n--- a/gateway/slash_commands_model.py\n+++ b/gateway/slash_commands_model.py\n@@ -367,16 +367,13 @@ class GatewayModelCommandsMixin:\n             return await self._commit_model_switch_locked(result, ctx, source=source, picker=picker)\n \n     def _channel_override_for(self, source):\n-        \"\"\"This chat's ``channel_overrides`` entry (model/provider), or None.\"\"\"\n-        from gateway.run import _get_channel_override\n-        cfg = getattr(self, \"config\", None)\n-        if not cfg or source is None:\n+        \"\"\"This chat's ``channel_overrides`` entry (model/provider), or None \u2014 scoped to the\n+        routed profile's own served config under multiplex, same as the turn runtime (TGR-01B).\"\"\"\n+        from gateway.run_config_loaders import _get_channel_override_for_source\n+        if source is None:\n             return None\n-        return _get_channel_override(\n-            cfg, source.platform, str(source.chat_id) if source.chat_id else \"\",\n-            thread_id=str(source.thread_id) if getattr(source, \"thread_id\", None) else None,\n-            parent_id=str(source.parent_chat_id) if getattr(source, \"parent_chat_id\", None) else None,\n-        )\n+        return _get_channel_override_for_source(\n+            self, getattr(self, \"config\", None), source)\n \n     def _model_switch_lock(self) -> asyncio.Lock:\n         \"\"\"Runner-wide lock over a /model command's read-resolve-commit. Slash commands bypass the busy\ndiff --git a/tests/gateway/test_profile_channel_override_routing.py b/tests/gateway/test_profile_channel_override_routing.py\nnew file mode 100644\nindex 0000000000..a628ba1062\n--- /dev/null\n+++ b/tests/gateway/test_profile_channel_override_routing.py\n@@ -0,0 +1,322 @@\n+\"\"\"Routed-profile channel-override scoping (TGR-01B).\n+\n+``GatewayRunner.config`` is the LAUNCHER profile's typed config. Under multiplex a routed\n+(secondary) profile's Telegram chats (company DM ``1256122537``, company forum\n+``-1004426332349`` \u2014 exact negative forum identifier) must match ``channel_overrides`` from\n+THAT profile's own served config (``_profile_configs``, populated/refreshed in run_adapters),\n+never from the launcher's rules. A missing/unknown/unserved routed profile falls back to the\n+global default without borrowing another profile's rule. Primary/standalone sources keep the\n+launcher config; an explicit session ``/model`` pin stays first priority; ``system_prompt``\n+resolution semantics are unchanged.\n+\n+All fixtures are temporary/mock data; provider resolution is patched \u2014 no network calls.\n+\"\"\"\n+\n+from pathlib import Path\n+from unittest.mock import patch\n+\n+from gateway.config import ChannelOverride, GatewayConfig, Platform, PlatformConfig\n+from gateway.run import GatewayRunner\n+from gateway.session import SessionSource\n+from gateway.session_identity import RoutingIdentity\n+\n+# Authoritative company targets (fixture copies; no live config is read).\n+COMPANY_DM = \"1256122537\"\n+COMPANY_FORUM = \"-1004426332349\"\n+\n+QWEN_MODEL = \"qwen3.8-max\"\n+QWEN_PROVIDER = \"custom\"\n+QWEN_URL = \"https://llmapi.aliyun.com/compatible-mode/v1/\"\n+CODEX_MODEL = \"gpt-6.1-sol\"\n+CODEX_PROVIDER = \"openai-codex\"\n+CODEX_URL = \"https://api.openai.com/v1\"\n+LAUNCHER_MODEL = \"launcher/model\"\n+LAUNCHER_PROVIDER = \"launcher-prov\"\n+LAUNCHER_URL = \"https://launcher.example/v1\"\n+TECH_RULE_MODEL = \"tech-rule-model\"\n+TECH_RULE_PROVIDER = \"tech-prov\"\n+TECH_RULE_URL = \"https://tech.example/v1\"\n+\n+_PROVIDER_URLS = {\n+    QWEN_PROVIDER: QWEN_URL,\n+    CODEX_PROVIDER: CODEX_URL,\n+    LAUNCHER_PROVIDER: LAUNCHER_URL,\n+    TECH_RULE_PROVIDER: TECH_RULE_URL,\n+}\n+\n+\n+def _runtime(provider):\n+    \"\"\"A fresh provider runtime fixture (dict is mutated by the resolver: never shared).\"\"\"\n+    return {\n+        \"provider\": provider,\n+        \"api_key\": \"k-\" + provider,\n+        \"base_url\": _PROVIDER_URLS[provider],\n+        \"api_mode\": \"chat_completions\",\n+    }\n+\n+\n+def _fake_for_provider(provider, target_model=None):\n+    return _runtime(provider)\n+\n+\n+def _tg_config(overrides):\n+    return GatewayConfig(\n+        platforms={\n+            Platform.TELEGRAM: PlatformConfig(enabled=True, channel_overrides=dict(overrides)),\n+        },\n+    )\n+\n+\n+def _company_cfg():\n+    \"\"\"Company profile's OWN served config: DM + forum rules for qwen3.8-max/custom.\"\"\"\n+    return _tg_config({\n+        COMPANY_DM: ChannelOverride(model=QWEN_MODEL, provider=QWEN_PROVIDER),\n+        COMPANY_FORUM: ChannelOverride(model=QWEN_MODEL, provider=QWEN_PROVIDER),\n+    })\n+\n+\n+def _tech_cfg():\n+    \"\"\"A specialist profile with its OWN rule for the same forum id.\"\"\"\n+    return _tg_config({\n+        COMPANY_FORUM: ChannelOverride(model=TECH_RULE_MODEL, provider=TECH_RULE_PROVIDER),\n+    })\n+\n+\n+def _identity(profile):\n+    home = Path(\"fixture-home\") / profile\n+    return RoutingIdentity(\n+        transport_profile=\"default\",\n+        runtime_profile=profile,\n+        authorization_home=home,\n+        runtime_home=home,\n+    )\n+\n+\n+def _pin(source, profile):\n+    \"\"\"Pin the routed identity the way gateway.session_identity.resolve_identity does.\"\"\"\n+    setattr(source, \"_identity\", _identity(profile))\n+    return source\n+\n+\n+def _runner(launcher_cfg, configs=None, primary=\"default\"):\n+    runner = object.__new__(GatewayRunner)\n+    runner.config = launcher_cfg\n+    runner._session_model_overrides = {}\n+    runner._profile_configs = dict(configs or {})\n+    runner._primary_profile_name = primary\n+    return runner\n+\n+\n+def _resolve(runner, source, session_key=None):\n+    \"\"\"Drive the REAL turn entrypoint with patched provider resolution (offline).\"\"\"\n+    with patch(\"gateway.run._resolve_gateway_model\", return_value=CODEX_MODEL), \\\n+         patch(\"gateway.run._resolve_runtime_agent_kwargs\",\n+               side_effect=lambda: _runtime(CODEX_PROVIDER)), \\\n+         patch(\"gateway.run._resolve_runtime_agent_kwargs_for_provider\",\n+               side_effect=_fake_for_provider), \\\n+         patch(\"gateway.run._credential_pool_for_provider\", return_value=None):\n+        return runner._resolve_session_agent_runtime(\n+            source=source, session_key=session_key,\n+            user_config={\"model\": {\"default\": CODEX_MODEL}},\n+        )\n+\n+\n+def _dm_source(profile=None):\n+    source = SessionSource(platform=Platform.TELEGRAM, chat_id=COMPANY_DM, user_id=\"u1\")\n+    return _pin(source, profile) if profile else source\n+\n+\n+def _forum_source(thread_id=None, profile=None):\n+    source = SessionSource(\n+        platform=Platform.TELEGRAM, chat_id=COMPANY_FORUM,\n+        chat_type=\"thread\" if thread_id else \"group\",\n+        thread_id=thread_id, user_id=\"u1\",\n+    )\n+    return _pin(source, profile) if profile else source\n+\n+\n+class TestRoutedCompanyRule:\n+    \"\"\"A routed company source must inherit the company profile's own rule (RED on base).\"\"\"\n+\n+    def test_company_dm_inherits_company_rule(self):\n+        runner = _runner(_tg_config({}), {\"company\": _company_cfg()})\n+        model, runtime = _resolve(runner, _dm_source(\"company\"))\n+        assert model == QWEN_MODEL\n+        assert runtime[\"provider\"] == QWEN_PROVIDER\n+        assert runtime[\"base_url\"] == QWEN_URL\n+\n+    def test_company_forum_root_message_inherits_forum_rule(self):\n+        runner = _runner(_tg_config({}), {\"company\": _company_cfg()})\n+        model, runtime = _resolve(runner, _forum_source(profile=\"company\"))\n+        assert model == QWEN_MODEL\n+        assert runtime[\"provider\"] == QWEN_PROVIDER\n+        assert runtime[\"base_url\"] == QWEN_URL\n+\n+    def test_company_forum_new_thread_inherits_forum_rule(self):\n+        runner = _runner(_tg_config({}), {\"company\": _company_cfg()})\n+        model, runtime = _resolve(runner, _forum_source(thread_id=\"99\", profile=\"company\"))\n+        assert model == QWEN_MODEL\n+        assert runtime[\"provider\"] == QWEN_PROVIDER\n+        assert runtime[\"base_url\"] == QWEN_URL\n+\n+    def test_source_profile_without_pinned_identity_scopes_override(self):\n+        runner = _runner(_tg_config({}), {\"company\": _company_cfg()})\n+        source = SessionSource(\n+            platform=Platform.TELEGRAM, chat_id=COMPANY_DM, user_id=\"u1\", profile=\"company\")\n+        model, runtime = _resolve(runner, source)\n+        assert model == QWEN_MODEL\n+        assert runtime[\"provider\"] == QWEN_PROVIDER\n+\n+    def test_pinned_identity_wins_over_stale_source_profile(self):\n+        runner = _runner(\n+            _tg_config({}), {\"company\": _company_cfg(), \"tech\": _tech_cfg()})\n+        source = _forum_source(thread_id=\"77\", profile=\"tech\")\n+        _pin(source, \"company\")\n+        model, runtime = _resolve(runner, source)\n+        assert model == QWEN_MODEL\n+        assert model != TECH_RULE_MODEL\n+        assert runtime[\"provider\"] == QWEN_PROVIDER\n+\n+\n+class TestNoCrossProfileBorrowing:\n+    \"\"\"Only the routed profile's OWN rule applies; never another profile's.\"\"\"\n+\n+    def test_specialist_same_forum_uses_own_rule(self):\n+        runner = _runner(\n+            _tg_config({}), {\"company\": _company_cfg(), \"tech\": _tech_cfg()})\n+        model, runtime = _resolve(runner, _forum_source(thread_id=\"77\", profile=\"tech\"))\n+        assert model == TECH_RULE_MODEL\n+        assert runtime[\"provider\"] == TECH_RULE_PROVIDER\n+        assert runtime[\"base_url\"] == TECH_RULE_URL\n+        assert model != QWEN_MODEL\n+\n+    def test_specialist_without_own_rule_uses_global_never_company(self):\n+        runner = _runner(\n+            _tg_config({}), {\"company\": _company_cfg(), \"tech\": _tg_config({})})\n+        model, runtime = _resolve(runner, _forum_source(thread_id=\"77\", profile=\"tech\"))\n+        assert model == CODEX_MODEL\n+        assert runtime[\"provider\"] == CODEX_PROVIDER\n+        assert model != QWEN_MODEL\n+\n+    def test_routed_profile_never_borrows_launcher_rule(self):\n+        launcher = _tg_config({\n+            COMPANY_FORUM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),\n+        })\n+        runner = _runner(launcher, {\"company\": _company_cfg()})\n+        model, runtime = _resolve(runner, _forum_source(thread_id=\"99\", profile=\"company\"))\n+        assert model == QWEN_MODEL\n+        assert runtime[\"provider\"] == QWEN_PROVIDER\n+        assert model != LAUNCHER_MODEL\n+\n+    def test_unserved_routed_profile_falls_back_to_global(self):\n+        launcher = _tg_config({\n+            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),\n+        })\n+        runner = _runner(launcher, {\"company\": _company_cfg()})\n+        model, runtime = _resolve(runner, _dm_source(\"ghost\"))\n+        assert model == CODEX_MODEL\n+        assert runtime[\"provider\"] == CODEX_PROVIDER\n+        assert model not in (QWEN_MODEL, LAUNCHER_MODEL)\n+\n+    def test_unknown_source_profile_falls_back_to_global(self):\n+        launcher = _tg_config({\n+            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),\n+        })\n+        runner = _runner(launcher, {\"company\": _company_cfg()})\n+        source = SessionSource(\n+            platform=Platform.TELEGRAM, chat_id=COMPANY_DM, user_id=\"u1\", profile=\"ghost\")\n+        model, runtime = _resolve(runner, source)\n+        assert model == CODEX_MODEL\n+        assert model not in (QWEN_MODEL, LAUNCHER_MODEL)\n+\n+\n+class TestPrimaryAndStandaloneUnchanged:\n+    \"\"\"Primary/standalone routing keeps the launcher config exactly as before.\"\"\"\n+\n+    def test_primary_identity_uses_launcher_rule(self):\n+        launcher = _tg_config({\n+            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),\n+        })\n+        runner = _runner(launcher, {\"company\": _company_cfg()})\n+        model, runtime = _resolve(runner, _dm_source(\"default\"))\n+        assert model == LAUNCHER_MODEL\n+        assert runtime[\"provider\"] == LAUNCHER_PROVIDER\n+\n+    def test_standalone_source_uses_launcher_rule(self):\n+        launcher = _tg_config({\n+            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),\n+        })\n+        runner = _runner(launcher, {\"company\": _company_cfg()})\n+        model, runtime = _resolve(runner, _dm_source())\n+        assert model == LAUNCHER_MODEL\n+        assert runtime[\"provider\"] == LAUNCHER_PROVIDER\n+        assert runtime[\"base_url\"] == LAUNCHER_URL\n+\n+\n+class TestWarmCacheAndNextTurn:\n+    \"\"\"A legit served-profile cache replacement must reach the warm next turn.\"\"\"\n+\n+    def test_warm_agent_signature_changes_after_cache_replacement(self):\n+        runner = _runner(_tg_config({}), {})  # company config not served yet\n+        source = _dm_source(\"company\")\n+        model1, runtime1 = _resolve(runner, source)\n+        sig1 = GatewayRunner._agent_config_signature(model1, runtime1, [], \"\")\n+        runner._profile_configs[\"company\"] = _company_cfg()  # run_adapters refresh\n+        model2, runtime2 = _resolve(runner, source)\n+        sig2 = GatewayRunner._agent_config_signature(model2, runtime2, [], \"\")\n+        assert (model2, runtime2[\"provider\"]) == (QWEN_MODEL, QWEN_PROVIDER)\n+        assert sig1 != sig2\n+\n+    def test_ordinary_next_turn_runtime_picks_new_values(self):\n+        runner = _runner(_tg_config({}), {})\n+        source = _dm_source(\"company\")\n+        model1, runtime1 = _resolve(runner, source)\n+        assert (model1, runtime1[\"provider\"]) == (CODEX_MODEL, CODEX_PROVIDER)\n+        runner._profile_configs[\"company\"] = _company_cfg()\n+        _model2, runtime2 = _resolve(runner, source)\n+        assert runtime2[\"provider\"] == QWEN_PROVIDER\n+        assert runtime2[\"base_url\"] == QWEN_URL\n+        assert runtime2[\"api_key\"] == \"k-\" + QWEN_PROVIDER\n+\n+\n+class TestSlashAndPromptParity:\n+    \"\"\"The slash/status consumer matches the turn; system_prompt semantics unchanged.\"\"\"\n+\n+    def test_slash_channel_override_for_matches_turn(self):\n+        runner = _runner(_tg_config({}), {\"company\": _company_cfg()})\n+        source = _dm_source(\"company\")\n+        override = runner._channel_override_for(source)\n+        assert override is not None\n+        assert override.model == QWEN_MODEL\n+        assert override.provider == QWEN_PROVIDER\n+        model, runtime = _resolve(runner, source)\n+        assert (model, runtime[\"provider\"]) == (override.model, override.provider)\n+\n+    def test_slash_channel_override_primary_source_unchanged(self):\n+        launcher = _tg_config({\n+            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),\n+        })\n+        runner = _runner(launcher, {\"company\": _company_cfg()})\n+        override = runner._channel_override_for(_dm_source())\n+        assert override is not None\n+        assert override.model == LAUNCHER_MODEL\n+\n+    def test_session_pin_wins_over_routed_company_rule(self):\n+        runner = _runner(_tg_config({}), {\"company\": _company_cfg()})\n+        source = _dm_source(\"company\")\n+        skey = \"agent:company:telegram:dm:\" + COMPANY_DM\n+        runner._session_state(skey).conversation.model_override = {\n+            \"model\": \"explicit/pin\", \"provider\": CODEX_PROVIDER, \"api_key\": \"pin-key\",\n+        }\n+        model, runtime = _resolve(runner, source, session_key=skey)\n+        assert model == \"explicit/pin\"\n+        assert runtime[\"api_key\"] == \"pin-key\"\n+\n+    def test_system_prompt_resolution_stays_launcher_scoped(self):\n+        launcher = _tg_config({\n+            COMPANY_DM: ChannelOverride(system_prompt=\"LAUNCHER PROMPT\"),\n+        })\n+        runner = _runner(launcher, {\"company\": _company_cfg()})\n+        runner._ephemeral_system_prompt = \"Global prompt\"\n+        prompt = runner._get_system_prompt_for_channel(Platform.TELEGRAM, COMPANY_DM)\n+        assert prompt == \"LAUNCHER PROMPT\"\n-- \n2.53.0.windows.3\n\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+        "diff",
+        "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+        "c605e5b618cf20a2d94422bd2c995b864bd986c8",
+        "--",
+        "gateway/run_config_loaders.py",
+        "gateway/run_turn.py",
+        "gateway/slash_commands_model.py"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "diff --git a/gateway/run_config_loaders.py b/gateway/run_config_loaders.py\nindex 5cd2a5d160..954558c93a 100644\n--- a/gateway/run_config_loaders.py\n+++ b/gateway/run_config_loaders.py\n@@ -42,6 +42,54 @@ DEFAULT_HUMAN_DELAY_RANGE_MS: tuple[int, int] = (800, 2500)\n _BUSY_INPUT_MODES = {\"interrupt\", \"queue\", \"steer\"}\n \n \n+def _routed_profile_for_override(runner: Any, source: Any) -> Optional[str]:\n+    \"\"\"The profile an inbound source is routed to, for channel-override scoping only.\n+\n+    The pinned :class:`~gateway.session_identity.RoutingIdentity` is authoritative; a bare\n+    ``source.profile`` (a routing result without a pinned identity) is the fallback.\n+    ``None`` means the launcher/primary scope.\"\"\"\n+    if source is None:\n+        return None\n+    from gateway.session_identity import identity_of\n+\n+    identity = identity_of(source)\n+    if identity is not None and identity.multiplexed:\n+        return identity.runtime_profile or None\n+    profile = getattr(source, \"profile\", None)\n+    return profile.strip() if isinstance(profile, str) and profile.strip() else None\n+\n+\n+def _get_channel_override_for_source(runner: Any, config: Any, source: Any) -> Optional[Any]:\n+    \"\"\"``_get_channel_override`` scoped to the config that actually owns *source*.\n+\n+    ``GatewayRunner.config`` is the LAUNCHER profile's typed config; under multiplex a routed\n+    (secondary) profile's chats must match ``channel_overrides`` in THAT profile's own served\n+    config from ``_profile_configs`` (populated/refreshed in run_adapters), never the\n+    launcher's rules. A missing/unknown/unserved routed profile falls back to NO override\n+    (the global default) \u2014 it must not borrow another profile's rule. Primary/standalone\n+    sources keep the launcher config. ``system_prompt`` resolution is deliberately untouched\n+    (different contract, keyed by platform/chat without a routed source).\"\"\"\n+    from gateway.run import _get_channel_override\n+\n+    platform = getattr(source, \"platform\", None)\n+    if source is None or platform is None:\n+        return None\n+    chat_id = str(getattr(source, \"chat_id\", \"\") or \"\")\n+\n+    def _lookup(cfg):\n+        return _get_channel_override(\n+            cfg, platform, chat_id,\n+            thread_id=str(source.thread_id) if getattr(source, \"thread_id\", None) else None,\n+            parent_id=str(source.parent_chat_id) if getattr(source, \"parent_chat_id\", None) else None,\n+        )\n+\n+    routed = _routed_profile_for_override(runner, source)\n+    primary = getattr(runner, \"_primary_profile_name\", None) or \"default\"\n+    if not routed or routed == primary:\n+        return _lookup(config)\n+    return _lookup((getattr(runner, \"_profile_configs\", None) or {}).get(routed))\n+\n+\n class GatewayConfigLoadersMixin:\n     \"\"\"Config/env loaders (busy modes, reasoning, service tier, timeouts, fallback) for GatewayRunner.\"\"\"\n \ndiff --git a/gateway/run_turn.py b/gateway/run_turn.py\nindex 66f895231e..8018ab913a 100644\n--- a/gateway/run_turn.py\n+++ b/gateway/run_turn.py\n@@ -177,7 +177,7 @@ class GatewayTurnMixin:\n         Priority (highest first): session ``/model`` \u2192 ``channel_overrides`` \u2192 global config/env\n         (``_resolve_gateway_model(user_config)`` and default provider resolution).\"\"\"\n         from gateway.run import (\n-            _credential_pool_for_provider, _get_channel_override, _resolve_gateway_model,\n+            _credential_pool_for_provider, _resolve_gateway_model,\n             _resolve_runtime_agent_kwargs, _resolve_runtime_agent_kwargs_for_provider,\n         )\n         skey = self._resolve_session_key_or_none(source, session_key)\n@@ -251,12 +251,11 @@ class GatewayTurnMixin:\n                 unavailable_override[\"provider\"], unavailable_override.get(\"model\"), runtime_kwargs.get(\"provider\"), model)\n \n         cfg = getattr(self, \"config\", None)  # getattr: bare object.__new__ test runners\n-        if cfg and source is not None:\n-            ch = _get_channel_override(\n-                cfg, source.platform, str(source.chat_id) if source.chat_id else \"\",\n-                thread_id=str(source.thread_id) if getattr(source, \"thread_id\", None) else None,\n-                parent_id=str(source.parent_chat_id) if getattr(source, \"parent_chat_id\", None) else None,\n-            )\n+        if source is not None:\n+            from gateway.run_config_loaders import _get_channel_override_for_source\n+            # Scoped to the routed profile's own served config under multiplex: runner.config\n+            # is launcher scope only, so a routed chat's rule lives in _profile_configs (TGR-01B).\n+            ch = _get_channel_override_for_source(self, cfg, source)\n             if ch:\n                 if ch.model:\n                     model = ch.model\ndiff --git a/gateway/slash_commands_model.py b/gateway/slash_commands_model.py\nindex 757df68700..52cdd8a08a 100644\n--- a/gateway/slash_commands_model.py\n+++ b/gateway/slash_commands_model.py\n@@ -367,16 +367,13 @@ class GatewayModelCommandsMixin:\n             return await self._commit_model_switch_locked(result, ctx, source=source, picker=picker)\n \n     def _channel_override_for(self, source):\n-        \"\"\"This chat's ``channel_overrides`` entry (model/provider), or None.\"\"\"\n-        from gateway.run import _get_channel_override\n-        cfg = getattr(self, \"config\", None)\n-        if not cfg or source is None:\n+        \"\"\"This chat's ``channel_overrides`` entry (model/provider), or None \u2014 scoped to the\n+        routed profile's own served config under multiplex, same as the turn runtime (TGR-01B).\"\"\"\n+        from gateway.run_config_loaders import _get_channel_override_for_source\n+        if source is None:\n             return None\n-        return _get_channel_override(\n-            cfg, source.platform, str(source.chat_id) if source.chat_id else \"\",\n-            thread_id=str(source.thread_id) if getattr(source, \"thread_id\", None) else None,\n-            parent_id=str(source.parent_chat_id) if getattr(source, \"parent_chat_id\", None) else None,\n-        )\n+        return _get_channel_override_for_source(\n+            self, getattr(self, \"config\", None), source)\n \n     def _model_switch_lock(self) -> asyncio.Lock:\n         \"\"\"Runner-wide lock over a /model command's read-resolve-commit. Slash commands bypass the busy\n",
+      "stderr": ""
+    }
+  ]
+}

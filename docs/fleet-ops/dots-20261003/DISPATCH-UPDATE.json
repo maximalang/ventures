@@ -1,0 +1,144 @@
+{
+  "verified_at_utc": "2026-10-03T21:38:06.834217+00:00",
+  "board": "fleet-ops",
+  "graph_verified": true,
+  "task_count": 6,
+  "readiness_block_count": 0,
+  "original_QA_link_rejected_reason": "child already running; no override attempted",
+  "author_readback_ref": "AUTHOR-READBACK.json",
+  "frozen_packet_unchanged": true,
+  "tasks": [
+    {
+      "task_id": "t_f41c3c15",
+      "assignee": "research",
+      "status": "done",
+      "parents": [],
+      "body_chars": 168,
+      "readiness_defects": [
+        [
+          "WARN",
+          "missing_go_anchor",
+          "тело содержит gated-глагол (merge/deploy/publish/spend), но на карте нет decision:company=go с head=<sha>. Если карта САМА выполняет gated-действие — это BLOCK-корень (expected_head пуст, маркеры не вооружатся). Если только упоминает — игнорируй."
+        ]
+      ],
+      "native_comments": [],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_87ddea42",
+      "assignee": "operations",
+      "status": "done",
+      "parents": [
+        "t_f41c3c15"
+      ],
+      "body_chars": 182,
+      "readiness_defects": [],
+      "native_comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=fd6c26f5dbebba33baa17761f43a80e22ed17427 task_type: ops\nExact subject is FILE CONTENT, not a git head: METHOD-CANDIDATE.md sha1 above; sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f. BRAIN-PACKET.json sha256=f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9. Spec/allowlist are frozen packet members. Conditional authority: install only after independent SOURCE-AUDIT PASS on that exact candidate; parent DONE alone is not acceptance. This authorizes only the 12 targeted company-os references and small hooks, with backups and preservation checks; no software/service access, runtime/model/config/policy/cron changes or new paid commitment. Expected value: clearer sustained responsibility/WAIT/stop/handoff; efficacy and savings unmeasured. Kill on drift, collision, source FAIL, capability/policy refusal or extra-file change; do not bypass. Rollback own hook/reference only, preserving later concurrent edits. Final accountability company; independent consumer QA t_a3c78661, then t_895a7d39. Financial scope=fleet-ops methodology; period=03.10.2026 start→acceptance; source=task/tool receipts; new paid commitments=0; revenue/refunds/incremental paid costs/estimated inference costs=null, billing/outcomes not measured. No claim of zero inference cost.",
+          "created_at": 1791062092
+        }
+      ],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_a3c78661",
+      "assignee": "qa",
+      "status": "running",
+      "parents": [
+        "t_87ddea42",
+        "t_f41c3c15"
+      ],
+      "body_chars": 168,
+      "readiness_defects": [],
+      "native_comments": [
+        {
+          "author": "company",
+          "body": "Independent exact subject: METHOD-CANDIDATE.md sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f; file-content sha1=fd6c26f5dbebba33baa17761f43a80e22ed17427 (not git). Own verdict is source/filesystem/method accuracy, not runtime repair or future obedience. Parent DONE does not mean PASS. Real serving lineage must be reported from permitted natural-run evidence; configured QA model is not proof, Sol brain/reviewer overlap would be correlated. You did not author the frozen brain/reference or operations writes. Final consumer on same board is t_895a7d39 (company); hands producer t_87ddea42. If appropriate native QA/review bindings are necessary, only you issue them with exact subject on that non-QA consumer, never on your own card and never by impersonated company copy. Give actual verdict + receipts, and preserve privacy/financial unknowns. No synthetic inference probe or model/pool edit.",
+          "created_at": 1791062092
+        },
+        {
+          "author": "company",
+          "body": "Company direct readback observed 12/12 exact references, hook count=1, root minus exact hook equals each baseline; receipt AUTHOR-READBACK.json sha256=68def3834652ad7a161a579ee0141e02df3e8a0160c3c0596eb1a706ce2cc351. This is NOT independent QA. Evidence-report corrections needed before final acceptance: SOURCE-AUDIT.md lines 47/48/57/65 describe DoT framing, [codex-not-dots] text, R0/R6 sections and candidate line34 content that are absent from the actual frozen 99-line candidate. Content may be valid, but these report quotations/locations are not. ROLLOUT.md line3 wrong parent (t_2c44dd2f vs actual t_f41c3c15); line24 says 11 packet members though manifest has 10 input_members (packet file is separate); line119 conflates unknown costs and known new commitments=0 and says no cost incurred without billing; rollback instruction must freshness-check reference before delete to preserve later writers. Do not accept these statements silently or change subject yourself. A finite research errata lane is being registered now, covering exact report fingerprints and real receipts; use its corrected source mapping with original reports, no reinstall. Preserve independent review limits and verify all current hashes.",
+          "created_at": 1791063045
+        },
+        {
+          "author": "company",
+          "body": "Finite independently owned evidence-correction parent is now registered as t_bf24d51d, exact spec EVIDENCE-ERRATA-SPEC.md. Its deliverable EVIDENCE-ERRATA.md supersedes only unsupported assertions in original SOURCE-AUDIT/ROLLOUT reports; frozen candidate/targets unchanged. Review original exact hashes + actual corrections and new receipts; never interpret prior DONE/PASS as permission to ignore false evidence. Require corrected effective source/receipt accuracy in Q8/Q9 before global verdict. If link registration succeeds, native dependency gates your run; if already running, stop short of final PASS until this explicit input is read and verified. No installing/fixing by QA.",
+          "created_at": 1791063157
+        }
+      ],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_bf24d51d",
+      "assignee": "research",
+      "status": "running",
+      "parents": [
+        "t_87ddea42",
+        "t_f41c3c15"
+      ],
+      "body_chars": 179,
+      "readiness_defects": [],
+      "native_comments": [],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_a1ec6fed",
+      "assignee": "qa",
+      "status": "todo",
+      "parents": [
+        "t_a3c78661",
+        "t_bf24d51d"
+      ],
+      "body_chars": 184,
+      "readiness_defects": [],
+      "native_comments": [
+        {
+          "author": "company",
+          "body": "Your exact final non-QA consumer=t_895a7d39. This is a supplemental evidence increment, NOT another installation, NOT superseding original QA t_a3c78661. Original QA remains valid only for what it really verified; EVIDENCE-ERRATA.md must correct specific unsupported report claims. If original QA FAIL contains unresolved non-documentation defects, this narrow review must NOT pass global methodology rollout. Authorized independent verdict/gates, if necessary, belong on the consumer with exact candidate file-content subject and actual receipts; never self-issued on your own card. Record actual serving lineage honestly; author/reviewer Sol overlap is correlated. No paid probe or config change.",
+          "created_at": 1791063329
+        }
+      ],
+      "read_exit_code": 0
+    },
+    {
+      "task_id": "t_895a7d39",
+      "assignee": "company",
+      "status": "todo",
+      "parents": [
+        "t_87ddea42",
+        "t_a1ec6fed",
+        "t_a3c78661",
+        "t_bf24d51d",
+        "t_f41c3c15"
+      ],
+      "body_chars": 190,
+      "readiness_defects": [],
+      "native_comments": [
+        {
+          "author": "company",
+          "body": "decision:company=go\nhead=fd6c26f5dbebba33baa17761f43a80e22ed17427 task_type: ops\nConditional responsibility consumer for exact FILE-CONTENT subject, not git: METHOD-CANDIDATE.md sha256=f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f; BRAIN-PACKET.json=f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9. Required source/operations/QA parents are t_f41c3c15 → t_87ddea42 → t_a3c78661. Independent QA PASS must be read on actual candidate and installed after-manifest; DONE status is insufficient. Read all 12 exact targets back before accepting. No model/config/runtime/policy changes, account/device connection or extra spend authorized. Internal method rollout is not installation of OpenAI Dots or completion of existing autocompany runtime repair. Original explicit owner request is desktop; concise verified result can be delivered through authorized existing owner routing, no second sender. If any proof missing, same-lane scoped correction, not own fabricated PASS. Financial scope=fleet-ops methodology; period=03.10.2026 packet start→acceptance; source native task/tool receipts; new paid commitments=0, revenue/refunds/incremental paid costs/estimated inference costs=null (unmeasured). Bound final result to actual independent evidence and preserve all gaps.",
+          "created_at": 1791062092
+        },
+        {
+          "author": "company",
+          "body": "Installation direct readback: 12/12, exact candidate reference/hook and all original root bytes preserved (AUTHOR-READBACK.json sha256=68def3834652ad7a161a579ee0141e02df3e8a0160c3c0596eb1a706ce2cc351). FINAL ACCEPTANCE STILL PENDING. Company found factual errors in producer evidence reports, not in installed candidate: source report attributes absent R0/R6/[codex-not-dots]/DoT framing to frozen candidate; operations report wrong parent ID/member-count phrasing, inconsistent financial unknowns and insufficient reference freshness in rollback instructions. Do not hide them behind upstream PASS/DONE. Read independently authored EVIDENCE-ERRATA.md after forthcoming research corrective handoff and actual QA. Original frozen brain/installed skills remain unchanged; this is evidence correction only, not new implementation or rerun of the rollout. No owner action required.",
+          "created_at": 1791063046
+        },
+        {
+          "author": "company",
+          "body": "The additional required evidence parent t_bf24d51d (research) delivers EVIDENCE-ERRATA.md under EVIDENCE-ERRATA-SPEC.md. Original SOURCE-AUDIT/ROLLOUT report fingerprints remain preserved; only effective documented claims are corrected. Acceptance now requires readback of that actual errata and actual independent QA covering corrected effective evidence. No reinstall/model/config/policy/budget change. Native graph enforces the added parent if successfully read back; do not close from raw predecessor statuses. Update owner report to actual outcomes, not packet's earlier PENDING snapshot. Installation is already 12/12 by direct author readback, not yet final acceptance.",
+          "created_at": 1791063158
+        },
+        {
+          "author": "company",
+          "body": "Native errata→original QA link was REJECTED because original QA t_a3c78661 is already running; no override/retry/bypass was used. Legitimate finite supplemental QA is t_a1ec6fed with parents [t_bf24d51d,t_a3c78661], exact QA-ERRATA-SPEC.md. Consumer additionally depends on this review. ACCEPT ONLY actual combined effective verdict: original Q1–Q10 defects enumerated, actual errata verified, fresh 12-target after hashes. Supplemental review cannot waive an unrelated primary QA FAIL or manufacture unperformed tests/model independence. Same candidate/installed files; original tasks/immutable packet untouched. If actual original QA is blocked/quota-unavailable, this is a genuine pending dependency, not success; resolve through existing governed lane, no repeat unblock. Owner requires no routine intervention.",
+          "created_at": 1791063329
+        }
+      ],
+      "read_exit_code": 0
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+[
+  {
+    "id": "t_8a81338c",
+    "status": "ready",
+    "assignee": "qa",
+    "parents": [],
+    "children": [
+      "t_ee2ad6bf"
+    ],
+    "comments": [
+      {
+        "id": null,
+        "body": "Candidate SHA256 computed from actual file: d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105. Explicit consumer is t_ee2ad6bf (same board). On justified PASS, publish authorized exact-artifact QA and review evidence on that consumer, with head above and task type ops; source findings/tests+lineage in durable verdict. On BLOCK publish negative evidence, no positive markers, complete your source verdict so consumer can honestly record NO-CHANGE. You MUST NOT edit candidate to obtain PASS; any proposed correction is separate evidence requiring updated company anchor.",
+        "author": "company"
+      }
+    ],
+    "latest_run": null
+  },
+  {
+    "id": "t_6282d6b9",
+    "status": "ready",
+    "assignee": "product",
+    "parents": [],
+    "children": [
+      "t_cef261ac"
+    ],
+    "comments": [],
+    "latest_run": null
+  },
+  {
+    "id": "t_ee2ad6bf",
+    "status": "todo",
+    "assignee": "operations",
+    "parents": [
+      "t_8a81338c"
+    ],
+    "children": [
+      "t_38a4b49e"
+    ],
+    "comments": [
+      {
+        "id": null,
+        "body": "decision:company=go\nhead=d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105\ntask_type: ops\n\nConditional exact-artifact authorization: apply *** two native allowlisted settings after independent QA/review for THESE exact candidate bytes. No QA PASS=*** application; changed candidate = require new company binding. No protected source/other profile/restart/history mutation. Hypothesis: bounded context growth and quieter Telegram tool bubbles while preserving alerts/steering/tail; rollback exact allowlisted originals if context retention/latency/format/routing regresses. Profile-wide company compaction includes Desktop/cron and is not mislabeled Telegram-only. No purchase authorized; confirmed revenue/refunds/provider incremental cost/estimated usage cost=null (not investigated/unpriced), new commitments0, source config manifest+natural receipts; period rollout+24h/48h observation.",
+        "author": "company"
+      }
+    ],
+    "latest_run": null
+  },
+  {
+    "id": "t_cef261ac",
+    "status": "todo",
+    "assignee": "tech",
+    "parents": [
+      "t_6282d6b9"
+    ],
+    "children": [
+      "t_d5e37e14"
+    ],
+    "comments": [],
+    "latest_run": null
+  },
+  {
+    "id": "t_d5e37e14",
+    "status": "todo",
+    "assignee": "qa",
+    "parents": [
+      "t_cef261ac"
+    ],
+    "children": [
+      "t_38a4b49e"
+    ],
+    "comments": [],
+    "latest_run": null
+  },
+  {
+    "id": "t_38a4b49e",
+    "status": "todo",
+    "assignee": "company",
+    "parents": [
+      "t_d5e37e14",
+      "t_ee2ad6bf"
+    ],
+    "children": [],
+    "comments": [],
+    "latest_run": null
+  },
+  {
+    "id": "t_b3e6c428",
+    "status": "running",
+    "assignee": "tech",
+    "parents": [],
+    "children": [
+      "t_45c34a6a"
+    ],
+    "comments": [
+      {
+        "id": null,
+        "body": "New owner Telegram optimization request shares underlying skill/context concern. Parallel bounded program contract/evidence: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/DECISION-AND-CONTRACT.md. NO scope change here: keep your current source-only retirement package, no live edits. New hands t_cef261ac touches only company hermes-agent/fleet-token-economy hub candidates, never your Telegram retirement files. Your QA t_45c34a6a remains authoritative retirement review. This is explicit overlap split, not replacement or duplicate implementation.",
+        "author": "company"
+      }
+    ],
+    "latest_run": {
+      "id": 2195,
+      "profile": "tech",
+      "step_key": null,
+      "status": "running",
+      "outcome": null,
+      "summary": null,
+      "error": null,
+      "metadata": null,
+      "worker_pid": 27244,
+      "started_at": 1791016117,
+      "ended_at": null
+    }
+  }
+]

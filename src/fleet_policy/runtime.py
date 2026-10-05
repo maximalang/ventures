@@ -44,7 +44,13 @@ class FleetPolicyRuntime:
     }
 
     # v1.2.12 C1: lexical binding tokens used inside comment bodies.
-    _BINDING_HEAD = re.compile(r"(?i)\bhead[=:\s]+([0-9a-f]{7,40})\b")
+    # v1.2.34 W3: the hex budget widens 40 → 64 so sha256 artifact heads
+    # bind for work that has no git head (verbal company decisions,
+    # doc/bundle artifacts — card t_d94dde9d). The prefix-equality check in
+    # missing_gates() is unchanged, so a 7..64-char bound head still must be
+    # an exact prefix of the anchor: 40-hex git flows behave identically,
+    # foreign-head / unbound / stale markers stay fail-closed.
+    _BINDING_HEAD = re.compile(r"(?i)\bhead[=:\s]+([0-9a-f]{7,64})\b")
     _BINDING_TYPE = re.compile(r"(?i)\btask_type\s*[=:]\s*([a-z_-]+)")
     _BINDING_ARTIFACT = re.compile(r"(?i)\bartifact[=:\s]+([^\s]+)")
     _NO_GO = "decision:company=no-go"

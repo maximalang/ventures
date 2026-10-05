@@ -1,0 +1,167 @@
+FFFFFFFFsFFFFFss................................FFF........F...          [100%]
+================================== FAILURES ===================================
+E   assert 1 == 0
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\hermes_cli\test_update_completion_process.py:197: assert 1 == 0
+E   assert 1 == 0
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\hermes_cli\test_update_completion_process.py:197: assert 1 == 0
+E   assert 1 == 0
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\hermes_cli\test_update_completion_process.py:197: assert 1 == 0
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E   assert 1 == 23
+---------------------------- Captured stdout call -----------------------------
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_failed_build_preserves_ex0\checkout\hermes_cli\update_completion.py", line 245, in _finish
+    _complete_selected(request)
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_failed_build_preserves_ex0\checkout\hermes_cli\update_completion.py", line 183, in _complete_selected
+    complete = complete_source_checkout(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_failed_build_preserves_ex0\checkout\hermes_cli\source_completion.py", line 51, in complete_source_checkout
+    build_update_products(root, desktop=desktop)
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_failed_build_preserves_ex0\checkout\hermes_cli\source_build.py", line 2, in build_update_products
+    def build_update_products(*a, **kw): raise subprocess.CalledProcessError(23, ['builder'])
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+subprocess.CalledProcessError: Command '['builder']' returned non-zero exit status 23.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_failed_build_preserves_ex0\checkout\hermes_cli\update_completion.py", line 304, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_failed_build_preserves_ex0\checkout\hermes_cli\update_completion.py", line 292, in main
+    return _finish(request, result_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_failed_build_preserves_ex0\checkout\hermes_cli\update_completion.py", line 252, in _finish
+    print(f"\u2717 Source update completion failed: {reason}")
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2717' in position 0: character maps to <undefined>
+✗ Source update completion did not finish: completion response disagrees with process exit
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\hermes_cli\test_update_completion_process.py:357: assert 1 == 23
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\hermes_cli\main.py
+E   assert 1 == 0
+---------------------------- Captured stdout call -----------------------------
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_bootstrap_does_not_initia0\checkout\hermes_cli\update_completion.py", line 245, in _finish
+    _complete_selected(request)
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_bootstrap_does_not_initia0\checkout\hermes_cli\update_completion.py", line 183, in _complete_selected
+    complete = complete_source_checkout(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_bootstrap_does_not_initia0\checkout\hermes_cli\source_completion.py", line 53, in complete_source_checkout
+    print(announce)
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2713' in position 2: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_bootstrap_does_not_initia0\checkout\hermes_cli\update_completion.py", line 304, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_bootstrap_does_not_initia0\checkout\hermes_cli\update_completion.py", line 292, in main
+    return _finish(request, result_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_bootstrap_does_not_initia0\checkout\hermes_cli\update_completion.py", line 252, in _finish
+    print(f"\u2717 Source update completion failed: {reason}")
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\encodings\cp1251.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2717' in position 0: character maps to <undefined>
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\hermes_cli\test_update_completion_process.py:410: assert 1 == 0
+E   assert 1 == 0
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\hermes_cli\test_update_completion_process.py:468: assert 1 == 0
+E   assert 1 == 0
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\hermes_cli\test_update_completion_process.py:468: assert 1 == 0
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+E   AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+    Use the isolated HERMES_HOME or a temporary fixture instead.
+---------------------------- Captured stderr call -----------------------------
+hermes: completing source-update dependencies...
+------------------------------ Captured log call ------------------------------
+INFO     hermes_cli.post_update:post_update.py:239 adopted blessed checkout at C:\Users\max\AppData\Local\Temp\pytest-of-max\pytest-1932\test_blessed_legacy_install_is0\home\hermes-agent (updateMechanism: self)
+C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py:123: AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\manifest.json
+============================== warnings summary ===============================
+tests/hermes_cli/test_update_fleet_completion.py::test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[False-current]
+  C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-18 (_monitor)
+  
+  Traceback (most recent call last):
+    File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\threading.py", line 1045, in _bootstrap_inner
+      self.run()
+    File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\threading.py", line 982, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\logging\handlers.py", line 1578, in _monitor
+      self.handle(record)
+    File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\logging\handlers.py", line 1559, in handle
+      handler.handle(record)
+    File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\logging\__init__.py", line 978, in handle
+      self.emit(record)
+    File "C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\hermes_logging.py", line 501, in emit
+      if self.stream is not None or os.path.exists(self.baseFilename):
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "<frozen genericpath>", line 19, in exists
+    File "C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py", line 150, in guarded
+      self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata)
+    File "C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py", line 107, in check
+      self.refuse(value)
+    File "C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-layer-tip\tests\home_io_guard.py", line 123, in refuse
+      raise AssertionError(
+  AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\profiles\operations\cache\scratch\audit-hermes-home\logs\agent.log
+  Use the isolated HERMES_HOME or a temporary fixture instead.
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/hermes_cli/test_update_completion_process.py::test_old_process_new_git_tree_completes_in_fresh_python[None]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_old_process_new_git_tree_completes_in_fresh_python[request]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_old_process_new_git_tree_completes_in_fresh_python[receipt]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_missing_child_result_fails_boundary_receipt_and_releases_lock[0]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_missing_child_result_fails_boundary_receipt_and_releases_lock[23]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[None]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[kill]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[wait]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_failed_build_preserves_exit_status_without_maintenance
+FAILED tests/hermes_cli/test_update_completion_process.py::test_prepare_failure_preserves_correlated_pm_receipt
+FAILED tests/hermes_cli/test_update_completion_process.py::test_bootstrap_does_not_initialize_old_site_packages
+FAILED tests/hermes_cli/test_update_completion_process.py::test_progress_is_forwarded_before_held_stage_is_released[prepare]
+FAILED tests/hermes_cli/test_update_completion_process.py::test_progress_is_forwarded_before_held_stage_is_released[selected]
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_failed_completion_tail_is_retried_without_rebuilding_dependencies
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_completion_tail_output_stays_off_stdout
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_first_launch_syncs_without_marker_then_uses_completion_fact
+FAILED tests/hermes_cli/test_update_launch_completion.py::test_blessed_legacy_install_is_adopted_before_sync
+17 failed, 43 passed, 3 skipped, 1 warning in 18.28s

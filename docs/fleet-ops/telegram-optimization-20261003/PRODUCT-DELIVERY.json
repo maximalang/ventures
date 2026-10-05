@@ -1,0 +1,38 @@
+{
+  "task": "t_6282d6b9",
+  "scope": "source-only product brief administrative delivery; not QA/runtime approval",
+  "captured_at": "2026-10-03T12:35:33.926987+03:00",
+  "files": {
+    "PRODUCT-BRIEF.md": "86faeddbefb392a9af1af6be5b1fc5c9b207a945fc4c985ca16fc0e551176cc1",
+    "SCENARIOS.json": "286d72021b2eaf2f3f8b9646b43dc80f58049df6e7a067596e2b4422b923ee3d"
+  },
+  "source_workspace": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_6282d6b9",
+  "changes": "only removed absent SOURCE-ANCHORS.json reference and supplied official URLs; PDF not delivered because stale",
+  "scenario_ids": [
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10",
+    "S11",
+    "S12"
+  ],
+  "unique_scenarios": 12,
+  "templates": 5,
+  "structural_checks_pass": true,
+  "behavioral_runtime_tests": null,
+  "behavioral_runtime_reason": "authored acceptance fixtures, not observed responses; independent QA pending",
+  "no_live_application": true,
+  "financial_scope": "product source brief this administrative capture",
+  "confirmed_revenue": null,
+  "refunds": null,
+  "incremental_paid_costs": null,
+  "estimated_usage_cost": null,
+  "unknown_reason": "usage/invoice attribution absent and revenue/refunds not investigated",
+  "new_paid_commitments_rub": 0
+}
