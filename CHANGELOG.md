@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.2.37] - 2026-10-05
+
+Card t_9412d7d5 (fleet-ops). Capture of the live-clone lexical delta
+flagged by the post-merge QA verdict finding F-A (t_85547708): the
+deployed profiles clone carried an uncommitted classifier patch (source
+card t_f6acc5dc, archived; the code existed in no commit or branch) plus
+an untracked test — a repeat of the "live clone is the sole carrier"
+pattern from the v1.2.32→34 rescue. Any reinstall or checkout to trunk
+would have lost it. Captured byte-exact into git: the policy.py staged
+blob equals the live canonical blob cac7780534e6…, the test blob equals
+95d7b609e5de…. The live clone was NOT modified (read-only capture);
+its controlled apply follows the merge.
+
+### Fixed
+- D1 (F1, run2166 call19 class): an EMPTY-value dotted `git -c` config
+  assignment (option reset/disable, e.g. an empty helper value) is a
+  config-key NAME, not a filesystem operand, and no longer trips the
+  protected-name guard. Only the empty-value form directly after
+  `git -c` is exempt; every non-empty value stays guarded (fail-closed).
+- D2 (F2, run2172 call26 class): dispatcher worker env-pin bindings
+  (HERMES_KANBAN_DB / _BOARD / _TASK / _WORKSPACE / _WORKSPACES_ROOT,
+  HERMES_TENANT) as NAME=value tokens bind a child process and mutate no
+  store; they are no longer treated as filesystem operands. Unknown env
+  names carrying a store path stay denied.
+
+### Added
+- D2e (fail-closed tightening): when the same command expands a bound
+  pin ($PIN / ${PIN}), the bound value is re-injected into the
+  path-guard subjects, so expansion cannot smuggle a store path past the
+  guard — a shape previously allowed is now denied.
+- tests/test_policy_lexical_delta.py: FP recurrences F1/F2/F2b plus TP
+  controls (non-empty config values, hard-guarded file operands, unknown
+  env names, pin-expansion re-entry, control-plane writes, store
+  mutation) proving the delta weakens nothing. Quoted-operand forms
+  (F1-SALVAGE C4/C5) stay a documented negative baseline tracked by
+  PR #54 (v1.2.35).
+
 ## [1.2.34] - 2026-10-02
 
 Card t_d94dde9d (fleet-ops). Live evidence: run 2125 of this card produced
