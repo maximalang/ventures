@@ -1,10 +1,13 @@
-# ROUTING — политика автороутера «Рельсы v2.2»
+# ROUTING — политика автороутера «Рельсы v3» (ROUTES v3, engine v4)
 
-Ред. 03.10.2026 (SPEC v3 + дельты v4: SPEC-router-v4-hardening.md). Человекочитаемая
-политика; единый источник данных — `profiles/company/scripts/model_router.py`
+Ред. 05.10.2026 (карта t_91e8ce45: ROUTES v3 по директиве владельца 04.10 —
+OPEN-QUESTIONS-20261004.md; канон лестницы — LADDER-PROVIDERS.md; сверка паттернов —
+PATTERNS-SOURCES-v2.md; diff — ROUTES-V3-CHANGELOG.md). Человекочитаемая политика;
+единый источник данных — `profiles/company/scripts/model_router.py`
 (ROUTES/RULES/PATTERNS/INVARIANTS). Файл согласован с `python model_router.py
---print-rules`; правки — только в скрипт, затем синхрон сюда. Канон: PROGRAM.md v2.2,
-SPEC-routing-matrix-router.md, CANON-MERGE-20261003.md, fleet-doctrine SKILL.md (числа),
+--print-rules` (rules_sha ed86d983fcf6); правки — только в скрипт, затем синхрон сюда.
+Канон: PROGRAM.md v2.2, SPEC-routing-matrix-router.md, CANON-MERGE-20261003.md,
+SPEC-router-v4-hardening.md (движок), fleet-doctrine SKILL.md (числа),
 RESEARCH.md (стоимость/анти-паттерны, числа только с URL).
 
 Логика одной строкой: **задача → класс → упорядоченный список моделей → первый
@@ -12,17 +15,47 @@ RESEARCH.md (стоимость/анти-паттерны, числа тольк
 ROUTING-LOG.md, фаза C). Детерминировано, объяснимо, 0 токенов на решение, <1 мс
 (вместо правил-эвристик на 100–500 токенов/диспатч — RESEARCH.md §1.5).
 
-## Классы и списки предпочтений (порядок = предпочтение)
+## Лестница провайдеров (LADDER-PROVIDERS.md; v3)
 
-| класс | №1 | №2 | обоснование (число + источник) |
-|---|---|---|---|
-| code | custom/kimi-k3 | custom/qwen3.8-max | чистый кодинг: Terminal-Bench 2.1 kimi-k3 88.3 > qwen3.8-max 86.6 (канон fleet-doctrine) |
-| data | custom/qwen3.8-max | custom/kimi-k3 | пайплайны/файлы/миграции: внутренний A/B 02.09 — qwen сохраняет данные 3/3, kimi удаляет 0/3 при конфликтных инструкциях; правило владельца: потеря данных хуже неопрятного формата |
-| research | custom/kimi-k3 | custom/qwen3.8-max | kimi-k3 сильнее в глубоком поиске (BrowseComp 91.2, DeepSearchQA 95.0); галлюцинации 51% против 40% — паттерн строго требует источник/URL на каждое число (канон fleet-doctrine) |
-| ops | custom/kimi-k3 | custom/qwen3.8-max | доменная работа и строгий чистый вывод (канон Round-2 02.09); qwen3.8-max второй |
-| review | zai/glm-5.3 | openai-codex/gpt-6.1-sol | glm-5.3 = qa-сит (решение владельца 23.09; dual verdict 03.09); author_model исключается из списка (инвариант №2) |
-| strategic | openai-codex/gpt-6.1-sol | openai-codex/gpt-6-astra | owner-facing/портфель/protected: brain-рельса (канон fleet-doctrine Two-rail model) — sol решения, astra узкий пакет; дешёвая рельса не первой |
-| vision | custom/qwen-vl-max | openai-codex/gpt-6-luna (low) | qwen-vl-max — канон перцепции (PerceptionBench 63.5 против 58.5), без reasoning_effort (инвариант №3); luna (low) — массовые простые просмотры |
+- Рельсы только T1-провайдеров: custom, zai, openai-codex; T2 (agentrouter/TypeSafe/
+  OpenRouter) и T3 в ROUTES никогда — только чрезвычайный ручной пин отдельным решением.
+- Разнообразие: соседние элементы списка — разные провайдеры; ≤2 моделей одного
+  провайдера в списке; первые две позиции не однопровайдерные. Отказ одного провайдера
+  не обнуляет класс. Исключение: strategic — ручной класс (канон-исключение, см. ниже).
+- GPT-ярусность (директива владельца 04.10): sol/astra — по назначению (strategic —
+  топ-рельса owner-facing; astra только ручной пин; sol — также живой бэкап review);
+  luna/terra — экономичные ступени (brief/creative; luna — также vision-aux).
+- terra (gpt-5.6-terra): каталог-верификация t_4e47fef0 положительна (05.10.2026,
+  HTTP 200 на обеих строках пула openai-codex, точная id-строка в каталоге) → ступень
+  включена; классы brief/creative, не на первых двух позициях — телеметрия 30д:
+  0 вызовов, качество для класса не доказано (LADDER правило 1); повышение — только
+  по shadow-данным (журнал → KPI-дельта → решение).
+
+## Классы и списки предпочтений (порядок = предпочтение; обоснование = число/источник)
+
+Списки — байт-в-байт как в `--print-rules`:
+
+- code: custom/qwen3.8-max → zai/glm-5.3 → custom/kimi-k3
+- data: custom/qwen3.8-max → zai/glm-5.3 → custom/kimi-k3
+- research: custom/kimi-k3 → zai/glm-5.3 → custom/qwen3.8-max
+- ops: custom/qwen3.8-max → zai/glm-5.3 → custom/kimi-k3
+- review: zai/glm-5.3 → openai-codex/gpt-6.1-sol → custom/qwen3.8-max
+- strategic: openai-codex/gpt-6.1-sol → openai-codex/gpt-6-astra
+- vision: custom/qwen-vl-max → openai-codex/gpt-6-luna
+- brief: openai-codex/gpt-6-luna → custom/qwen3.8-max → openai-codex/gpt-5.6-terra → custom/kimi-k3
+- creative: custom/qwen3.8-max → openai-codex/gpt-6-luna → custom/kimi-k3 → openai-codex/gpt-5.6-terra
+
+| класс | №1 | №2 | №3 | №4 | обоснование (число + источник) |
+|---|---|---|---|---|---|
+| code | custom/qwen3.8-max | zai/glm-5.3 | custom/kimi-k3 | — | лестница 03.10: qwen3.8-max первый (reasoning max — канон); glm-5.3 второй — провайдерное разнообразие (отказ custom не обнуляет класс); kimi-k3 третий (Terminal-Bench 2.1 88.3 — канон fleet-doctrine). v3: без изменений |
+| data | custom/qwen3.8-max | zai/glm-5.3 | custom/kimi-k3 | — | A/B 02.09: qwen сохраняет данные 3/3, kimi удаляет 0/3 при конфликтных инструкциях (правило владельца: потеря данных хуже неопрятного формата) → qwen первый, kimi последний; v3: glm-5.3 второй — соседний провайдер (LADDER правило 2) |
+| research | custom/kimi-k3 | zai/glm-5.3 | custom/qwen3.8-max | — | kimi-k3 сильнее в глубоком поиске (BrowseComp 91.2, DeepSearchQA 95.0 — канон fleet-doctrine); галлюцинации 51% против 40% — источник/URL на каждое число; v3: glm-5.3 второй — LADDER правило 2 (черновик списка LADDER нарушал собственное правило соседства — исправлено, см. changelog) |
+| ops | custom/qwen3.8-max | zai/glm-5.3 | custom/kimi-k3 | — | qwen3.8-max первый — доменная работа и строгий чистый вывод (канон Round-2 02.09, reasoning max); glm-5.3 второй — разнообразие; kimi-k3 третий. v3: без изменений |
+| review | zai/glm-5.3 | openai-codex/gpt-6.1-sol | custom/qwen3.8-max | — | glm-5.3 = qa-сит (решение владельца 23.09; dual verdict 03.09); sol второй — живой бэкап при стене zai (инцидент rate-limit 04.10); qwen3.8-max третий — независимый резерв; author_model исключается (инвариант №2, R1). terra не входит — качество для класса не доказано (LADDER правило 1) |
+| strategic | openai-codex/gpt-6.1-sol | openai-codex/gpt-6-astra | — | — | owner-facing/портфель/protected: brain-рельса (канон fleet-doctrine Two-rail model) — sol решения, astra узкий пакет (только ручной пин); дешёвая рельса не первой. Только вручную. v3: канон-исключение правила разнообразия — ручной класс, отказ провайдера = решение владельца, не автолестница |
+| vision | custom/qwen-vl-max | openai-codex/gpt-6-luna | — | — | qwen-vl-max — канон перцепции (PerceptionBench 63.5 против 58.5), без reasoning_effort (инвариант №3); luna (low/none effort) — массовые простые просмотры, качество доказано (телеметрия 30д: 125 вызовов). v3: без изменений |
+| brief | openai-codex/gpt-6-luna | custom/qwen3.8-max | openai-codex/gpt-5.6-terra | custom/kimi-k3 | v3-класс (директива владельца 04.10, OPEN-QUESTIONS-20261004 §1-2): брифы/копирайт/ТЗ творческих профилей — GPT-ярусность + DashScope-руки. luna первый — качество доказано (125 вызовов 30д; none/low effort — developers.openai.com); qwen3.8-max второй — жёсткий формат (A/B 02.09 3/3); terra третий — каталог-верификация t_4e47fef0 (HTTP 200 обе строки пула), качество для класса не доказано (0 вызовов 30д) → не выше середины; kimi-k3 четвёртый — цитатная дисциплина (platform.kimi.ai) |
+| creative | custom/qwen3.8-max | openai-codex/gpt-6-luna | custom/kimi-k3 | openai-codex/gpt-5.6-terra | v3-класс (директива владельца 04.10): design/ux/video-продакшн — DashScope-руки первые (qwen3.8-max: визуальный вход + строгий формат — alibabacloud.com model-studio); luna второй — экономичная GPT-ступень (125 вызовов 30д); kimi-k3 третий (визуальный вход, platform.kimi.ai); terra четвёртый — каталог-верификация t_4e47fef0, качество в ожидании (0 вызовов 30д) |
 
 ## Жёсткие правила (применяются до выбора, по порядку)
 
@@ -30,29 +63,35 @@ ROUTING-LOG.md, фаза C). Детерминировано, объяснимо,
 - R2: owner_facing=true или protected (main/deploy/publish в title/body) → класс strategic.
 - R3: needs_vision=true → класс vision (способность выше тира: R3 перекрывает R2).
 - R4: prior_run_failed=true → следующий элемент списка (эскалация одним шагом вправо; на конце списка остаётся последний).
-- R5: спорный класс (нет маркеров) → устойчивый маппинг task_type→класс (research→research, ops→ops, review→review, code→code, code+файловые ключевые слова→data); неизвестный task_type → code.
+- R5: спорный класс (нет маркеров) → устойчивый маппинг task_type→класс (research→research, ops→ops, review→review, code→code, brief→brief, creative→creative, code+файловые ключевые слова→data); неизвестный task_type → code.
 - R6: кэш-дисциплина (инвариант №5, канон 8): повторная карта той же работы рекомендует ту же модель — роутер детерминирован; единственная причина смены — prior_run_failed (R4: шаг вправо с логом).
+- R7: деградация v3 (LADDER правило 6): все рельсы класса недоступны по --status → дефолт профиля (model=PROFILE_DEFAULT) + degrade-строка в reason; деградация явная (инвариант №1), решение выдаётся всегда.
 
 Файловые ключевые слова code→data: migrat*/pipeline*/etl/csv/tsv/parquet/dump*/
 ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/выгрузк*).
 Слово-маркер защищено границами слова: «domain»/«remaining» не срабатывают.
+Классы brief/creative назначаются по task_type=brief|creative (R5); карты творческих
+профилей (design/ux/video-*) несут эти task_type по решению company.
 
-## Эскалация
+## Эскалация и деградация
 
 - Неудача/блок → шаг вправо по списку; на конце — остаётся последняя модель.
 - Эскалация явная: пер-картовый пин с причиной + строка в ROUTING-LOG.md (фаза C); тихой подмены на ходу нет (инвариант №1).
+- R7 деградация (v3): все рельсы класса недоступны по --status → дефолт профиля (model=PROFILE_DEFAULT) + degrade-строка в reason (LADDER правило 6).
 
-## Доступность рельс — --status (дельта v4 D1, канон 7)
+## Доступность рельс — --status (дельта v4 D1 + R7 v3)
 
 - `--status s.json` — опциональный ввод к `--card`: `{"<provider>": {"available": false}}`
   и/или `{"<model>": {"available": false}}`. Ключ: точный id (`zai/glm-5.3`), короткое
   имя модели (`glm-5.3`) или провайдер (`zai`); форма `"<key>": false` тоже понимается.
 - Недоступные записи пропускаются ДО выбора — это маршрутизация, не failover: решение
   остаётся единственным и до старта (инвариант №1). Маркеры в rules_fired:
-  S1 — рельса реально пропущена; W1 — предупреждение деградации.
+  S1 — рельса реально пропущена; W1 — предупреждение деградации; R7 — все рельсы
+  класса недоступны → дефолт профиля.
 - Файла нет / битый JSON / пустой `{}` → все рельсы считаются доступными, W1 в
-  rules_fired; все рельсы класса недоступны → оставлен полный список (W1). Деградация
-  безопасна в обе стороны, решение выдаётся всегда. `--status` без `--card` → exit 2.
+  rules_fired, решение на первом подходящем. Все рельсы класса недоступны →
+  v3: model=PROFILE_DEFAULT + degrade-строка (в v2.2 оставлялся полный список —
+  изменено правилом 6 LADDER). Решение выдаётся всегда. `--status` без `--card` → exit 2.
 
 ## Инварианты (PROGRAM.md v2.2)
 
@@ -62,11 +101,16 @@ ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/в�
 4. TG = qwen3.8-max и дефолты профилей — только словом владельца.
 5. Внутри живой сессии модель не переключаем (prompt cache).
 
+Стратегия остаётся ручной (strategic — только ручной пин); review исключает
+author_model (R1); деградация → дефолт профиля + degrade-строка (R7).
+
 ## Паттерны общения на каждую модель (сжатая таблица)
 
 Полный блок из 4 строк («как брифовать / требовать строго / страховка /
 анти-паттерн») выдаёт `--print-rules` и `--card` (поле pattern — целиком, для
-вставки в спецификацию).
+вставки в спецификацию). Сверка с PATTERNS-SOURCES-v2.md: 7 корпусных моделей (§1-7)
+без изменений; gpt-5.6-terra (§12 вопрос #1 — в вендорном корпусе отсутствует) —
+паттерн с маркером «источник: только флот-канон» + гайды GPT-семейства.
 
 | модель | как брифовать | требовать строго | страховка | анти-паттерн |
 |---|---|---|---|---|
@@ -76,7 +120,8 @@ ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/в�
 | gpt-6.1-sol | короткий ясный текст, только суть; финишная линия | решение + обоснование в 3–5 предложениях; глубина только через reasoning_effort | сверять поле model в usage (тихий даунгрейд) | длинные многоуровневые брифы; смена правил mid-turn |
 | gpt-6-astra | только узкий пакет — один вопрос/одно решение | ответ в формате пакета, без развернутых исследований | глубокое исследование → классу research | портфельные исследования и длинный анализ |
 | qwen-vl-max | одно изображение на вопрос | без reasoning_effort (инвариант №3) | критичное распознавание — перепроверка luna | коллажи в одном запросе; любая настройка effort |
-| gpt-6-luna | массовые простые просмотры, low effort | короткий единообразный ответ на элемент | сложный кадр → эскалация на qwen-vl-max | детальный анализ одного изображения |
+| gpt-6-luna | массовые простые просмотры, low/none effort (none поддерживается — developers.openai.com); творческие брифы — короткий ясный пакет | короткий единообразный ответ на элемент | сложный кадр → эскалация на qwen-vl-max | детальный анализ одного изображения; портфельные исследования |
+| gpt-5.6-terra | короткий ясный текст, только суть, один deliverable — экономичная ступень (precise instructions — developers.openai.com) | результат + краткое обоснование; глубина только через reasoning_effort; сверять model в usage | качество для класса не доказано (0 вызовов 30д; каталог-верификация t_4e47fef0) → критичный класс через независимую QA | постановка на первые две позиции класса; портфельные исследования. Источник: только флот-канон + гайды GPT-семейства |
 
 ## KPI-тройка (дельта v4 D4; измерение фазы C, каноны 4+9)
 
@@ -86,11 +131,17 @@ ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/в�
 - Источники: ROUTING-LOG.md (строка на диспатч) + вердикты qa; еженедельная сверка
   (weekly delta) с BASELINE-20261003.json (токены по рельсам; included ≠ бесплатно).
 - Kill: QA-block rate вырос на классе → класс возвращается на канон-порядок (PROGRAM.md v2.2).
+- Kill-критерий модели в классе (LADDER правило 7): QA-block rate выше цели класса
+  2 недели подряд → замена одной правкой строки списка.
 
 ## Канарейка по классам (дельта v4 D4; порядок раскатки фазы D, канон 10)
 
 - Порядок: ops → code → research → review; каждый класс включается отдельно.
+- v3-классы brief/creative — канарейка после основной четвёрки (новые классы:
+  сначала shadow-журнал, затем включение отдельным решением company).
 - strategic и vision — только ручной канон, без авто-пинов.
+- terra-ступень: повышение/перестановка — только по shadow-данным (телеметрия 30д:
+  0 вызовов; каталог-верификация есть, доказательства качества для классов нет).
 - Откат класса = правка одной строки списка ROUTES (+ синхрон этого файла).
 - Запрет «включить всё сразу»: инцидент из досье — 100% трафика сразу дали −9 п.
   function-call accuracy (RESEARCH.md §1.10, futureagi.com/blog/llm-eval-shadow-traffic-canary-2026).
@@ -116,27 +167,39 @@ ingest*/lockfile/database/backup* (+ рус. миграц*/пайплайн*/в�
 ## CLI
 
 - `python model_router.py --card card.json [--status s.json]` → JSON {class, model,
-  provider, reasoning, pattern, reason, rules_fired, router_version, rules_sha, input_echo}.
-- `python model_router.py --selftest` → таблица PASS/FAIL (11 кейсов: 8 кейсов v3 +
-  status-скип провайдера + вход без единого маркера + protected в title; отдельно —
-  структурная проверка PATTERNS↔ROUTES), exit 0/1.
+  provider, reasoning, pattern, reason, rules_fired, router_version, routes_version,
+  rules_sha, input_echo}.
+- `python model_router.py --selftest` → таблица PASS/FAIL (18 кейсов: 11 кейсов v4 +
+  7 входов v3 — новые классы brief/creative, шаг вправо на соседнего провайдера,
+  R7-деградация) + 7 структурных проверок (PATTERNS-покрытие, старые 7 классов,
+  T1-only, разнообразие, terra-дисциплина, sol/astra по назначению, маркер источника
+  terra-паттерна), exit 0/1.
 - `python model_router.py --print-rules` → печать этой политики из данных скрипта;
   первая строка — `rules_sha <12 hex>`.
-- Аудит-мета (дельта v4 D2): router_version («v4»); rules_sha = sha1(канонический дамп
-  ROUTES+PATTERNS)[:12] — два прогона на одном входе дают идентичный rules_sha
-  (детерминизм для evals); input_echo — только использованные поля карты.
+- Аудит-мета (дельта v4 D2 + v3): router_version («v4» — движок), routes_version
+  («v3» — таблица маршрутов); rules_sha = sha1(канонический дамп ROUTES+PATTERNS)[:12]
+  — два прогона на одном входе дают идентичный rules_sha (детерминизм для evals);
+  input_echo — только использованные поля карты.
 
 Поля карты: title, body, task_type, author_model, needs_vision, owner_facing,
 prior_run_failed. Отсутствующие поля = ложные/пустые; решение всегда выдаётся.
 
 ## Границы и rollback
 
-- Фаза C: роутер рекомендательный (shadow, без принуждения); пин — явное решение с причиной в карте.
-- Никаких новых рельс/моделей вне списков; 0 live inference; 0 сети; только stdlib (hashlib — локальный sha1).
+- Фаза C: роутер рекомендательный (shadow, без принуждения); пин — явное решение с
+  причиной в карте. Хук не активирован: ROUTER_ACTIVE.json отсутствует — активация
+  отдельным решением владельца/компании.
+- Никаких новых рельс/моделей вне списков; 0 live inference; 0 сети; только stdlib
+  (hashlib — локальный sha1).
 - Правка списков — одна строка в ROUTES + синхрон этого файла; смена порядка/значений
   ROUTES/PATTERNS — только отдельным решением company по shadow-данным (SPEC v4).
-- Rollback v4→v3: откат скрипта и этого файла (аудит-мета и --status исчезают; решение
-  без --status не меняется); общий rollback — перестать применять пины (все в ROUTING-LOG.md).
+- Rollback v3→v2.2: восстановить `scripts/backups/model_router.py.bak-pre-v3-t_91e8ce45`
+  (sha256 1ae2e34d08cd17cc4a4ea41d2af7c4c80ddece8977bfde86ffb56466c6548df1) и этот файл
+  из `ROUTING.md.bak-pre-v3-t_91e8ce45` (sha256
+  3b9150545e037758b8be2b4f41f61f39c296367124015e45a4409de8c3383b09); решение без
+  --status для старых 7 классов меняется только в research/data (порядок №2/№3) и в
+  all-down деградации (v2.2 оставлял полный список). Общий rollback — перестать
+  применять пины (все в ROUTING-LOG.md).
 
 ## Фолбэки: интерактив vs воркеры (дельта v2.2-fallbacks, 04.10)
 
