@@ -193,6 +193,18 @@ def kanban_task_claimed(task_id: str = "", board: str = "", assignee: str = "", 
         runtime().config.get("projects", {}),
     )
     task_type, error = runtime().task_type(ctx)
+    # v1.2.36 (SPEC v5) — нативный автороутинг в pre-claim пути: рядом с этой
+    # пре-диспатч проверкой, ONLY за флагом router_hook.enabled (конфиг), режим
+    # из ROUTER_ACTIVE.json рядом с router_hook.py (поставка mode=shadow;
+    # откат = {"mode":"off"} без передеплоя). Best-effort: роутер никогда не
+    # блокирует claim — сбой деградирует к профильному дефолту (канон 7).
+    try:
+        from fleet_policy.router_bridge import router_step
+
+        router_step(ctx, task_id, board or str(ctx.get("board") or ""), run_id,
+                    runtime().config, store=runtime().store, task_type=task_type)
+    except Exception:
+        pass
     if not error:
         return
     payload = {

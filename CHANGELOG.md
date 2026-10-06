@@ -1,5 +1,86 @@
 # Changelog
 
+## [1.2.36] - 2026-10-04
+
+### Added
+- SPEC v5 native auto-routing in the dispatch pre-claim path (t_a0f026dd,
+  GO anchors 0e41574d/dcc08f35/2734b0fc; spec
+  docs/fleet-ops/model-routing-20261003/SPEC-v5-native-integration.md).
+  The router stops being a company advisor and becomes part of the dispatch
+  path: at card claim the model/pattern recommendation is produced
+  automatically; company loses the manual-pin duty (stays the rules owner).
+- `scripts/router_hook.py` (219 lines ≤ 220, stdlib-only, zero network):
+  modes `off|shadow|enforce` from `ROUTER_ACTIVE.json` next to the hook
+  (missing/corrupt file → off, canon 7); `shadow` appends one row per
+  dispatch to ROUTING-LOG.md and sets NO model; `enforce` returns
+  model+provider+pattern (action=override) ONLY for classes listed in
+  `"classes"`, a class outside the list behaves as shadow; missing/foreign
+  task_type degrades to «default: профильный дефолт» with a `degrade` log
+  row (override impossible); availability `status_file`
+  `{"<provider|model>": {"available": false}}` skips a rail BEFORE selection
+  (reuses model_router D1; the status file is produced by a script-only
+  cron, the hook itself never runs commands). `--selftest` runs 7 cases
+  (off/shadow/enforce-in-list/enforce-out-of-list/no-task_type/status-skip/
+  corrupt-active) in temp dirs from any cwd, exit 0.
+- `src/fleet_policy/router_bridge.py` — plugin↔hook bridge. Called from the
+  EXISTING official pre-claim guard (`kanban_task_claimed`), right beside
+  the pre-dispatch task_type check, ONLY behind the new config flag
+  `router_hook.enabled` (master switch; delivered `true` with runtime
+  mode=shadow). Best-effort contract: routing NEVER blocks a claim — every
+  failure degrades silently to the profile default (canon 7) and stays
+  observable via a policy-store event `kind="router_hook"`. Card payload =
+  the same fields as `model_router.py --card` (title/body from
+  load_task_context, task_type from the pre-dispatch check,
+  pinned_model/prior_run_failed from a read-only query of the board DB
+  (tasks.model_override/consecutive_failures); author_model is not
+  knowable in the dispatcher process → env fallback or absent, documented
+  conservative degrade). enforce applies the pin via the OFFICIAL CLI
+  (`hermes kanban --board <b> set-model … --provider …` + comment
+  `ROUTER vN: model=… pattern=… rules_sha=…`, child env without
+  HERMES_KANBAN_* per the card_readiness.kanban pattern).
+- `config/fleet-policy.yaml` → `router_hook:` section (enabled/script/
+  active_file/log_file/status_file; nulls = documented defaults, script
+  default `<hermes>/profiles/company/scripts/router_hook.py`).
+- `scripts/model_router.py` — byte-identical repo copy of the live router v4
+  after the t_f98bb636 rails review (sha256
+  1ae2e34d08cd17cc4a4ea41d2af7c4c80ddece8977bfde86ffb56466c6548df1,
+  rules_sha 5499e01c152d): CI must exercise router_hook `--selftest` on the
+  exact head, which is impossible without the rules source. Live file is
+  NOT touched by this release; deployment verifies live==repo byte
+  identity.
+- `scripts/ROUTER_ACTIVE.json.example` — the delivered runtime file shape:
+  `{"mode": "shadow", "classes": [], "status_file": null, "log_file":
+  "…/model-routing-20261003/ROUTING-LOG.md"}` (empty canary list: even an
+  accidental mode flip pins nothing without an explicit company class
+  decision).
+
+### Semantics / rollback
+- enforce pin timing is the NATIVE kanban semantic: `set-model` “applies on
+  the next dispatch” — a pin set at claim governs the next (re)dispatch of
+  the card; the delivered mode is shadow anyway (no pins), and the enforce
+  canary is a separate company decision after a week of shadow (SPEC v5
+  «Запрещено»: enforce is NOT enabled on production classes in this release).
+- Rollback gate (SPEC v5 acceptance): `ROUTER_ACTIVE.json` →
+  `{"mode": "off"}` — dispatch behaviour identical to before, no redeploy;
+  second layer: `router_hook.enabled: false` in config.
+- Deployment (activation = this release's single SHA): fast-forward the
+  deployed plugin checkout to the activation SHA, copy
+  `scripts/router_hook.py` (+ verify `scripts/model_router.py` byte
+  identity) into `profiles/company/scripts/`, write
+  `profiles/company/scripts/ROUTER_ACTIVE.json` from the `.example`
+  (mode=shadow). Order: scripts first, then the plugin checkout flip —
+  a missing hook file degrades to a silent no-op.
+
+### Tests
+- `tests/test_v1236_router_hook.py` — hook: selftest exit 0 (subprocess,
+  two cwds), line budget ≤220, zero network imports (AST scan), all 6 SPEC
+  mode/degrade/status cases at the decide() level with pinned sha of the
+  repo model_router copy (CRLF-normalized so Windows checkouts match the
+  LF live bytes); bridge: flag off → no-op, shadow → decision+event and no
+  CLI mutation, enforce → exact set-model/comment command shapes with a
+  clean child env, missing hook → None, store failure tolerated; plugin
+  source carries the flag-gated best-effort call inside
+  `kanban_task_claimed`.
 ## [1.2.34] - 2026-10-02
 
 Card t_d94dde9d (fleet-ops). Live evidence: run 2125 of this card produced
