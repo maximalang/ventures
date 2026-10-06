@@ -5,15 +5,12 @@ model:
   reasoning_echo: false
   base_url: https://api.z.ai/api/coding/paas/v4
   fallback_providers:
+  - provider: openai-codex
+    model: codex-auto-review
+    base_url: null
   - provider: zai
     model: glm-5.3-flash
     base_url: null
-  - provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: custom
-    model: kimi-k3
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
 providers:
   custom:
     name: DashScope

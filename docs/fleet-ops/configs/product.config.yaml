@@ -6,17 +6,14 @@ model:
     astra: openai-codex/gpt-6-astra
   reasoning_echo: false
   fallback_providers:
+  - provider: openai-codex
+    model: gpt-6-astra
+    base_url: null
   - provider: zai
     model: glm-5.3
     base_url: null
-  - provider: zai
-    model: glm-5.3-flash
-    base_url: null
   - provider: custom
     model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: custom
-    model: kimi-k3
     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
 providers:
   custom:

@@ -7,11 +7,11 @@ model:
     astra: openai-codex/gpt-6-astra
   reasoning_echo: false
   fallback_providers:
-  - provider: zai
-    model: glm-5.3
+  - provider: openai-codex
+    model: gpt-6-astra
     base_url: null
   - provider: zai
-    model: glm-5.3-flash
+    model: glm-5.3
     base_url: null
   - provider: custom
     model: qwen3.8-max

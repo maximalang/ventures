@@ -14,11 +14,8 @@ model:
   - provider: custom
     model: kimi-k3
     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: zai
-    model: glm-5.3
-    base_url: null
-  - provider: zai
-    model: glm-5.3-flash
+  - provider: openai-codex
+    model: gpt-6.1-sol
     base_url: null
 providers:
   custom:

@@ -1,19 +1,16 @@
 model:
-  default: kimi-k3
-  provider: custom
-  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  default: glm-5.3-flash
+  provider: zai
+  base_url: https://api.z.ai/api/coding/paas/v4
   max_tokens: 16384
   reasoning_echo: false
   fallback_providers:
-  - provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
   - provider: zai
     model: glm-5.3
     base_url: null
-  - provider: zai
-    model: glm-5.3-flash
-    base_url: null
+  - provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
 providers:
   custom:
     name: DashScope

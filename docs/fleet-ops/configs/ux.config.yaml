@@ -1,18 +1,18 @@
 model:
-  default: qwen3.8-max
+  default: kimi-k3
   provider: custom
   base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
   max_tokens: 16384
   reasoning_echo: true
   fallback_providers:
   - provider: custom
-    model: kimi-k3
+    model: qwen3.8-max
     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
   - provider: zai
     model: glm-5.3
     base_url: null
-  - provider: zai
-    model: glm-5.3-flash
+  - provider: openai-codex
+    model: gpt-6.1-sol
     base_url: null
 providers:
   custom:
