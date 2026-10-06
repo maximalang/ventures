@@ -22,9 +22,10 @@ ROOT = Path(__file__).resolve().parents[1]
 HOOK = ROOT / "scripts" / "router_hook.py"
 ROUTER = ROOT / "scripts" / "model_router.py"
 PLUGIN = ROOT / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
-# ROUTES v3 (карта t_91e8ce45, директива владельца 04.10; QA t_8c502715 40/40):
-# репо-копия байт-в-байт с каноническим роутером v3 (engine v4).
-ROUTER_LIVE_SHA = "5d24308d8057b62b728dde0196ae61062b7581d2ad46564aee6941408e9be2ae"
+# ROUTES v3 (карта t_91e8ce45, директива владельца 04.10; QA t_8c502715 40/40) +
+# PATTERNS v2 (карта t_234de1e7, сверка PATTERNS-SOURCES-v2.md 2026-10-04):
+# пин отслеживает байты канонической репо-копии роутера (engine v4, VERSION 3.1.0).
+ROUTER_LIVE_SHA = "e47705039a2669de7791ae550326613718d71bb06062280273ed9b712eb09023"
 FORBIDDEN_IMPORTS = {
     "socket", "urllib", "requests", "http", "ftplib", "smtplib", "telnetlib",
     "subprocess", "ssl", "xmlrpc", "websocket", "asyncio",
@@ -279,6 +280,11 @@ def test_bridge_enforce_sets_model_and_comment(bridge, tmp_path, monkeypatch):
     body = comment_cmd[6]
     assert body.startswith("ROUTER v4:") and f"model={provider}/{model}" in body
     assert f"rules_sha={hookmod.model_router.RULES_SHA}" in body
+    # PATTERNS v2 (t_234de1e7): штамп несёт v2-блок — 5 слоёв + источники;
+    # первая строка формата v1.2.36 сохранена (контракт совместим).
+    assert "PATTERN v2 (" + model + "):" in body
+    assert "как брифовать:" in body and "источники:" in body
+    assert body.index("ROUTER v4:") < body.index("PATTERN v2 (")
     assert comment_cmd[-2:] == ["--author", "fleet-router"]
 
 

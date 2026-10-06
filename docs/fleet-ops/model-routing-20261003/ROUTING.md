@@ -1,11 +1,13 @@
 # ROUTING — политика автороутера «Рельсы v3» (ROUTES v3, engine v4)
 
-Ред. 05.10.2026 (карта t_91e8ce45: ROUTES v3 по директиве владельца 04.10 —
+Ред. 06.10.2026 (карта t_234de1e7: PATTERNS v2 — интеграция вендорного корпуса
+PATTERNS-SOURCES-v2.md во все поверхности диспатча; пред. ред. 05.10.2026 —
+карта t_91e8ce45: ROUTES v3 по директиве владельца 04.10 —
 OPEN-QUESTIONS-20261004.md; канон лестницы — LADDER-PROVIDERS.md; сверка паттернов —
 PATTERNS-SOURCES-v2.md; diff — ROUTES-V3-CHANGELOG.md). Человекочитаемая политика;
 единый источник данных — `profiles/company/scripts/model_router.py`
 (ROUTES/RULES/PATTERNS/INVARIANTS). Файл согласован с `python model_router.py
---print-rules` (rules_sha ed86d983fcf6); правки — только в скрипт, затем синхрон сюда.
+--print-rules` (rules_sha 64d839805a07); правки — только в скрипт, затем синхрон сюда.
 Канон: PROGRAM.md v2.2, SPEC-routing-matrix-router.md, CANON-MERGE-20261003.md,
 SPEC-router-v4-hardening.md (движок), fleet-doctrine SKILL.md (числа),
 RESEARCH.md (стоимость/анти-паттерны, числа только с URL).
@@ -106,11 +108,16 @@ author_model (R1); деградация → дефолт профиля + degrad
 
 ## Паттерны общения на каждую модель (сжатая таблица)
 
-Полный блок из 4 строк («как брифовать / требовать строго / страховка /
-анти-паттерн») выдаёт `--print-rules` и `--card` (поле pattern — целиком, для
-вставки в спецификацию). Сверка с PATTERNS-SOURCES-v2.md: 7 корпусных моделей (§1-7)
-без изменений; gpt-5.6-terra (§12 вопрос #1 — в вендорном корпусе отсутствует) —
-паттерн с маркером «источник: только флот-канон» + гайды GPT-семейства.
+Полный блок PATTERNS v2 — 6 строк («как брифовать / требовать строго / страховка /
+анти-паттерн / канонические настройки / источники») выдаёт `--print-rules`, `--card`
+(поле pattern — целиком, для вставки в спецификацию) и `--patterns [MODEL]`
+(JSON-контракт для delegation-контекста, brain-brief/hands-deliverable и субагентов;
+см. раздел Provenance). Интеграция PATTERNS v2 (карта t_234de1e7, СТРОГО по
+mapping-таблице PATTERNS-SOURCES-v2.md): 8 моделей вендорного корпуса (§1-8,
+включая deepseek-v4-flash — паттерн есть, в ROUTES не входит: дешёвые ступени без
+class-quality evidence, LADDER правило 1); gpt-5.6-terra (§12 вопрос #1 — в вендорном
+корпусе отсутствует) — паттерн с маркером «источник: только флот-канон» + гайды
+GPT-семейства. Таблица ниже — сжатые первые 4 слоя; полные 6 строк — в CLI-выводе.
 
 | модель | как брифовать | требовать строго | страховка | анти-паттерн |
 |---|---|---|---|---|
@@ -122,6 +129,35 @@ author_model (R1); деградация → дефолт профиля + degrad
 | qwen-vl-max | одно изображение на вопрос | без reasoning_effort (инвариант №3) | критичное распознавание — перепроверка luna | коллажи в одном запросе; любая настройка effort |
 | gpt-6-luna | массовые простые просмотры, low/none effort (none поддерживается — developers.openai.com); творческие брифы — короткий ясный пакет | короткий единообразный ответ на элемент | сложный кадр → эскалация на qwen-vl-max | детальный анализ одного изображения; портфельные исследования |
 | gpt-5.6-terra | короткий ясный текст, только суть, один deliverable — экономичная ступень (precise instructions — developers.openai.com) | результат + краткое обоснование; глубина только через reasoning_effort; сверять model в usage | качество для класса не доказано (0 вызовов 30д; каталог-верификация t_4e47fef0) → критичный класс через независимую QA | постановка на первые две позиции класса; портфельные исследования. Источник: только флот-канон + гайды GPT-семейства |
+
+## Provenance паттернов (v2, карта t_234de1e7)
+
+Правило владельца 04.10: «брать в интернете и не выдумывать» — каждый слой каждой
+записи PATTERNS v2 traceable к вендорной цитате; цитаты и 33 официальных URL —
+в PATTERNS-SOURCES-v2.md (research t_108caa9b, сверка 2026-10-04, sha256
+76e68e7c3cd536d5129746491bd209f8f3d6d6dd4591522fbb65e93d0206ab33). Источники
+слоёв: platform.kimi.ai (kimi-k3), alibabacloud.com/help.aliyun.com (qwen3.8-max,
+qwen-vl-max), docs.z.ai/z.ai (glm-5.3), developers.openai.com/openai.com
+(gpt-6.1-sol, gpt-6-astra, gpt-6-luna), api-docs.deepseek.com (deepseek-v4-flash).
+Пометка «флот-канон» — внутренние A/B-замеры и инциденты (PROGRAM.md, RESEARCH.md,
+LADDER-PROVIDERS.md); gpt-5.6-terra — только флот-канон + гайды GPT-семейства
+(в вендорном корпусе отсутствует, §12 вопрос #1). Дата сверки всего корпуса:
+2026-10-04; устаревание — по циклу PROGRAM.md (пересмотр корпуса — отдельная
+research-карта, паттерны без цитаты не добавляются).
+
+Машинный контракт `--patterns` (меж-агентные поверхности):
+- `python model_router.py --patterns` → JSON всех паттернов;
+  `--patterns MODEL` → одна модель; неизвестная модель → stderr + exit 2.
+- Поля: `patterns_version` («v2»), `source` (документ+сверка), `rules_sha`,
+  `models` (сортированный список), `patterns` (model → 6-строчный блок).
+- Детерминирован (sort_keys), 0 сети, stdlib-only — безопасен в pre-claim хуке.
+- Потребители: delegation-контекст и шаблоны brain-brief/hands-deliverable
+  (templates/BRAIN-BRIEF.md, templates/HANDS-DELIVERABLE.md,
+  templates/DELEGATION-CONTEXT.md) — каждый агентный бриф несёт официальный
+  паттерн целевой модели; штамп hook на claim (router_bridge.apply_override) —
+  первая строка формата v1.2.36 + блок «PATTERN v2 (<model>):» с 6 строками.
+- Протокол синтеза owner-задач: SYNTHESIS-PROTOCOL.md (этот каталог); канон
+  авторства карт — kanban-card-authoring skill (пропатчен company 04.10).
 
 ## KPI-тройка (дельта v4 D4; измерение фазы C, каноны 4+9)
 
@@ -169,13 +205,17 @@ author_model (R1); деградация → дефолт профиля + degrad
 - `python model_router.py --card card.json [--status s.json]` → JSON {class, model,
   provider, reasoning, pattern, reason, rules_fired, router_version, routes_version,
   rules_sha, input_echo}.
-- `python model_router.py --selftest` → таблица PASS/FAIL (18 кейсов: 11 кейсов v4 +
+- `python model_router.py --selftest` → таблица PASS/FAIL (18 кейсов ROUTES: 11 кейсов v4 +
   7 входов v3 — новые классы brief/creative, шаг вправо на соседнего провайдера,
-  R7-деградация) + 7 структурных проверок (PATTERNS-покрытие, старые 7 классов,
+  R7-деградация) + 5 v2-паттерн-кейсов (traceability слоёв: kimi-k3, glm-5.3,
+  gpt-6-luna, deepseek-v4-flash, gpt-5.6-terra) + 9 структурных проверок (PATTERNS-покрытие, старые 7 классов,
   T1-only, разнообразие, terra-дисциплина, sol/astra по назначению, маркер источника
-  terra-паттерна), exit 0/1.
+  terra-паттерна, v2-структура 5 слоёв + источники на каждую запись, deepseek-паттерн), exit 0/1.
 - `python model_router.py --print-rules` → печать этой политики из данных скрипта;
   первая строка — `rules_sha <12 hex>`.
+- `python model_router.py --patterns [MODEL]` → JSON паттернов v2 (машинный
+  контракт delegation/brain-brief/hands-deliverable; поля и потребители —
+  раздел Provenance). Без аргумента — все модели; неизвестная модель → exit 2.
 - Аудит-мета (дельта v4 D2 + v3): router_version («v4» — движок), routes_version
   («v3» — таблица маршрутов); rules_sha = sha1(канонический дамп ROUTES+PATTERNS)[:12]
   — два прогона на одном входе дают идентичный rules_sha (детерминизм для evals);

@@ -1,5 +1,48 @@
 # Changelog
 
+## [1.2.41] - 2026-10-06
+
+(1.2.37/1.2.38/1.2.39/1.2.40 claimed by open PRs #56/#57/#58/#59 — second and
+later merges must re-pin; this PR takes 1.2.41.)
+
+### Changed
+- `scripts/model_router.py`: PATTERNS v2 (card `t_234de1e7`, owner directive
+  04.10 «брать в интернете и не выдумывать»). Every entry is a 6-line block
+  (как брифовать / требовать строго / страховка / анти-паттерн / канонические
+  настройки / источники), strictly per the mapping table of
+  `PATTERNS-SOURCES-v2.md` (research `t_108caa9b`, verified 2026-10-04, sha256
+  `76e68e7c…`, 33 official URLs); each entry traceable to vendor citations,
+  fleet-canon items marked «флот-канон». 9 models: 7 corpus models (§1-7) +
+  `gpt-5.6-terra` (fleet-canon-only marker kept, catalog check `t_4e47fef0`) +
+  `deepseek-v4-flash` (§8; pattern only — NOT in ROUTES, cheap rungs need
+  class-quality evidence per LADDER rule 1). ROUTES/engine untouched (parent
+  lane `t_698a054c`); VERSION 3.0.0 → 3.1.0; rules_sha `ed86d983fcf6` →
+  `64d839805a07`. Selftest: 18 ROUTES cases + 5 new v2-pattern cases + 9
+  structural checks (v2 layers/sources per entry, deepseek pattern), ALL PASS.
+- `src/fleet_policy/router_bridge.py`: claim stamp carries the v2 pattern
+  block — first line keeps the v1.2.36 format (`ROUTER v4: model=… pattern=…
+  rules_sha=…`), followed by `PATTERN v2 (<model>):` + the 6-line block.
+  Hook JSON contract unchanged (`decision.pattern` stays a string).
+- `tests/test_v1236_router_hook.py`: `ROUTER_LIVE_SHA` pin moved to the v2
+  artifact (`e4770503…`); enforce-stamp test asserts the v2 block (layers,
+  sources, first-line compatibility). E2E hook battery green.
+- `docs/fleet-ops/model-routing-20261003/ROUTING.md`: patterns section
+  rewritten for v2 (6-line block, 3 CLI surfaces), new «Provenance паттернов»
+  section (vendor citations only, verification date 2026-10-04, `--patterns`
+  machine contract and consumers), CLI/selftest counts synced.
+
+### Added
+- `scripts/model_router.py --patterns [MODEL]`: deterministic JSON contract
+  for inter-agent surfaces (`patterns_version`, `source`, `rules_sha`,
+  `models`, `patterns`); unknown model → stderr + exit 2; stdlib-only, 0 network.
+- `docs/fleet-ops/model-routing-20261003/SYNTHESIS-PROTOCOL.md`: owner-task
+  synthesis protocol (intake → decomposition → broader professional form →
+  one-form questions → dispatch with the model pattern → human-language
+  report); extends the kanban-card-authoring skill canon (patched by company 04.10).
+- `templates/BRAIN-BRIEF.md`, `templates/HANDS-DELIVERABLE.md`,
+  `templates/DELEGATION-CONTEXT.md`: every agent brief carries the official
+  pattern of the target model (filled from `--patterns <model>`).
+
 ## [1.2.39] - 2026-10-06
 
 ### Changed
