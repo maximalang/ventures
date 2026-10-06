@@ -1,5 +1,84 @@
 # Changelog
 
+## [1.2.41] - 2026-10-06
+
+(1.2.37/1.2.38/1.2.39/1.2.40 claimed by open PRs #56/#57/#58/#59 — second and
+later merges must re-pin; this PR takes 1.2.41.)
+
+### Changed
+- `scripts/model_router.py`: PATTERNS v2 (card `t_234de1e7`, owner directive
+  04.10 «брать в интернете и не выдумывать»). Every entry is a 6-line block
+  (как брифовать / требовать строго / страховка / анти-паттерн / канонические
+  настройки / источники), strictly per the mapping table of
+  `PATTERNS-SOURCES-v2.md` (research `t_108caa9b`, verified 2026-10-04, sha256
+  `76e68e7c…`, 33 official URLs); each entry traceable to vendor citations,
+  fleet-canon items marked «флот-канон». 9 models: 7 corpus models (§1-7) +
+  `gpt-5.6-terra` (fleet-canon-only marker kept, catalog check `t_4e47fef0`) +
+  `deepseek-v4-flash` (§8; pattern only — NOT in ROUTES, cheap rungs need
+  class-quality evidence per LADDER rule 1). ROUTES/engine untouched (parent
+  lane `t_698a054c`); VERSION 3.0.0 → 3.1.0; rules_sha `ed86d983fcf6` →
+  `64d839805a07`. Selftest: 18 ROUTES cases + 5 new v2-pattern cases + 9
+  structural checks (v2 layers/sources per entry, deepseek pattern), ALL PASS.
+- `src/fleet_policy/router_bridge.py`: claim stamp carries the v2 pattern
+  block — first line keeps the v1.2.36 format (`ROUTER v4: model=… pattern=…
+  rules_sha=…`), followed by `PATTERN v2 (<model>):` + the 6-line block.
+  Hook JSON contract unchanged (`decision.pattern` stays a string).
+- `tests/test_v1236_router_hook.py`: `ROUTER_LIVE_SHA` pin moved to the v2
+  artifact (`e4770503…`); enforce-stamp test asserts the v2 block (layers,
+  sources, first-line compatibility). E2E hook battery green.
+- `docs/fleet-ops/model-routing-20261003/ROUTING.md`: patterns section
+  rewritten for v2 (6-line block, 3 CLI surfaces), new «Provenance паттернов»
+  section (vendor citations only, verification date 2026-10-04, `--patterns`
+  machine contract and consumers), CLI/selftest counts synced.
+
+### Added
+- `scripts/model_router.py --patterns [MODEL]`: deterministic JSON contract
+  for inter-agent surfaces (`patterns_version`, `source`, `rules_sha`,
+  `models`, `patterns`); unknown model → stderr + exit 2; stdlib-only, 0 network.
+- `docs/fleet-ops/model-routing-20261003/SYNTHESIS-PROTOCOL.md`: owner-task
+  synthesis protocol (intake → decomposition → broader professional form →
+  one-form questions → dispatch with the model pattern → human-language
+  report); extends the kanban-card-authoring skill canon (patched by company 04.10).
+- `templates/BRAIN-BRIEF.md`, `templates/HANDS-DELIVERABLE.md`,
+  `templates/DELEGATION-CONTEXT.md`: every agent brief carries the official
+  pattern of the target model (filled from `--patterns <model>`).
+
+## [1.2.39] - 2026-10-06
+
+### Changed
+- `scripts/model_router.py`: repo copy updated to the canonical ROUTES v3
+  router, byte-identical to the QA-passed artifact
+  (sha256 `5d24308d8057b62b728dde0196ae61062b7581d2ad46564aee6941408e9be2ae`,
+  401 lines, VERSION 3.0.0, engine v4, rules_sha `ed86d983fcf6`; selftest
+  18 cases + 7 structural checks, zero network). Delivered by fleet-ops card
+  `t_91e8ce45` under the owner directive of 04.10; independent QA `t_8c502715`
+  verdict 40/40 PASS against this exact sha. The repo copy had been frozen at
+  v2.2 (`1ae2e34d…`) by #55, and the activation apply of 06.10 propagated that
+  stale copy over the live v3 — this restores repo==canon parity (card
+  `t_698a054c`). v3 substance: T1-only rails (custom/zai/openai-codex);
+  provider diversity (adjacent different, ≤2 per provider, first-two not
+  same-provider, `strategic` exempt as the manual class); GPT tiering
+  (sol strategic + review live-backup, astra manual-pin only, luna/terra
+  economical rungs); new classes `brief`/`creative`; `gpt-5.6-terra` rung
+  catalog-verified 05.10.2026 (`t_4e47fef0`, HTTP 200 both pool rows), allowed
+  in brief/creative only and never top-2; R7 all-rails-down degradation to
+  `PROFILE_DEFAULT` with an explicit degrade line; additive `routes_version`
+  field in the card JSON (SPEC v5.1 hook contract intact, `router_hook.py`
+  untouched).
+- `tests/test_v1236_router_hook.py`: `ROUTER_LIVE_SHA` pin moved to the v3
+  artifact sha (the pin tracks the canonical repo-copy bytes).
+
+### Added
+- `docs/fleet-ops/model-routing-20261003/ROUTES-V3-CHANGELOG.md`: v2.2→v3 diff
+  table, terra verification evidence, engine deltas, artifact sha registry.
+- `docs/fleet-ops/model-routing-20261003/LADDER-PROVIDERS.md`: live-catalog
+  verification note for the openai-codex pool (`t_4e47fef0`, 05.10.2026).
+
+### Docs
+- `docs/fleet-ops/model-routing-20261003/ROUTING.md` v3: human-readable policy
+  synced byte-for-byte with `--print-rules` (9/9 class lists, rules_sha
+  `ed86d983fcf6`).
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

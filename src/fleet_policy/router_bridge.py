@@ -163,6 +163,12 @@ def apply_override(board: str, task_id: str, decision: dict[str, Any],
         comment = (f"ROUTER {decision.get('router_version') or ''}: "
                    f"model={decision.get('provider') or '-'}/{model} "
                    f"pattern={model} rules_sha={decision.get('rules_sha') or '-'}")
+        # PATTERNS v2 (карта t_234de1e7): штамп несёт v2-блок паттерна целевой
+        # модели (5 слоёв + источники). Первая строка формата v1.2.36 сохранена —
+        # контракт совместим; блок добавляется только при непустом pattern.
+        pattern_block = str(decision.get("pattern") or "")
+        if pattern_block:
+            comment += "\nPATTERN v2 (" + model + "):\n" + pattern_block
         run(["hermes", "kanban", "--board", b, "comment", task_id, comment,
              "--author", "fleet-router"], 30)
     return ok
