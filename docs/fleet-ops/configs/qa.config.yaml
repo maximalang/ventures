@@ -8,12 +8,6 @@ model:
   - provider: zai
     model: glm-5.3-flash
     base_url: null
-  - provider: openai-codex
-    model: gpt-6-sol
-    base_url: null
-  - provider: openai-codex
-    model: gpt-5.6-sol
-    base_url: null
   - provider: custom
     model: qwen3.8-max
     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1

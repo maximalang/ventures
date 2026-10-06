@@ -6,9 +6,6 @@ model:
     astra: openai-codex/gpt-6-astra
   reasoning_echo: false
   fallback_providers:
-  - provider: openai-codex
-    model: gpt-5.6-sol
-    base_url: null
   - provider: zai
     model: glm-5.3
     base_url: null

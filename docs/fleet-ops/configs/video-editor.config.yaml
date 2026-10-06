@@ -14,12 +14,6 @@ model:
   - provider: zai
     model: glm-5.3-flash
     base_url: null
-  - provider: openai-codex
-    model: gpt-6-sol
-    base_url: null
-  - provider: openai-codex
-    model: gpt-5.6-sol
-    base_url: null
 providers:
   custom:
     name: DashScope
