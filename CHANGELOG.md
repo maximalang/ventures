@@ -1,5 +1,71 @@
 # Changelog
 
+## [1.2.40] - 2026-10-06
+
+### Added
+- Pre-claim card-body validation in the official claim-guard path
+  (t_f0599145; owner directive 04.10 «correct, native, full-fledged cards»;
+  semantics ported 1:1 from the live `card_readiness.py` rails v3,
+  t_20d62426 — the mechanism is reused, the live company scripts are NOT
+  touched). `src/fleet_policy/body_guard.py` (stdlib-only, zero network):
+  - rule 1 — the FIRST body line must carry the exact marker
+    `task_type: <research|code|review|ops>` (BOM-tolerant, case-insensitive;
+    a marker deeper in the body does NOT save the card). Defects:
+    `missing_task_type_marker` / `invalid_task_type_value` (BLOCK, precise
+    reason quotes the offending first line).
+  - rule 2 — sections DELIVERABLE / ACCEPTANCE / BANS / ANCHOR (EN+RU
+    synonyms, markdown headings, parenthesized qualifiers — FP regression
+    t_22153d76). For agent-created cards (`created_by` ∉
+    `body_guard.owner_created_by`; unknown/empty `created_by` = agent,
+    fail-closed) missing sections → BLOCK `body_sections_missing`; for
+    owner cards → WARN (advisory, never blocks).
+  - modes (`body_guard.mode`): `enforce` (delivered default — BLOCK → deny
+    `card_structurally_broken`, WARN → advisory comment), `warn` (every
+    defect advisory-only — full behaviour rollback without redeploy), `off`
+    (guard not invoked); unknown/garbage mode → `warn` (fail-safe, the
+    card_readiness v3 convention).
+  - `--selftest`: 13 cases (marker deep/invalid/BOM, agent strict, owner
+    advisory, unknown-author fail-closed, RU synonyms, paren-qualifier FP
+    regression, warn/off/garbage modes, empty body), any cwd, exit 0.
+    `--body-file … --created-by … --mode … [--json]` — read-only manual
+    check (exit 0 pass / 1 defects / 2 usage).
+- `integrations/hermes/fleet-policy-plugin/__init__.py` — wiring inside the
+  EXISTING `kanban_task_claimed` pre-claim guard, in the no-error branch
+  only (the legacy `missing_or_unknown_task_type` claim-deny path is
+  unchanged and never double-projects). ONLY behind the new config flag
+  `body_guard.enabled` (master switch, delivered `true` with mode=enforce).
+  Best-effort contract (canon 7): validation NEVER blocks the claim itself —
+  every failure degrades silently. BLOCK → the same projection machinery as
+  the existing claim-deny (comment + block, `--kind policy_denied`, precise
+  reason + `next_step` remediation, `who=company`); deny-triage never
+  auto-resumes structurally broken cards, so the stop is hard. WARN →
+  comment WITHOUT block (`_project_advisory`, same dedup/release semantics).
+- `config/fleet-policy.yaml` → `body_guard:` section (enabled / mode /
+  owner_created_by=["user"]). Rollback without redeploy: `mode: warn|off`
+  or `enabled: false`.
+- `docs/CARD_BODY_TEMPLATE.md` — the authoring template: required body
+  shape, accepted section forms/synonyms table, strictness by `created_by`,
+  a native `kanban_create` example, pre-create checklist, guard modes and
+  manual CLI verification.
+- Policy-store observability: `kind="body_guard"` (non-significant) on every
+  claim while enabled; deny → `kind="card_structurally_broken"`
+  (significant), advisory → `kind="body_guard_advisory"` (significant).
+  `created_by` is read from the task ctx when present, else via a read-only
+  board-DB query (the `router_bridge.card_payload` pattern); no fact →
+  fail-closed agent semantics.
+
+### Tests
+- `tests/test_v1240_body_guard.py` — 39 tests: module purity (AST scan,
+  zero network/subprocess imports), selftest exit 0 from two cwds, CLI
+  exit-code contract, the full validate() matrix (marker/sections/creator/
+  modes incl. fail-closed unknown author and fail-safe garbage mode),
+  guard_step (explicit-true flag, store event shape, store-failure
+  tolerance, ctx-over-DB precedence, DB fallback incl. unreadable DB),
+  plugin wiring (deny projection payload, owner advisory without block,
+  silent pass, legacy error path untouched, disabled-config no-op,
+  guard-explosion claim survival, source contract keeping the v1.2.36
+  router ordering intact).
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

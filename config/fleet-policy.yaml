@@ -135,3 +135,15 @@ router_hook:
   active_file: null  # дефолт: ROUTER_ACTIVE.json рядом с script
   log_file: null     # дефолт: log_file из ROUTER_ACTIVE.json → HERMES_ROUTING_LOG → раскладка флота
   status_file: null  # дефолт: status_file из ROUTER_ACTIVE.json (генерирует script-only cron)
+# v1.2.40 (t_f0599145) — pre-claim валидация тела карты в kanban_task_claimed:
+# первая строка body обязана нести маркер task_type: <research|code|review|ops>;
+# секции DELIVERABLE/ACCEPTANCE/BANS/ANCHOR обязательны для карт, созданных
+# агентами (created_by != owner_created_by; неизвестный created_by = агент,
+# fail-closed), для owner-карт — advisory. enforce: BLOCK → deny
+# card_structurally_broken (комментарий + блок карты с точной причиной),
+# WARN → комментарий без блока; warn: всё advisory; off / enabled:false —
+# стража не вызывается. Откат без передеплоя: mode: warn|off.
+body_guard:
+  enabled: true
+  mode: enforce              # off|warn|enforce; неизвестное значение → warn (fail-safe)
+  owner_created_by: ["user"] # created_by владельца: секции для таких карт advisory
