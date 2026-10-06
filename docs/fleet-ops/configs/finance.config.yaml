@@ -4,6 +4,25 @@ model:
   base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
   max_tokens: 16384
   reasoning_echo: false
+  fallback_providers:
+  - provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  - provider: custom
+    model: glm-5.3
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  - provider: custom
+    model: deepseek-v4-pro
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  - provider: custom
+    model: qwen3.7-plus
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  - provider: custom
+    model: qwen3.8-flash
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  - provider: custom
+    model: MiniMax-M2.5
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
 providers:
   custom:
     name: DashScope
@@ -12,9 +31,39 @@ providers:
     key_env: HERMES_CUSTOM_CUSTOM_API_KEY
     discover_models: false
     models:
-      - id: qwen3.8-max
-      - id: glm-5.2
-      - id: kimi-k3
+    - id: qwen3.8-max
+    - id: glm-5.2
+    - id: kimi-k3
+    - id: qwen3.7-max
+    - id: qwen3-max
+    - id: qwen3.7-plus
+    - id: qwen3.6-plus
+    - id: qwen3.5-plus
+    - id: qwen-plus
+    - id: qwen-max
+    - id: qwen3.8-flash
+    - id: qwen3.7-flash
+    - id: qwen3.6-flash
+    - id: qwen-turbo
+    - id: kimi-k2-thinking
+    - id: kimi/kimi-k2.8-preview
+    - id: kimi/kimi-k2.7-code
+    - id: kimi/kimi-k2.7-code-highspeed
+    - id: glm-5.3
+    - id: glm-5.1
+    - id: glm-5
+    - id: glm-4.7
+    - id: deepseek-v4-pro
+    - id: deepseek-v3.2
+    - id: deepseek-r1
+    - id: MiniMax-M2.5
+    - id: MiniMax-M2.1
+    - id: qwen-deep-research-2025-12-15
+    - id: qwen3-coder-next
+    - id: qwen3-coder-plus
+    - id: qwen3-coder-flash
+    - id: qwen3-235b-a22b
+    - id: qwen3-next-80b-a3b-instruct
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
@@ -246,128 +295,128 @@ skills:
 approvals:
   mode: 'off'
   deny:
-    - Remove-Item -Recurse -Force /Users*
-    - Remove-Item -Recurse -Force /home*
-    - Remove-Item -Recurse -Force C*
-    - dd if=/dev/zero of=/dev/*
-    - git push --force origin main*
-    - git push --force-with-lease origin main*
-    - git push -f origin main*
-    - mkfs*
-    - rm -rf $HOME*
-    - rm -rf .git*
-    - rm -rf /*
-    - rm -rf /Users*
-    - rm -rf /c/Users*
-    - rm -rf /home*
-    - rm -rf C*
-    - rm -rf ~*
+  - Remove-Item -Recurse -Force /Users*
+  - Remove-Item -Recurse -Force /home*
+  - Remove-Item -Recurse -Force C*
+  - dd if=/dev/zero of=/dev/*
+  - git push --force origin main*
+  - git push --force-with-lease origin main*
+  - git push -f origin main*
+  - mkfs*
+  - rm -rf $HOME*
+  - rm -rf .git*
+  - rm -rf /*
+  - rm -rf /Users*
+  - rm -rf /c/Users*
+  - rm -rf /home*
+  - rm -rf C*
+  - rm -rf ~*
 command_allowlist:
-  - gzip *
-  - tail *
-  - zip *
-  - ss *
-  - cd *
-  - docker *
-  - basename *
-  - head *
-  - git *
-  - kill *
-  - ls
-  - sort *
-  - realpath *
-  - ping *
-  - ssh *
-  - cat
-  - pg_dump *
-  - ps *
-  - chmod *
-  - dirname *
-  - diff *
-  - scp *
-  - '*'
-  - psql *
-  - pg_restore *
-  - pkill *
-  - cd
-  - yarn *
-  - ls *
-  - df *
-  - sleep *
-  - rsync *
-  - stat *
-  - 'true'
-  - access to Hermes secrets (Windows path)
-  - date *
-  - seq *
-  - mkdir *
-  - netstat *
-  - telnet *
-  - wc *
-  - test *
-  - lsof *
-  - whoami *
-  - printenv *
-  - curl *
-  - redis-cli *
-  - wget *
-  - gh *
-  - cp *
-  - pwd
-  - env *
-  - printf *
-  - touch
-  - pg_isready *
-  - recursive delete
-  - nc *
-  - 'false'
-  - rg *
-  - chown *
-  - which *
-  - less *
-  - docker-compose *
-  - pnpm *
-  - mkdir
-  - tsx *
-  - where *
-  - echo
-  - mv
-  - ssh -V
-  - uname *
-  - command *
-  - tree *
-  - tar *
-  - sftp *
-  - node *
-  - hostname *
-  - grep *
-  - sed *
-  - cp
-  - echo *
-  - cat *
-  - mv *
-  - file *
-  - npx *
-  - readlink *
-  - npm *
-  - unzip *
-  - find *
-  - script execution via -e/-c flag
-  - xargs *
-  - du *
-  - gunzip *
-  - crontab *
-  - touch *
-  - uniq *
-  - awk *
+- gzip *
+- tail *
+- zip *
+- ss *
+- cd *
+- docker *
+- basename *
+- head *
+- git *
+- kill *
+- ls
+- sort *
+- realpath *
+- ping *
+- ssh *
+- cat
+- pg_dump *
+- ps *
+- chmod *
+- dirname *
+- diff *
+- scp *
+- '*'
+- psql *
+- pg_restore *
+- pkill *
+- cd
+- yarn *
+- ls *
+- df *
+- sleep *
+- rsync *
+- stat *
+- 'true'
+- access to Hermes secrets (Windows path)
+- date *
+- seq *
+- mkdir *
+- netstat *
+- telnet *
+- wc *
+- test *
+- lsof *
+- whoami *
+- printenv *
+- curl *
+- redis-cli *
+- wget *
+- gh *
+- cp *
+- pwd
+- env *
+- printf *
+- touch
+- pg_isready *
+- recursive delete
+- nc *
+- 'false'
+- rg *
+- chown *
+- which *
+- less *
+- docker-compose *
+- pnpm *
+- mkdir
+- tsx *
+- where *
+- echo
+- mv
+- ssh -V
+- uname *
+- command *
+- tree *
+- tar *
+- sftp *
+- node *
+- hostname *
+- grep *
+- sed *
+- cp
+- echo *
+- cat *
+- mv *
+- file *
+- npx *
+- readlink *
+- npm *
+- unzip *
+- find *
+- script execution via -e/-c flag
+- xargs *
+- du *
+- gunzip *
+- crontab *
+- touch *
+- uniq *
+- awk *
 plugins:
   enabled:
-    - disk-cleanup
-    - fleet-policy
-    - homeassistant
-    - rtk-rewrite
-    - security-guidance
-    - yandex_mail
+  - disk-cleanup
+  - fleet-policy
+  - homeassistant
+  - rtk-rewrite
+  - security-guidance
+  - yandex_mail
   disabled: []
   entries:
     fleet-policy:
@@ -404,90 +453,90 @@ session_reset:
 group_sessions_per_user: true
 platform_toolsets:
   cli:
-    - browser
-    - clarify
-    - connections
-    - file
-    - memory
-    - session_search
-    - skills
-    - terminal
-    - todo
-    - vision
-    - web
-    - yandex_mail
+  - browser
+  - clarify
+  - connections
+  - file
+  - memory
+  - session_search
+  - skills
+  - terminal
+  - todo
+  - vision
+  - web
+  - yandex_mail
   telegram:
-    - hermes-telegram
+  - hermes-telegram
   discord:
-    - hermes-discord
+  - hermes-discord
   whatsapp:
-    - hermes-whatsapp
+  - hermes-whatsapp
   slack:
-    - hermes-slack
+  - hermes-slack
   signal:
-    - hermes-signal
+  - hermes-signal
   homeassistant:
-    - hermes-homeassistant
+  - hermes-homeassistant
   qqbot:
-    - hermes-qqbot
+  - hermes-qqbot
   yuanbao:
-    - hermes-yuanbao
+  - hermes-yuanbao
   teams:
-    - hermes-teams
+  - hermes-teams
   google_chat:
-    - hermes-google_chat
+  - hermes-google_chat
 known_plugin_toolsets:
   cli:
-    - a2a
-    - homeassistant
-    - spotify
-    - yandex_mail
+  - a2a
+  - homeassistant
+  - spotify
+  - yandex_mail
   acp:
-    - homeassistant
+  - homeassistant
   webhook:
-    - homeassistant
+  - homeassistant
 known_builtin_toolsets:
   cli:
-    - browser
-    - clarify
-    - code_execution
-    - computer_use
-    - connections
-    - context_engine
-    - cronjob
-    - delegation
-    - discord
-    - discord_admin
-    - file
-    - homeassistant
-    - image_gen
-    - kanban
-    - memory
-    - session_search
-    - skills
-    - spotify
-    - stt
-    - terminal
-    - todo
-    - tts
-    - video
-    - video_gen
-    - vision
-    - web
-    - x_search
-    - yuanbao
+  - browser
+  - clarify
+  - code_execution
+  - computer_use
+  - connections
+  - context_engine
+  - cronjob
+  - delegation
+  - discord
+  - discord_admin
+  - file
+  - homeassistant
+  - image_gen
+  - kanban
+  - memory
+  - session_search
+  - skills
+  - spotify
+  - stt
+  - terminal
+  - todo
+  - tts
+  - video
+  - video_gen
+  - vision
+  - web
+  - x_search
+  - yuanbao
 mcp_servers:
   codegraph:
     command: codegraph
     args:
-      - serve
-      - --mcp
+    - serve
+    - --mcp
   donut:
     url: http://127.0.0.1:51080/mcp/WdacSCnDSM44oAWCP9ngtPF930R6JoxW_ikIEBMdjMQ
     connect_timeout: 5
     enabled: true
 reasoning_effort: xhigh
 _left_core_scoped:
-  - homeassistant
+- homeassistant
 _left_core_installed:
-  - homeassistant
+- homeassistant
