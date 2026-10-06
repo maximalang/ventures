@@ -1,0 +1,26 @@
+# Fleet config spec — desired state of hermes configs (single source of truth).
+# The reconciler (config_integrity_watch.py) repairs fields FROM this spec;
+# whole-file damage is restored from the git copy in this directory.
+# Owner directive changes = edit this file. No frozen snapshots.
+version: 1
+updated: "2026-10-06"
+memory_char_limit:
+  profiles: 8000      # the 12 agent profiles; ROOT keeps its own standing value
+line_floor:
+  default: 250        # healthy files are 490-730 lines; gutted ones ~100
+auxiliary:
+  vision:
+    provider: gpt-free
+    model: gpt-6-luna
+    reasoning_effort: max
+    timeout: 120
+  compression:
+    provider: custom
+    model: kimi-k3
+    reasoning_effort: low
+    timeout: 300
+forbidden_slot_keys: [fallback_providers, fallback_chain, fallback]
+required_sections:
+  ROOT: [gateway, kanban, memory, mcp_servers]
+  profiles: [memory, kanban]
+  company_extra: [telegram]

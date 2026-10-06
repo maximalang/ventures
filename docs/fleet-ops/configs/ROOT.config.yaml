@@ -1,0 +1,604 @@
+model:
+  default: qwen3.8-max
+  provider: custom
+  base_url: https://chatgpt.com/backend-api/codex
+  aliases:
+    q38: custom/qwen3.8-max
+    glm52: custom/glm-5.2
+    glm53: zai/glm-5.3
+    kimi3: custom/kimi-k3
+    dsv4: custom/deepseek-v4-pro
+providers:
+  groq:
+    name: groq
+    base_url: https://api.groq.com/openai/v1
+    model: qwen/qwen3.8-27b
+    discover_models: true
+    models:
+      canopylabs/orpheus-arabic-saudi: {}
+      openai/gpt-oss-120b: {}
+      groq/compound: {}
+      meta-llama/llama-prompt-guard-2-22m: {}
+      groq/compound-mini: {}
+      whisper-large-v3-turbo: {}
+      qwen/qwen3.6-27b: {}
+      allam-2-7b: {}
+      canopylabs/orpheus-v1-english: {}
+      meta-llama/llama-prompt-guard-2-86m: {}
+      whisper-large-v3: {}
+      openai/gpt-oss-20b: {}
+      qwen/qwen3.8-27b: {}
+      openai/gpt-oss-safeguard-20b: {}
+    key_env: HERMES_CUSTOM_GROQ_API_KEY
+  mistral:
+    name: mistral
+    base_url: https://api.mistral.ai/v1
+    model: mistral-medium-latest
+    discover_models: true
+    models:
+      mistral-medium-latest: {}
+    key_env: HERMES_CUSTOM_MISTRAL_API_KEY
+    default_model: mistral-medium-latest
+  cloudflare:
+    name: cloudflare
+    base_url: https://api.cloudflare.com/client/v4/accounts/382d65f05966f1884b9881b8b239b182/ai/v1
+    model: '@cf/qwen/qwen3.8-27b'
+    discover_models: true
+    models:
+      '@cf/qwen/qwen3.8-27b': {}
+    key_env: HERMES_CUSTOM_CLOUDFLARE_API_KEY
+  custom:
+    name: DashScope
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    model: qwen3.8-max
+    key_env: HERMES_CUSTOM_CUSTOM_API_KEY
+    discover_models: false
+    models:
+      - id: qwen3.8-max
+      - id: glm-5.2
+      - id: kimi-k3
+      - id: deepseek-v4-pro
+fallback_providers:
+  - provider: zai
+    model: glm-5.3-flash
+    base_url: https://api.z.ai/api/coding/paas/v4
+fallback:
+  min_switch_reset_seconds: 120
+credential_pool_strategies:
+  openai-codex: round_robin
+  zai: fill_first
+database:
+  journal_mode: wal
+runtime:
+  nofile_soft_limit: 4096
+agent:
+  max_turns: 150
+  service_tier: normal
+  coding_context: focus
+  verbose: false
+  reasoning_effort: max
+  personalities: {}
+  reasoning_overrides:
+    qwen3.8-max: max
+    kimi-k3: max
+terminal:
+  backend: local
+  cwd: .
+  timeout: 180
+  home_mode: auto
+  container_cpu: 1
+  container_memory: 5120
+  container_disk: 51200
+  container_persistent: true
+  docker_mount_cwd_to_workspace: false
+  lifetime_seconds: 300
+web:
+  backend: exa
+  provider_tier:
+    exa: free
+browser:
+  inactivity_timeout: 120
+  cloud_provider: local
+tool_loop_guardrails:
+  warnings_enabled: true
+  hard_stop_enabled: false
+  warn_after:
+    exact_failure: 2
+    same_tool_failure: 3
+    idempotent_no_progress: 2
+  hard_stop_after:
+    exact_failure: 5
+    same_tool_failure: 8
+    idempotent_no_progress: 5
+compression:
+  enabled: true
+  progress_notices: false
+  threshold: 0.75
+  target_ratio: 0.2
+  tail_mode: lean
+  protect_last_n: 20
+  min_tail_user_messages: 1
+  max_attempts: 3
+  proactive_prune_tokens: 48000
+  proactive_prune_min_result_chars: 8000
+  proactive_prune_min_reclaim_tokens: 4096
+  protect_first_n: 3
+  codex_gpt55_autoraise: true
+  codex_app_server_auto: native
+  codex_responses_native: false
+  codex_responses_compact_threshold: 200000
+  idle_compact_after_seconds: 1800
+  context_total_ceiling_seconds: 480
+  context_timeout_seconds: 300
+prompt_caching:
+  cache_ttl: 5m
+auxiliary:
+  free_only: false
+  vision:
+    provider: gpt-free
+    model: gpt-6-luna
+    reasoning_effort: max
+    timeout: 120
+  skills_hub:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  review:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  mcp:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  title_generation:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  memory_query_rewrite:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  triage_specifier:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  profile_describer:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  goal_judge:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  curator:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  background_review:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  approval:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  kanban_decomposer:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  tts_audio_tags:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  monitor:
+    provider: custom
+    model: qwen3.8-max
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: max
+  compression:
+    provider: custom
+    model: kimi-k3
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    reasoning_effort: low
+    timeout: 300
+display:
+  compact: false
+  busy_input_mode: interrupt
+  bell_on_complete: false
+  show_reasoning: false
+  background_process_notifications: concise
+  streaming: true
+  skin: slate
+  language: ru
+  interim_assistant_messages: true
+  pet:
+    enabled: false
+    slug: maisenpai
+    scale: 0.65
+  tool_progress: all
+  cleanup_progress: false
+  long_running_notifications: true
+  busy_ack_detail: true
+  in_app_tips: false
+  in_app_tours: false
+stt:
+  enabled: true
+  language: en
+  local:
+    model: base
+  openai:
+    model: whisper-1
+    language: ''
+voice:
+  auto_tts: false
+wake_word:
+  enabled: false
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 5000
+  user_char_limit: 2500
+  nudge_interval: 20
+  provider: holographic
+delegation:
+  model: qwen3.8-max
+  provider: custom
+  max_iterations: 40
+  child_timeout_seconds: 0
+  reasoning_effort: max
+  max_concurrent_children: 4
+  max_spawn_depth: 1
+moa:
+  active_preset: ''
+  presets:
+    default:
+      reference_models:
+        - provider: openai-codex
+          model: gpt-5.5
+          enabled: true
+      aggregator:
+        provider: openai-codex
+        model: gpt-6.1-sol
+      degraded_reference_policy: loud
+      fanout: user_turn
+  reference_models:
+    - provider: openai-codex
+      model: gpt-5.5
+      enabled: true
+  aggregator:
+    provider: openai-codex
+    model: gpt-6.1-sol
+  degraded_reference_policy: loud
+  max_tokens: 4096
+  fanout: user_turn
+  enabled: true
+skills:
+  creation_nudge_interval: 15
+  disabled:
+    - openhue
+    - xurl
+curator:
+  consolidate: true
+approvals:
+  mode: 'off'
+  deny:
+    - Remove-Item -Recurse -Force /Users*
+    - Remove-Item -Recurse -Force /home*
+    - Remove-Item -Recurse -Force C*
+    - dd if=/dev/zero of=/dev/*
+    - git push --force origin main*
+    - git push --force-with-lease origin main*
+    - git push -f origin main*
+    - mkfs*
+    - rm -rf $HOME*
+    - rm -rf .git*
+    - rm -rf /*
+    - rm -rf /Users*
+    - rm -rf /c/Users*
+    - rm -rf /home*
+    - rm -rf C*
+    - rm -rf ~*
+command_allowlist:
+  - gzip *
+  - tail *
+  - zip *
+  - ss *
+  - cd *
+  - docker *
+  - basename *
+  - head *
+  - git *
+  - kill *
+  - ls
+  - sort *
+  - realpath *
+  - ping *
+  - ssh *
+  - cat
+  - pg_dump *
+  - ps *
+  - chmod *
+  - dirname *
+  - diff *
+  - scp *
+  - '*'
+  - psql *
+  - pg_restore *
+  - pkill *
+  - cd
+  - yarn *
+  - ls *
+  - df *
+  - sleep *
+  - rsync *
+  - stat *
+  - 'true'
+  - access to Hermes secrets (Windows path)
+  - date *
+  - seq *
+  - mkdir *
+  - netstat *
+  - telnet *
+  - wc *
+  - test *
+  - lsof *
+  - whoami *
+  - printenv *
+  - curl *
+  - redis-cli *
+  - wget *
+  - gh *
+  - cp *
+  - pwd
+  - env *
+  - printf *
+  - touch
+  - pg_isready *
+  - recursive delete
+  - nc *
+  - 'false'
+  - rg *
+  - chown *
+  - which *
+  - less *
+  - docker-compose *
+  - pnpm *
+  - mkdir
+  - tsx *
+  - where *
+  - echo
+  - mv
+  - ssh -V
+  - uname *
+  - command *
+  - tree *
+  - tar *
+  - sftp *
+  - node *
+  - hostname *
+  - grep *
+  - sed *
+  - cp
+  - echo *
+  - cat *
+  - mv *
+  - file *
+  - npx *
+  - readlink *
+  - npm *
+  - unzip *
+  - find *
+  - script execution via -e/-c flag
+  - xargs *
+  - du *
+  - gunzip *
+  - crontab *
+  - touch *
+  - uniq *
+  - awk *
+kanban:
+  auto_subscribe_on_create: true
+  dispatch_in_gateway: true
+  review_dispatch: true
+  dispatch_interval_seconds: 60
+  orchestrator_profile: company
+  default_assignee: company
+  max_in_progress: 5
+  auto_decompose: false
+code_execution:
+  timeout: 300
+  max_tool_calls: 50
+tools:
+  tool_search:
+    listing_max_tokens: 1200
+streaming:
+  enabled: false
+sessions:
+  auto_archive: true
+  auto_prune: true
+onboarding:
+  seen:
+    openclaw_residue_cleanup: true
+telemetry:
+  shared_metrics:
+    enabled: false
+updates:
+  pre_update_backup: quick
+  backup_keep: 5
+  non_interactive_local_changes: stash
+computer_use:
+  backend: cua
+_config_version: 49
+session_reset:
+  mode: none
+  idle_minutes: 1440
+  at_hour: 4
+group_sessions_per_user: true
+platform_toolsets:
+  cli:
+    - browser
+    - clarify
+    - code_execution
+    - computer_use
+    - connections
+    - cronjob
+    - delegation
+    - file
+    - image_gen
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - tts
+    - vision
+    - web
+  telegram:
+    - hermes-telegram
+  discord:
+    - hermes-discord
+  whatsapp:
+    - hermes-whatsapp
+  slack:
+    - hermes-slack
+  signal:
+    - hermes-signal
+  homeassistant:
+    - hermes-homeassistant
+  qqbot:
+    - hermes-qqbot
+  yuanbao:
+    - hermes-yuanbao
+  teams:
+    - hermes-teams
+  google_chat:
+    - hermes-google_chat
+known_plugin_toolsets:
+  cli:
+    - a2a
+    - homeassistant
+    - spotify
+  acp:
+    - homeassistant
+  webhook:
+    - homeassistant
+known_builtin_toolsets:
+  cli:
+    - browser
+    - clarify
+    - code_execution
+    - computer_use
+    - connections
+    - context_engine
+    - cronjob
+    - delegation
+    - discord
+    - discord_admin
+    - file
+    - homeassistant
+    - image_gen
+    - memory
+    - session_search
+    - skills
+    - spotify
+    - stt
+    - terminal
+    - todo
+    - tts
+    - video
+    - video_gen
+    - vision
+    - web
+    - x_search
+    - yuanbao
+mcp_servers:
+  codegraph:
+    command: codegraph
+    args:
+      - serve
+      - --mcp
+  magic:
+    command: npx
+    args:
+      - -y
+      - '@21st-dev/magic@latest'
+    env:
+      API_KEY: ${env:TWENTYFIRST_API_KEY}
+  timeweb:
+    url: https://timeweb.cloud/api/v1/mcp
+    headers:
+      Authorization: ${env:...KEN}
+    connect_timeout: 120
+  node_repl:
+    enabled: false  # 24.09 owner decision: legacy Codex CUA runtime, 0 real calls in 30d
+    command: C:\Users\max\AppData\Local\OpenAI\Codex\runtimes\cua_node\2fb562745e6d66f0\bin\node_repl.exe
+    env:
+      NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS: '1000'
+      NODE_REPL_NODE_MODULE_DIRS: C:\Users\max\AppData\Local\OpenAI\Codex\runtimes\cua_node\2fb562745e6d66f0\bin\node_modules
+      NODE_REPL_NODE_PATH: C:\Users\max\AppData\Local\OpenAI\Codex\runtimes\cua_node\2fb562745e6d66f0\bin\node.exe
+      NODE_REPL_TRUSTED_CODE_PATHS: C:\Users\max\.codex;C:\Users\max\AppData\Local\OpenAI\Codex\runtimes\cua_node\2fb562745e6d66f0\bin\node_modules
+      CODEX_HOME: C:\Users\max\.codex
+      BROWSER_USE_AVAILABLE_BACKENDS: chrome,iab
+      NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER: Control the in-app browser in conjunction with the Browser Plugin.
+      NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME: Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative.
+      BROWSER_USE_CODEX_APP_BUILD_FLAVOR: prod
+      BROWSER_USE_CODEX_APP_VERSION: 26.814.41407
+      NODE_REPL_TRUSTED_SERVICES: '{"browser":"C:/Users/max/.codex/plugins/cache/openai-bundled/browser/26.814.41407/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
+      SKY_CUA_NATIVE_PIPE: '1'
+      SKY_CUA_NATIVE_PIPE_DIRECTORY: \\.\pipe\codex-computer-use-5b8ec212-98ef-4d98-b3b4-9b978fc74429
+      CODEX_CLI_PATH: C:\Users\max\AppData\Local\OpenAI\Codex\bin\39633208fb6e0c47\codex.exe
+  donut:
+    url: http://127.0.0.1:51080/mcp/WdacSCnDSM44oAWCP9ngtPF930R6JoxW_ikIEBMdjMQ
+    connect_timeout: 5
+    enabled: true
+dashboard:
+  ws_orphan_reap_grace_s: 300
+max_live_sessions: 24
+gateway:
+  multiplex_profiles: true
+platforms:
+  webhook:
+    enabled: true
+    host: 127.0.0.1
+    port: 8644
+  telegram:
+    channel_overrides:
+      '1256122537':
+        model: qwen3.8-max
+        provider: custom
+      '-1004426332349':
+        model: qwen3.8-max
+        provider: custom
+_left_core_scoped:
+  - homeassistant
+_left_core_installed:
+  - homeassistant
