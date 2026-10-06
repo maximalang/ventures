@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.2.39] - 2026-10-06
+
+### Changed
+- `scripts/model_router.py`: repo copy updated to the canonical ROUTES v3
+  router, byte-identical to the QA-passed artifact
+  (sha256 `5d24308d8057b62b728dde0196ae61062b7581d2ad46564aee6941408e9be2ae`,
+  401 lines, VERSION 3.0.0, engine v4, rules_sha `ed86d983fcf6`; selftest
+  18 cases + 7 structural checks, zero network). Delivered by fleet-ops card
+  `t_91e8ce45` under the owner directive of 04.10; independent QA `t_8c502715`
+  verdict 40/40 PASS against this exact sha. The repo copy had been frozen at
+  v2.2 (`1ae2e34d…`) by #55, and the activation apply of 06.10 propagated that
+  stale copy over the live v3 — this restores repo==canon parity (card
+  `t_698a054c`). v3 substance: T1-only rails (custom/zai/openai-codex);
+  provider diversity (adjacent different, ≤2 per provider, first-two not
+  same-provider, `strategic` exempt as the manual class); GPT tiering
+  (sol strategic + review live-backup, astra manual-pin only, luna/terra
+  economical rungs); new classes `brief`/`creative`; `gpt-5.6-terra` rung
+  catalog-verified 05.10.2026 (`t_4e47fef0`, HTTP 200 both pool rows), allowed
+  in brief/creative only and never top-2; R7 all-rails-down degradation to
+  `PROFILE_DEFAULT` with an explicit degrade line; additive `routes_version`
+  field in the card JSON (SPEC v5.1 hook contract intact, `router_hook.py`
+  untouched).
+- `tests/test_v1236_router_hook.py`: `ROUTER_LIVE_SHA` pin moved to the v3
+  artifact sha (the pin tracks the canonical repo-copy bytes).
+
+### Added
+- `docs/fleet-ops/model-routing-20261003/ROUTES-V3-CHANGELOG.md`: v2.2→v3 diff
+  table, terra verification evidence, engine deltas, artifact sha registry.
+- `docs/fleet-ops/model-routing-20261003/LADDER-PROVIDERS.md`: live-catalog
+  verification note for the openai-codex pool (`t_4e47fef0`, 05.10.2026).
+
+### Docs
+- `docs/fleet-ops/model-routing-20261003/ROUTING.md` v3: human-readable policy
+  synced byte-for-byte with `--print-rules` (9/9 class lists, rules_sha
+  `ed86d983fcf6`).
+
 ## [1.2.36] - 2026-10-04
 
 ### Added
