@@ -13,6 +13,12 @@
   точка отказа; смягчение: статус-файл + пропуск рельсы роутером до выбора.
 - `openai-codex` (2 Plus-ключа): gpt-6.1-sol (стратегия/мозг), gpt-6-luna
   (vision-aux), gpt-6-astra (точечный второй взгляд, только ручной пин).
+  Live catalog 2026-10-05 (t_4e47fef0, both pool rows a2662b+8a052d HTTP 200,
+  client_version=99.0.0): gpt-6.1-sol, gpt-6-astra, gpt-6-sol, gpt-6-luna,
+  gpt-reserve, gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna, gpt-5.5,
+  codex-auto-review. `gpt-5.6-terra` reachability подтверждена (catalog
+  membership = billing-visible entitlement); ротация/пин — только отдельным
+  решением владельца.
 
 ### T2 — временные/чрезвычайные (в ROUTES НИКОГДА)
 - `agentrouter`: платная рельса; бюджет-пул премиума исчерпан (402), суммарный

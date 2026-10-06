@@ -22,8 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 HOOK = ROOT / "scripts" / "router_hook.py"
 ROUTER = ROOT / "scripts" / "model_router.py"
 PLUGIN = ROOT / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
-# Живой router v4 после t_f98bb636 (лестница 03.10): репо-копия байт-в-байт.
-ROUTER_LIVE_SHA = "1ae2e34d08cd17cc4a4ea41d2af7c4c80ddece8977bfde86ffb56466c6548df1"
+# ROUTES v3 (карта t_91e8ce45, директива владельца 04.10; QA t_8c502715 40/40):
+# репо-копия байт-в-байт с каноническим роутером v3 (engine v4).
+ROUTER_LIVE_SHA = "5d24308d8057b62b728dde0196ae61062b7581d2ad46564aee6941408e9be2ae"
 FORBIDDEN_IMPORTS = {
     "socket", "urllib", "requests", "http", "ftplib", "smtplib", "telnetlib",
     "subprocess", "ssl", "xmlrpc", "websocket", "asyncio",
