@@ -107,6 +107,78 @@ def _project(payload: dict[str, Any]) -> None:
     # `fleet-policy drain-notifications`.
 
 
+def _advisory_message(payload: dict[str, Any]) -> str:
+    rem = payload.get("remediation") or {}
+    base = f"FLEET POLICY ADVISORY [{payload.get('rule_id')}] {payload.get('reason') or ''}"
+    if rem.get("how"):
+        base += f" next_step={rem['how']}"
+    return base
+
+
+def _project_advisory(payload: dict[str, Any]) -> None:
+    """v1.2.40: WARN-проекция — комментарий на карту БЕЗ блока (advisory для
+    owner-карт и режима warn). Dedup/release-семантика та же, что _project."""
+    task_id = str(payload.get("task_id") or "")
+    if not task_id or not runtime().claim_projection(payload):
+        return
+    board = str(payload.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "default")
+    try:
+        result = _PROJECTOR.comment_and_block(board, task_id, _advisory_message(payload), block=False)
+    except Exception:
+        runtime().release_projection(payload)
+        return
+    if result.get("comment") != 0:
+        runtime().release_projection(payload)
+
+
+def _body_guard(ctx: dict[str, Any], task_id: str, board: str, assignee: str,
+                run_id: Any, task_type: str | None) -> None:
+    """v1.2.40 (t_f0599145) — pre-claim валидация тела карты: маркер task_type
+    строго в первой строке body + секции DELIVERABLE/ACCEPTANCE/BANS/ANCHOR
+    (строго для agent-карт created_by != owner; owner-карты — advisory).
+    BLOCK → deny card_structurally_broken: комментарий + блок карты штатным
+    claim-deny механизмом (тот же, что missing_or_unknown_task_type);
+    deny_triage_bot структурно сломанные карты не авто-ресумит. WARN →
+    комментарий без блока. Best-effort (канон 7): любой сбой деградирует
+    молча и никогда не блокирует сам claim; флаг body_guard.enabled."""
+    try:
+        from fleet_policy.body_guard import guard_step
+
+        guard = guard_step(ctx, task_id, board or str(ctx.get("board") or ""), run_id,
+                           runtime().config, store=runtime().store)
+    except Exception:
+        return
+    if not isinstance(guard, dict) or guard.get("decision") not in ("deny", "warn"):
+        return
+    b = str(board or ctx.get("board") or "")
+    run_key = str(ctx.get("current_run_id") or run_id or "session")
+    deny = guard.get("decision") == "deny"
+    payload = {
+        "decision": "deny" if deny else "allow",
+        "rule_id": "card_structurally_broken" if deny else "body_sections_advisory",
+        "pattern_category": "card_body", "call_index": 0,
+        "reason": str(guard.get("reason") or "card body failed structural validation"),
+        "remediation": guard.get("remediation") or {},
+        "task_id": task_id, "project": ctx.get("project", b), "profile": assignee,
+        "board": b, "task_status": str(ctx.get("task_status") or "unknown"),
+        "run_key": run_key, "action": "worker_launch", "target": task_id,
+        "args_hash": "not-applicable", "timestamp": "",
+        "budget_snapshot": runtime().budget_snapshot(ctx, task_type), "approval_card": None,
+    }
+    kind = "card_structurally_broken" if deny else "body_guard_advisory"
+    try:
+        runtime().store.record_event(
+            f"claim-body-guard:{b}:{task_id}:{payload['rule_id']}", str(run_id or task_id),
+            task_id, kind, payload, True,
+        )
+    except Exception:
+        pass  # наблюдаемость не должна ломать диспатч
+    if deny:
+        _project(payload)
+    else:
+        _project_advisory(payload)
+
+
 def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[str, Any] | None:
     arguments = dict(args or {}) if isinstance(args, dict) else {}
     try:
@@ -206,6 +278,12 @@ def kanban_task_claimed(task_id: str = "", board: str = "", assignee: str = "", 
     except Exception:
         pass
     if not error:
+        # v1.2.40 (t_f0599145) — pre-claim валидация тела карты: первая строка
+        # task_type + секции deliverable/acceptance/bans/anchor (agent-карты
+        # строго, owner-карты advisory). За флагом body_guard.enabled; никогда
+        # не блокирует сам claim (канон 7). Дублирует смысл живой стражи
+        # card_readiness/deny_triage_bot rails v3 в версионированном плагине.
+        _body_guard(ctx, task_id, board, assignee, run_id, task_type)
         return
     payload = {
         "decision": "deny", "rule_id": "missing_or_unknown_task_type", "reason": error,
