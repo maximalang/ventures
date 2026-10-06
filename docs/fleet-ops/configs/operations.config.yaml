@@ -8,21 +8,18 @@ model:
   - provider: custom
     model: qwen3.8-max
     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: custom
+  - provider: zai
     model: glm-5.3
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: custom
-    model: deepseek-v4-pro
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: custom
-    model: qwen3.7-plus
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: custom
-    model: qwen3.8-flash
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: custom
-    model: MiniMax-M2.5
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    base_url: null
+  - provider: zai
+    model: glm-5.3-flash
+    base_url: null
+  - provider: openai-codex
+    model: gpt-6-sol
+    base_url: null
+  - provider: openai-codex
+    model: gpt-5.6-sol
+    base_url: null
 providers:
   custom:
     name: DashScope
@@ -32,38 +29,8 @@ providers:
     discover_models: false
     models:
     - id: qwen3.8-max
-    - id: glm-5.2
     - id: kimi-k3
-    - id: qwen3.7-max
-    - id: qwen3-max
-    - id: qwen3.7-plus
-    - id: qwen3.6-plus
-    - id: qwen3.5-plus
-    - id: qwen-plus
-    - id: qwen-max
-    - id: qwen3.8-flash
-    - id: qwen3.7-flash
-    - id: qwen3.6-flash
-    - id: qwen-turbo
-    - id: kimi-k2-thinking
-    - id: kimi/kimi-k2.8-preview
-    - id: kimi/kimi-k2.7-code
-    - id: kimi/kimi-k2.7-code-highspeed
-    - id: glm-5.3
-    - id: glm-5.1
-    - id: glm-5
-    - id: glm-4.7
-    - id: deepseek-v4-pro
-    - id: deepseek-v3.2
-    - id: deepseek-r1
-    - id: MiniMax-M2.5
-    - id: MiniMax-M2.1
-    - id: qwen-deep-research-2025-12-15
-    - id: qwen3-coder-next
-    - id: qwen3-coder-plus
-    - id: qwen3-coder-flash
-    - id: qwen3-235b-a22b
-    - id: qwen3-next-80b-a3b-instruct
+    - id: qwen-vl-max
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
