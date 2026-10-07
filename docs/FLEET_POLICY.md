@@ -55,6 +55,21 @@ Workers cannot grant capabilities or approve themselves, including through direc
 
 Task-type budgets cover generated tokens only, wall clock and tool calls. Prompt tokens are not repeatedly charged as work. Retry enforcement belongs to Hermes Kanban (`failure_limit` / per-task `max_retries`), because provider fallback errors are not task retries. Identical-call, same-failure and idle-turn guards use the shared SQLite state.
 
+Budget ceilings carry a standing owner kill criterion: if estimated monthly usage cost more than doubles without task-completion-rate growth over the measurement window, the ceilings are reduced or reverted. Monetary usage-cost figures remain `unavailable` (NULL) until provider-reported usage telemetry exists; until then the criterion is evaluated from fleet-policy event-store telemetry. Changing a ceiling is a financial action and follows the financial-mandate canon: per-operation and per-project-per-month RUB limits, with `gate:finance=pass` plus `decision:company=go` recorded in Kanban before the change lands.
+
+### Approved caps audit
+
+Audited 2026-10-07 against the live deployed `profiles/company/plugins/fleet-policy/config/fleet-policy.yaml` (plugin v1.2.36 governance); the repo copy `config/fleet-policy.yaml` carries the same values. Token ceilings are per-task generated-token budgets:
+
+| task_type | tokens | wall_clock_minutes | tool_calls | retries |
+| --- | ---: | ---: | ---: | ---: |
+| research | 250000 | 240 | 250 | 3 |
+| code | 400000 | 300 | 400 | 3 |
+| review | 250000 | 180 | 250 | 3 |
+| ops | 250000 | 240 | 250 | 3 |
+
+Lineage: the owner-approved raise of 2026-09-08 (research 120k→250k, code 180k→400k, review 60k→150k, ops 50k→150k) landed via `ca173fe` (PR #37, merged 2026-09-15); review and ops were then raised to 250k by v1.2.31 (PR #50, merged 2026-09-29). The closed-stale PR #51 (base v1.2.32) still showed review/ops at 150k and is not a source for current values.
+
 ## Boards and project context
 
 - `portfolio`: cross-project strategy, capital allocation, venture incubation;
