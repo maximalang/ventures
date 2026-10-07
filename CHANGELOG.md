@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.2.42] - 2026-10-07
+
+### Fixed (root cause)
+- Unbounded policy event store (fleet-ops t_1d99b96b; 2026-10-07 incident:
+  deny-triage window queries timed out 3× at 240s against a 2.8 GB store, the
+  emergency hand-created index dropped them 14.5s→0.001s). The storage
+  manifesto — WAL with a sane autocheckpoint, auto_vacuum, retention, size
+  caps — is now a built-in feature of the storage layer instead of an
+  external cron plus manual hotfixes.
+
+### Added
+- Schema v5 (idempotent, applied on every plugin load): hot-path indexes
+  `idx_events_created` (time window) and `idx_events_kind_created`
+  (class window) join the existing task window `idx_events_task_created`;
+  `maintenance_state` KV ledger for cross-process throttling. Index coverage
+  never again depends on a manual hotfix.
+- `src/fleet_policy/maintenance.py`: throttled maintenance tick invoked from
+  the plugin hooks (`register`, `kanban_task_claimed`) and the operator CLI —
+  not from an external cron. Expired events are archived to deterministic
+  `JSONL.gz` + `.sha256` sidecar + `manifest.jsonl` under
+  `.state/fleet-policy-archive/`; the archive is verified (hash + gzip decode
+  + row count) BEFORE the covered primary keys are deleted, so history stays
+  restorable for legal/incident review. After a run: WAL checkpoint(TRUNCATE)
+  and incremental vacuum when the freelist is large.
+- Size guard: DB size (pages + WAL) ≥ soft cap (default 100 MB) emits one
+  significant event per UTC day through the existing notification lane;
+  ≥ hard cap (default 300 MB) forces an immediate retention run regardless
+  of the interval. Maintenance never crashes the gate: every failure lands
+  in the returned report dict.
+- `fleet-policy maintenance [--full-vacuum]` CLI (operator run + one-time
+  auto_vacuum activation on legacy stores); `status` now reports
+  `db_size_bytes` and `maintenance_last_run_epoch`.
+- `PolicyStore.retention(..., skip_events=True)` for the archive-first path;
+  the legacy delete-only behavior is unchanged for the manual CLI.
+
+### Notes
+- No policy-semantics changes: deny/allow rules, protected paths, approver
+  roles and gates are untouched (storage lifecycle only).
+- Rollback: revert the merge and redeploy the previous bundle; the v5 schema
+  objects (indexes, maintenance_state) are additive and harmless to older
+  code, and archived events are never re-imported automatically.
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

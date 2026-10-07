@@ -100,6 +100,33 @@ uv run python scripts/fleet_migration.py rollback
 
 Rollback verifies `snapshot.sha256`, restores owners/blocked states and the exact prior Kanban routing values, including nullable `max_in_progress`. Old cron jobs are never automatically re-enabled.
 
+## Storage maintenance (v1.2.42)
+
+The event store is append-only audit data, so retention, vacuuming and size
+caps are built into the storage layer itself — not an external cron.
+
+- **Hot-path indexes** (`idx_events_created`, `idx_events_kind_created`,
+  `idx_events_task_created`) are part of schema v5 and are (re)applied by an
+  idempotent heal on every plugin load; a store that lost them (or a manual
+  hotfix that created them) converges automatically.
+- **Retention tick** runs inside the plugin (`register`, `kanban_task_claimed`)
+  and via `fleet-policy maintenance`, throttled by the `maintenance_state`
+  ledger (default interval 24h). Expired events are archived to deterministic
+  `JSONL.gz` + `.sha256` sidecars + `manifest.jsonl` under
+  `.state/fleet-policy-archive/`; a batch's rows are deleted only after the
+  archive file passes read-back verification (hash + gzip decode + row count).
+- **Size guard**: DB size (pages + WAL) ≥ 100 MB warns once per UTC day via
+  the significant-event lane; ≥ 300 MB forces an immediate retention run.
+  Thresholds/horizons come from the optional `retention` config section and
+  fall back to code defaults, so older configs run unchanged.
+- **Vacuum**: connections set `wal_autocheckpoint=1000`; fresh stores get
+  `auto_vacuum=INCREMENTAL` at migrate time and the tick drains a large
+  freelist gradually. A legacy store needs one operator
+  `fleet-policy maintenance --full-vacuum` to activate the mode.
+- Restore: replay a JSONL.gz into `events` with `INSERT OR IGNORE` (primary
+  keys deduplicate batches that were archived more than once after an
+  interrupted run).
+
 ## Version reservation
 
 Versions are reserved deterministically, never picked by eye (root cause of
