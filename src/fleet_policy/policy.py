@@ -1641,7 +1641,14 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
-        (rf"(?:\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
+        # v1.2.37 (t_c0f25265): release = moving commits ONTO a protected ref:
+        # a push whose target ref resolves to a protected branch, `gh pr merge`,
+        # or an explicit "merge ... into <protected>" form. Scoped to a single
+        # shell stage ([^;&|\n]) so a protected name mentioned in an earlier
+        # stage (fetch/merge-base/prose) cannot arm the gate, and `merge` no
+        # longer matches bare: `git merge origin/main` integrates main INTO the
+        # current branch (repository_change), it is not a protected release.
+        (rf"(?:\bpush\b[^;&|\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b|\bmerge\b[^;&|\n]*\binto\s+(?:{branches})\b)", "release_to_protected_branch", "allow"),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),

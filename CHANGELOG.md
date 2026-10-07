@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.37] - 2026-10-07
+
+### Fixed
+- classifier: `release_to_protected_branch` narrowed to real protected-ref
+  releases (t_c0f25265, live repro on v1.2.36). `git merge origin/main`
+  (integrating a protected branch INTO the current feature branch) no longer
+  arms the ci/review/rollback gate chain — the false positive deadlocked
+  rr-team merge-train and landing-lane workers in `evidence_gate_missing`
+  on read-only/integration git commands. Matching is now scoped to a single
+  shell stage, so a protected name in an earlier `&&`/`;` stage (fetch,
+  merge-base, prose) cannot arm a later unrelated push. TP controls kept:
+  `git push origin main`, `push HEAD:main`, `push ... refs/heads/main`,
+  `gh pr merge`, explicit `merge ... into <protected>` stay gated; the
+  serious-risk `irreversible_data_loss` rule (force-push) is untouched.
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

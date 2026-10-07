@@ -87,6 +87,38 @@ def test_routine_actions_are_autonomous_after_runtime_gates(config, command, cat
     assert result.category == category
 
 
+@pytest.mark.parametrize("command", [
+    # v1.2.37 (t_c0f25265): integrating a protected branch INTO the current
+    # feature branch is not a protected release. These armed
+    # release_to_protected_branch and deadlocked workers in
+    # evidence_gate_missing during merge-train / landing-lane flows.
+    "git merge origin/main",
+    "git merge main",
+    "git merge-base HEAD origin/main",
+    "git fetch origin main && git push origin HEAD",
+    "git checkout landing-v3 && git merge origin/main",
+])
+def test_v1237_protected_integration_into_feature_is_not_release(config, command):
+    result = classify("terminal", {"command": command}, config, worker=True)
+    assert result.decision == "allow"
+    assert result.category != "release_to_protected_branch"
+
+
+@pytest.mark.parametrize("command", [
+    # v1.2.37 TP controls: real protected releases stay in the gated category.
+    "git push origin main",
+    "git push origin HEAD:main",
+    "git push origin +feature:refs/heads/main",
+    "git push origin master",
+    "gh pr merge 271 --squash --admin",
+    "git merge feature-x into main",
+])
+def test_v1237_true_protected_releases_stay_gated(config, command):
+    result = classify("terminal", {"command": command}, config, worker=True)
+    assert result.decision == "allow"
+    assert result.category == "release_to_protected_branch"
+
+
 def test_canonical_public_policy_doc_has_one_exact_read_exception(config):
     name = "APP" + "ROVALS.md"
     canonical = "C:/Users/max/Desktop/all/ventures/" + name
