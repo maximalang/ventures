@@ -8,7 +8,14 @@ from typing import Any
 
 from .config import load_config
 from .models import PolicyDecision, remediation_for
-from .policy import Classification, classify, infer_task_type, is_lifecycle_tool
+from .policy import (
+    GRACE_LIFECYCLE_CALLS,
+    GRACE_LLM_REQUESTS,
+    Classification,
+    classify,
+    infer_task_type,
+    is_lifecycle_tool,
+)
 from .redaction import args_hash, redact, stable_id
 from .storage import PolicyStore, utc_now
 
@@ -28,6 +35,14 @@ class FleetPolicyRuntime:
         self.config = load_config(config_path or self.root / "config" / "fleet-policy.yaml")
         self.store = PolicyStore(db_path or self.root / ".state" / "fleet-policy.db")
         self.store.migrate()
+        # v1.2.37: terminal-grace registry, keyed by (task_id, run_key).
+        # In-memory by design (spec §1: "in-memory registry + policy event per
+        # grace call"): a process restart is a new dispatch run with a new
+        # run_key, so durability beyond the run buys nothing. Fields:
+        # calls — grace lifecycle calls used; llm — llm requests seen since
+        # first exhaustion detection; opened — open-event latch; events —
+        # per-state counter keeping budget_grace event ids unique.
+        self._grace: dict[tuple[str, str], dict[str, int]] = {}
 
     def task_type(self, context: dict[str, Any]) -> tuple[str | None, str | None]:
         return infer_task_type(context.get("task_body"), context.get("comments"), context.get("skills"))
@@ -278,6 +293,30 @@ class FleetPolicyRuntime:
                 return metric
         return None
 
+    # ---------------------------------------------------- v1.2.37 budget grace
+    def _grace_state(self, task_id: str, run_key: str) -> dict[str, int]:
+        return self._grace.setdefault(
+            (task_id, run_key or "session"),
+            {"calls": 0, "llm": 0, "opened": 0, "events": 0},
+        )
+
+    def _grace_event(self, task_id: str, run_key: str, grace: dict[str, int],
+                     transition: str, call_index: int) -> None:
+        grace["events"] += 1
+        run_key = run_key or "session"
+        self.store.record_event(
+            stable_id(task_id, run_key, "budget_grace", transition, grace["events"]),
+            run_key, task_id, "budget_grace",
+            {"transition": transition, "task_id": task_id, "run_key": run_key,
+             "call_index": call_index},
+            False,
+        )
+
+    def _grace_open(self, task_id: str, run_key: str, grace: dict[str, int]) -> None:
+        if not grace["opened"]:
+            grace["opened"] = 1
+            self._grace_event(task_id, run_key, grace, "open", grace["calls"])
+
     @staticmethod
     def _target(tool_name: str, arguments: dict[str, Any]) -> str:
         raw = arguments.get("path") or arguments.get("url") or arguments.get("target") or arguments.get("command") or tool_name
@@ -387,7 +426,34 @@ class FleetPolicyRuntime:
         exhausted = self._exhausted(snapshot, context) if worker else None
         blocked_read = context.get("task_status") == "blocked" and result.effect == "read"
         if exhausted and not blocked_read:
-            result = Classification(result.effect, "budget_exhausted", "deny", f"hard budget exhausted: {exhausted}")
+            reason = f"hard budget exhausted: {exhausted}"
+            # v1.2.37 terminal grace (spec policy-budget-grace-20261007): on
+            # pure tool_calls exhaustion the worker keeps its lifecycle channel
+            # for up to GRACE_LIFECYCLE_CALLS calls per (task, run) so it can
+            # self-close with a partial handoff instead of dying as a false
+            # protocol-violation crash. The runaway cap is preserved: past the
+            # grace budget every call denies again. Other metrics keep the
+            # pre-grace behavior (immediate full deny, no grace).
+            if exhausted == "tool_calls":
+                run_key = self._run_key(context)
+                grace = self._grace_state(task_id, run_key)
+                self._grace_open(task_id, run_key, grace)
+                if is_lifecycle_tool(tool_name) and grace["calls"] < GRACE_LIFECYCLE_CALLS:
+                    grace["calls"] += 1
+                    self._grace_event(task_id, run_key, grace, "use", grace["calls"])
+                else:
+                    if is_lifecycle_tool(tool_name):
+                        # Grace budget spent — the runaway cap is restored.
+                        self._grace_event(task_id, run_key, grace, "exhaust", grace["calls"])
+                    else:
+                        remaining = max(0, GRACE_LIFECYCLE_CALLS - grace["calls"])
+                        reason += (
+                            " — budget exhausted: call kanban_complete or kanban_block "
+                            f"NOW with a partial handoff ({remaining} lifecycle grace calls remain)"
+                        )
+                    result = Classification(result.effect, "budget_exhausted", "deny", reason)
+            else:
+                result = Classification(result.effect, "budget_exhausted", "deny", reason)
         elif worker and not blocked_read and not is_lifecycle_tool(tool_name) and self.store.count_signature(
             task_id, "call_signature", call_signature, self._run_key(context) or None
         ) >= int(self.config["anti_loop"]["max_identical_calls"]):
@@ -608,7 +674,24 @@ class FleetPolicyRuntime:
         if idle >= int(self.config["anti_loop"]["max_idle_turns"]):
             rule, reason = "idle_turn_loop", f"idle turn threshold reached: {idle}"
         elif exhausted:
-            rule, reason = "budget_exhausted", f"hard budget exhausted: {exhausted}"
+            # v1.2.37 terminal grace (spec policy-budget-grace-20261007): pure
+            # tool_calls exhaustion must not kill the loop before the worker
+            # had its closing turn(s). Hold the stop payload while lifecycle
+            # grace remains, but never longer than GRACE_LLM_REQUESTS llm
+            # requests past the first detection — whichever limit hits first.
+            # Other metrics stop immediately, exactly as before.
+            if exhausted == "tool_calls":
+                run_key = self._run_key(context)
+                grace = self._grace_state(task_id, run_key)
+                self._grace_open(task_id, run_key, grace)
+                if grace["calls"] >= GRACE_LIFECYCLE_CALLS or grace["llm"] >= GRACE_LLM_REQUESTS:
+                    self._grace_event(task_id, run_key, grace, "exhaust", grace["calls"])
+                    rule, reason = "budget_exhausted", f"hard budget exhausted: {exhausted}"
+                else:
+                    grace["llm"] += 1
+                    return None
+            else:
+                rule, reason = "budget_exhausted", f"hard budget exhausted: {exhausted}"
         if not rule:
             return None
         payload = {

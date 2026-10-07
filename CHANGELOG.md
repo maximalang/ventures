@@ -1,5 +1,54 @@
 # Changelog
 
+## [1.2.37] - 2026-10-07
+
+### Added
+- Terminal grace on pure `tool_calls` budget exhaustion (card t_b71d23c0;
+  spec docs/fleet-ops/policy-budget-grace-20261007/SPEC.md; evidence: run 106
+  of t_173c47e4, 2026-10-07 — `budget_or_loop_stop` deny killed the LLM loop
+  at 12:30:06Z and the hard `budget_exhausted` deny severed every tool incl.
+  the lifecycle channel at 12:30:09Z, so the rc=0 exit was recorded as a
+  false "protocol violation" crash and the in-session handoff was lost;
+  retries 115/117 burned ~1.5h).
+- `policy.py`: `GRACE_LIFECYCLE_CALLS = 3`, `GRACE_LLM_REQUESTS = 2`.
+- `runtime.py` `pre_tool_call`: when the exhausted metric is exactly
+  `tool_calls`, lifecycle tools (LIFECYCLE_TOOLS, membership unchanged) stay
+  allowed for up to GRACE_LIFECYCLE_CALLS calls per (task_id, run_key); the
+  call past the grace budget denies `budget_exhausted` again (runaway cap
+  preserved). The non-lifecycle deny message now carries the close-now
+  instruction (call kanban_complete or kanban_block NOW with a partial
+  handoff, N lifecycle grace calls remain).
+- `runtime.py` `post_api_request`: on pure tool_calls exhaustion the stop
+  payload is held while grace remains; the loop is stopped once the
+  lifecycle grace budget is spent OR GRACE_LLM_REQUESTS llm requests passed
+  since first detection — whichever hits first. Both limits per
+  (task_id, run_key).
+- Grace state: in-memory registry per (task_id, run_key) + policy event
+  `budget_grace` (open/use/exhaust transitions with task/run/call_index,
+  significant=False) for observability.
+- `tests/test_v1237_budget_grace.py` — 8 tests covering the 6 spec
+  scenarios: close-now instruction, grace allow/count/cap + ledger charging,
+  post_api_request hold/stop timing (unused grace, partially used, spent),
+  wall_clock no-grace, v1.2.13 exemption during grace, per-run scoping.
+
+### Changed
+- `tests/test_v1213_lifecycle_exempt.py`
+  `test_lifecycle_calls_still_charge_budget_and_respect_exhaustion`: amended
+  to the v1.2.37 contract — the first GRACE_LIFECYCLE_CALLS lifecycle calls
+  past pure tool_calls exhaustion are grace-allowed; the invariant the test
+  guards (ledger charging + runaway bounded by budget_exhausted) is
+  unchanged and still asserted. This is the deliberate contract change of
+  this release, flagged for the reviewer.
+
+### Preserved invariants / limitations
+- Anti-loop caps apply during grace; denied calls still charge the
+  tool_calls budget; `is_lifecycle_tool` semantics unchanged; no config
+  schema changes; live config and plugin.yaml runtime keys untouched
+  (version bump only).
+- tokens/wall_clock/retries exhaustion keeps the pre-grace behavior:
+  immediate stop, no self-close. Those runs still cannot self-close — the
+  dispatcher retry contract covers them (documented per spec §2).
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

@@ -20,7 +20,7 @@ Contract under test:
 """
 from __future__ import annotations
 
-from fleet_policy.policy import LIFECYCLE_TOOLS, is_lifecycle_tool
+from fleet_policy.policy import GRACE_LIFECYCLE_CALLS, LIFECYCLE_TOOLS, is_lifecycle_tool
 from fleet_policy.redaction import args_hash, stable_id
 from fleet_policy.runtime import FleetPolicyRuntime
 
@@ -160,6 +160,15 @@ def test_lifecycle_calls_still_charge_budget_and_respect_exhaustion(runtime, tas
     runtime.pre_tool_call("kanban_heartbeat", args, task_context)
     limit = runtime.config["budgets"]["code"]["tool_calls"]
     runtime.store.add_budget(task_context["task_id"], "tool_calls", limit, "seed", runtime._run_key(task_context))
+    # v1.2.37 terminal grace: the first GRACE_LIFECYCLE_CALLS lifecycle calls
+    # past pure tool_calls exhaustion are grace-allowed so the worker can
+    # self-close with a partial handoff. The bounded-runaway invariant this
+    # test guards is unchanged: every call still charges the ledger and the
+    # call past the grace budget still denies budget_exhausted.
+    for index in range(GRACE_LIFECYCLE_CALLS):
+        task_context["tool_call_id"] = f"hb-budget-grace-{index}"
+        grace_decision = runtime.pre_tool_call("kanban_heartbeat", args, task_context)
+        assert grace_decision.decision == "allow", (index, grace_decision.rule_id)
     task_context["tool_call_id"] = "hb-budget-2"
     stopped = runtime.pre_tool_call("kanban_heartbeat", args, task_context)
     assert (stopped.decision, stopped.rule_id) == ("deny", "budget_exhausted")

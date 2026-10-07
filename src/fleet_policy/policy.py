@@ -399,6 +399,22 @@ def is_lifecycle_tool(tool_name: str) -> bool:
     """v1.2.13 M-E: normalized board-lifecycle namespace membership."""
     return _normalize_tool_name(tool_name) in LIFECYCLE_TOOLS
 
+
+# v1.2.37 (card t_b71d23c0, spec docs/fleet-ops/policy-budget-grace-20261007):
+# terminal grace on pure tool_calls exhaustion. A hard budget deny used to
+# sever EVERY tool incl. the lifecycle channel, and post_api_request stopped
+# the loop in the same turn, so a budget-exhausted run died as a false
+# "protocol violation" crash with the in-session handoff lost (run 106 of
+# t_173c47e4, 2026-10-07). The grace below lets the worker close its own card
+# with a partial handoff. The runaway cap from the v1.2.13 design comment
+# above is PRESERVED: past GRACE_LIFECYCLE_CALLS every call denies again.
+GRACE_LIFECYCLE_CALLS = 3
+# Loop-stop side of the grace: post_api_request holds the stop payload while
+# closing turns remain, but never for more than this many llm requests after
+# the first exhaustion detection — whichever limit hits first. Both limits
+# are per (task_id, run_key).
+GRACE_LLM_REQUESTS = 2
+
 # v1.2.7: `git clone`/`git fetch` moved out of READ_COMMAND. They are
 # network downloads into a local tree (state change), not pure reads; the
 # exact-head verifier lane never needed them. Chained `cd X && git status`
