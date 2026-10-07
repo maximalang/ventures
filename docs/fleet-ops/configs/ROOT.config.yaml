@@ -441,7 +441,12 @@ kanban:
   dispatch_interval_seconds: 60
   orchestrator_profile: company
   default_assignee: company
-  max_in_progress: 5
+  max_in_progress: 10
+  # Owner word 07.10 14:5x: «поднять до 10». Per-profile guardrail (#21582
+  # rationale): one profile can't monopolize all host slots / melt its model
+  # quota (qwen rate-limit storm 06.10 is the evidence). Kill-criterion: OOM /
+  # host freeze recurrence after this change → reduce before blaming RAM audit.
+  max_in_progress_per_profile: 3
   auto_decompose: false
 code_execution:
   timeout: 300
