@@ -1044,6 +1044,37 @@ def _effect_for(name: str, arguments: dict[str, Any]) -> Literal["read", "state_
     return "state_change"
 
 
+# --- lexical delta (card t_f6acc5dc): action-aware operand classification ---
+# D1 (F1, run2166 call19): an EMPTY-value dotted git config assignment
+# (`git -c <config-key>.helper=`) resets/disables the option; the token is a
+# config-key NAME, not a filesystem object. Only the empty-value form is
+# exempt and only directly after `git -c`; any non-empty value stays
+# guarded (fail-closed).
+_GIT_CONFIG_EMPTY_OPTION = re.compile(
+    r"^[A-Za-z][A-Za-z0-9_-]*(?:\.[A-Za-z0-9_-]+)+=$"
+)
+# D2 (F2, run2172 call26): dispatcher-provided worker binding pins are
+# nonsecret context facts. A NAME=value binding for a child process does not
+# mutate the referenced store, so the assignment token is not a filesystem
+# operand. Fail-closed: D2e (in _path_guard_subjects) re-injects the bound
+# value as a subject whenever the command expands the same pin ($NAME),
+# because the value can then re-enter as a real operand. Unknown names are
+# never exempt.
+_ENV_PIN_BINDING_NAMES = frozenset({
+    "HERMES_KANBAN_DB",
+    "HERMES_KANBAN_BOARD",
+    "HERMES_KANBAN_TASK",
+    "HERMES_KANBAN_WORKSPACE",
+    "HERMES_KANBAN_WORKSPACES_ROOT",
+    "HERMES_TENANT",
+})
+_ENV_PIN_BINDING = re.compile(
+    r"(?<![A-Za-z0-9_])("
+    + "|".join(sorted(_ENV_PIN_BINDING_NAMES))
+    + r")=(\"[^\"]*\"|'[^']*'|\S+)"
+)
+
+
 def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
     """F4: the path guard sees only path-like targets, never free text."""
     if name in TERMINAL_TOOLS:
@@ -1063,6 +1094,18 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
             "--format", "--output", "-name", "--name",
         }
         subjects: list[str] = []
+        # Lexical delta D2e (t_f6acc5dc): an expanded worker pin can feed the
+        # bound value back in as a real operand ($PIN / ${PIN}); inject the
+        # value so the guard sees it. Fail-closed: injection only ADDS a
+        # subject, it never allows anything by itself.
+        for binding_match in _ENV_PIN_BINDING.finditer(command):
+            pin_name = binding_match.group(1)
+            if pin_name in _ENV_PIN_BINDING_NAMES and re.search(
+                r"\$\{?" + pin_name + r"\b", command
+            ):
+                bound_value = binding_match.group(2).strip("'\"")
+                if _is_path_like(bound_value):
+                    subjects.append(bound_value)
         # A code-bearing flag value (python -c "…") is executable input, not
         # prose: its text is scanned as an operand even though it was quoted.
         for code_match in re.finditer(
@@ -1090,14 +1133,37 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
             # filesystem target — the original false-deny class (c2c46082);
             # later positionals stay guarded (needle auth.json → deny).
             head = stage[0] if stage else ""
-            search_head = PurePath(head.replace("\\", "/")).name.lower() in {
+            head_name = PurePath(head.replace("\\", "/")).name.lower()
+            search_head = head_name in {
                 "grep", "rg", "findstr", "select-string",
             }
+            git_head = head_name in {"git", "git.exe"}
             pattern_seen = False
             expect_value = False
+            expect_git_config = False
             for token in stage[1:]:
                 if expect_value:
                     expect_value = False  # flag value = prose, never a target
+                    continue
+                if expect_git_config:
+                    # Lexical delta D1 (t_f6acc5dc F1, run2166 call19): the
+                    # token after `git -c` is a config assignment. Only the
+                    # EMPTY-value dotted-key form (option reset/disable, e.g.
+                    # an empty helper) names no filesystem object; every
+                    # non-empty value falls through and stays guarded.
+                    expect_git_config = False
+                    if _GIT_CONFIG_EMPTY_OPTION.match(token):
+                        continue
+                if git_head and token == "-c":
+                    expect_git_config = True
+                    continue
+                pin_binding = _ENV_PIN_BINDING.match(token)
+                if pin_binding and pin_binding.group(1) in _ENV_PIN_BINDING_NAMES:
+                    # Lexical delta D2 (t_f6acc5dc F2, run2172 call26): a
+                    # dispatcher worker pin assignment binds the child
+                    # process; it is context, not a filesystem operand. The
+                    # bound value stays guarded via the D2e injection above
+                    # whenever the command expands the same pin.
                     continue
                 if token in value_flags:
                     expect_value = True
