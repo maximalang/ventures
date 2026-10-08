@@ -40,6 +40,11 @@ CFG_NAME = "fleet-" + "policy.yaml"
     'echo "=== section ==="',
     'printf "x=%s\\n" 42',
     'true',
+    # v1.2.43 (t_40022daf): fd duplication writes nothing — both stages here
+    # are reads. The _SHELL_METACHARACTERS comment always claimed `2>&1` was
+    # exempt ("handled by the redirect scanner"); the bare-`&` alternative
+    # matched it by mistake. Moved out of the adversary list.
+    'wc -l PORTFOLIO.md 2>&1; echo x',
 ])
 def test_echo_marker_read_diagnostics_are_read_only(config, command):
     result = _classify(command, config)
@@ -51,9 +56,12 @@ def test_echo_marker_read_diagnostics_are_read_only(config, command):
 @pytest.mark.parametrize("command", [
     f'echo hi > config/{CFG_NAME}',            # redirect => write marker
     f'echo "x" | tee config/{CFG_NAME}',       # tee => write marker
+    # fd-dup followed by a REAL file redirect still trips the write-marker
+    # scan — the v1.2.43 fd-dup exemption never launders file writes.
+    f'wc -l PORTFOLIO.md 2>&1 > config/{CFG_NAME}',
+    'echo hi > /dev/null 2>&1 &',              # backgrounding stays fail-closed
     'echo $(cat .env)',                        # command substitution fail-closed
     'echo hi `cat auth.json`',                 # backticks fail-closed
-    'wc -l PORTFOLIO.md 2>&1; echo x',         # fd-dup `2>&1` trips the metacharacter scan
     'FOO=bar echo hi',                         # env prefix stays fail-closed
     'date',                                    # date stays fail-closed (clock-set forms)
     'python -c "import sqlite3; sqlite3.connect(\'file:C:/x/kanban.db?mode=ro\', uri=True)"',

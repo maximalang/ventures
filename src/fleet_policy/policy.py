@@ -583,6 +583,58 @@ _ASSIGNMENT_STAGE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=(?:\"[^\"]*\"|'[^']*'|\
 _OUTPUT_REDIRECT = re.compile(r"&>>|&>|>>|>")
 
 
+def _simple_command_spans(command: str) -> list[tuple[int, int]]:
+    """Span-keeping variant of the stage split (same quote-aware rules).
+
+    v1.2.34 W2(b): the split is quote-aware — `&&`, `||`, `;` and `|` inside
+    BALANCED single/double quotes are literal characters of one stage (the
+    shell never treats them as control operators). An unbalanced quote state
+    fails closed to the historical quote-blind split, so a stray apostrophe
+    can never swallow a later mutating stage into a "quoted" span.
+    """
+    spans: list[tuple[int, int]] = []
+    start = 0
+    quote: str | None = None
+    index = 0
+    length = len(command)
+    while index < length:
+        char = command[index]
+        if quote is not None:
+            if char == "\\" and quote == '"' and index + 1 < length:
+                index += 2
+                continue
+            if char == quote:
+                quote = None
+            index += 1
+            continue
+        if char in "\"'":
+            quote = char
+            index += 1
+            continue
+        if command[index:index + 2] in ("&&", "||"):
+            spans.append((start, index))
+            index += 2
+            start = index
+            continue
+        if char in ";|":
+            spans.append((start, index))
+            index += 1
+            start = index
+            continue
+        index += 1
+    if quote is not None:
+        # Unbalanced quoting: fall back to the historical blind split.
+        blind: list[tuple[int, int]] = []
+        cursor = 0
+        for match in re.finditer(r"&&|\|\||;|\|", command):
+            blind.append((cursor, match.start()))
+            cursor = match.end()
+        blind.append((cursor, length))
+        return [(s, e) for s, e in blind if command[s:e].strip()]
+    spans.append((start, length))
+    return [(s, e) for s, e in spans if command[s:e].strip()]
+
+
 def _simple_commands(command: str) -> list[str]:
     """Split a command line into stages: chains, lists and pipes.
 
@@ -595,45 +647,10 @@ def _simple_commands(command: str) -> list[str]:
     never swallow a later mutating stage into a "quoted" span; the MUTATOR
     and write-marker scans additionally run over the raw text.
     """
-    stages: list[str] = []
-    current: list[str] = []
-    quote: str | None = None
-    index = 0
-    length = len(command)
-    while index < length:
-        char = command[index]
-        if quote is not None:
-            current.append(char)
-            if char == "\\" and quote == '"' and index + 1 < length:
-                current.append(command[index + 1])
-                index += 2
-                continue
-            if char == quote:
-                quote = None
-            index += 1
-            continue
-        if char in "\"'":
-            quote = char
-            current.append(char)
-            index += 1
-            continue
-        if command[index:index + 2] in ("&&", "||"):
-            stages.append("".join(current))
-            current = []
-            index += 2
-            continue
-        if char in ";|":
-            stages.append("".join(current))
-            current = []
-            index += 1
-            continue
-        current.append(char)
-        index += 1
-    if quote is not None:
-        # Unbalanced quoting: fall back to the historical blind split.
-        return [part.strip() for part in re.split(r"&&|\|\||;|\|", command) if part.strip()]
-    stages.append("".join(current))
-    return [part.strip() for part in stages if part.strip()]
+    return [
+        command[start:end].strip()
+        for start, end in _simple_command_spans(command)
+    ]
 
 
 def _stage_tokens(segment: str) -> list[str]:
@@ -641,6 +658,65 @@ def _stage_tokens(segment: str) -> list[str]:
         return shlex.split(segment, posix=False)
     except ValueError:
         return segment.split()
+
+
+# v1.2.43 (t_40022daf): search-tool operands are DATA, never verbs. A bare
+# pattern like `grep -rn deploy src/` put the word `deploy` in front of the
+# MUTATOR scan (only QUOTED spans were neutralized by v1.2.22), flipping a
+# pure read into state_change and then into an evidence-gated lexical
+# category — the same literal-trap class as the quoted-form incident, one
+# quoting style down. Masking is safe by construction: it only affects the
+# MUTATOR pre-filter view, the write-marker scan keeps the raw command, and
+# every stage still passes its own read-only check afterwards, so a masked
+# operand can never launder a mutating stage (a mutator hidden in an operand
+# position would not be executed by these programs at all).
+_SEARCH_DATA_HEADS = {"grep", "rg", "findstr", "select-string", "find"}
+_SEARCH_DATA_VALUE_FLAGS = {
+    "-e", "--regexp", "-f", "--file", "-m", "--max-count",
+    "--include", "--exclude", "--glob", "-g", "--type", "-t",
+    "-name", "--name", "-iname", "-path", "-regex",
+}
+
+
+def _search_data_spans(command: str) -> list[tuple[int, int]]:
+    """Operand spans of search-tool stages (patterns, paths, value-flag
+    values). Flags themselves are never masked."""
+    spans: list[tuple[int, int]] = []
+    for stage_start, stage_end in _simple_command_spans(command):
+        segment = command[stage_start:stage_end]
+        tokens = list(re.finditer(r"\S+", segment))
+        if not tokens:
+            continue
+        if _program_name(tokens[0].group(0)) not in _SEARCH_DATA_HEADS:
+            continue
+        expect_value = False
+        for token in tokens[1:]:
+            bare = token.group(0).strip("\"'")
+            if expect_value:
+                expect_value = False
+                spans.append((stage_start + token.start(), stage_start + token.end()))
+                continue
+            if bare.startswith("-"):
+                flag = bare.split("=", 1)[0].lower()
+                if flag in _SEARCH_DATA_VALUE_FLAGS and "=" not in bare:
+                    expect_value = True
+                continue
+            spans.append((stage_start + token.start(), stage_start + token.end()))
+    return spans
+
+
+def _mask_mutator_view(command: str) -> str:
+    """Length-preserving MUTATOR pre-filter view: quoted spans (v1.2.22) and
+    search-tool operands (v1.2.43) are blanked; everything else keeps its
+    raw text and offsets."""
+    chars = list(command)
+    for match in re.finditer(r"\"[^\"]*\"|'[^']*'", command):
+        for pos in range(match.start(), match.end()):
+            chars[pos] = " "
+    for start, end in _search_data_spans(command):
+        for pos in range(start, end):
+            chars[pos] = " "
+    return "".join(chars)
 
 
 def _writes_via_option(program: str, args: list[str]) -> bool:
@@ -728,8 +804,14 @@ _GH_API_ENDPOINT_PATH = re.compile(r"/?[a-z0-9._-]+(?:/[a-z0-9._-]+)*")
 # Background jobs (`cmd &`) and unconditional chaining would otherwise
 # hide a second command behind a read-only first stage; fd duplication
 # like `2>&1` is handled by the redirect scanner, not matched here.
+# v1.2.43 (t_40022daf): make that comment true — the bare-`&` alternative
+# previously matched the `&` inside fd-duplication (`2>&1`, `>&2`), so any
+# read pipeline with stderr redirection failed closed into state_change
+# and then into the keyword rules (live incident: event
+# f3b2e0d2cd9e0edaedaccbbaa88849fd7fa1b2703ce03f4ab4222876c09578ba).
+# `&>`/`&>>` (write-both redirect) and `cmd &` still fail closed.
 _SHELL_METACHARACTERS = re.compile("[\\n\
-]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
+]|(?<![&>])&(?!&)|\\$\\(|`|<\\(|>\\(")
 # v1.2.25: read-only process substitution `<(...)` with a parenthesis-free
 # inner span (no nesting — nested forms fail closed). Verified inner-first
 # in _terminal_is_read_only, then neutralized so the metacharacter guard
@@ -1043,6 +1125,10 @@ _SQLITE_SAFE_FLAGS = frozenset({
 })
 _SQLITE_READ_STATEMENT = re.compile(r"^(?:select|with|values|explain)\b", re.IGNORECASE)
 _SQLITE_READ_PRAGMA = re.compile(r"^pragma\b[^=]*$", re.IGNORECASE)
+# v1.2.43 (t_40022daf): fd-duplication (`2>&1`) is shell plumbing around
+# the sqlite3 call, not a database argument; it must not consume one of
+# the two positional slots the read lane validates.
+_SQLITE_FD_DUP = re.compile(r"\d?>&\d?")
 
 
 def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
@@ -1051,6 +1137,8 @@ def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
     positionals: list[str] = []
     for raw in tokens[1:]:
         token = _clean_shell_token(raw)
+        if _SQLITE_FD_DUP.fullmatch(token):
+            continue
         if token.startswith("-"):
             if token.lower() in _SQLITE_SAFE_FLAGS:
                 continue
@@ -1061,6 +1149,11 @@ def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
     if len(positionals) != 2:
         return False
     statement = positionals[1].strip()
+    # v1.2.43 (t_40022daf): a single trailing statement terminator is
+    # standard SQL, not a multi-statement chain — strip it before the
+    # separator check so `sqlite3 ro "SELECT ...;"` stays on the read
+    # lane. Interior separators still fail closed.
+    statement = re.sub(r";\s*$", "", statement)
     if not statement or statement.startswith(".") or ";" in statement:
         return False
     return bool(
@@ -1107,7 +1200,9 @@ def _terminal_is_read_only(command: str) -> bool:
     # category. The unquote regex is the same one _has_write_marker already
     # uses; the RAW text still feeds the write-marker scan below, so
     # redirects and mutating flags outside quotes stay fail-closed.
-    mutator_view = re.sub(r"\"[^\"]*\"|'[^']*'", " ", command)
+    # v1.2.43: the view additionally blanks search-tool OPERANDS (v1.2.22
+    # covered only the quoted form; a bare pattern hit the same trap).
+    mutator_view = _mask_mutator_view(command)
     if MUTATOR.search(mutator_view) or _has_write_marker(command):
         return False
     segments = _simple_commands(command)
@@ -1845,14 +1940,14 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"\b(?:kyc|phone verification|domain owner|bank owner|domain or bank ownership)\b", "phone_kyc_domain_or_bank_owner_action", "approval_required"),
         (r"\b(?:sign contract|legal commitment|regulated claim|material reputation|defamation|guaranteed return)\b", "legal_or_material_reputation_risk", "approval_required"),
         (r"\b(?:transfer ownership|root access|admin access expansion|recovery key|change owner)\b", "ownership_or_root_access_change", "approval_required"),
-        (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
+        (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|[\s\"'])rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
         (rf"(?:\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),
-        (r"(?:\b(?:delete|remove|cleanup|purge|git\s+clean|branch\s+-[dD]|tag\s+-d|stash\s+(?:drop|clear)|checkout\s+--\s+\.)\b|(?:^|\s)rm\s)", "destructive_change", "allow"),
+        (r"(?:\b(?:delete|remove|cleanup|purge|git\s+clean|branch\s+-[dD]|tag\s+-d|stash\s+(?:drop|clear)|checkout\s+--\s+\.)\b|(?:^|[\s\"'])rm\s)", "destructive_change", "allow"),
         (r"\b(?:create|open|register)[^\n]*(?:free service account|free account|trial account)\b", "free_service_account", "allow"),
     ]
     for pattern, category, decision in rules:

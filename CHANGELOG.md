@@ -1,5 +1,53 @@
 # Changelog
 
+## [1.2.43] - 2026-10-08
+
+Card t_40022daf (fleet-ops). Consolidates the in-flight fix branches (PR #56
+v1.2.37 lexical-delta capture, PR #57 v1.2.38 FP root classes, PR #63 v1.2.42
+built-in retention) onto current trunk and closes the residual read-lane
+false-positive class proven by live event
+f3b2e0d2cd9e0edaedaccbbaa88849fd7fa1b2703ce03f4ab4222876c09578ba
+(2026-10-08, task t_40022daf call 41: a read-only `sqlite3 mode=ro` FTS
+query blocked as irreversible_data_loss because the query text contained a
+risk keyword).
+
+### Fixed
+- `_SHELL_METACHARACTERS`: the bare-`&` alternative no longer matches the
+  `&` inside fd duplication (`2>&1`, `>&2`). The pre-existing comment
+  already claimed this exemption; the regex never implemented it, so every
+  read pipeline with stderr redirection failed closed into state_change and
+  the keyword rules. `cmd &`, `&> file` and `&>> file` still fail closed.
+- `_sqlite_stage_is_read_only`: a single trailing statement terminator
+  (`SELECT ...;`) no longer ejects the sqlite read lane; interior
+  separators still fail closed. fd-duplication tokens (`2>&1`) no longer
+  consume positional slots in the lane's two-positional validation.
+- MUTATOR pre-filter: search-tool operands (grep/rg/findstr/select-string/
+  find patterns, paths, and value-flag values) are masked as data, closing
+  the bare-pattern literal trap (`grep -rn deploy src/`) that v1.2.22 fixed
+  only for the quoted form. The view only feeds the MUTATOR pre-filter; the
+  write-marker scan keeps the raw command and every stage still passes its
+  own read-only check.
+- rm keyword rules: the `(?:^|\s)rm` anchor now accepts quote characters
+  (`(?:^|[\s"'])rm`), closing the quote-adjacent evasion
+  (`python -c "os.system('rm -rf ...')"`, `bash -c 'rm -rf ...'`) that
+  previously slipped through as scoped_state_change.
+
+### Added
+- `scripts/prune_policy_db.py` — operator-only one-time prune of the live
+  event store: pre-flight counts, SQLite backup-API snapshot with
+  MANIFEST.json + MANIFEST.sha256, forced maintenance tick (verified
+  archive before delete), full VACUUM, post-run archive sidecar
+  re-verification and PRUNE-REPORT.json. Dry-run by default posture;
+  `--yes` required to execute.
+- tests/test_v1243_readlane_fp.py (25 tests) and
+  tests/test_v1243_prune_script.py (3 tests).
+
+### Notes
+- `python -c` code strings keep their nested literals scanned (no nested
+  masking): prompt text embedded in code can still trip the keyword rules.
+  The sanctioned lane for prompt-heavy runners is a script file via
+  write_file + `python file.py` — file contents are data, not commands.
+
 ## [1.2.42] - 2026-10-07
 
 ### Fixed (root cause)
