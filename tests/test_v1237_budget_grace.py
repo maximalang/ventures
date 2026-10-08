@@ -23,13 +23,25 @@ Contract under test:
    they are bounded by the grace cap alone;
 6. every grace transition emits a budget_grace policy event
    (open/use/exhaust) carrying task/run/call_index, significant=False.
+
+QA run 141 regressions (card t_b71d23c0):
+F1. the worker-visible hook message of the integration adapter must surface
+    the close-now instruction (the runtime carried it only in the internal
+    reason, the adapter dropped it);
+F2. stop-payload delivery idempotency is per (task_id, run_key): a previous
+    run's budget_or_loop_stop event must not suppress the mandatory stop of
+    a later scoped run — same or fresh runtime — while the stop is still
+    delivered exactly once within a run.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import time
+from pathlib import Path
 
 from fleet_policy.policy import GRACE_LIFECYCLE_CALLS, GRACE_LLM_REQUESTS
+from fleet_policy.runtime import FleetPolicyRuntime
 
 
 def _exhaust_tool_calls(runtime, task_context) -> int:
@@ -182,3 +194,91 @@ def test_grace_state_is_scoped_per_run(runtime, task_context):
     new_run["tool_call_id"] = "run-b-1"
     decision = runtime.pre_tool_call("kanban_heartbeat", {"note": "fresh run"}, new_run)
     assert decision.decision == "allow"
+
+
+# --- QA F1: adapter hook message surfaces the close-now instruction ---
+
+def _load_adapter(name: str):
+    module_path = (
+        Path(__file__).parents[1] / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
+    )
+    spec = importlib.util.spec_from_file_location(name, module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_hook_message_surfaces_close_now_instruction(runtime, task_context, monkeypatch):
+    """Adapter-level regression for QA F1: real runtime + real integration
+    adapter; only the external context lookup and the board projection are
+    replaced by fixtures/capture."""
+    _exhaust_tool_calls(runtime, task_context)
+    module = _load_adapter("fp_plugin_v1237_grace_message")
+    monkeypatch.setattr(module, "_RUNTIME", runtime)
+    monkeypatch.setattr(module, "context", lambda kwargs: dict(task_context))
+    projected = []
+    monkeypatch.setattr(module, "_project", lambda payload: projected.append(payload))
+
+    output = module.pre_tool_call("write_file", {"path": "x.txt", "content": "x"})
+    assert output["action"] == "block"
+    message = output["message"]
+    assert "budget_exhausted" in message
+    assert "kanban_complete" in message and "kanban_block" in message
+    assert "NOW" in message and "partial handoff" in message
+    assert f"{GRACE_LIFECYCLE_CALLS} lifecycle grace calls remain" in message
+    # The company-route projection is unchanged: exactly one projection with
+    # the internal reason intact.
+    assert len(projected) == 1
+    assert projected[0]["rule_id"] == "budget_exhausted"
+    assert "kanban_complete" in projected[0]["reason"]
+
+
+# --- QA F2: stop delivery is idempotent per (task, run), mandatory per run ---
+
+def _run_to_cap(rt, ctx, tag: str):
+    """Drive post_api_request past GRACE_LLM_REQUESTS and return the stop."""
+    for index in range(GRACE_LLM_REQUESTS):
+        ctx["api_request_id"] = f"{tag}-{index}"
+        assert rt.post_api_request(ctx, None, 1) is None, (tag, index)
+    ctx["api_request_id"] = f"{tag}-final"
+    return rt.post_api_request(ctx, None, 1)
+
+
+def test_stop_delivered_once_per_run_and_again_for_new_runs(runtime, task_context):
+    _exhaust_tool_calls(runtime, task_context)
+    stop_a = _run_to_cap(runtime, task_context, "run-a")
+    assert stop_a is not None and stop_a["rule_id"] == "budget_exhausted"
+    assert stop_a["run_key"] == runtime._run_key(task_context)
+    # Within the same run the stop payload is delivered exactly once.
+    task_context["api_request_id"] = "run-a-repeat"
+    assert runtime.post_api_request(task_context, None, 1) is None
+
+    limit = int(runtime.config["budgets"]["code"]["tool_calls"])
+
+    # Same runtime, new scoped run: the previous run's stop event must not
+    # suppress this run's mandatory stop.
+    run_b = dict(task_context, current_run_id="r2", run_id="r2")
+    runtime.store.add_budget(task_context["task_id"], "tool_calls", limit, "seed-r2", "r2")
+    stop_b = _run_to_cap(runtime, run_b, "run-b")
+    assert stop_b is not None and stop_b["run_key"] == "r2"
+
+    # Fresh runtime on the same DB (in-memory grace registry lost): the stop
+    # is still delivered for the new scoped run.
+    fresh = FleetPolicyRuntime(
+        runtime.root,
+        config_path=runtime.root / "config" / "fleet-policy.yaml",
+        db_path=runtime.store.path,
+    )
+    run_c = dict(task_context, current_run_id="r3", run_id="r3")
+    fresh.store.add_budget(task_context["task_id"], "tool_calls", limit, "seed-r3", "r3")
+    stop_c = _run_to_cap(fresh, run_c, "run-c")
+    assert stop_c is not None and stop_c["run_key"] == "r3"
+
+    # One stop event row per run, none shared across runs.
+    with fresh.store.connect() as connection:
+        rows = connection.execute(
+            "SELECT payload_json FROM events WHERE task_id=? AND kind='budget_or_loop_stop' ORDER BY rowid",
+            (task_context["task_id"],),
+        ).fetchall()
+    runs = [json.loads(row["payload_json"])["run_key"] for row in rows]
+    assert sorted(runs) == ["r1", "r2", "r3"]

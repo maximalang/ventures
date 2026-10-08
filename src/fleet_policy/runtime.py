@@ -694,6 +694,7 @@ class FleetPolicyRuntime:
                 rule, reason = "budget_exhausted", f"hard budget exhausted: {exhausted}"
         if not rule:
             return None
+        run_key = self._run_key(context) or "session"
         payload = {
             "decision": "deny", "rule_id": rule, "reason": reason, "task_id": task_id,
             "project": context.get("project", ""), "profile": context.get("profile", ""),
@@ -704,10 +705,16 @@ class FleetPolicyRuntime:
             # pending forever (39 of 83 outbox events on 2026-09-07).
             "board": str(context.get("board") or ""),
             "task_status": str(context.get("task_status") or "unknown"),
-            "run_key": self._run_key(context) or "session",
+            "run_key": run_key,
         }
+        # v1.2.37 rework (QA run 141 on t_b71d23c0, finding F2): stop delivery
+        # idempotency is per (task_id, run_key) — the stop event id must carry
+        # the run key, otherwise a previous run's budget_or_loop_stop row
+        # INSERT-OR-IGNORE-dedups the current run's event and its mandatory
+        # stop payload is never returned. Within one run the stop is still
+        # delivered exactly once.
         inserted = self.store.record_event(
-            stable_id(task_id, rule, exhausted or idle), str(context.get("run_id") or task_id),
+            stable_id(task_id, run_key, rule, exhausted or idle), run_key,
             task_id, "budget_or_loop_stop", payload, True,
         )
         return payload if inserted else None

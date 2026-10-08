@@ -49,6 +49,22 @@
   immediate stop, no self-close. Those runs still cannot self-close — the
   dispatcher retry contract covers them (documented per spec §2).
 
+### Fixed (review rework — QA run 141 on t_b71d23c0)
+- `integrations/hermes/fleet-policy-plugin/__init__.py` `_message`: the
+  worker-visible hook message of a `budget_exhausted` deny now carries the
+  bounded runtime reason, i.e. the close-now instruction (call
+  kanban_complete or kanban_block NOW with a partial handoff, N lifecycle
+  grace calls remain). Previously the instruction existed only in the
+  internal reason/projection and never reached the worker (QA F1).
+- `runtime.py` `post_api_request`: the `budget_or_loop_stop` event id is now
+  `stable_id(task_id, run_key, rule, metric)` — stop delivery is idempotent
+  per (task_id, run_key): a previous run's stop event no longer suppresses
+  the mandatory stop payload of a later scoped run (same or fresh runtime);
+  within one run the stop is still delivered exactly once (QA F2).
+- `tests/test_v1237_budget_grace.py`: +2 regression tests — adapter-level
+  hook message surfacing (F1) and per-run stop delivery across same/fresh
+  runtimes with once-per-run idempotency (F2).
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

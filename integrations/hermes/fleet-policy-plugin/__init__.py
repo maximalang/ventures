@@ -61,6 +61,15 @@ def _message(payload: dict[str, Any]) -> str:
         f"pattern={payload.get('pattern_category') or 'unknown'} "
         f"call_index={payload.get('call_index') or 0}"
     )
+    # v1.2.37 rework (QA run 141 on t_b71d23c0, finding F1): SPEC
+    # policy-budget-grace §1 requires the first grace-enabling deny to reach
+    # the worker with the close-now instruction. The runtime builds that
+    # instruction into `reason` (a bounded string: metric name + the fixed
+    # instruction + remaining grace count — no arbitrary payload data), but
+    # the hook message used to drop it. Surface it for budget_exhausted.
+    reason = str(payload.get("reason") or "")
+    if payload.get("rule_id") == "budget_exhausted" and reason:
+        base += f" reason={reason}"
     # Канон 17.09: deny = пауза с маршрутом. Маршрут кладём в сообщение
     # (воркер читает его в этом же ране) и в next_step (для blocked-карты).
     rem = payload.get("remediation") or {}
