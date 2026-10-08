@@ -15,6 +15,36 @@ TASK_LINE = re.compile(r"(?im)^\s*task_type\s*:\s*([a-z_-]+)\s*$")
 TASK_TAG = re.compile(r"(?i)(?:^|[\s,;])task_type\s*=\s*([a-z_-]+)(?=$|[\s,;])")
 TASK_SKILL = re.compile(r"(?i)(?:^|[\s,;])task-type-(research|code|review|ops)(?=$|[\s,;])")
 
+# v1.2.38 FP-literal-traps (card t_e393b6e8, RECOVERY-PROGRAM RR-4c): a
+# task-type token inside an EXPLICIT QUOTE (markdown blockquote line, fenced
+# code block, «…» / "…" / `…` inline span) or inside a SANCTIONED emission
+# binding line (any line carrying a head=<hex> binding — company anchors,
+# gate verdicts quoted for verification) is DATA: an echo of an incident,
+# another card or an attestation contract. It never classifies THIS card.
+# The only literal that establishes a class is the bare marker line the
+# company writes into the body; the only legal literal form in a comment is
+# the authorized author's binding line, consumed by missing_gates — never
+# by this inference. Live POISON 04.10.2026: quoted markers classified
+# cards into the wrong class or fenced them as "unknown task_type" forever.
+_EMIT_BINDING_LINE = re.compile(r"(?im)^.*\bhead[=:\s]+[0-9a-f]{7,64}\b.*$")
+_BLOCKQUOTE_LINE = re.compile(r"(?m)^\s*>.*$")
+_FENCED_CODE_BLOCK = re.compile(r"(?ms)^[ \t]*(?:```|~~~).*?^[ \t]*(?:```|~~~)[ \t]*$")
+_INLINE_QUOTE_SPAN = re.compile(r"«[^»\n]*»|\"[^\"\n]*\"|`[^`\n]*`")
+
+
+def _mask_quoted_marker_text(text: str) -> str:
+    """Blank quoted/binding spans so their task-type tokens cannot classify.
+
+    Length-preserving (masked spans become spaces, fences keep their
+    newlines), so no new token adjacency is fabricated and match positions
+    stay stable. An unterminated fence is NOT masked — malformed bodies
+    fail closed to the historical first-marker behavior.
+    """
+    masked = _FENCED_CODE_BLOCK.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), text)
+    masked = _EMIT_BINDING_LINE.sub(lambda m: " " * len(m.group(0)), masked)
+    masked = _BLOCKQUOTE_LINE.sub(lambda m: " " * len(m.group(0)), masked)
+    return _INLINE_QUOTE_SPAN.sub(lambda m: " " * len(m.group(0)), masked)
+
 CANONICAL_PUBLIC_POLICY_DOC = (
     "c:/users/max/desktop/all/ventures/" + "app" + "rovals.md"
 )
@@ -46,12 +76,17 @@ def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
     create a class for an unmarked body nor poison or switch an existing one.
     Within the body, the FIRST marker whose value is a canonical task type
     decides; non-canonical markers are reported only when the body carries
-    no canonical marker at all."""
+    no canonical marker at all.
+
+    v1.2.38 FP-literal-traps: quoted spans (blockquotes, fenced blocks,
+    «…»/"…"/`…`) and emission binding lines (head=<hex>) are masked out
+    BEFORE matching — their task-type tokens are data, never class markers.
+    """
     body = values[0] if values else None
     first_noncanonical: str | None = None
     items = body if isinstance(body, (list, tuple, set)) else [body]
     for item in items:
-        text = str(item or "")
+        text = _mask_quoted_marker_text(str(item or ""))
         matches: list[tuple[int, str]] = []
         for pattern in (TASK_LINE, TASK_TAG, TASK_SKILL):
             matches.extend((match.start(1), match.group(1)) for match in pattern.finditer(text))
@@ -140,6 +175,57 @@ def _is_control_plane_store_name(basename: str) -> bool:
     return bool(_STORE_DB_SUFFIX.search(lowered)) and any(
         token in lowered for token in _STORE_NAME_TOKENS
     )
+
+
+# v1.2.38 FP-read-lane (card t_e393b6e8, RR-4b): ENUMERATION of a
+# directory-family protected pattern (sessions / request_dump / dumps)
+# reveals NAMES, never contents — it is not a secret operation. Live FP
+# (t_90c07896 run 41): `ls <profiles>/tech/sessions/` denied as
+# secret_read_or_write while the sanctioned route (company guidance) was
+# exactly "перечисли имена файлов". Reading ANY file inside those trees
+# (cat/grep/read_file/search_files content mode) stays denied, and
+# hard-secret FILE names (.env*, auth.json, *credential*, *secret*, key
+# material) are deliberately NOT enumerable: `ls` on them is a
+# reconnaissance primitive for the exact stores the guard protects.
+_ENUMERABLE_DIRECTORY_SEGMENTS = frozenset({"sessions", "request_dump", "request_dumps", "dumps"})
+_ENUMERATION_PROGRAMS = frozenset({"ls", "dir"})
+
+
+def _enumerable_directory_pattern(pattern: str) -> bool:
+    """True when the protected pattern describes a directory family whose
+    NAME LISTING is not a secret read (sessions/dumps/request_dump trees)."""
+    parts = {
+        part.strip("*?")
+        for part in re.split(r"[\\/]", str(pattern).lower())
+        if part not in ("", "**", "*")
+    }
+    return bool(parts & _ENUMERABLE_DIRECTORY_SEGMENTS)
+
+
+def _enumeration_only_read(name: str, arguments: dict[str, Any], effect: str) -> bool:
+    """True when the call enumerates directory NAMES without touching file
+    contents: `search_files(target=files)` or a terminal command whose every
+    stage is a bare `ls`/`dir`. Fail-closed on any shell metacharacter,
+    write marker, mutator token, or non-enumeration program in any stage."""
+    if effect != "read":
+        return False
+    if name == "search_files":
+        return str(arguments.get("target") or "content").lower() == "files"
+    if name not in TERMINAL_TOOLS:
+        return False
+    command = str(arguments.get("command") or arguments.get("cmd") or "")
+    if not command or _SHELL_METACHARACTERS.search(command) or _has_write_marker(command):
+        return False
+    if MUTATOR.search(re.sub(r"\"[^\"]*\"|'[^']*'", " ", command)):
+        return False
+    stages = [stage for stage in _simple_commands(command) if stage.strip()]
+    if not stages:
+        return False
+    for stage in stages:
+        tokens = _stage_tokens(stage)
+        if not tokens or _program_name(tokens[0]) not in _ENUMERATION_PROGRAMS:
+            return False
+    return True
 
 
 def _git_tracked_source_file(word: str, arguments: dict[str, Any]) -> bool:
@@ -445,7 +531,18 @@ READ_COMMAND = re.compile(
     # hard to bound lexically (-us/-ns/-Iseconds all cluster with 's'), so it
     # stays fail-closed. echo/printf never read or write files; redirects,
     # tee, command substitution and backticks still fail closed elsewhere.
-    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|diff\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
+    # v1.2.38 FP-read-lane (card t_e393b6e8, RR-3/RR-4a): the sanctioned
+    # read-only diagnostics route for policy state joins the read lane —
+    # `fleet-policy status|show|events|task` (console script) and
+    # `python -m fleet_policy.cli status|show|events|task`, with the global
+    # `--root` option tolerated before the subcommand. The mutating verbs
+    # (approve/reject/revoke/override-expected-failure/retention/drain-*/
+    # grant-capability/build-*) are NOT listed, so they never inherit the
+    # lane; the worker_self_approval guard below additionally tolerates the
+    # same `--root` gap so the mutating verbs cannot slip past it either.
+    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|diff\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b|"
+    r"fleet[-_]policy(?:\.exe)?\s+(?:--root[=\s]\S+\s+)?(?:status|show|events|task)\b|"
+    r"(?:python|py)(?:\d+(?:\.\d+)*)?(?:\.exe)?\s+-m\s+fleet_policy\.cli\s+(?:--root[=\s]\S+\s+)?(?:status|show|events|task)\b)\b)",
     re.I,
 )
 MUTATOR = re.compile(
@@ -1585,6 +1682,29 @@ def _exempt_quote_spans(command: str) -> list[tuple[int, int]]:
     return spans
 
 
+# v1.2.38 FP-read-lane (RR-4a): a denied control-plane call whose command
+# TEXT shows read intent (mode=ro, sqlite3 -readonly, SELECT…FROM, kanban
+# show, CLI read verbs) keeps its fail-closed deny — heredocs/multiline
+# probes are never parsed — but the reason must point at the sanctioned
+# read lane instead of leaving the worker to guess (live deny loops 04.10:
+# t_b8752c3f, t_22153d76, t_c7312fde, t_e9ef9cc1, t_945d1772). SQL write
+# verbs suppress the hint so a denied WRITE never gets read-lane advice.
+_SQL_WRITE_VERB_HINT = re.compile(
+    r"(?i)\b(?:update|insert|delete|drop|alter|create|replace|vacuum|reindex|attach|detach|truncate)\b"
+)
+_READ_SHAPED_PROBE_HINT = re.compile(
+    r"(?i)mode=ro|sqlite3\s+-readonly|\bselect\b.+\bfrom\b|hermes\s+kanban\s+show"
+    r"|fleet[-_]policy(?:\.exe)?\s+(?:--\S+[=\s]\S+\s+)*(?:status|show|events|task)\b"
+    r"|fleet_policy\.cli\s+(?:status|show|events|task)\b"
+)
+
+
+def _read_shaped_probe(command: str) -> bool:
+    if not command or _SQL_WRITE_VERB_HINT.search(command):
+        return False
+    return _READ_SHAPED_PROBE_HINT.search(command) is not None
+
+
 def _mask_exempt_quote_spans(command: str) -> str:
     spans = _exempt_quote_spans(command)
     if not spans:
@@ -1623,7 +1743,28 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         if _is_policy_controlled(matched):
             if effect == "read":
                 return Classification("read", "read_only", "allow", "policy-controlled documents are readable by the fleet")
-            return Classification("state_change", "policy_control_plane_mutation", "deny", "policy-controlled files are immutable for the fleet")
+            reason = "policy-controlled files are immutable for the fleet"
+            if name in TERMINAL_TOOLS and _read_shaped_probe(
+                str(arguments.get("command") or arguments.get("cmd") or "")
+            ):
+                # v1.2.38 FP-read-lane (RR-4a): the deny stands (heredoc /
+                # multiline / metachar probes fail closed), but a READ-shaped
+                # probe is pointed at the sanctioned read lane instead of
+                # leaving the worker to guess and loop.
+                reason += (
+                    "; read-shaped probe failed closed (heredoc/multiline/metachars are not parsed)."
+                    " Sanctioned read lane: python -m fleet_policy.cli status|show|events|task;"
+                    " single-statement sqlite3 -readonly SELECT; read_file; gh api GET"
+                )
+            return Classification("state_change", "policy_control_plane_mutation", "deny", reason)
+        if (
+            _enumerable_directory_pattern(matched)
+            and _enumeration_only_read(name, arguments, effect)
+        ):
+            # v1.2.38 FP-read-lane (RR-4b): listing a sessions/dumps/
+            # request_dump tree reveals NAMES only — not a secret operation.
+            # Any content read inside those trees stays denied below.
+            continue
         if _tracked_source_carveout(matched, subject, arguments):
             continue
         # v1.2.31: the deny carries the TRUE effect. A read-only probe of a
@@ -1644,8 +1785,8 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     # Hard-deny checks inspect command/target fields only. They must never scan
     # generated code, card bodies, comments or file contents.
     if worker and (
-        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
-        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
+        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:--root[=\s]\S+\s+)?(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
+        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:--root[=\s]\S+\s+)?(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
         or re.search(r"\b(?:decide_approval|consume_exact_approval|ensure_approval|revoke_approval|mark_expected_failure)\b", subject, re.I)
         or re.search(r"\b(?:update|insert|delete)[^\n]*\bapprovals\b", subject, re.I)
     ):
