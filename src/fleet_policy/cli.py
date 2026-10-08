@@ -305,6 +305,10 @@ def parser() -> argparse.ArgumentParser:
     spend = sub.add_parser("spend-status")
     spend.add_argument("--project", required=True)
     sub.add_parser("retention")
+    maintenance = sub.add_parser("maintenance")
+    maintenance.add_argument("--full-vacuum", action="store_true",
+                             help="Operator-only: run one full VACUUM after the maintenance tick "
+                                  "(applies auto_vacuum=INCREMENTAL on legacy stores).")
     sub.add_parser("status")
     sub.add_parser("drift-check")
     bundle = sub.add_parser("build-bundle")
@@ -460,6 +464,19 @@ def main(argv: list[str] | None = None) -> int:
         cfg = runtime.config["retention"]
         print(json.dumps(runtime.store.retention(cfg["events_days"], cfg["call_history_days"], cfg["approvals_days"])))
         return 0
+    if args.command == "maintenance":
+        # Explicit operator invocation always forces a run (bypasses the
+        # interval throttle); the hook-driven ticks stay throttled.
+        report = runtime.maybe_maintenance(None, force=True, source="cli")
+        if args.full_vacuum:
+            runtime.store.full_vacuum()
+            report["db_size_bytes_after_vacuum"] = runtime.store.db_size_bytes()
+        print(json.dumps(report, ensure_ascii=False, sort_keys=True, default=str))
+        # A run that surfaced per-batch errors (fail-closed archive
+        # verification, QA F2) is failed maintenance even without a
+        # top-level exception: the process status must say so so an
+        # operator/cron does not read a broken store trim as success.
+        return 1 if report.get("error") or report.get("errors") else 0
     if args.command == "drift-check":
         missing = approval_drift(default_root(args), runtime.config)
         print(json.dumps({"ok": not missing, "missing": missing}, ensure_ascii=False, sort_keys=True))
@@ -471,6 +488,10 @@ def main(argv: list[str] | None = None) -> int:
             "notifications_pending": connection.execute("SELECT COUNT(*) FROM notification_outbox WHERE status='pending'").fetchone()[0],
         }
     counts.update({f"notifications_{name}": value for name, value in runtime.store.notification_counts().items()})
+    counts["db_size_bytes"] = runtime.store.db_size_bytes()
+    last_maintenance = runtime.store.maintenance_get("retention_last_run_epoch")
+    if last_maintenance is not None:
+        counts["maintenance_last_run_epoch"] = float(last_maintenance)
     print(json.dumps(counts, ensure_ascii=False, sort_keys=True))
     return 0
 

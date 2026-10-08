@@ -120,7 +120,7 @@ wheels = [
 
 [[package]]
 name = "ventures-fleet-policy"
-version = "1.2.38"
+version = "1.2.42"
 source = { editable = "." }
 dependencies = [
     { name = "pyyaml" },
