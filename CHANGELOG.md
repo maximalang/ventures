@@ -10,6 +10,22 @@
   caps — is now a built-in feature of the storage layer instead of an
   external cron plus manual hotfixes.
 
+### Fixed (QA boundary rework, fleet-ops t_7733d471)
+- Legacy auto_vacuum conversion (QA F1): the `PRAGMA auto_vacuum=2` staged in
+  `migrate()` never persisted — `journal_mode=WAL` materializes the database
+  header first, so even fresh stores silently stayed in mode NONE, and a
+  staged mode does not cross connections. The pragma is now issued BEFORE
+  the WAL switch (fresh stores are born INCREMENTAL) and re-issued by
+  `full_vacuum()` on the vacuuming connection (legacy stores convert on the
+  advertised one-time operator full vacuum), proven by freelist + file-size
+  reclamation, not a marker.
+- Maintenance CLI exit status (QA F2): a run whose report carries per-batch
+  errors (fail-closed archive verification) now exits 1 instead of 0.
+- Retry throttle (QA F3): a run with errors no longer stamps the success
+  throttle (`retention_last_run_epoch`), so the documented retry-next-tick
+  actually fires; failed attempts are ledgered separately
+  (`retention_last_failure_epoch`, `retention_consecutive_failures`).
+
 ### Added
 - Schema v5 (idempotent, applied on every plugin load): hot-path indexes
   `idx_events_created` (time window) and `idx_events_kind_created`

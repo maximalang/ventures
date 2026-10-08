@@ -222,7 +222,11 @@ def main(argv: list[str] | None = None) -> int:
             runtime.store.full_vacuum()
             report["db_size_bytes_after_vacuum"] = runtime.store.db_size_bytes()
         print(json.dumps(report, ensure_ascii=False, sort_keys=True, default=str))
-        return 0 if "error" not in report else 1
+        # A run that surfaced per-batch errors (fail-closed archive
+        # verification, QA F2) is failed maintenance even without a
+        # top-level exception: the process status must say so so an
+        # operator/cron does not read a broken store trim as success.
+        return 1 if report.get("error") or report.get("errors") else 0
     if args.command == "drift-check":
         missing = approval_drift(default_root(args), runtime.config)
         print(json.dumps({"ok": not missing, "missing": missing}, ensure_ascii=False, sort_keys=True))

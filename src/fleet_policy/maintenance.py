@@ -49,6 +49,8 @@ DEFAULTS: dict[str, Any] = {
 }
 
 LAST_RUN_KEY = "retention_last_run_epoch"
+LAST_FAILURE_KEY = "retention_last_failure_epoch"
+CONSECUTIVE_FAILURES_KEY = "retention_consecutive_failures"
 
 
 def resolved(config: dict[str, Any]) -> dict[str, Any]:
@@ -238,7 +240,22 @@ def maybe_run(store: PolicyStore, config: dict[str, Any], *,
         report["freelist_pages"] = freelist
         if freelist >= int(cfg["vacuum_freelist_pages"]):
             store.incremental_vacuum(min(freelist, int(cfg["vacuum_max_pages"])))
-        store.maintenance_set(LAST_RUN_KEY, str(now.timestamp()))
+        if report.get("errors"):
+            # Fail closed: a run that surfaced errors is NOT a completed
+            # retention. Stamping the success throttle here consumed the
+            # interval and suppressed the documented retry-next-tick (QA F3,
+            # PR #63): the fail-closed archive path keeps every row exactly
+            # so the next tick can retry. The failed attempt is ledgered
+            # separately for observability; the retry stays bounded because
+            # ticks are event-driven (hooks/CLI) and each pass is capped by
+            # batch_size/max_batches — no busy loop, no premature deletion.
+            failures = int(_epoch(store.maintenance_get(CONSECUTIVE_FAILURES_KEY))) + 1
+            store.maintenance_set(CONSECUTIVE_FAILURES_KEY, str(failures))
+            store.maintenance_set(LAST_FAILURE_KEY, str(now.timestamp()))
+            report["consecutive_failures"] = failures
+        else:
+            store.maintenance_set(LAST_RUN_KEY, str(now.timestamp()))
+            store.maintenance_set(CONSECUTIVE_FAILURES_KEY, "0")
 
         size_after = store.db_size_bytes()
         report["db_size_bytes_after"] = size_after

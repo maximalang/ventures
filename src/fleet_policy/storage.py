@@ -141,15 +141,20 @@ class PolicyStore:
 
     def migrate(self) -> None:
         with self.connect() as connection:
+            # auto_vacuum=INCREMENTAL lets the maintenance tick return freed
+            # pages to the OS gradually (v1.2.42). ORDER MATTERS (QA F1,
+            # PR #63): journal_mode=WAL materializes the database header
+            # immediately, and a mode requested after the header exists is
+            # only staged in memory — it survives neither the commit nor the
+            # connection. Set it FIRST so fresh stores are born incremental;
+            # a legacy store (header already on disk) still stages it only,
+            # and the operator full VACUUM applies it (full_vacuum re-issues
+            # the pragma on the vacuuming connection for the same reason).
+            connection.execute("PRAGMA auto_vacuum=2")
             # Journal mode is a database-level setup operation. Re-running it on
             # every hot-path connection requires an exclusive lock and can make
             # concurrent workers exceed Hermes' 30s pre-tool hook timeout.
             connection.execute("PRAGMA journal_mode=WAL")
-            # auto_vacuum=INCREMENTAL lets the maintenance tick return freed
-            # pages to the OS gradually (v1.2.42). Fresh stores take it
-            # immediately; a legacy store applies it on the next operator
-            # full VACUUM (fleet-policy maintenance --full-vacuum).
-            connection.execute("PRAGMA auto_vacuum=2")
             row = connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_migrations'").fetchone()
             if row is not None and connection.execute("SELECT version FROM schema_migrations WHERE version=4").fetchone() is not None:
                 self._heal_v3_tables(connection)
@@ -910,10 +915,18 @@ class PolicyStore:
     def full_vacuum(self) -> None:
         """Operator-run full VACUUM: rebuilds the database file, applies a
         pending auto_vacuum mode change, and reclaims every freelist page.
-        Never invoked from a hook path — CLI only, after a retention run."""
+        Never invoked from a hook path — CLI only, after a retention run.
+
+        A requested auto_vacuum mode is connection-scoped until a VACUUM
+        commits it: the mode migrate() set on its own connection does not
+        survive into this one, so the pragma must be re-issued here, on the
+        same connection as the VACUUM. Without that, a legacy auto_vacuum=0
+        store silently stays in mode NONE and later incremental_vacuum()
+        calls keep no-oping (QA F1, PR #63)."""
         connection = sqlite3.connect(self.path, timeout=30)
         try:
             connection.execute("PRAGMA busy_timeout=30000")
+            connection.execute("PRAGMA auto_vacuum=2")
             connection.execute("VACUUM")
         finally:
             connection.close()
