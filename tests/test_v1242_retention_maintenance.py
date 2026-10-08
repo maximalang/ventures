@@ -23,8 +23,15 @@ from pathlib import Path
 
 import pytest
 
-from fleet_policy import maintenance
-from fleet_policy.maintenance import LAST_RUN_KEY, maybe_run, resolved, verify_archive
+from fleet_policy import cli, maintenance
+from fleet_policy.maintenance import (
+    CONSECUTIVE_FAILURES_KEY,
+    LAST_FAILURE_KEY,
+    LAST_RUN_KEY,
+    maybe_run,
+    resolved,
+    verify_archive,
+)
 from fleet_policy.storage import PolicyStore
 
 
@@ -264,3 +271,112 @@ def test_thirty_day_storm_stays_bounded(tmp_path):
         with gzip.open(file, "rt", encoding="utf-8") as stream:
             archived_rows += sum(1 for _ in stream)
     assert archived_rows == len(drop_days) * per_day
+
+
+# --- QA boundary locks (PR #63 NO-GO F1-F3, t_218bc548 comment 6212) -----------
+
+def _auto_vacuum_mode(path: Path) -> int:
+    with sqlite3.connect(path) as connection:
+        return int(connection.execute("PRAGMA auto_vacuum").fetchone()[0])
+
+
+def _fill_and_drain_events(store: PolicyStore, count: int) -> None:
+    blob = json.dumps({"payload": "x" * 512})
+    with store.connect() as connection:
+        connection.executemany(
+            "INSERT INTO events VALUES(?,?,?,?,?,?,?)",
+            [(f"fat-{index}", "corr", "t", "deny", 0, blob, _ts(1)) for index in range(count)],
+        )
+        connection.execute("DELETE FROM events")
+
+
+def test_fresh_store_runs_incremental_auto_vacuum(tmp_path):
+    path = tmp_path / "fresh.db"
+    PolicyStore(path).migrate()
+    assert _auto_vacuum_mode(path) == 2
+
+
+def test_full_vacuum_converts_a_legacy_store_and_enables_reclamation(tmp_path):
+    """F1: a legacy auto_vacuum=0 store must converge to INCREMENTAL through
+    the advertised one-time conversion (migrate + operator full vacuum), and
+    subsequent incremental_vacuum must physically return pages — the bounded
+    -growth claim for legacy installs depends on it."""
+    path = tmp_path / "legacy.db"
+    with sqlite3.connect(path) as connection:
+        connection.execute("CREATE TABLE legacy_marker(id INTEGER)")
+        assert int(connection.execute("PRAGMA auto_vacuum").fetchone()[0]) == 0
+    store = PolicyStore(path)
+    store.migrate()
+    # migrate() only stages the mode on its own connection; the legacy store
+    # stays NONE until the operator full vacuum commits it.
+    assert _auto_vacuum_mode(path) == 0
+    store.full_vacuum()
+    assert _auto_vacuum_mode(path) == 2
+    _fill_and_drain_events(store, 2000)
+    freelist_before = store.freelist_pages()
+    assert freelist_before > 0
+    store.wal_checkpoint_truncate()
+    size_before = path.stat().st_size
+    store.incremental_vacuum(freelist_before)
+    store.wal_checkpoint_truncate()
+    assert store.freelist_pages() < freelist_before
+    assert path.stat().st_size < size_before
+
+
+def test_incremental_vacuum_noops_on_a_legacy_mode_none_store(tmp_path):
+    """Negative control for the F1 conversion proof: without full_vacuum the
+    same delete leaves the freed pages trapped in mode NONE — exactly the
+    defect F1 made permanent for legacy installs."""
+    path = tmp_path / "none.db"
+    with sqlite3.connect(path) as connection:
+        connection.execute("CREATE TABLE legacy_marker(id INTEGER)")
+    store = PolicyStore(path)
+    store.migrate()
+    assert _auto_vacuum_mode(path) == 0
+    _fill_and_drain_events(store, 2000)
+    freelist_before = store.freelist_pages()
+    assert freelist_before > 0
+    store.incremental_vacuum(freelist_before)
+    assert store.freelist_pages() == freelist_before
+
+
+def test_maintenance_cli_fails_on_archive_verification_error(runtime, monkeypatch, capsys):
+    """F2: a maintenance run whose report carries errors is failed
+    maintenance — the process exit status must be nonzero."""
+    _insert_events(runtime.store, "expired", 1, days_ago=120)
+    monkeypatch.setattr(maintenance, "verify_archive", lambda path, rows: (False, "injected-failure"))
+    monkeypatch.setattr(cli, "FleetPolicyRuntime", lambda root: runtime)
+    exit_code = cli.main(["--root", str(runtime.root), "maintenance"])
+    report = json.loads(capsys.readouterr().out)
+    assert report["errors"], report
+    assert report["archived_events"] == 0
+    assert exit_code == 1
+    # fail closed: the expired row is retained and the success throttle was
+    # NOT consumed by the failed run.
+    assert _user_event_count(runtime.store) == 1
+    assert runtime.store.maintenance_get(LAST_RUN_KEY) is None
+
+
+def test_failed_archive_does_not_consume_the_success_throttle(tmp_path, monkeypatch):
+    """F3: a failed archival is retried on the next tick (the source contract
+    on the fail-closed path), not throttled away by a success stamp."""
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    _insert_events(store, "old", 3, days_ago=120)
+    real_verify = maintenance.verify_archive
+    monkeypatch.setattr(maintenance, "verify_archive", lambda path, rows: (False, "injected-failure"))
+    moment = datetime.now(timezone.utc)
+    first = maybe_run(store, _config(), now=moment, source="test-failure")
+    assert first["ran"] is True and first["errors"]
+    # the failed attempt is ledgered for observability, the success throttle
+    # is not stamped
+    assert first["consecutive_failures"] == 1
+    assert store.maintenance_get(LAST_RUN_KEY) is None
+    assert store.maintenance_get(CONSECUTIVE_FAILURES_KEY) == "1"
+    assert store.maintenance_get(LAST_FAILURE_KEY) is not None
+    monkeypatch.setattr(maintenance, "verify_archive", real_verify)
+    second = maybe_run(store, _config(), now=moment + timedelta(minutes=1), source="test-recovery")
+    assert second["ran"] is True
+    assert second["archived_events"] == 3
+    assert store.maintenance_get(LAST_RUN_KEY) is not None
+    assert store.maintenance_get(CONSECUTIVE_FAILURES_KEY) == "0"
