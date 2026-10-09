@@ -1,6 +1,6 @@
-"""v1.2.37 — quoted file-operand path-guard subjects (t_fc317116 F1/F2).
+"""v1.2.44 — quoted file-operand path-guard subjects (t_fc317116 F1/F2).
 
-Red/green contract (base 4908dd4 -> v1.2.37):
+Red/green contract (base 4908dd4 -> v1.2.44):
 - On base, quoted positional file operands were skipped as prose by
   _path_guard_subjects (policy.py:854-857), so `sqlite3 "<board db>"
   "UPDATE ..."` classified as allow:scoped_state_change and `sqlite3
@@ -152,7 +152,7 @@ def test_search_head_quoted_pattern_stays_prose(config):
 def test_value_flag_quoted_message_stays_prose(config):
     # The message text must never become a path-guard subject: the shape
     # stays in the ordinary rule table, not a protected-path deny.
-    # v1.2.37 reconciliation: on base >= v1.2.34 the PR #53 W4 prose-mask
+    # v1.2.44 reconciliation: on base >= v1.2.34 the PR #53 W4 prose-mask
     # strips the quoted -m span from the risk scan, so the category is
     # repository_change (was destructive_change on the 1.2.31 base).
     result = _c(config, f'git commit -m "delete {BOARD_DB} notes"')
