@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.2.37] - 2026-10-09
+
+### Fixed
+- F1/F2 quoted-operand path-guard bypass (salvage t_fc317116, materialized
+  by t_9e0d11f0). `_path_guard_subjects` treated every quoted span as prose,
+  so `sqlite3 "<policy-controlled db>" "UPDATE/DELETE ..."` classified as
+  allow:scoped_state_change / allow:destructive_change instead of
+  deny:policy_control_plane_mutation — an in-process bypass of the
+  protected-path guard confirmed behaviorally on committed base 9b09444
+  (corpus t_5dd6729d cases C4/C5; company live-probe 09.10.2026).
+- The fix is allowlist-only extraction: for file-operand programs
+  (sqlite3, cp, mv, rm, del, copy, move, xcopy, robocopy, tee) the first
+  quoted positional is re-inspected as a real filesystem operand; sqlite3
+  keeps its single-file-operand shape so the quoted read lane
+  (`sqlite3 -readonly "<db>" "SELECT ..."` → allow:read_only) is
+  byte-identical. No unconditional quoted-span scan: value-flag prose
+  exclusion and search-head expression slots are untouched, and
+  non-allowlisted programs keep the old quoted-prose behavior.
+
+### Added
+- `tests/test_v1237_quoted_operands.py` — 32-case red/green contract:
+  quoted mutating operands on protected stores deny as
+  policy_control_plane_mutation (sqlite quoted db × UPDATE/DELETE,
+  file-mover quoted targets, tee pipeline, relative quoted path, quoted db
+  with unquoted statement), the sqlite read lane and operator lane stay
+  allow, non-allowlisted programs and value-flag messages stay prose, plus
+  whitebox subject-extraction pins.
+
 ## [1.2.36] - 2026-10-04
 
 ### Added
