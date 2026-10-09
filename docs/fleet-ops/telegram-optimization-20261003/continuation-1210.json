@@ -1,0 +1,198 @@
+[
+  {
+    "id": "t_8a81338c",
+    "status": "running",
+    "result": null,
+    "last_error": "pid 20772 exited rate-limited (quota wall) — requeued without counting a failure",
+    "latest_summary": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Verified methodology clarification, no candidate-byte change: MEASUREMENT-REVIEW.md and measurement-strata.json saved beside contract. API baseline actual span23.515h (02.10 12:04→03.10 11:35), seven-day unique-tool audit is separate. Cache-known uncached medians Qwen1842.5/Sol3115; cached footprint reduction ≠ cash savings. Treat128000 as compaction trigger, not hard per-call cap; check quality/latency/summary retention and protected-tail behavior. Candidate immutable hash and company conditional binding unchanged. Independent child audit is advisory, NOT release/QA gate.",
+        "created_at": 1791017771
+      },
+      {
+        "author": "company",
+        "body": "Runtime blocker evidence read back natively: QA run2197 exited75, outcome rate_limited; error='pid20772 exited rate-limited (quota wall) — requeued without counting a failure'; current card ready under native retry policy. This is provider availability, NOT a negative candidate verdict, NOT independent acceptance. Do not force retries, spawn duplicate QA, use correlated company self-review, downgrade/re-pin config, or treat child measurement audit as gate. Native cooldown/recovery only; if retry again fails, record same failure with native availability evidence and stop speculative attempts. Candidate unchanged. Application withheld until actual independent acceptance.",
+        "created_at": 1791017931
+      }
+    ],
+    "recent_runs": [
+      {
+        "id": 2197,
+        "profile": "qa",
+        "step_key": null,
+        "status": "rate_limited",
+        "outcome": "rate_limited",
+        "summary": null,
+        "error": "pid 20772 exited rate-limited (quota wall) — requeued without counting a failure",
+        "metadata": {
+          "pid": 20772,
+          "claimer": "laptop:24928",
+          "exit_code": 75,
+          "retry_status": "ready",
+          "receipt": {
+            "status": "rate_limited",
+            "evidence_refs": [
+              "error:pid 20772 exited rate-limited (quota wall) — requeued without counting a failure"
+            ],
+            "next_action": "review outcome and continue workflow"
+          }
+        },
+        "worker_pid": null,
+        "started_at": 1791017227,
+        "ended_at": 1791017288
+      }
+    ]
+  },
+  {
+    "id": "t_ee2ad6bf",
+    "status": "todo",
+    "result": null,
+    "last_error": null,
+    "latest_summary": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "decision:company=go\nhead=d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105\ntask_type: ops\n\nConditional exact-artifact authorization: apply *** two native allowlisted settings after independent QA/review for THESE exact candidate bytes. No QA PASS=*** application; changed candidate = require new company binding. No protected source/other profile/restart/history mutation. Hypothesis: bounded context growth and quieter Telegram tool bubbles while preserving alerts/steering/tail; rollback exact allowlisted originals if context retention/latency/format/routing regresses. Profile-wide company compaction includes Desktop/cron and is not mislabeled Telegram-only. No purchase authorized; confirmed revenue/refunds/provider incremental cost/estimated usage cost=null (not investigated/unpriced), new commitments0, source config manifest+natural receipts; period rollout+24h/48h observation.",
+        "created_at": 1791017023
+      },
+      {
+        "author": "company",
+        "body": "Application remains withheld: prerequisite independent QA run2197 exited75 quota wall and was natively requeued ready; no verdict/PASS exists. Artifact preparation and child methodological review are not substitutes for actual independent gates. Preserve consumer no-op until QA genuinely accepted. Do not initiate correlated/paid synthetic fallback tests or config/model changes to bypass availability. Current measurement refinements saved in MEASUREMENT-REVIEW.md; candidate bytes remain original exact hash.",
+        "created_at": 1791017931
+      }
+    ],
+    "recent_runs": []
+  },
+  {
+    "id": "t_6282d6b9",
+    "status": "running",
+    "result": null,
+    "last_error": "pid 23644 not alive Worker's last output: 'able,\\'paths\\':{k:str(pathlib.Path(v)) for k,v in paths.items() if pathlib.Path(v).is_file()},\\'modules\\':{k:bool(importlib.util.find_spec(k)) for k in (\\'fpdf\\',\\'docx\\',\\'weasyprint\\',\\'markdown\\',\\'PIL\\')}},sort_keys=True))\"  0.8s ┊ 📚 навык     fleet-browser-routing  0.5s ┊ 📖 чтение    hermes-telegram-official.txt L1792-1819  0.9s ┊ 📖 чтение    openai-caching-official.txt L850-899  1.0s ┊ 🔎 файлы     *  1.3s'",
+    "latest_summary": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Source baseline refinement verified from actual saved events: MEASUREMENT-REVIEW.md and measurement-strata.json beside contract. Separate API observed23.515h from seven-day unique tool-output audit. Cached vs uncached input/report cost separately; unique skill-result chars are content volume, not proven marginal request-token attribution. Model-stratified input medians Qwen316154/Sol164533; cache-known uncached1842.5/3115. Do not describe128000 as hard cap or visual tool suppression as token savings. Existing format/role/task scope unchanged.",
+        "created_at": 1791017771
+      }
+    ],
+    "recent_runs": [
+      {
+        "id": 2198,
+        "profile": "product",
+        "step_key": null,
+        "status": "crashed",
+        "outcome": "crashed",
+        "summary": null,
+        "error": "pid 23644 not alive Worker's last output: 'able,\\'paths\\':{k:str(pathlib.Path(v)) for k,v in paths.items() if pathlib.Path(v).is_file()},\\'modules\\':{k:bool(importlib.util.find_spec(k)) for k in (\\'fpdf\\',\\'docx\\',\\'weasyprint\\',\\'markdown\\',\\'PIL\\')}},sort_keys=True))\"  0.8s ┊ 📚 навык     fleet-browser-routing  0.5s ┊ 📖 чтение    hermes-telegram-official.txt L1792-1819  0.9s ┊ 📖 чтение    openai-caching-official.txt L850-899  1.0s ┊ 🔎 файлы     *  1.3s'",
+        "metadata": {
+          "pid": 23644,
+          "claimer": "laptop:24928",
+          "worker_output": "able,'paths':{k:str(pathlib.Path(v)) for k,v in paths.items() if pathlib.Path(v).is_file()},'modules':{k:bool(importlib.util.find_spec(k)) for k in ('fpdf','docx','weasyprint','markdown','PIL')}},sort_keys=True))\"  0.8s ┊ 📚 навык     fleet-browser-routing  0.5s ┊ 📖 чтение    hermes-telegram-official.txt L1792-1819  0.9s ┊ 📖 чтение    openai-caching-official.txt L850-899  1.0s ┊ 🔎 файлы     *  1.3s",
+          "retry_status": "ready",
+          "receipt": {
+            "status": "crashed",
+            "evidence_refs": [
+              "error:pid 23644 not alive Worker's last output: 'able,\\'paths\\':{k:str(pathlib.Path(v)) for k,v in paths.items() if pathlib.Path(v).is_file()},\\'modules\\':{k:bool(importlib.util.find_spec(k)) for k in (\\'fpdf\\',\\'docx\\',\\'weasyprint\\',\\'markdown\\"
+            ],
+            "next_action": "review outcome and continue workflow"
+          }
+        },
+        "worker_pid": null,
+        "started_at": 1791017288,
+        "ended_at": 1791018040
+      }
+    ]
+  },
+  {
+    "id": "t_cef261ac",
+    "status": "todo",
+    "result": null,
+    "last_error": null,
+    "latest_summary": null,
+    "last_comments": [],
+    "recent_runs": []
+  },
+  {
+    "id": "t_d5e37e14",
+    "status": "todo",
+    "result": null,
+    "last_error": null,
+    "latest_summary": null,
+    "last_comments": [],
+    "recent_runs": []
+  },
+  {
+    "id": "t_38a4b49e",
+    "status": "todo",
+    "result": null,
+    "last_error": null,
+    "latest_summary": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Accepted measurement correction: review MEASUREMENT-REVIEW.md and measurement-strata.json. Revised minimum natural after-change sample=10 comparable Telegram calls PER observed model/provider stratum, not pooled changed model mix. Actual API baseline span23.515h; no weekly extrapolation. Output/input/cache/unknown separately; no theoretical cache-price conversion without verified provider tariff/quota semantics. Telegram observations remain valid TG-scope observations; include outside-TG effects only for company-wide conclusions. Candidate128000 is trigger, not ceiling. Child second eye was methodology advice only; native independent QA still required.",
+        "created_at": 1791017771
+      }
+    ],
+    "recent_runs": []
+  },
+  {
+    "id": "t_b3e6c428",
+    "status": "blocked",
+    "result": null,
+    "last_error": "pid 23560 not alive Worker's last output: \"AND / 'MANIFEST.sha256.json'\\x1b[0m \\x1b[38;2;255;255;255;48;2;19;87;20m+out.write_text(json.dumps(man, ensure_ascii=False, indent=1), encoding='utf-8')\\x1b[0m \\x1b[38;2;255;255;255;48;2;19;87;20m+print('manifest files=%d sha=%s' % (len(man['files']), sha(out)))\\x1b[0m ┊ 💻 подготовка terminal… ┊ 💻 $         python retirement/make_manifest.py + 6 команд(ы)  0.7s ┊ 💬 подготовка kanban_comment… ┊ ⚡ kanban_co   0.1s\"",
+    "latest_summary": null,
+    "last_comments": [
+      {
+        "author": "tech",
+        "body": "Handoff от run 2195 (timed_out 1233s>1200s, sigkill=false — zombie-доклад; lifecycle принадлежит run 2200).\n\nРЕЗУЛЬТАТ: SOURCE-ONLY пакет ПОЛНОСТЬЮ построен и зелёный. Live не менялся (skills/scripts/SOUL/memories/cron/adapter — ни одной правки). Преемнику: НЕ пересобирать — верифицировать и закрыть карту.\n\nArtifact: C:/Users/max/AppData/Local/hermes/profiles/company/reports/skill-layer-20261003/candidate/ (36 файлов, MANIFEST.sha256.json sha=2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62):\n- audit_extension/skill_layer_audit.py (sha 6b46ce2e…) — рубрики A1 overbroad-routine-trigger / A2 SOUL-duplication (порог 0.025, эмпирика: offender 0.038 vs maintenance 0.0002) / A3 runtime-restated (≥2 маркеров, exemption TRANSPORT_MAINTENANCE_AREAS={fleet-notification-ops}); статус всех находок ARCHITECTURE_REVIEW_REQUIRED (кандидат, не вердикт; пусто ≠ принятие).\n- audit_extension/prompt_audit.py (sha 337ba594…, база 6d370466… + 5 guarded hunks): P1–P3/P5, size-чеки, heartbeat, watermark, stdout/tg-маршруты intact; детали ARCH → prompt_audit_arch_candidates.json рядом с STATE.\n- tests/ (18 тестов, unittest) + fixtures: реальный offender 6420 симв./sha 07c2ee89… hash-pinned, maintenance (7dbac…/0225f…), negative controls safety-gate+specialized, ambiguous-control, live-drift-guard 7 якорей.\n- retirement/: consumers.patch (sha 3b670542…, 6 файлов +11/−10, git apply --check exit 0 из profiles/company), patched/-дерево, новый references/tg-transport-internals.md (sha e76a12fc…, уникальные транспортные факты + LORD + потребители tg_format.py), official-format.md перемещён байт-в-байт (ebab4c22…), DELETIONS.json (staged, не применён), RETIREMENT-PATCH.md, MEMORY-OPERATIONS-NOTE.md (предложены replace MEMORY.md:25 и USER.md:3 — не выполнены), PINS-VERIFICATION.md.\n- logs/: unittest-final2-run2195.log (Ran 18 tests, OK, exit 0), full-tree-scan-company.log (candidates=3 — ВСЕ на offender, ноль FP на остальных живых скиллах), arch-candidates-company.json.\n\nVerification: 7/7 input-якорей совпали со spec; unittest exit 0 дважды (после фикса T12-regex); git apply --check exit 0; full-tree scan exit 0; T11 ноль активных загрузок retirуемого скилла в patched-дереве; T14 SOUL untouched (758badb9…), стиль «замок/милорд» сохранён; T15 py_compile patched truffle_form_watch.py PASS.\n\nDecision/Risks: (1) НЕРАЗРЕШЁННЫЙ cron-пин: job report-delivery-trigger c92f4e39c75d (enabled, hourly) skills+skill = telegram-message-formatting → блокирует live-удаление, источник-пакет не блокирует. (2) Kanban task-pins не swept — проверить при rollout. (3) Одна смысловая (не только указательная) правка: ops-facts-2209.md строка про whitelist-HTML для ответов владельцу приводилась к действующему Markdown-канону — flagged для QA. (4) A2-порог откалиброван на текущем корпусе; drift-guard T10 остановит stale-патч. (5) Параллельная программа t_cef261ac (telegram-optimization-20261003) мои файлы не трогает — overlap split подтверждён комментарием company.\n\nNext owner/APPROVAL: run 2200 (tech) — верифицировать (прогнать unittest, сверить MANIFEST) и kanban_complete с handoff на QA t_45c34a6a (авторитетное retirement-review, SOURCE_ONLY verdict). Rollout-гейты и rollback — в README.md.",
+        "created_at": 1791018031
+      },
+      {
+        "author": "tech",
+        "body": "Lifecycle-статус от tech (сессия атрибутирована ядром к run 2200 / pid 23560):\n\n1. Работа ВЫПОЛНЕНА полностью: SOURCE-ONLY пакет зелёный (18 unittest exit 0; full-tree scan candidates=3 — все на offender, ноль FP; consumers.patch git apply --check exit 0; 7/7 якорей sha256; MANIFEST 2932437590ff…, 36 файлов). Ноль live-правок. Детали — комментарий 5499 (12:00) и candidate/README.md.\n2. Терминальные вызовы из этой сессии отклонены ядром: kanban_complete → crash-receipt run 2200 («pid 23560 not alive» — pid-атрибуция: run 2195 timed_out при sigkill=false, сессия продолжила работу и была записана на run 2200, затем объявлена crashed); kanban_request_review → «task is not in running/ready». Карта в blocked после gave_up (failures 2/2, limit dispatcher).\n3. Требуется действие владельца/company (из записей zombie-рана допустимы только комментарии): закрыть карту kanban_complete с handoff на QA t_45c34a6a (пакет готов к SOURCE_ONLY verdict) ЛИБО reset retry-лимита/разблокировать для нового run — новому воркеру пересобирать НЕЧЕГО, достаточно верификации (cd candidate && python -m unittest discover -s tests -v; сверка MANIFEST.sha256.json).\n4. Напоминание по rollout-гейтам: cron-пин report-delivery-trigger (c92f4e39c75d) неразрешён — блокирует только live-удаление скилла; kanban task-pins не swept; memory-операции предложены, не выполнены (MEMORY-OPERATIONS-NOTE.md).",
+        "created_at": 1791018271
+      }
+    ],
+    "recent_runs": [
+      {
+        "id": 2195,
+        "profile": "tech",
+        "step_key": null,
+        "status": "timed_out",
+        "outcome": "timed_out",
+        "summary": null,
+        "error": "elapsed 1233s > limit 1200s",
+        "metadata": {
+          "pid": 27244,
+          "elapsed_seconds": 1233,
+          "limit_seconds": 1200,
+          "sigkill": false,
+          "retry_status": "ready",
+          "receipt": {
+            "status": "timed_out",
+            "evidence_refs": [
+              "error:elapsed 1233s > limit 1200s"
+            ],
+            "next_action": "review outcome and continue workflow"
+          }
+        },
+        "worker_pid": null,
+        "started_at": 1791016117,
+        "ended_at": 1791017350
+      }
+    ]
+  },
+  {
+    "id": "t_45c34a6a",
+    "status": "todo",
+    "result": null,
+    "last_error": null,
+    "latest_summary": null,
+    "last_comments": [],
+    "recent_runs": []
+  }
+]

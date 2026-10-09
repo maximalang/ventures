@@ -1,0 +1,98 @@
+# TG-NETWORK-VERIFY — final evidence report
+Task: t_930c007a — Restore company Telegram via supported network configuration
+Author: operations
+Date UTC: 2026-10-03T08:47:00Z (local 11:47)
+
+## Pre-state (already established, see TG-NETWORK-PROBE/SET/DEFER-RESTART logs)
+- config key: `telegram.proxy_url = http://127.0.0.1:10809` (set at 2026-10-03T08:19:33Z via native `hermes -p company config set`)
+- pre-value was unset (recorded in TG-NETWORK-SET-20261003T081933Z.log)
+- host PID 24928 (python, `hermes_cli.main gateway run`), StartTime 2026-10-03 05:00:06 — writer of company gateway.log; multiplexer hosts company Telegram adapter
+- pre-restart state: last getUpdates OK at 11:09:57 (generation 1); polling intermittently degraded before that
+
+## Action 1 — Wait for safe restart window
+Last owner Telegram inbound:  11:29:09
+Last owner Telegram outbound: 11:29:25 (response 676 chars, session 716301)
+Restart decision gate:       no Telegram inbound/outbound for 10+ minutes; no active Telegram owner conversation
+Active TUI session 113858 (gpt-6.1-sol, source=client) belongs to Desktop client, NOT telegram platform — restart does not interrupt it.
+
+## Action 2 — Hot restart (supported, secondary-profile scope)
+Command: `hermes -p company gateway restart`
+UTC:     2026-10-03T08:39:47Z (local 11:39:47)
+CLI ack: "Profile 'company' restart was not confirmed: host operation is still pending."
+         (multiplex mode: restart is async; host reconciles within 30s)
+Host PID 24928 NOT touched. No --force, no --host restart, no standalone shim.
+
+## Restart evidence in company/gateway.log
+11:39:41,433  [Telegram] Disconnected from Telegram
+11:39:41,434  telegram disconnected (1.38s) (profile: company)
+11:39:41,485  [MULTIPLEX] Profile 'company' unserved — 1 adapter(s) stopped and unrouted
+11:39:47,272  [Telegram] Proxy detected; passing explicitly to HTTPXRequest: http://127.0.0.1:10809   <<< PROXY PATH ACTIVE
+11:39:48,861  Cold boot: dropping Telegram updates queued while offline (expected; spec pre-warned; drop_pending_on_cold_boot=true semantics preserved, not modified)
+11:40:00,364  [Telegram] Telegram polling confirmed healthy: getUpdates progressing (generation 1)   <<< POLLING OK
+11:40:00,370  [Telegram] Connected to Telegram (polling mode)
+11:40:01,750..11:40:01,968  set_my_commands OK ×3 (Default / AllPrivateChats / AllGroupChats)
+
+## Action 3 — 5-minute observation window
+Baseline (UTC 2026-10-03T08:40:57Z / local 11:40:57):
+  gateway.log offset = 27193 lines
+  errors.log  offset = 3213  lines
+End      (UTC 2026-10-03T08:46:08Z / local 11:46:08):
+  gateway.log = 27194 lines (+1)
+  errors.log  = 3421  lines (+208)
+
+Delta gateway.log (1 line):
+  11:43:35,572 INFO gateway.run_profile_reconcile: MCP servers reconciled with config (company)  (routine; no telegram relevance)
+
+Pattern scan over new gateway.log lines:
+  ConnectTimeout      : 0 matches
+  polling degraded    : 0 matches
+  rebuild loop        : 0 matches
+  ProxyDetected       : 0 new matches (initial proxy line at 11:39:47 is the boot-time binding, stable since)
+  fallback            : 0 matches (no IP fallback after proxy bind)
+  generation          : 0 new matches (generation 1 stable, no re-generation)
+
+Delta errors.log (208 lines):
+  All are `Config ref '${env:HERMES_CUSTOM_CUSTOM_API_KEY}': ... not set` / browseros MCP `CancelledError` warnings — pre-existing MCP startup noise, UNRELATED to Telegram or proxy. 0 telegram/polling/connect errors.
+
+## Action 4 — Host/PID & writer verification (post-restart)
+PID 24928 ALIVE  ProcessName=python  StartTime=10/03/2026 05:00:06  (unchanged identity)
+CmdLine: `python.exe -m hermes_cli.main gateway run`  (multiplexer host)
+Host process NOT restarted. Default-profile multiplexer continues to serve company.
+
+## Acceptance mapping (spec line 20)
+- selected-key before/after receipt           : PASS (TG-NETWORK-PROBE + TG-NETWORK-SET logs; value matches http://127.0.0.1:10809)
+- fresh current PID/creation+writer match     : PASS (PID 24928, StartTime 05:00:06, gateway.log writer, multiplexer)
+- actual proxy connection evidence            : PASS (gateway.log 11:39:47 explicit "Proxy detected; passing explicitly to HTTPXRequest: http://127.0.0.1:10809")
+- 5-minute delta free from polling timeout/rebuild loop : PASS (observation window 11:40:57 → 11:46:08 local; 0 ConnectTimeout / 0 polling-degraded / 0 rebuild)
+- app/host/other profiles unaffected          : PASS (host PID 24928 unchanged; other profiles reconciled as routine MCP only; Desktop TUI session 113858 unaffected)
+- owner inbound/reply separately verified     : UNVERIFIED — no natural owner message arrived during the observation window. Per spec line 17, this round trip is explicitly NOT claimed. Owner must send a fresh message to confirm end-to-end delivery.
+
+## Rollback path (if regression)
+1. `hermes -p company config unset telegram.proxy_url`
+2. `hermes -p company gateway restart` (same hot path)
+3. Adapter returns to direct/fallback-IP path within one reconcile cycle (≤30s).
+No source/YAML edits required; fully native reversible.
+
+## Bans compliance check
+- .env / auth / secrets / dumps            : not read
+- kanban.db / policy DB writes             : none
+- bot token read                           : none
+- second getUpdates poller                 : none
+- models/pools/provider probes             : none
+- broad taskkill / Stop-Process            : none (only Get-Process -Id readback)
+- custom reconnect scripts                 : none (only native `hermes gateway restart`)
+- VPN system settings                      : not touched
+- new accounts / spend                     : none
+- patch cycles                             : none
+- cold pending queue changes               : none (drop_pending_on_cold_boot left at native default true)
+- fleet-policy denies                      : 0 received during this run
+
+## Files in this directory
+- TG-NETWORK.md                                        (brief)
+- TG-NETWORK-PROBE-20261003T081908Z.log                (pre-state probe)
+- TG-NETWORK-SET-20261003T081933Z.log                  (config set receipt)
+- TG-NETWORK-DEFER-RESTART-20261003T082117Z.log        (owner-session defer decision)
+- TG-NETWORK-VERIFY-20261003T084700Z.log               (this file)
+
+## Outstanding
+- Owner inbound/reply round trip: UNVERIFIED. Notify company; do NOT tell owner "bot is fully fixed" until a fresh owner message produces a reply visible in gateway.log.

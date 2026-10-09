@@ -1,0 +1,22 @@
+{
+  "candidate_sha256": "d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105",
+  "verdict_sha256": "86e6e65554c264f9d956d279a34be236f7b502a0472023ef93c2ed8b0a9c4171",
+  "task": "t_8a81338c",
+  "issuer": "qa",
+  "run_id": 2214,
+  "terminal_phase": "source_verdict_only",
+  "native_current_run_id": null,
+  "full_source_verdict_preserved": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\QA-CONFIG-PRIMARY-VERDICT.md",
+  "consumer": "t_ee2ad6bf",
+  "consumer_alternate_prerequisite": "t_e87dad43",
+  "application": "withheld",
+  "financial_scope": "this source-verdict salvage/admin phase",
+  "period": "2026-10-03",
+  "financial_source": "native Kanban report and offline artifact verification",
+  "confirmed_revenue": null,
+  "refunds": null,
+  "incremental_paid_costs": null,
+  "new_commitments": 0,
+  "estimated_usage_cost": null,
+  "unknown_reason": "provider invoice/attribution absent; revenue/refunds not investigated"
+}

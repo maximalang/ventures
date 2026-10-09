@@ -1,0 +1,46 @@
+{
+  "scope": "observed rotated-log company Telegram completions only",
+  "first_observed": "2026-10-02T12:04:24+03:00",
+  "last_observed": "2026-10-03T11:35:18+03:00",
+  "observed_span_hours": 23.515,
+  "total_observed_calls": 771,
+  "strata": [
+    {
+      "model": "qwen3.8-max",
+      "provider": "custom",
+      "calls": 474,
+      "cache_reported_calls": 474,
+      "cache_unknown_calls": 0,
+      "input_median": 316154.0,
+      "input_p95": 479591.0,
+      "uncached_input_median_where_reported": 1842.5,
+      "uncached_input_p95_where_reported": 15461.0,
+      "uncached_input_sum_where_reported": 3647380,
+      "cache_read_sum_where_reported": 146274176,
+      "output_sum_observed": 646257,
+      "latency_median_seconds": 36.4
+    },
+    {
+      "model": "gpt-6.1-sol",
+      "provider": "openai-codex",
+      "calls": 297,
+      "cache_reported_calls": 289,
+      "cache_unknown_calls": 8,
+      "input_median": 164533,
+      "input_p95": 224889.5,
+      "uncached_input_median_where_reported": 3115,
+      "uncached_input_p95_where_reported": 56732.5,
+      "uncached_input_sum_where_reported": 3130829,
+      "cache_read_sum_where_reported": 42494208,
+      "output_sum_observed": 390165,
+      "latency_median_seconds": 39.3
+    }
+  ],
+  "cash_savings": null,
+  "cash_savings_reason": "provider invoice/rate attribution not available; cached input is not free input",
+  "notes": [
+    "128000 is proposed compaction trigger, not hard per-call cap",
+    "Tool-result unique character volumes are not repeated-context token attribution",
+    "Company-wide setting effects outside Telegram require separate reporting; Telegram measurements may still be reported as Telegram-only observations, not total company savings"
+  ]
+}

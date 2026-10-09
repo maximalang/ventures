@@ -48,10 +48,10 @@ def test_redaction_and_stable_canonical_hash():
 
 def test_all_budget_types_present(config):
     assert set(config["budgets"]) == {"research", "code", "review", "ops"}
-    assert config["budgets"]["research"]["tokens"] == 120000
-    assert config["budgets"]["code"]["tool_calls"] == 140
-    assert config["budgets"]["review"]["wall_clock_minutes"] == 45
-    assert config["budgets"]["ops"]["tokens"] == 50000
+    assert config["budgets"]["research"]["tokens"] == 250000
+    assert config["budgets"]["code"]["tool_calls"] == 400
+    assert config["budgets"]["review"]["wall_clock_minutes"] == 180
+    assert config["budgets"]["ops"]["tokens"] == 250000
 
 
 def test_read_allow_and_secret_deny(config):
@@ -148,6 +148,96 @@ def test_destructive_git_variants_split_by_reversibility(config):
         assert (result.decision, result.category) == ("allow", "destructive_change"), (command, result)
     irreversible = classify("terminal", {"command": "git filter-branch --prune-empty HEAD"}, config, worker=True)
     assert (irreversible.decision, irreversible.category) == ("approval_required", "irreversible_data_loss")
+
+
+def test_ephemeral_workspace_child_cleanup_is_autonomous(config, tmp_path):
+    workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    (workdir_path / "repo").mkdir(parents=True)
+    workdir = str(workdir_path)
+    for command in (
+        "rm -rf repo",
+        f"rm -rf {workdir_path / 'repo'}",
+    ):
+        result = classify(
+            "terminal",
+            {"command": command, "workdir": workdir},
+            config,
+            worker=True,
+        )
+        assert (result.decision, result.category) == (
+            "allow",
+            "ephemeral_workspace_cleanup",
+        ), (command, result)
+
+
+def test_ephemeral_workspace_cleanup_fails_closed_outside_child_scope(config, tmp_path, monkeypatch):
+    # v1.2.31: isolate the ambient temp/workspace env roots. pytest's tmp_path
+    # lives under the real %TEMP%, whose children SPEC §2.2 now treats as
+    # disposable scratch; this test pins the WORKSPACE lane contract, so the
+    # scratch-root lane must see no roots here (its own semantics are covered
+    # by tests/test_v1231_limits.py).
+    for _env_name in ("TMPDIR", "TEMP", "TMP", "HERMES_KANBAN_WORKSPACE"):
+        monkeypatch.delenv(_env_name, raising=False)
+    workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    workdir_path.mkdir(parents=True)
+    foreign = tmp_path / "project"
+    foreign.mkdir()
+    workdir = str(workdir_path)
+    cases = (
+        ({"command": "rm -rf ..", "workdir": workdir}, "parent traversal"),
+        ({"command": "rm -rf .", "workdir": workdir}, "workspace root"),
+        ({"command": "rm -rf repo && git clone https://example.com/repo.git repo", "workdir": workdir}, "command chain"),
+        ({"command": "rm -rf repo", "workdir": str(foreign)}, "outside workspace"),
+    )
+    for arguments, label in cases:
+        result = classify("terminal", arguments, config, worker=True)
+        assert result.category != "ephemeral_workspace_cleanup", (label, result)
+
+
+def test_ephemeral_workspace_cleanup_rejects_tilde_expansion(config, tmp_path):
+    workdir_path = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    workdir_path.mkdir(parents=True)
+    workdir = str(workdir_path)
+    for command in (
+        "rm -rf ~",
+        "rm -rf ~/x",
+        "rm -rf ~user",
+        "rm -rf child ~",
+    ):
+        result = classify(
+            "terminal",
+            {"command": command, "workdir": workdir},
+            config,
+            worker=True,
+        )
+        assert (result.decision, result.category) == (
+            "approval_required",
+            "irreversible_data_loss",
+        ), (command, result)
+
+
+def test_ephemeral_workspace_cleanup_refuses_link_escape(config, tmp_path, monkeypatch):
+    # v1.2.31: env-isolated like the sibling scope test — the scratch-root
+    # lane (SPEC §2.2) must not contribute roots while the workspace lane's
+    # link-escape contract is pinned here.
+    for _env_name in ("TMPDIR", "TEMP", "TMP", "HERMES_KANBAN_WORKSPACE"):
+        monkeypatch.delenv(_env_name, raising=False)
+    workdir = tmp_path / ".hermes" / "kanban" / "boards" / "fleet-ops" / "workspaces" / "t_fix"
+    outside = tmp_path / "outside"
+    workdir.mkdir(parents=True)
+    outside.mkdir()
+    link = workdir / "escape"
+    try:
+        link.symlink_to(outside, target_is_directory=True)
+    except OSError:
+        pytest.skip("directory symlink creation is unavailable")
+    result = classify(
+        "terminal",
+        {"command": "rm -rf escape", "workdir": str(workdir)},
+        config,
+        worker=True,
+    )
+    assert result.category != "ephemeral_workspace_cleanup", result
 
 
 def test_bare_secret_filenames_denied(config):
@@ -414,7 +504,9 @@ def test_v127_gh_hostname_equals_and_absolute_url_fail_closed(config):
         # F-01: cobra prefix abbreviation of the hostname override.
         "gh api --hostn evil.example repos/o/r",
         # F-01: an unknown/foreign option must not be treated as a read.
-        "gh api --jq '.items' repos/o/r",
+        # (v1.2.19: `--jq` moved to the read-safe allowlist; any other
+        # non-allowlisted option still fails closed.)
+        "gh api --permissive repos/o/r",
         # F-02: absolute URL endpoint stays fail closed.
         "gh api https://evil.example/repos/o/r",
         "gh api http://api.github.com/repos/o/r",

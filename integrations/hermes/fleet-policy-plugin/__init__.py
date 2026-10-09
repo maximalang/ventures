@@ -56,11 +56,27 @@ def context(kwargs: dict[str, Any]) -> dict[str, Any]:
 
 
 def _message(payload: dict[str, Any]) -> str:
-    return (
+    base = (
         f"FLEET POLICY BLOCKED [{payload.get('rule_id')}] "
         f"pattern={payload.get('pattern_category') or 'unknown'} "
         f"call_index={payload.get('call_index') or 0}"
     )
+    # Канон 17.09: deny = пауза с маршрутом. Маршрут кладём в сообщение
+    # (воркер читает его в этом же ране) и в next_step (для blocked-карты).
+    rem = payload.get("remediation") or {}
+    how, who = rem.get("how"), rem.get("who")
+    if how and who:
+        base += f" next_step={how} [continues: {who}]"
+    return base
+
+
+def _continuation(payload: dict[str, Any]) -> str | None:
+    """Машиночитаемый continuation-контракт для blocked-комментария карты."""
+    rem = payload.get("remediation") or {}
+    how, who = rem.get("how"), rem.get("who")
+    if not how or not who:
+        return None
+    return f"CONTINUATION[who={who}]: {how}"
 
 
 def _project(payload: dict[str, Any]) -> None:
@@ -120,6 +136,13 @@ def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[
         payload["board"] = str(ctx.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "")
         payload["task_status"] = str(ctx.get("task_status") or "unknown")
         payload["run_key"] = str(ctx.get("current_run_id") or ctx.get("run_id") or "session")
+        # Worker-маршруты (continues: worker) НЕ паркуем карту: deny уже донёс
+        # маршрут в сообщение — воркер продолжает в этом же ране. Паркуем только
+        # company/owner-классы (там продолжение вне полномочий воркера).
+        rem = payload.get("remediation") or {}
+        if rem.get("who") == "worker":
+            return {"action": "block", "message": _message(payload)}
+        payload["continuation"] = _continuation(payload)
         _project(payload)
         return {"action": "block", "message": _message(payload)}
     return None
@@ -170,6 +193,18 @@ def kanban_task_claimed(task_id: str = "", board: str = "", assignee: str = "", 
         runtime().config.get("projects", {}),
     )
     task_type, error = runtime().task_type(ctx)
+    # v1.2.36 (SPEC v5) — нативный автороутинг в pre-claim пути: рядом с этой
+    # пре-диспатч проверкой, ONLY за флагом router_hook.enabled (конфиг), режим
+    # из ROUTER_ACTIVE.json рядом с router_hook.py (поставка mode=shadow;
+    # откат = {"mode":"off"} без передеплоя). Best-effort: роутер никогда не
+    # блокирует claim — сбой деградирует к профильному дефолту (канон 7).
+    try:
+        from fleet_policy.router_bridge import router_step
+
+        router_step(ctx, task_id, board or str(ctx.get("board") or ""), run_id,
+                    runtime().config, store=runtime().store, task_type=task_type)
+    except Exception:
+        pass
     if not error:
         return
     payload = {

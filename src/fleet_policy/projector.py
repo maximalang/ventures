@@ -64,7 +64,8 @@ class HermesProjector:
         result: dict[str, int] = {}
         if block:
             blocked = self.runner(
-                ["hermes", "kanban", "--board", board, "block", task_id, message, "--kind", "needs_input"], 20
+                ["hermes", "kanban", "--board", board, "block", task_id, message,
+                 "--kind", "policy_denied"], 20
             )
             result["block"] = int(blocked.returncode)
         else:
@@ -161,6 +162,7 @@ class HermesProjector:
         become synthetic alerts. The live status cache bounds duplicate logical
         events to one read per exact board/task binding.
         """
+        store.expire_stale_notifications()
         claimed = store.claim_pending_notifications(batch_limit)
         if claimed is None:
             return 0
@@ -204,21 +206,34 @@ class HermesProjector:
             with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".txt", delete=False) as handle:
                 handle.write(text)
                 temp_path = Path(handle.name)
-        except OSError:
-            store.release_notification_claim(claim_token, active_event_ids)
+        except OSError as error:
+            self._release_or_fail(store, claim_token, active_event_ids, error)
             return 0
         try:
             command = [
                 "hermes", "-p", profile, "chat", "--in", "~", "-c", "Bot Chat",
                 "--create-if-missing", "-Q", "--max-turns", "1", "--query-file", str(temp_path),
             ]
+            # Optional explicit delivery-model pin (21.09 incident: a heavy
+            # resumed session restored an exhausted model and every batch
+            # timed out). Env-driven; absent env keeps prior behaviour.
+            import os as _os
+            _model = _os.environ.get("FP_DELIVERY_MODEL", "").strip()
+            _provider = _os.environ.get("FP_DELIVERY_PROVIDER", "").strip()
+            if _model:
+                command += ["-m", _model]
+                if _provider:
+                    command += ["--provider", _provider]
             try:
                 result = self.runner(command, self.DELIVERY_TIMEOUT_SECONDS)
-            except (subprocess.TimeoutExpired, OSError, subprocess.SubprocessError):
-                store.release_notification_claim(claim_token, active_event_ids)
+            except (subprocess.TimeoutExpired, OSError, subprocess.SubprocessError) as error:
+                self._release_or_fail(store, claim_token, active_event_ids, error)
                 return 0
             if result.returncode != 0:
-                store.release_notification_claim(claim_token, active_event_ids)
+                self._release_or_fail(
+                    store, claim_token, active_event_ids,
+                    OSError(f"delivery transport exited {result.returncode}: {(result.stderr or '').strip()[:200]}"),
+                )
                 return 0
             return store.mark_claimed_notifications_sent(claim_token, active_event_ids)
         finally:
@@ -226,3 +241,15 @@ class HermesProjector:
                 temp_path.unlink(missing_ok=True)
             except OSError:
                 pass
+
+    @staticmethod
+    def _release_or_fail(store: PolicyStore, claim_token: str, event_ids: list[str], error: Exception) -> None:
+        """A failed transport is an attempt: account it instead of free retries.
+
+        Every claimed row keeps its own attempt ledger; the release of the
+        remaining rows must not be blocked by one row exhausting its budget.
+        """
+        if not event_ids:
+            return
+        for event_id in event_ids:
+            store.fail_claimed_notification(claim_token, event_id, str(error))

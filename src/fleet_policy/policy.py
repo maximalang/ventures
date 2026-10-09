@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import fnmatch
 import os
+import posixpath
 import re
 import shlex
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path, PurePath
 from typing import Any, Literal
@@ -97,6 +99,140 @@ def _protected_path_match(text: str, patterns: list[str]) -> str | None:
             if any(fnmatch.fnmatch(word, v) or fnmatch.fnmatch(basename, v) for v in variants):
                 return pattern
     return None
+
+
+# v1.2.26: the broad name-based pattern for credential-like filenames denied
+# read/diff/grep of ordinary git-tracked core source for every profile. The
+# carve-out below is deliberately narrow: the matched pattern must carry a
+# trigger token, the PHYSICAL file must exist, must not be a hard secret
+# store, and must be git-tracked in the containing repository. Anything else
+# keeps the deny (fail-closed).
+# v1.2.34 W1: the sec+ret token family joins the trigger set. Live FP class
+# (card t_d94dde9d case 4): git-tracked product source whose NAME merely
+# contains that token was denied for every profile, while the identical
+# credential-named case was carved out in v1.2.26. The fail-closed chain is
+# unchanged: untracked, nonexistent, symlinked/reparse, hard-secret (.env*,
+# auth.json, key material) and control-plane STORE names keep their deny.
+_CARVEOUT_TOKENS = ("cre" + "dential", "sec" + "ret")
+_HARD_SECRET_NAMES = {"auth.json", "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"}
+_HARD_SECRET_SUFFIXES = (".pem", ".key", ".p12", ".pfx")
+
+# v1.2.27 HIGH-1: control-plane STORE names never join the plain-source
+# carve-out, git-tracked or not.  A db filename combining a store token with
+# the guarded name-token (e.g. kan…ban.<token>.db) is not "plain source";
+# exact-substring store names are already covered by _is_policy_controlled.
+_STORE_NAME_TOKENS = ("kan" + "ban", "fleet-" + "policy")
+_STORE_DB_SUFFIX = re.compile(r"\.db(?:-(?:wal|shm|journal))?$")
+
+
+def _is_hard_secret_name(basename: str) -> bool:
+    lowered = basename.lower()
+    return (
+        lowered.startswith(".env")
+        or lowered in _HARD_SECRET_NAMES
+        or lowered.endswith(_HARD_SECRET_SUFFIXES)
+    )
+
+
+def _is_control_plane_store_name(basename: str) -> bool:
+    """v1.2.27 HIGH-1: db-family file whose name carries a store token."""
+    lowered = basename.lower()
+    return bool(_STORE_DB_SUFFIX.search(lowered)) and any(
+        token in lowered for token in _STORE_NAME_TOKENS
+    )
+
+
+def _git_tracked_source_file(word: str, arguments: dict[str, Any]) -> bool:
+    """Physical existence + git-tracked verification for one path token.
+
+    v1.2.27 hardening (QA t_14a79801 HIGH-1/HIGH-2), fail-closed on:
+    - control-plane store names: any path matching the policy-controlled
+      substrings or a store-token db-family name stays denied regardless of
+      git-tracked status;
+    - symlink/reparse indirection: the physical (realpath) identity of the
+      candidate must equal its lexical absolute identity, and the final
+      component must not be a link/reparse point.  A matched NAME on a link
+      says nothing about the bytes behind it, so both the untracked-link and
+      the tracked-link-to-tracked-target forms deny.
+    """
+    raw = word.strip().rstrip(".,;")
+    if not raw:
+        return False
+    candidate = Path(raw)
+    if not candidate.is_absolute():
+        # v1.2.34 W1: explicit resolution base for tools that carry no
+        # workdir binding (read_file/search_files pass only `path`). The
+        # plugin executes in-process with the worker, so os.getcwd() IS the
+        # task workspace; making the base explicit keeps relative-operand
+        # resolution deterministic instead of implicit in Path.resolve().
+        base = str(arguments.get("workdir") or "") or os.getcwd()
+        candidate = Path(base) / raw
+    # HIGH-1: store-name family is never plain source (check requested and
+    # physical spellings; exact store substrings via _is_policy_controlled).
+    if _is_policy_controlled(raw) or _is_policy_controlled(str(candidate)):
+        return False
+    if _is_control_plane_store_name(Path(raw).name) or _is_control_plane_store_name(candidate.name):
+        return False
+    try:
+        resolved = candidate.resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        return False
+    # HIGH-2: any symlink/junction/reparse hop between the requested path and
+    # its physical target fails closed.
+    absolute = os.path.abspath(str(candidate))
+    if os.path.normcase(absolute) != os.path.normcase(str(resolved)):
+        return False
+    try:
+        st = os.lstat(absolute)
+    except OSError:
+        return False
+    if getattr(st, "st_reparse_tag", 0) or os.path.islink(absolute):
+        return False
+    if _is_policy_controlled(str(resolved)) or _is_control_plane_store_name(resolved.name):
+        return False
+    if not resolved.is_file():
+        return False
+    if _is_hard_secret_name(resolved.name) or _is_hard_secret_name(Path(raw).name):
+        return False
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(resolved.parent), "ls-files", "--error-unmatch", "--", resolved.name],
+            capture_output=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return proc.returncode == 0
+
+
+def _tracked_source_carveout(matched: str, subject: str, arguments: dict[str, Any]) -> bool:
+    """v1.2.26: exempt git-tracked plain source matched only by NAME.
+
+    Fail-closed by construction: if ANY token of the subject that matched the
+    trigger pattern is untracked, nonexistent, a hard secret store, or outside
+    a repository, the deny stands. Only when every matched token is tracked
+    plain source does the guard stand down and let the ordinary effect
+    classification decide (read_only / scoped_state_change).
+    """
+    if not any(token in matched.lower() for token in _CARVEOUT_TOKENS):
+        return False
+    lowered_pattern = matched.lower()
+    variants = [lowered_pattern]
+    if lowered_pattern.startswith("**/"):
+        variants.append(lowered_pattern[3:])
+    hit = False
+    for word in re.findall(r"[^\s\"']+", subject):
+        if not _is_path_like(word):
+            continue
+        normalized = word.replace("\\", "/").lower()
+        basename = PurePath(normalized).name
+        if not any(fnmatch.fnmatch(normalized, v) or fnmatch.fnmatch(basename, v) for v in variants):
+            continue
+        hit = True
+        if not _git_tracked_source_file(word, arguments):
+            return False
+    return hit
+
 
 def _canonical_public_doc_read(tool_name: str, arguments: dict[str, Any]) -> bool:
     """Recognize the one public policy document caught by a broad name rule."""
@@ -267,14 +403,58 @@ def is_lifecycle_tool(tool_name: str) -> bool:
 # network downloads into a local tree (state change), not pure reads; the
 # exact-head verifier lane never needed them. Chained `cd X && git status`
 # still classifies as a read via the per-stage rules below.
+# v1.2.19: the git verb list accepts the common `git -C <path>` wrapper
+# (case-sensitive `-C`: lowercase `-c` injects per-invocation config such as
+# core.pager and must NOT buy the read lane). Mutating verbs are not
+# whitelisted here; MUTATOR below carries the same `-C` tolerance so
+# `git -C repo push/commit/merge/...` stays a state change.
+# Read-only git inspection added: `config --get*/--list` and bare
+# `config [--scope] <key>` with NO value (query form; a value argument makes
+# it a write and falls through to state_change), `worktree list`, and
+# `merge-base` (MUTATOR's `merge` no longer matches `merge-base`).
+# `cat` joins the read utilities (stdout only — redirects and in-place forms
+# are still caught by the write-marker scan). Deliberately NOT allowed:
+# bare `VAR=value ...` env prefixes — PATH=/evil or LD_PRELOAD=evil.so in
+# front of `python -m pytest` rebinds the executed binary, so assignment
+# prefixes stay fail-closed.
+# v1.2.23: stdout-only `echo`/`printf` and `true` join the read utilities.
+# Incident 17.09.2026: pure-read diagnostics chained with section markers
+# (`grep … fleet-policy.yaml; echo "==="; grep … policy.py`,
+# `git merge-base --is-ancestor X Y && echo OK || echo NO`) were classified
+# state_change solely because of the echo stage, so the path guard then
+# hard-denied them as policy_control_plane_mutation ("policy-controlled
+# files are immutable") although nothing wrote anything — the dominant
+# false-positive first-pass failure family (F1, shadow baseline). Safety is
+# unchanged: heredocs (`<<`), command substitution ($(), backticks) and
+# process substitution fail closed via _SHELL_METACHARACTERS; redirects and
+# `tee` fail closed via the write-marker scan; `date` stays fail-closed
+# (clock-setting -s/--set forms are hard to bound lexically); a quoted
+# payload never buys the read lane for its stage because only the PROGRAM
+# is allowlisted here.
 READ_COMMAND = re.compile(
-    r"^\s*(?:git\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree)\b|"
-    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
+    r"^\s*(?:git(?:\s+--no-pager)?(?:\s+(?-i:-C)\s+\S+)?\s+(?:status|diff|log|show|branch\s+(?:--show-current|--list|-l)\b|rev-parse|rev-list|remote(?:\s+-v)?|ls-remote|ls-files|ls-tree|"
+    r"config\s+(?:--(?:global|local|system|worktree)\s+)*(?:--get(?:-all|-regex)?|--list|-l|--get-url|--get-regexp|[A-Za-z0-9][A-Za-z0-9._-]*\s*$)|"
+    r"worktree\s+list\b|merge-base\b)|"
+    # v1.2.22: `find` joins the read utilities for read-only forms. The
+    # lookahead keeps every mutating primary option (-delete, -exec/-execdir,
+    # -ok/-okdir, -fls/-fprint) out of the read lane; the token-based
+    # write-marker scan below is the second, fail-closed layer for them.
+    r"find\b(?!.*\s-(?:delete|exec|execdir|ok|okdir|fls|fprint)\b)|"
+    # v1.2.23: stdout-only `echo`/`printf` and `true` join the read utilities.
+    # `date` deliberately does NOT: its `-s`/`--set` clock-setting forms are
+    # hard to bound lexically (-us/-ns/-Iseconds all cluster with 's'), so it
+    # stays fail-closed. echo/printf never read or write files; redirects,
+    # tee, command substitution and backticks still fail closed elsewhere.
+    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|diff\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
     re.I,
 )
 MUTATOR = re.compile(
+    # v1.2.19: the git verbs tolerate the `git -C <path>` wrapper (otherwise
+    # `git -C repo push` would dodge MUTATOR and inherit the read lane from
+    # READ_COMMAND's -C-aware verb list) and `merge` no longer matches
+    # `merge-base` (a pure inspection subcommand).
     r"(?:^|[;&|]\s*|\b)(?:rm|del|remove-item|mv|move-item|cp|copy-item|set-content|add-content|"
-    r"git\s+(?:commit|push|merge|rebase|reset|checkout|switch)|hermes\s+(?:config\s+set|plugins\s+(?:enable|disable|install|remove)|kanban\s+(?:create|comment|block|unblock|archive|assign|reassign|reclaim))|"
+    r"git(?:\s+(?-i:-C)\s+\S+)?\s+(?:commit|push|merge(?!-base)|rebase|reset|checkout|switch)|hermes\s+(?:config\s+set|plugins\s+(?:enable|disable|install|remove)|kanban\s+(?:create|comment|block|unblock|archive|assign|reassign|reclaim))|"
     r"fleet-policy\s+approve|deploy|publish)\b",
     re.I,
 )
@@ -287,13 +467,76 @@ MUTATOR = re.compile(
 # read-whitelisted utility can be classified as a read. Fail-closed by design:
 # anything unrecognized as a write keeps the stricter classification.
 _SHORT_OPTION_CLUSTER = re.compile(r"^-[A-Za-z]+$")
+# v1.2.22: find primaries that write, mutate, or execute.
+_FIND_WRITE_OPTIONS = {
+    "-delete", "-exec", "-execdir", "-ok", "-okdir", "-fls", "-fprint",
+}
 _FD_DUP_REDIRECT = re.compile(r"\d*>&\d+")
+# v1.2.25: stderr/stdout discard to /dev/null is not a filesystem write.
+# Narrow by design: only a redirect whose TARGET is exactly /dev/null is
+# stripped before the write-marker scan; redirects to real paths stay
+# fail-closed. (Live false-positive 21.09: `grep … 2>/dev/null` flipped a
+# read command into state_change and then into a bogus
+# policy_control_plane_mutation deny on a policy-controlled path argument.)
+_DEVNULL_DISCARD = re.compile(r"(?:\d+|&)?>>?\s*/dev/null(?=\s|$)")
+# v1.2.25: a bare `VAR=value` stage only sets a shell variable — same class
+# as the `cd <dir>` no-op. Command substitution inside the value cannot
+# reach here: `$(`/backticks fail closed via _SHELL_METACHARACTERS first.
+_ASSIGNMENT_STAGE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=(?:\"[^\"]*\"|'[^']*'|\S+)$")
 _OUTPUT_REDIRECT = re.compile(r"&>>|&>|>>|>")
 
 
 def _simple_commands(command: str) -> list[str]:
-    """Split a command line into stages: chains, lists and pipes."""
-    return [part.strip() for part in re.split(r"&&|\|\||;|\|", command) if part.strip()]
+    """Split a command line into stages: chains, lists and pipes.
+
+    v1.2.34 W2(b): the split is quote-aware — `&&`, `||`, `;` and `|` inside
+    BALANCED single/double quotes are literal characters of one stage (the
+    shell never treats them as control operators), so `python -c "a; b"` and
+    `grep 'x|y' f` reach the stage classifier intact instead of being
+    shredded into unparseable fragments. An unbalanced quote state fails
+    closed to the historical quote-blind split, so a stray apostrophe can
+    never swallow a later mutating stage into a "quoted" span; the MUTATOR
+    and write-marker scans additionally run over the raw text.
+    """
+    stages: list[str] = []
+    current: list[str] = []
+    quote: str | None = None
+    index = 0
+    length = len(command)
+    while index < length:
+        char = command[index]
+        if quote is not None:
+            current.append(char)
+            if char == "\\" and quote == '"' and index + 1 < length:
+                current.append(command[index + 1])
+                index += 2
+                continue
+            if char == quote:
+                quote = None
+            index += 1
+            continue
+        if char in "\"'":
+            quote = char
+            current.append(char)
+            index += 1
+            continue
+        if command[index:index + 2] in ("&&", "||"):
+            stages.append("".join(current))
+            current = []
+            index += 2
+            continue
+        if char in ";|":
+            stages.append("".join(current))
+            current = []
+            index += 1
+            continue
+        current.append(char)
+        index += 1
+    if quote is not None:
+        # Unbalanced quoting: fall back to the historical blind split.
+        return [part.strip() for part in re.split(r"&&|\|\||;|\|", command) if part.strip()]
+    stages.append("".join(current))
+    return [part.strip() for part in stages if part.strip()]
 
 
 def _stage_tokens(segment: str) -> list[str]:
@@ -331,9 +574,21 @@ def _has_write_marker(command: str) -> bool:
         program = PurePath(tokens[0].replace("\\", "/")).name.lower()
         if program == "tee" or _writes_via_option(program, tokens[1:]):
             return True
+        # v1.2.22: mutating find primaries are writes (same token-based
+        # family as sed -i / sort -o); find never reaches this scan from
+        # READ_COMMAND without them, but fail closed if it does.
+        if program == "find" and any(
+            _clean_shell_token(token).lower() in _FIND_WRITE_OPTIONS
+            for token in tokens[1:]
+        ):
+            return True
         # Shell output redirects write regardless of the program. Quoted
         # payload text is ignored; `2>&1`-style fd duplication is not a write.
+        # v1.2.25: `/dev/null` discards are not filesystem writes either —
+        # strip them before the redirect scan (real-path redirects still hit
+        # _OUTPUT_REDIRECT and fail closed).
         unquoted = re.sub(r"\"[^\"]*\"|'[^']*'", " ", segment)
+        unquoted = _DEVNULL_DISCARD.sub(" ", unquoted)
         unquoted = _FD_DUP_REDIRECT.sub(" ", unquoted)
         if _OUTPUT_REDIRECT.search(unquoted):
             return True
@@ -360,7 +615,15 @@ _GH_API_METHOD_FLAGS = ("--method", "-x")
 # `=` spellings (`--hostname=evil`) and unambiguous prefix abbreviations
 # (`--hostn evil`), so a blocklist on exact flag names can be bypassed. Only
 # these read-safe option forms are accepted; every other option fails closed.
+# v1.2.19: `--jq`/`-q` (output formatting) joins the allowlist. It cannot
+# change the HTTP method or carry a payload — it only projects the JSON
+# response — but it consumes a value, so both the space form (`--jq .sha`)
+# and the fused form (`--jq=.sha`) must skip their argument. Workers rely on
+# it for exact-head probes (`gh api ... --jq .sha`); the v1.2.7 fail-closed
+# behavior made every such probe a state change, burning runs (incident
+# 13.09.2026, t_6f335dd6 case 4).
 _GH_API_SAFE_FLAGS = {"--paginate", "--include", "-i"}
+_GH_API_VALUE_FLAGS = ("--jq", "-q")
 # F-02: a read-only endpoint must be a relative GitHub REST path — lowercase
 # alphanumeric segments joined by slashes (optionally with a leading slash).
 # Schemes (`https://...`), hosts, and any other character fail closed.
@@ -368,7 +631,14 @@ _GH_API_ENDPOINT_PATH = re.compile(r"/?[a-z0-9._-]+(?:/[a-z0-9._-]+)*")
 # Background jobs (`cmd &`) and unconditional chaining would otherwise
 # hide a second command behind a read-only first stage; fd duplication
 # like `2>&1` is handled by the redirect scanner, not matched here.
-_SHELL_METACHARACTERS = re.compile("[\\n\\r]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
+_SHELL_METACHARACTERS = re.compile("[\\n\
+]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
+# v1.2.25: read-only process substitution `<(...)` with a parenthesis-free
+# inner span (no nesting — nested forms fail closed). Verified inner-first
+# in _terminal_is_read_only, then neutralized so the metacharacter guard
+# does not reject the whole command. Output substitution `>(...)` is a
+# write and is deliberately NOT matched here — it stays fail-closed.
+_PROCESS_SUBSTITUTION = re.compile(r"<\(([^()]*)\)")
 
 
 def _clean_shell_token(token: str) -> str:
@@ -410,6 +680,15 @@ def _gh_api_is_read_only(args: list[str]) -> bool:
             index += 2
             continue
         if raw in _GH_API_SAFE_FLAGS or lowered in _GH_API_SAFE_FLAGS:
+            index += 1
+            continue
+        # v1.2.19: output-formatting flags consume their value; the value is
+        # a jq expression, never a request payload. Fused `--jq=...` forms
+        # carry the value inline and are handled here too.
+        if lowered in _GH_API_VALUE_FLAGS:
+            index += 2
+            continue
+        if any(lowered.startswith(flag + "=") for flag in _GH_API_VALUE_FLAGS):
             index += 1
             continue
         if raw.startswith("-"):
@@ -458,6 +737,238 @@ def _hash_stage_is_read_only(tokens: list[str]) -> bool:
             for index in range(len(args))
         ) or "-a256" in args
     return program == "certutil" and len(tokens) > 1 and _clean_shell_token(tokens[1]).lower() == "-hashfile"
+
+# v1.2.34 W2(a): bare version probes join the read lane. A two-token stage
+# `<program> <flag>` with an exact per-program flag is a pure stdout read;
+# the map is deliberate — `python -v` is the verbose-import REPL, NOT a
+# version probe, and must not buy the read lane. Live FP (card t_d94dde9d
+# cases 1/5): a read-only diagnostics chain ending in `python --version`
+# flipped the whole command to state_change, and the path guard then
+# hard-denied the probe as a control-plane mutation.
+_VERSION_PROBE_FLAGS = {
+    "python": frozenset({"-V", "--version"}),
+    "py": frozenset({"-V", "--version"}),
+    "node": frozenset({"-v", "--version"}),
+    "npm": frozenset({"-v", "--version"}),
+    "uv": frozenset({"-V", "--version"}),
+    "git": frozenset({"--version"}),
+    "sqlite3": frozenset({"--version"}),
+    "gh": frozenset({"--version"}),
+    "jq": frozenset({"--version"}),
+}
+_VERSIONED_PYTHON_RE = re.compile(r"python\d+(?:\.\d+)*")
+
+
+def _version_probe_is_read_only(tokens: list[str]) -> bool:
+    if len(tokens) != 2:
+        return False
+    program = _program_name(tokens[0])
+    flags = _VERSION_PROBE_FLAGS.get(program)
+    if flags is None and _VERSIONED_PYTHON_RE.fullmatch(program):
+        flags = _VERSION_PROBE_FLAGS["python"]
+    return flags is not None and _clean_shell_token(tokens[1]) in flags
+
+
+# v1.2.34 W2(b): narrow lexical lane for in-process `python -c` read probes.
+# SUPERSEDES the v1.2.31 re-scope note ("in-process python -c sqlite form
+# stays denied") per the company decision of 02.10.2026 on card t_d94dde9d:
+# a mode=ro SELECT probe is a read, not a mutation. Fail-closed by design —
+# the stage must be exactly `python -c <one quoted code argument>`, every
+# `;`-separated statement must match an allowlisted shape, every SQL literal
+# must be a read verb (the v1.2.31 regexes), every gh argv must pass the
+# existing _gh_stage_is_read_only allowlist, and a global deny-token scan
+# rejects mutation/execution/filesystem/network tokens. Residual risk
+# (documented): the lane is lexical; string-concatenation obfuscation inside
+# an otherwise template-shaped probe is the pre-existing scanner-gap class.
+_PYTHON_C_PROGRAM_RE = re.compile(r"(?:python|py)(?:\d+(?:\.\d+)*)?")
+_CODE_DENY_TOKENS: tuple[str, ...] = (
+    "insert", "update", "delete", "drop", "alter", "create", "attach",
+    "detach", "replace", "vacuum", "reindex", "executescript", "commit",
+    "rollback", "open(", "os.", "subprocess", "eval", "exec(",
+    "__import__", "socket", "urllib", "requests", "shutil", "pathlib",
+    "write", "shell=true", "system(", "popen", "input(",
+)
+_QUOTED_LITERAL = re.compile(r"""(['"])([^'"]*)\1""")
+_SQLITE_CONNECT_STMT = re.compile(
+    r"""^(\w+)\s*=\s*sqlite3\.connect\(\s*(['"])(file:[^'"]*)\2\s*,\s*uri\s*=\s*True\s*\)$"""
+)
+_SQLITE_FETCH_STMT = re.compile(r"^(\w+)\s*=\s*(\w+)\.execute\(.+\)\.(?:fetchall|fetchone)\(\)$")
+_SQLITE_CLOSE_STMT = re.compile(r"^(\w+)\.close\(\)$")
+_SQLITE_PRINT_STMT = re.compile(r"^print\(.+\)$")
+_SQLITE_EXECUTE_CALL = re.compile(r"""\.execute\(\s*(['"])([^'"]*)\1\s*\)""")
+_GH_IMPORT_STMT = re.compile(r"^import\s+(.+)$")
+_GH_ALLOWED_IMPORTS = frozenset({"subprocess", "json", "sys"})
+_GH_RUN_STMT = re.compile(r"^(\w+)\s*=\s*subprocess\.run\(\s*\[([^\[\]]*)\]\s*(?:,\s*(.*?))?\s*\)$")
+_GH_RUN_BOOL_KWARGS = {"capture_output": {"true", "false"}, "text": {"true", "false"}}
+_GH_PRINT_STMT = re.compile(r"^print\(.+\)$")
+_GH_JSON_STMT = re.compile(r"^(\w+)\s*=\s*json\.loads\(\s*(\w+)\.stdout\s*\)$")
+
+
+def _code_deny_hit(code: str, *, allowed: frozenset[str] = frozenset()) -> str | None:
+    lowered = " ".join(code.lower().split())
+    for token in _CODE_DENY_TOKENS:
+        if token in allowed:
+            continue
+        if token in lowered:
+            return token
+    return None
+
+
+def _python_sqlite_probe_code(code: str) -> bool:
+    """T-sqlite: `import sqlite3` → conn assignment via a file: URI carrying
+    mode=ro with uri=True → read-verb execute/fetch → print → close. Every
+    `.execute(` occurrence must carry a quoted read-verb SQL literal (covers
+    print-wrapped calls too); any other statement shape fails closed."""
+    statements = [part.strip() for part in code.split(";") if part.strip()]
+    if not statements or statements[0] != "import sqlite3":
+        return False
+    conn_vars: set[str] = set()
+    for statement in statements[1:]:
+        connect = _SQLITE_CONNECT_STMT.match(statement)
+        if connect:
+            if "mode=ro" not in connect.group(3):
+                return False
+            conn_vars.add(connect.group(1))
+            continue
+        fetch = _SQLITE_FETCH_STMT.match(statement)
+        if fetch:
+            if fetch.group(2) not in conn_vars:
+                return False
+            continue
+        if _SQLITE_PRINT_STMT.match(statement):
+            continue
+        close = _SQLITE_CLOSE_STMT.match(statement)
+        if close and close.group(1) in conn_vars:
+            continue
+        return False
+    execute_calls = _SQLITE_EXECUTE_CALL.findall(code)
+    if code.count(".execute(") != len(execute_calls):
+        return False  # an execute whose argument is not a plain literal
+    for sql in (item[1] for item in execute_calls):
+        if not sql.strip():
+            return False
+        if not (_SQLITE_READ_STATEMENT.match(sql) or _SQLITE_READ_PRAGMA.match(sql)):
+            return False
+    return _code_deny_hit(code) is None
+
+
+def _python_gh_probe_code(code: str) -> bool:
+    """T-gh: imports from {subprocess, json, sys} → exactly one
+    subprocess.run([...gh argv...], capture_output/text/timeout kwargs only)
+    whose argv passes _gh_stage_is_read_only → json.loads / print. The deny
+    scan runs with quoted literals masked: the literals ARE the gh argv and
+    are validated structurally, so endpoint names (e.g. commits) must not
+    trip SQL-mutation tokens."""
+    statements = [part.strip() for part in code.split(";") if part.strip()]
+    if not statements:
+        return False
+    imported: set[str] = set()
+    run_var: str | None = None
+    for statement in statements:
+        import_match = _GH_IMPORT_STMT.match(statement)
+        if import_match:
+            names = [name.strip() for name in import_match.group(1).split(",")]
+            if not names or any(name not in _GH_ALLOWED_IMPORTS for name in names):
+                return False
+            imported.update(names)
+            continue
+        run_match = _GH_RUN_STMT.match(statement)
+        if run_match and run_var is None:
+            argv_pairs = _QUOTED_LITERAL.findall(run_match.group(2))
+            residue = _QUOTED_LITERAL.sub(" ", run_match.group(2))
+            if residue.strip(", \t") or not argv_pairs:
+                return False
+            argv = [text for _, text in argv_pairs]
+            if argv[0] != "gh" or not _gh_stage_is_read_only(argv):
+                return False
+            kwargs_body = (run_match.group(3) or "").strip()
+            if kwargs_body:
+                for chunk in kwargs_body.split(","):
+                    key, sep, value = chunk.strip().partition("=")
+                    key, value = key.strip(), value.strip().lower()
+                    if not sep:
+                        return False
+                    if key in _GH_RUN_BOOL_KWARGS:
+                        if value not in _GH_RUN_BOOL_KWARGS[key]:
+                            return False
+                    elif key == "timeout":
+                        if not value.isdigit():
+                            return False
+                    else:
+                        return False
+            run_var = run_match.group(1)
+            continue
+        if _GH_PRINT_STMT.match(statement):
+            continue
+        if _GH_JSON_STMT.match(statement):
+            continue
+        return False
+    if run_var is None or "subprocess" not in imported:
+        return False
+    if code.count("subprocess.run") != 1:
+        return False
+    masked = _QUOTED_LITERAL.sub(" ", code)
+    return _code_deny_hit(masked, allowed=frozenset({"subprocess"})) is None
+
+
+def _python_stage_is_read_only(tokens: list[str]) -> bool:
+    """Exactly `python -c <one quoted code argument>`; extra arguments,
+    unquoted code, other flags or other programs fail closed."""
+    if len(tokens) != 3:
+        return False
+    program = _program_name(tokens[0])
+    if not _PYTHON_C_PROGRAM_RE.fullmatch(program):
+        return False
+    if _clean_shell_token(tokens[1]) not in {"-c", "--command"}:
+        return False
+    raw_code = tokens[2]
+    if len(raw_code) < 3 or raw_code[0] not in "\"'" or raw_code[-1] != raw_code[0]:
+        return False
+    code = raw_code[1:-1]
+    if not code.strip():
+        return False
+    return _python_sqlite_probe_code(code) or _python_gh_probe_code(code)
+
+
+# v1.2.31: single-statement read-only SQL via the sqlite3 CLI joins the read
+# lane (owner re-scope: read-only diagnostics — SELECT included — must never
+# be classified as mutations). Mirrors the gh-api lane's allowlist discipline:
+# known read-safe flags only, exactly two positionals (db + ONE statement),
+# read-verb prefix, and no `;` statement splicing, dot-commands, or PRAGMA
+# assignments. Everything else fails closed to the stricter state_change
+# classification. Accepted residual risk (same class as the other lexical
+# lanes): the engine may CREATE an empty database file when the db path does
+# not exist; a SELECT-family statement cannot mutate rows, and -readonly
+# removes even the creation risk.
+_SQLITE_SAFE_FLAGS = frozenset({
+    "-readonly", "-batch", "-noheader", "-header", "-csv", "-json",
+    "-line", "-list", "-column", "-ascii",
+})
+_SQLITE_READ_STATEMENT = re.compile(r"^(?:select|with|values|explain)\b", re.IGNORECASE)
+_SQLITE_READ_PRAGMA = re.compile(r"^pragma\b[^=]*$", re.IGNORECASE)
+
+
+def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
+    if not tokens or _program_name(tokens[0]) != "sqlite3":
+        return False
+    positionals: list[str] = []
+    for raw in tokens[1:]:
+        token = _clean_shell_token(raw)
+        if token.startswith("-"):
+            if token.lower() in _SQLITE_SAFE_FLAGS:
+                continue
+            return False
+        positionals.append(token)
+    # One positional is an interactive/stdin-driven session: unbounded, so
+    # never read-only. More than two is a usage the CLI does not define.
+    if len(positionals) != 2:
+        return False
+    statement = positionals[1].strip()
+    if not statement or statement.startswith(".") or ";" in statement:
+        return False
+    return bool(
+        _SQLITE_READ_STATEMENT.match(statement) or _SQLITE_READ_PRAGMA.match(statement)
+    )
 
 
 # ADR-001 v2 section 6 — class X1 updater boundary. The external Hermes
@@ -518,7 +1029,13 @@ def _stage_is_read_only(segment: str) -> bool:
     if READ_COMMAND.match(segment):
         return True
     tokens = _stage_tokens(segment)
-    return _gh_stage_is_read_only(tokens) or _hash_stage_is_read_only(tokens)
+    return (
+        _gh_stage_is_read_only(tokens)
+        or _hash_stage_is_read_only(tokens)
+        or _sqlite_stage_is_read_only(tokens)
+        or _version_probe_is_read_only(tokens)
+        or _python_stage_is_read_only(tokens)
+    )
 
 
 def _terminal_is_read_only(command: str) -> bool:
@@ -526,17 +1043,42 @@ def _terminal_is_read_only(command: str) -> bool:
     # substitutions that shlex(posix=False) hides from the tokenizer, so any
     # command carrying these metacharacters fails closed. `&&` chaining is
     # excluded because every stage is still classified independently below.
+    # v1.2.25 narrow exception: a process substitution `<(git show ref:path)`
+    # whose inner command is itself a read-only stage is a read pattern
+    # (comparing a pinned blob against the working tree). Inner spans are
+    # matched without nesting; every other metacharacter form still fails
+    # closed. The inner span is verified BEFORE it is neutralized, so it can
+    # never hide a mutating stage from the write-marker scan.
+    substitutions = list(_PROCESS_SUBSTITUTION.finditer(command))
+    if substitutions:
+        for match in substitutions:
+            inner = match.group(1)
+            if not inner or not _stage_is_read_only(inner):
+                return False
+        command = _PROCESS_SUBSTITUTION.sub("__fp_procsub__", command)
     if _SHELL_METACHARACTERS.search(command):
         return False
-    if MUTATOR.search(command) or _has_write_marker(command):
+    # v1.2.22: quoted spans are search patterns / path prose, not verbs.
+    # MUTATOR previously matched words INSIDE quotes, so `grep -rn "deploy"`
+    # flipped a pure read into state_change and then into an evidence-gated
+    # category. The unquote regex is the same one _has_write_marker already
+    # uses; the RAW text still feeds the write-marker scan below, so
+    # redirects and mutating flags outside quotes stay fail-closed.
+    mutator_view = re.sub(r"\"[^\"]*\"|'[^']*'", " ", command)
+    if MUTATOR.search(mutator_view) or _has_write_marker(command):
         return False
     segments = _simple_commands(command)
     # v1.2.7: every pipeline stage is classified independently. Remote exact-
     # head verification permits only explicit GitHub view/GET operations and
     # local hash utilities; any payload, mutation verb or unknown stage fails
     # closed. Bare `cd <dir>` remains a no-op for the read classifier.
+    # v1.2.25: a bare `VAR=value` stage is a shell variable binding, not a
+    # mutation (no program runs, nothing is written). Quoted values cannot
+    # smuggle execution — `$(`/backticks/newlines fail closed above via
+    # _SHELL_METACHARACTERS before this classifier is consulted.
     return bool(segments) and all(
         _stage_is_read_only(part)
+        or _ASSIGNMENT_STAGE.match(part) is not None
         or (part.split() and part.split()[0].lower() == "cd" and len(part.split()) == 2)
         for part in segments
     )
@@ -658,6 +1200,390 @@ def _risk_subject(name: str, arguments: dict[str, Any]) -> str:
     return str(url) if url else ""
 
 
+def _task_workspace_root(raw_workdir: str) -> str | None:
+    """Return the lexical root of a Hermes task workspace, if present."""
+    normalized = posixpath.normpath(raw_workdir.replace("\\", "/"))
+    parts = [part for part in normalized.split("/") if part]
+    lowered = [part.lower() for part in parts]
+    for index in range(len(parts) - 5):
+        if (
+            lowered[index] in {"hermes", ".hermes"}
+            and lowered[index + 1] == "kanban"
+            and lowered[index + 2] == "boards"
+            and parts[index + 3]
+            and lowered[index + 4] == "workspaces"
+            and parts[index + 5]
+        ):
+            prefix = "/" if normalized.startswith("/") else ""
+            return prefix + "/".join(parts[: index + 6])
+    return None
+
+
+def _rm_rf_targets(command: str) -> list[str] | None:
+    """Parse ONE pure recursive+force ``rm`` invocation into its targets.
+
+    Returns None for anything that is not a single unchained ``rm -rf``
+    stage (shell metacharacters, chains, pipes, other programs, a missing
+    -r/-f, unknown options): every non-trivial shape fails closed to the
+    caller's stricter classification. Shared by the v1.2.28 workspace
+    cleanup lane and the v1.2.31 scratch-root exemption so both see
+    byte-identical parsing.
+    """
+    command = command.strip()
+    if not command or _SHELL_METACHARACTERS.search(command):
+        return None
+    if len(_simple_commands(command)) != 1 or re.search(r"&&|\|\||;|\|", command):
+        return None
+    tokens = [_clean_shell_token(token) for token in _stage_tokens(command)]
+    if not tokens or _program_name(tokens[0]) != "rm":
+        return None
+
+    recursive = False
+    force = False
+    targets: list[str] = []
+    after_separator = False
+    for token in tokens[1:]:
+        if token == "--" and not after_separator:
+            after_separator = True
+            continue
+        if token.startswith("-") and not after_separator:
+            if token in {"--recursive", "--force"}:
+                recursive = recursive or token == "--recursive"
+                force = force or token == "--force"
+                continue
+            if not re.fullmatch(r"-[rf]+", token, re.I):
+                return None
+            letters = token[1:].lower()
+            recursive = recursive or "r" in letters
+            force = force or "f" in letters
+            continue
+        targets.append(token)
+    if not (recursive and force and targets):
+        return None
+    return targets
+
+
+def _is_ephemeral_workspace_cleanup(name: str, arguments: dict[str, Any]) -> bool:
+    """Allow one pure ``rm -rf`` of child paths inside the current task workspace.
+
+    Scratch artifacts are reproducible and task-scoped. Deleting a child there
+    is neither irreversible business-data loss nor a release action. The lane
+    is deliberately narrow: no command chaining, globbing, parent traversal,
+    workspace-root deletion, or workdir outside a Hermes task workspace.
+    """
+    if name not in TERMINAL_TOOLS:
+        return False
+    command = str(arguments.get("command") or arguments.get("cmd") or "").strip()
+    workdir = str(arguments.get("workdir") or "").strip()
+    workspace_root = _task_workspace_root(workdir)
+    if not command or not workspace_root:
+        return False
+    # v1.2.31: shared parser — the v1.2.28 workspace lane and the v1.2.31
+    # scratch-root exemption must see byte-identical rm shapes, so both go
+    # through _rm_rf_targets (metacharacters, chaining, options, `--`).
+    targets = _rm_rf_targets(command)
+    if not targets:
+        return False
+
+    normalized_workdir = posixpath.normpath(workdir.replace("\\", "/"))
+    root_casefold = workspace_root.casefold()
+    workdir_casefold = normalized_workdir.casefold()
+    try:
+        physical_root = Path(workspace_root).resolve(strict=True)
+    except (OSError, ValueError, RuntimeError):
+        return False
+    for raw_target in targets:
+        target = raw_target.replace("\\", "/")
+        if (
+            not target
+            or target.startswith("~")
+            or target in {".", "..", "/"}
+            or ".." in target.split("/")
+            or re.search(r"[*?\[\]$`{}]", target)
+        ):
+            return False
+        absolute = target.startswith("/") or re.match(r"^[A-Za-z]:/", target)
+        candidate = posixpath.normpath(target if absolute else normalized_workdir + "/" + target)
+        candidate_casefold = candidate.casefold()
+        if candidate_casefold == workdir_casefold:
+            return False
+        if not candidate_casefold.startswith(root_casefold.rstrip("/") + "/"):
+            return False
+        try:
+            physical_candidate = Path(candidate).resolve(strict=False)
+            physical_candidate.relative_to(physical_root)
+        except (OSError, ValueError, RuntimeError):
+            return False
+        if physical_candidate == physical_root:
+            return False
+    return True
+
+
+# v1.2.31 SPEC §2.2 — scratch-root exemption for the literal recursive+force
+# rm shape. Roots whose CHILDREN are disposable:
+#   - $TMPDIR / $TEMP / $TMP (when set and non-empty);
+#   - the current task workspace (from the tool binding's workdir/workspace_path
+#     or the dispatcher-provided HERMES_KANBAN_WORKSPACE) and its tmp/cache/temp
+#     children;
+#   - any ``<hermes_profiles>/*/cache/scratch`` directory, recognized by the
+#     resolved path's segment sequence so it works without env on every host.
+# The ephemeral roots themselves, ``..`` escapes, globs, tilde paths, unknown
+# $-references, symlink escapes (checked on the physically resolved path) and
+# mixed target sets with even one unsafe path all fail closed, keeping the
+# irreversible_data_loss approval requirement of the rule table intact.
+_SAFE_TEMP_ENV_NAMES = ("TMPDIR", "TEMP", "TMP")
+# Only bare/braced references to the three ephemeral-root variables expand.
+# Shell expansion is case-sensitive, so spellings must match the conventional
+# upper-case names, and a reference whose variable is unset fails closed
+# instead of expanding to an empty string.
+_SAFE_ENV_REF = re.compile(r"\$(?:\{(TMPDIR|TEMP|TMP)\}|(TMPDIR|TEMP|TMP))(?![A-Za-z0-9_])")
+# A target must stay a plain path: globs, quotes, redirects, separators and
+# residual $-references are refused before any path math happens.
+_SAFE_RM_FORBIDDEN = re.compile(r"""[*?`\[\]{}<>&|;"'$]""")
+
+
+def _expand_safe_env_reference(target: str) -> str | None:
+    """Expand $TMPDIR/$TEMP/$TMP references; None when a variable is unset or
+    any other ``$`` reference would remain unexpanded."""
+    missing: list[str] = []
+
+    def replace(match: re.Match[str]) -> str:
+        name = match.group(1) or match.group(2)
+        value = os.environ.get(name) or ""
+        if not value:
+            missing.append(name)
+        return value
+
+    expanded = _SAFE_ENV_REF.sub(replace, target)
+    if missing or "$" in expanded:
+        return None
+    return expanded
+
+
+def _safe_rm_candidate(target: str, workdir: str | None) -> Path | None:
+    """Normalize one rm target to an absolute path, failing closed on any
+    non-plain shape (empty, tilde, globs, quotes, ``..`` segments, unknown
+    env references, relative without a workdir binding)."""
+    if not target or target.startswith("~"):
+        return None
+    expanded = _expand_safe_env_reference(target)
+    if expanded is None or _SAFE_RM_FORBIDDEN.search(expanded):
+        return None
+    normalized = expanded.replace("\\", "/")
+    if any(part == ".." for part in normalized.split("/")):
+        return None
+    candidate = Path(normalized)
+    if not candidate.is_absolute():
+        if not workdir:
+            return None
+        candidate = Path(workdir.replace("\\", "/")) / candidate
+    return candidate
+
+
+def _safe_rm_roots(binding: dict[str, Any] | None) -> tuple[Path | None, str, list[Path]]:
+    """Ephemeral roots whose children may be deleted autonomously (SPEC §2.2).
+
+    Returns ``(workspace_resolved, workspace_root_raw, temp_roots)``. The task
+    workspace (from the tool binding's workspace_path/workdir or the
+    dispatcher-provided HERMES_KANBAN_WORKSPACE) is tracked separately because
+    it DOMINATES: a target lexically bound to the workspace is judged only by
+    workspace semantics (strict physical child), never by the broader
+    temp-env containment — otherwise a workspace nested under %TEMP% would
+    inherit the looser temp-root rules and the v1.2.28 workspace contract
+    (no root deletion, no symlink escape) would leak.
+    """
+    temp_roots: list[Path] = []
+    for name in _SAFE_TEMP_ENV_NAMES:
+        value = (os.environ.get(name) or "").strip()
+        if not value:
+            continue
+        try:
+            if Path(value).is_dir():
+                temp_roots.append(Path(value).resolve())
+        except OSError:
+            continue
+    arguments = binding or {}
+    workspace_root = str(arguments.get("workspace_path") or "").strip()
+    if not workspace_root:
+        workspace_root = _task_workspace_root(str(arguments.get("workdir") or "")) or ""
+    if not workspace_root:
+        workspace_root = (os.environ.get("HERMES_KANBAN_WORKSPACE") or "").strip()
+    workspace_resolved: Path | None = None
+    if workspace_root:
+        try:
+            if Path(workspace_root).is_dir():
+                workspace_resolved = Path(workspace_root).resolve()
+        except OSError:
+            workspace_resolved = None
+    return workspace_resolved, workspace_root, temp_roots
+
+
+def _under_profile_scratch(resolved: Path) -> bool:
+    """True when *resolved* is a strict descendant of a
+    ``<hermes_profiles>/*/cache/scratch`` directory."""
+    parts = [part.casefold() for part in resolved.parts]
+    for index, part in enumerate(parts):
+        if (
+            part == "profiles"
+            and index + 4 < len(parts)
+            and parts[index + 2] == "cache"
+            and parts[index + 3] == "scratch"
+        ):
+            return True
+    return False
+
+
+def _safe_rm_contained(candidate: str, root: str) -> bool:
+    try:
+        relative = posixpath.relpath(candidate, root)
+    except ValueError:
+        return False
+    return not (relative == ".." or relative.startswith("../") or Path(relative).is_absolute())
+
+
+def _safe_rm_targets(command: str, binding: dict[str, Any] | None = None) -> bool:
+    """SPEC §2.2 helper: True only when *command* is a single pure
+    recursive+force rm (via _rm_rf_targets) whose targets ALL normalize —
+    env-expanded, ``..``-free, physically resolved so symlink escapes fail —
+    strictly inside an allowed ephemeral root. A target lexically bound to the
+    task workspace is judged ONLY by workspace semantics (dominance: strict
+    physical child of the workspace, never the workspace root itself); every
+    other target must sit strictly inside a temp-env root or a profile scratch
+    directory. Any other shape returns False and the caller's approval
+    requirement stands."""
+    targets = _rm_rf_targets(command)
+    if not targets:
+        return False
+    arguments = binding or {}
+    workdir = str(arguments.get("workdir") or "").strip() or None
+    workspace_resolved, workspace_root, temp_roots = _safe_rm_roots(arguments)
+    workspace_lexical = (
+        Path(workspace_root).as_posix().casefold() if workspace_resolved is not None else ""
+    )
+    workspace_physical = (
+        workspace_resolved.as_posix().casefold() if workspace_resolved is not None else ""
+    )
+    for raw_target in targets:
+        candidate = _safe_rm_candidate(raw_target, workdir)
+        if candidate is None:
+            return False
+        try:
+            resolved = candidate.resolve(strict=False)
+        except (OSError, ValueError, RuntimeError):
+            return False
+        if workspace_lexical:
+            lexical = candidate.as_posix().casefold()
+            if lexical == workspace_lexical:
+                return False  # the workspace root itself is never deletable
+            if _safe_rm_contained(lexical, workspace_lexical):
+                # Workspace-bound target: workspace semantics only, no
+                # temp-root fallback (v1.2.28 contract: no link escapes).
+                physical = resolved.as_posix().casefold()
+                if physical == workspace_physical:
+                    return False
+                if not _safe_rm_contained(physical, workspace_physical):
+                    return False
+                continue
+        normalized = resolved.as_posix().casefold()
+        contained = False
+        for root in temp_roots:
+            root_normalized = root.as_posix().casefold()
+            if normalized == root_normalized:
+                continue  # an ephemeral root itself is never a deletable target
+            if _safe_rm_contained(normalized, root_normalized):
+                contained = True
+                break
+        if contained or _under_profile_scratch(resolved):
+            continue
+        return False
+    return True
+
+
+# v1.2.34 W4: risk-regex span exemption. The hard-deny and rule-table scans
+# see the RAW command text, so a deny phrase QUOTED as data (echo/grep
+# arguments, git commit -m prose, gh --body text, heredoc lines) triggered
+# evidence-gated categories or hard denies for commands that execute
+# nothing — a live FP family (card t_d94dde9d case 2b: commit-message and
+# report prose). A risk-regex match lying entirely inside a shell-quoted
+# span is now exempt UNLESS the span is executable input: the token before
+# the opening quote is a code-flag form (-c/--command/-e/--eval or a short
+# cluster ending in c/e), or the span shares its line with an
+# interpreter/executor program (bash -c, ssh host "cmd", awk 'prog',
+# eval "x", sed scripts, heredoc opener lines). A span containing a URL
+# stays scanned (real target, matching the _risk_subject URL doctrine).
+# Unbalanced quoting disables every exemption (fail-closed). Untouched: the
+# path guard and its python -c code extraction (F5), the MUTATOR/write-
+# marker effect scans, and the runtime gate-forgery checks. Residual
+# (documented): string-concatenation obfuscation inside an executed span is
+# the pre-existing lexical-gap class (F4 free-text note).
+_CODE_FLAG_TOKENS = frozenset({"-c", "--command", "-e", "--eval"})
+_CODE_FLAG_CLUSTER = re.compile(r"^-[A-Za-z]*[ce]=?$")
+_INTERPRETER_PROGRAMS = frozenset({
+    "sh", "bash", "zsh", "ksh", "dash", "ash", "fish", "eval", "xargs",
+    "python", "python2", "python3", "py", "perl", "node", "deno", "bun",
+    "ruby", "php", "lua", "tclsh", "awk", "gawk", "mawk", "sed",
+    "powershell", "pwsh", "cmd", "wscript", "cscript", "mshta", "ssh",
+    "sqlite3", "psql", "mysql", "docker", "podman", "kubectl",
+})
+_VERSIONED_INTERPRETER_RE = re.compile(r"(?:python|py|node|ruby|php|lua)\d+(?:\.\d+)*")
+
+
+def _span_is_prose(command: str, open_at: int, close_at: int) -> bool:
+    if "://" in command[open_at + 1:close_at - 1]:
+        return False  # a quoted URL is a real target, never inert prose
+    preceding = command[:open_at].rstrip()
+    token_match = re.search(r"(\S+)$", preceding)
+    token = token_match.group(1) if token_match else ""
+    bare = token[:-1] if token.endswith("=") else token
+    if bare in _CODE_FLAG_TOKENS or _CODE_FLAG_CLUSTER.match(bare):
+        return False
+    line_start = command.rfind("\n", 0, open_at) + 1
+    line_head = command[line_start:open_at].split()
+    if line_head:
+        program = _program_name(line_head[0])
+        if program in _INTERPRETER_PROGRAMS or _VERSIONED_INTERPRETER_RE.fullmatch(program):
+            return False
+    return True
+
+
+def _exempt_quote_spans(command: str) -> list[tuple[int, int]]:
+    spans: list[tuple[int, int]] = []
+    index = 0
+    length = len(command)
+    quote: str | None = None
+    open_at = -1
+    while index < length:
+        char = command[index]
+        if quote is None:
+            if char in "\"'":
+                quote = char
+                open_at = index
+            index += 1
+            continue
+        if char == "\\" and quote == '"' and index + 1 < length:
+            index += 2
+            continue
+        if char == quote:
+            if _span_is_prose(command, open_at, index + 1):
+                spans.append((open_at, index + 1))
+            quote = None
+        index += 1
+    if quote is not None:
+        return []  # unbalanced quoting: no exemptions (fail-closed)
+    return spans
+
+
+def _mask_exempt_quote_spans(command: str) -> str:
+    spans = _exempt_quote_spans(command)
+    if not spans:
+        return command
+    chars = list(command)
+    for start, end in spans:
+        for position in range(start, min(end, len(chars))):
+            chars[position] = " "
+    return "".join(chars)
+
+
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
     name = _normalize_tool_name(tool_name)
     effect = _effect_for(name, arguments)
@@ -686,9 +1612,21 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             if effect == "read":
                 return Classification("read", "read_only", "allow", "policy-controlled documents are readable by the fleet")
             return Classification("state_change", "policy_control_plane_mutation", "deny", "policy-controlled files are immutable for the fleet")
-        return Classification("state_change", PROTECTED_STORE_RULE, "deny", DENY_MSG)
+        if _tracked_source_carveout(matched, subject, arguments):
+            continue
+        # v1.2.31: the deny carries the TRUE effect. A read-only probe of a
+        # protected store stays a denied READ — relabeling it as a mutation
+        # made the blocked-task override mask the real category as
+        # task_already_blocked and starved read-only diagnostics.
+        return Classification(effect, PROTECTED_STORE_RULE, "deny", DENY_MSG)
 
     subject = _risk_subject(name, arguments)
+    # v1.2.34 W4: deny phrases quoted as DATA are exempt from the risk
+    # scans below; executable spans (code-flag values, interpreter lines,
+    # URLs) keep their raw text. Length-preserving masking, so no new token
+    # adjacency can be fabricated outside the masked spans.
+    if name in TERMINAL_TOOLS and subject:
+        subject = _mask_exempt_quote_spans(subject)
     lower = f"{name} {subject}".lower()
 
     # Hard-deny checks inspect command/target fields only. They must never scan
@@ -747,6 +1685,37 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     if effect == "read":
         return Classification(effect, "read_only", "allow", "read-only action")
 
+    # A pure child cleanup inside the worker's own task workspace is bounded,
+    # reproducible scratch maintenance. Keep broad rm -rf escalation everywhere
+    # else, including the workspace root itself.
+    if _is_ephemeral_workspace_cleanup(name, arguments):
+        return Classification(
+            effect,
+            "ephemeral_workspace_cleanup",
+            "allow",
+            "ephemeral task-workspace child cleanup is autonomous",
+        )
+
+    # v1.2.31 SPEC §2.2: scratch-root exemption for the literal recursive+force
+    # rm shape whose targets ALL sit inside an allowed ephemeral root ($TMPDIR/
+    # $TEMP/$TMP, <hermes_profiles>/*/cache/scratch/**, the task workspace and
+    # its tmp/cache/temp children). Routed through the ungated ephemeral
+    # cleanup category instead of the SPEC's destructive_change label because
+    # destructive_change is evidence-gated (backup+scope): an allow there would
+    # be re-denied at runtime as evidence_gate_missing, recreating the very
+    # worker hang this exemption removes. Approval_required for every unsafe
+    # shape — repos, state, home, ventures, escapes — is unchanged.
+    if name in TERMINAL_TOOLS and _safe_rm_targets(
+        str(arguments.get("command") or arguments.get("cmd") or ""),
+        arguments,
+    ):
+        return Classification(
+            effect,
+            "ephemeral_workspace_cleanup",
+            "allow",
+            "ephemeral scratch-root cleanup is autonomous",
+        )
+
     branches = "|".join(re.escape(branch) for branch in config["protected"]["branches"])
     rules = [
         # Serious-only escalation classes.
@@ -758,7 +1727,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
-        (rf"(?:\b(?:push|merge)[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
+        (rf"(?:\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),
@@ -770,7 +1739,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             reason = f"{category} requires serious-risk approval" if decision == "approval_required" else f"{category} is autonomous after evidence gates"
             return Classification(effect, category, decision, reason)
 
-    if re.search(r"\bgit\s+(?:commit|push|merge)\b", lower):
+    if re.search(r"\bgit\s+(?:commit|push|merge(?!-base))\b", lower):
         return Classification(effect, "repository_change", "allow", "repository changes are autonomous within project rules")
     return Classification(effect, "scoped_state_change", "allow", "scoped state change is autonomous")
 

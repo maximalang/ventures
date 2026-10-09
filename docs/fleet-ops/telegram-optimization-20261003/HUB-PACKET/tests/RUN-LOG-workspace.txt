@@ -1,0 +1,23 @@
+test_live_files_match_manifest_before_hashes (__main__.T01_AnchorIntegrity.test_live_files_match_manifest_before_hashes) ... ok
+test_candidate_files_match_manifest (__main__.T02_CandidateIntegrity.test_candidate_files_match_manifest) ... ok
+test_rollback_snapshots_are_byte_exact (__main__.T02_CandidateIntegrity.test_rollback_snapshots_are_byte_exact) ... ok
+test_frontmatter_byte_identical_and_triggers_preserved (__main__.T03_FrontmatterTriggers.test_frontmatter_byte_identical_and_triggers_preserved) ... ok
+test_all_map_entries (__main__.T04_SlicePreservation.test_all_map_entries) ... ok
+test_routing_addition_rows_present (__main__.T04_SlicePreservation.test_routing_addition_rows_present) ... ok
+test_routing_kept_with_all_original_rows (__main__.T04_SlicePreservation.test_routing_kept_with_all_original_rows) ... ok
+test_markers_at_destination_and_hub (__main__.T05_Markers.test_markers_at_destination_and_hub) ... ok
+test_every_relative_link_resolves_in_applied_tree (__main__.T06_ReferenceResolution.test_every_relative_link_resolves_in_applied_tree) ... ok
+test_existing_references_untouched (__main__.T06_ReferenceResolution.test_existing_references_untouched)
+Packet must not modify pre-existing reference/script/template files. ... ok
+test_hub_pointer_and_ref_content (__main__.T07_SelectiveRetrieval.test_hub_pointer_and_ref_content) ... ok
+test_owner_directive_stays_in_hub (__main__.T07_SelectiveRetrieval.test_owner_directive_stays_in_hub) ... ok
+test_obsolete_claims_gone_and_updates_in_place (__main__.T08_Corrections.test_obsolete_claims_gone_and_updates_in_place) ... ok
+test_owner_ban_recorded (__main__.T08_Corrections.test_owner_ban_recorded) ... ok
+test_combined_hub_reduction_ge_60 (__main__.T09_Reduction.test_combined_hub_reduction_ge_60) ... ok
+test_live_skills_still_pristine_after_test_run (__main__.T10_PacketHygieneAndNoLiveWrites.test_live_skills_still_pristine_after_test_run) ... ok
+test_packet_contains_only_allowed_paths (__main__.T10_PacketHygieneAndNoLiveWrites.test_packet_contains_only_allowed_paths) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.245s
+
+OK

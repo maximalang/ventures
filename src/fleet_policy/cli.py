@@ -220,6 +220,7 @@ def main(argv: list[str] | None = None) -> int:
             "approvals_pending": connection.execute("SELECT COUNT(*) FROM approvals WHERE status='pending'").fetchone()[0],
             "notifications_pending": connection.execute("SELECT COUNT(*) FROM notification_outbox WHERE status='pending'").fetchone()[0],
         }
+    counts.update({f"notifications_{name}": value for name, value in runtime.store.notification_counts().items()})
     print(json.dumps(counts, ensure_ascii=False, sort_keys=True))
     return 0
 

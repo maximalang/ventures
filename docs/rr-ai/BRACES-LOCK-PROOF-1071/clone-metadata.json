@@ -1,0 +1,11 @@
+{
+ "run_id": 1071,
+ "task": "t_8323638f",
+ "frozen_head": "ec77dadf72ed9ada28f1bd092587ab731b3b22f0",
+ "clone_dirty_lines": 0,
+ "clone_origin_local": "C:/Users/max/Desktop/all/ventures/.worktrees/rr-braces-source-1067-a7c3",
+ "gh_pr266": {"state":"open","head_sha":"ec77dadf72ed9ada28f1bd092587ab731b3b22f0","base_sha":"1d7906ae45f9570d4c37d9f73fc6bd5100246f65"},
+ "node": "v24.15.0",
+ "npm": "11.17.0",
+ "captured_utc": "2026-10-04T01:27:35Z"
+}

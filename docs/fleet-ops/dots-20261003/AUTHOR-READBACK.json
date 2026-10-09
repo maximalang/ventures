@@ -1,0 +1,125 @@
+{
+  "verified_at_utc": "2026-10-03T21:27:23.978556+00:00",
+  "owner": "company",
+  "scope": "direct filesystem readback; not independent QA or behavior proof",
+  "expected_profile_count": 12,
+  "verified_profile_count": 12,
+  "unique_reference_hash_count": 1,
+  "original_root_variant_count": 3,
+  "checks_per_target": [
+    "reference bytes equal accepted candidate",
+    "exact hook appears once",
+    "hook at end",
+    "root minus hook equals baseline hash"
+  ],
+  "targets": [
+    {
+      "profile": "company",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "research",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "product",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "operations",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "qa",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "tech",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "finance",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "sales",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "design",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "ux",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "video-director",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    },
+    {
+      "profile": "video-editor",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md",
+      "root_after_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "original_preserved": true,
+      "hook_count": 1
+    }
+  ]
+}

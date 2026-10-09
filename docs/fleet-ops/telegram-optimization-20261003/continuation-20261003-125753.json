@@ -1,0 +1,2410 @@
+{
+  "observed_at": "2026-10-03T12:57:53.278730+03:00",
+  "cards": [
+    {
+      "id": "t_e87dad43",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_e87dad43",
+          "title": "Telegram native config: bounded independent Qwen QA after primary quota wall",
+          "body": "task_type: review\nReal exact-artifact alternate QA, NOT model probe, for company Sol-authored native two-key candidate. Spec QA-NATIVE-RECOVERY.md at C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003. Immutable candidate head d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105; consumer t_ee2ad6bf. Existing reviewer t_8a81338c quota-wall, no verdict. Targeted per-card Qwen only, no QA config changes. Deliver QA-CONFIG-ALTERNATE-VERDICT.md+actual source/fixture test logs+full main/auxiliary lineage independent of authorSol6.1 before positive verdict. Tests preserve tail/goal/history/alerts/steering/long-running/rich and verify native consumers/cache invalidation. Review bounded source, no full scans/monoliths; no paid canary, live writes, credentials, model migration or restart. SOURCE-PASS/BLOCK truthful; genuine independent PASS publishes authorized exact QA/review to same-board consumer task_type ops. Not applicable to Qwen-authored retirement/hubs. Unknown usage cost/no purchase. See measurement refinements for fair metrics;128000 is trigger, not ceiling.",
+          "assignee": "qa",
+          "status": "running",
+          "priority": 17000,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_e87dad43",
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791019870,
+          "started_at": 1791019943,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1200,
+          "max_retries": null,
+          "model_override": "qwen3.8-max",
+          "provider_override": "custom",
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": "elapsed 1233s > limit 1200s"
+        },
+        "latest_summary": null,
+        "parents": [],
+        "children": [
+          "t_ee2ad6bf"
+        ],
+        "comments": [],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "qa",
+              "status": "ready",
+              "parents": [],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": "qwen3.8-max",
+              "provider_override": "custom"
+            },
+            "created_at": 1791019870,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791020843,
+              "run_id": 2210
+            },
+            "created_at": 1791019943,
+            "run_id": 2210
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 22076,
+              "started_at": "|179101994363"
+            },
+            "created_at": 1791019943,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019957,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020017,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020078,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": {
+              "note": "QA t_e87dad43 started: reading spec QA-NATIVE-RECOVERY.md + candidate bytes"
+            },
+            "created_at": 1791020091,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020142,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020202,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020268,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020328,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020388,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020448,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020508,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020568,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020628,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020688,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020765,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020838,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020903,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020963,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021023,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021084,
+            "run_id": 2210
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021144,
+            "run_id": 2210
+          },
+          {
+            "kind": "timed_out",
+            "payload": {
+              "pid": 22076,
+              "elapsed_seconds": 1233,
+              "limit_seconds": 1200,
+              "sigkill": false,
+              "retry_status": "ready"
+            },
+            "created_at": 1791021176,
+            "run_id": 2210
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791022076,
+              "run_id": 2216
+            },
+            "created_at": 1791021176,
+            "run_id": 2216
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 10176,
+              "started_at": "|179102117681"
+            },
+            "created_at": 1791021176,
+            "run_id": 2216
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021190,
+            "run_id": 2216
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021251,
+            "run_id": 2216
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021311,
+            "run_id": 2216
+          },
+          {
+            "kind": "heartbeat",
+            "payload": {
+              "note": "run2216: candidate sha256 + installed head verified; reading contract + source consumers"
+            },
+            "created_at": 1791021338,
+            "run_id": 2216
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021371,
+            "run_id": 2216
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021431,
+            "run_id": 2216
+          }
+        ],
+        "runs": [
+          {
+            "id": 2210,
+            "profile": "qa",
+            "step_key": null,
+            "status": "timed_out",
+            "outcome": "timed_out",
+            "summary": null,
+            "error": "elapsed 1233s > limit 1200s",
+            "metadata": {
+              "pid": 22076,
+              "elapsed_seconds": 1233,
+              "limit_seconds": 1200,
+              "sigkill": false,
+              "retry_status": "ready",
+              "receipt": {
+                "status": "timed_out",
+                "evidence_refs": [
+                  "error:elapsed 1233s > limit 1200s"
+                ],
+                "next_action": "review outcome and continue workflow"
+              }
+            },
+            "worker_pid": null,
+            "started_at": 1791019943,
+            "ended_at": 1791021176
+          },
+          {
+            "id": 2216,
+            "profile": "qa",
+            "step_key": null,
+            "status": "running",
+            "outcome": null,
+            "summary": null,
+            "error": null,
+            "metadata": null,
+            "worker_pid": 10176,
+            "started_at": 1791021176,
+            "ended_at": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "t_8a81338c",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_8a81338c",
+          "title": "Telegram optimization: independent native compaction/display acceptance",
+          "body": "task_type: review\nIndependent source/config acceptance ONLY for two-key company Telegram efficiency candidate. Anchor NATIVE-CONFIG-CANDIDATE.json in C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003; full scope/metrics/bans: DECISION-AND-CONTRACT.md same dir. Deliver exact-hash QA-CONFIG-VERDICT.md + executed fixture/source-test evidence for compression128000 and Telegram tool_progress=off. Check installed consumers/cache invalidation and preserve full conversation/goal/tail, warnings/steering/long-running signals, rich transport, all nonallowlisted keys. Profile-wide compaction scope must be explicit. Execute relevant native tests offline only, no inference; no live writes/restart/delete/secret reads. Positive or negative verdict is a complete deliverable, not a blocker. Confirm actual serving lineage independence. Financial period=this source review; provider costs unknown, no purchase. Handoff paths/hashes/commands/exits, gates only if justified.",
+          "assignee": "qa",
+          "status": "ready",
+          "priority": 220,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_8a81338c",
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791016929,
+          "started_at": 1791017227,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1200,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": "pid 28648 exited rate-limited (quota wall) — requeued without counting a failure"
+        },
+        "latest_summary": null,
+        "parents": [],
+        "children": [
+          "t_ee2ad6bf"
+        ],
+        "comments": [
+          {
+            "author": "company",
+            "body": "Candidate SHA256 computed from actual file: d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105. Explicit consumer is t_ee2ad6bf (same board). On justified PASS, publish authorized exact-artifact QA and review evidence on that consumer, with head above and task type ops; source findings/tests+lineage in durable verdict. On BLOCK publish negative evidence, no positive markers, complete your source verdict so consumer can honestly record NO-CHANGE. You MUST NOT edit candidate to obtain PASS; any proposed correction is separate evidence requiring updated company anchor.",
+            "created_at": 1791017024
+          },
+          {
+            "author": "company",
+            "body": "Verified methodology clarification, no candidate-byte change: MEASUREMENT-REVIEW.md and measurement-strata.json saved beside contract. API baseline actual span23.515h (02.10 12:04→03.10 11:35), seven-day unique-tool audit is separate. Cache-known uncached medians Qwen1842.5/Sol3115; cached footprint reduction ≠ cash savings. Treat128000 as compaction trigger, not hard per-call cap; check quality/latency/summary retention and protected-tail behavior. Candidate immutable hash and company conditional binding unchanged. Independent child audit is advisory, NOT release/QA gate.",
+            "created_at": 1791017771
+          },
+          {
+            "author": "company",
+            "body": "Runtime blocker evidence read back natively: QA run2197 exited75, outcome rate_limited; error='pid20772 exited rate-limited (quota wall) — requeued without counting a failure'; current card ready under native retry policy. This is provider availability, NOT a negative candidate verdict, NOT independent acceptance. Do not force retries, spawn duplicate QA, use correlated company self-review, downgrade/re-pin config, or treat child measurement audit as gate. Native cooldown/recovery only; if retry again fails, record same failure with native availability evidence and stop speculative attempts. Candidate unchanged. Application withheld until actual independent acceptance.",
+            "created_at": 1791017931
+          },
+          {
+            "author": "company",
+            "body": "Bounded alternate qa t_e87dad43 qwen/custom is now linked as an ADDITIONAL consumer prerequisite on t_ee2ad6bf. Your running source review may finish honestly; no gate substitution/self-approval. Check complete main+auxiliary lineage: any authorSol6.1 overlap prevents independent PASS even if tests green. If quota/no independent lineage, emit explicit completed source BLOCK/no-verdict with evidence; don't wait indefinitely for availability or force repeats. Alternate is for companySol-authored two-key config only, not Qwen-authored retirement/hubs. QA profile configs unchanged.",
+            "created_at": 1791020045
+          },
+          {
+            "author": "qa",
+            "body": "SOURCE_PASS (словесная форма; gates в metadata завершения) — two-key native config candidate, card t_8a81338c, run 2214.\n\nСТАТУС: source/config acceptance завершена. Live не менялся, инференс не использовался, кандидат не редактировался.\n\nIdentity/evidence:\n- кандидат sha256 d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 (пересчитан sha256sum, exit 0) = company anchor;\n- installed HEAD 9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f = candidate.installed_head_at_capture; worktree dirty (38 файлов), но все консьюмеры кандидата (agent_init.py, display_config.py, run_turn.py, run.py, config*.py) чисты vs HEAD; dirty auxiliary_client.py — только retry-ladder L7300-7500, threshold-функции L598-688 не задеты → вердикт head-bound;\n- lineage независимости (author = company gpt-6.1-sol): readback qa state.db session_model_usage, сессия 20261003_122121_56: MAIN glm-5.3 (zai, 3 calls) + glm-5.3-flash (zai, 35 calls), auxiliary/compression task-строк нет (пробы offline), sol/gpt-строк в сессии нет → overlap отсутствует, independence MET.\n\nПрогоны (все exit 0, оффлайн, venv python 3.11.16):\n- PROBE-C: _parse_compression_config — baseline gpt-6.1-sol/openai-codex: threshold 0.85 (codex autoraise), threshold_tokens None; company-секция вербатим: protect_last 10, protect_first 3, prune 48000/8000/4096, tail lean; + threshold_tokens 128000 → резолвится в 128000, остальные ключи байт-равны, asserts PASS.\n- PROBE-T: resolve_tool_progress на РЕАЛЬНОМ company config.yaml (in-memory copy): before ('new', explicit=True) = candidate before; после единственной правки ('off', explicit=True) = candidate after; изоляция: discord/global 'all', CLI display.tool_progress 'all' не задет; preserve asserts ALL PASS (grouping accumulate, busy_ack_detail false, busy_steer_ack true, interim true, long_running true, suppress_warning false, show_reasoning false, streaming true, rich_messages/rich_all true, compression-секция цела, threshold_tokens отсутствует до применения).\n- Консьюмеры: threshold_tokens в _CACHE_BUSTING_CONFIG_KEYS (gateway/run.py L4399-4415) → hot-reload инвалидирует кэш агента; display-ключ резолвится per-turn (run_turn.py L2958-2965), 'off' гасит tool_progress_enabled (L3001) только для Telegram; warnings/steering/long-running/interim — независимые поверхности, значения сохранены.\n\nFindings (все info, не блокируют):\n- F-1 scope: compression profile-wide (Telegram+Desktop+cron company) — кандидат это честно декларирует;\n- F-2 128000 = триггер компакции, не hard per-call cap;\n- F-3 dominance: при текущем 272K-окне Sol cap доминирует (0.85×272K≈231K > 128K → более ранняя компакция достигается); при будущей модели с окном < ~160K cap молча засыпает — мониторить при смене модели;\n- F-4 более ранний триггер = чаще cache-prefix break при commit prune/compaction; continuity защищён lean tail + protect_last 10 + protect_first 3; качество/latency/retention judged в 24h/48h наблюдении;\n- F-5 cash-savings не заявляется; medians Qwen 1842.5 / Sol 3115 (uncached) остаются; фин Scope = это ревью, 0 обязательств, без покупок.\n\nЧто блокирует: ничего для source-вердикта. Применение на t_ee2ad6bf остаётся conditional: этот PASS + второй prerequisite (bounded alternate qa t_e87dad43 qwen/custom) per company note 12:34.\n\nOwner: durable verdict — QA-CONFIG-VERDICT.md в workspace карты (пути/команды/exits внутри); authorized evidence опубликован на consumer t_ee2ad6bf.",
+            "created_at": 1791020884
+          },
+          {
+            "author": "qa",
+            "body": "Закрытие прогона (для owner): терминальный kanban_complete отклонён ядром с \"elapsed 1221s > limit 1200s\" — строка байт-в-байт совпадает с last_failure_error предыдущего run 2206, fresh timed_out-события для run 2214 в events нет. Ретраи complete не выполнял (anti-loop). Повторных прогонов не требуется: верификационная работа завершена в этом ране.\n\nИтог в словесной форме: SOURCE_PASS по кандидату d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 на HEAD 9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f. Полный evidence — комментарий выше и QA-CONFIG-VERDICT.md в workspace карты; authorized exact-artifact публикация — на consumer t_ee2ad6bf (применение остаётся conditional на второй prerequisite: alternate qa t_e87dad43 qwen/custom).\n\nLive-состояние: без изменений (ни один ключ не применён), инференс не тратился, кандидат не редактировался. Карту закрывает owner/company.",
+            "created_at": 1791020985
+          }
+        ],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "qa",
+              "status": "ready",
+              "parents": [],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791016929,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 586
+            },
+            "created_at": 1791017024,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:24928",
+              "expires": 1791018127,
+              "run_id": 2197
+            },
+            "created_at": 1791017227,
+            "run_id": 2197
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 20772,
+              "started_at": "|179101722757"
+            },
+            "created_at": 1791017227,
+            "run_id": 2197
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791017246,
+            "run_id": 2197
+          },
+          {
+            "kind": "rate_limited",
+            "payload": {
+              "pid": 20772,
+              "claimer": "laptop:24928",
+              "exit_code": 75,
+              "retry_status": "ready"
+            },
+            "created_at": 1791017288,
+            "run_id": 2197
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791017288,
+            "run_id": null
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791017350,
+            "run_id": null
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791017412,
+            "run_id": null
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791017474,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 579
+            },
+            "created_at": 1791017771,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 677
+            },
+            "created_at": 1791017931,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791018940,
+              "run_id": 2202
+            },
+            "created_at": 1791018040,
+            "run_id": 2202
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 28240,
+              "started_at": "|179101804093"
+            },
+            "created_at": 1791018040,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018059,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018121,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018181,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018246,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018308,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018370,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018434,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018497,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018558,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018618,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018679,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018745,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018805,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018871,
+            "run_id": 2202
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791018931,
+            "run_id": 2202
+          },
+          {
+            "kind": "rate_limited",
+            "payload": {
+              "pid": 28240,
+              "claimer": "laptop:26200",
+              "exit_code": 75,
+              "retry_status": "ready"
+            },
+            "created_at": 1791018965,
+            "run_id": 2202
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791018965,
+            "run_id": null
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791019027,
+            "run_id": null
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791019150,
+            "run_id": null
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791019211,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791020172,
+              "run_id": 2206
+            },
+            "created_at": 1791019272,
+            "run_id": 2206
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 3520,
+              "started_at": "|179101927268"
+            },
+            "created_at": 1791019272,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019287,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019348,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": {
+              "note": "QA acceptance t_8a81338c started: verifying anchor hash, installed HEAD lineage, config consumers"
+            },
+            "created_at": 1791019380,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019410,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019472,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019533,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019595,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019656,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019717,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019783,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019843,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019906,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019966,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020026,
+            "run_id": 2206
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 584
+            },
+            "created_at": 1791020045,
+            "run_id": null
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020086,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020148,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020210,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020271,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020333,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020394,
+            "run_id": 2206
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020457,
+            "run_id": 2206
+          },
+          {
+            "kind": "timed_out",
+            "payload": {
+              "pid": 3520,
+              "elapsed_seconds": 1221,
+              "limit_seconds": 1200,
+              "sigkill": false,
+              "retry_status": "ready"
+            },
+            "created_at": 1791020493,
+            "run_id": 2206
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791021393,
+              "run_id": 2214
+            },
+            "created_at": 1791020493,
+            "run_id": 2214
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 28648,
+              "started_at": "|179102049366"
+            },
+            "created_at": 1791020493,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020509,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": {
+              "note": "QA acceptance t_8a81338c restarted (run 2214): reading anchor NATIVE-CONFIG-CANDIDATE.json + DECISION-AND-CONTRACT.md, then hash verification and native tests"
+            },
+            "created_at": 1791020544,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020570,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020630,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020690,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020751,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020814,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": {
+              "note": "Hash+HEAD verified; consumers confirmed. 2 display_config failures diagnosed as live-tree guard artifact (payload_venv stats real manifest.json). Moving tests to scratch clone at anchor SHA."
+            },
+            "created_at": 1791020814,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020876,
+            "run_id": 2214
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "qa",
+              "len": 3402
+            },
+            "created_at": 1791020884,
+            "run_id": null
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020936,
+            "run_id": 2214
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "qa",
+              "len": 889
+            },
+            "created_at": 1791020985,
+            "run_id": null
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020997,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021059,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021125,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021185,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021251,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021312,
+            "run_id": 2214
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021372,
+            "run_id": 2214
+          },
+          {
+            "kind": "rate_limited",
+            "payload": {
+              "pid": 28648,
+              "claimer": "laptop:26200",
+              "exit_code": 75,
+              "retry_status": "ready"
+            },
+            "created_at": 1791021421,
+            "run_id": 2214
+          },
+          {
+            "kind": "respawn_guarded",
+            "payload": {
+              "reason": "rate_limit_cooldown"
+            },
+            "created_at": 1791021421,
+            "run_id": null
+          }
+        ],
+        "runs": [
+          {
+            "id": 2197,
+            "profile": "qa",
+            "step_key": null,
+            "status": "rate_limited",
+            "outcome": "rate_limited",
+            "summary": null,
+            "error": "pid 20772 exited rate-limited (quota wall) — requeued without counting a failure",
+            "metadata": {
+              "pid": 20772,
+              "claimer": "laptop:24928",
+              "exit_code": 75,
+              "retry_status": "ready",
+              "receipt": {
+                "status": "rate_limited",
+                "evidence_refs": [
+                  "error:pid 20772 exited rate-limited (quota wall) — requeued without counting a failure"
+                ],
+                "next_action": "review outcome and continue workflow"
+              }
+            },
+            "worker_pid": null,
+            "started_at": 1791017227,
+            "ended_at": 1791017288
+          },
+          {
+            "id": 2202,
+            "profile": "qa",
+            "step_key": null,
+            "status": "rate_limited",
+            "outcome": "rate_limited",
+            "summary": null,
+            "error": "pid 28240 exited rate-limited (quota wall) — requeued without counting a failure",
+            "metadata": {
+              "pid": 28240,
+              "claimer": "laptop:26200",
+              "exit_code": 75,
+              "retry_status": "ready",
+              "receipt": {
+                "status": "rate_limited",
+                "evidence_refs": [
+                  "error:pid 28240 exited rate-limited (quota wall) — requeued without counting a failure"
+                ],
+                "next_action": "review outcome and continue workflow"
+              }
+            },
+            "worker_pid": null,
+            "started_at": 1791018040,
+            "ended_at": 1791018965
+          },
+          {
+            "id": 2206,
+            "profile": "qa",
+            "step_key": null,
+            "status": "timed_out",
+            "outcome": "timed_out",
+            "summary": null,
+            "error": "elapsed 1221s > limit 1200s",
+            "metadata": {
+              "pid": 3520,
+              "elapsed_seconds": 1221,
+              "limit_seconds": 1200,
+              "sigkill": false,
+              "retry_status": "ready",
+              "receipt": {
+                "status": "timed_out",
+                "evidence_refs": [
+                  "error:elapsed 1221s > limit 1200s"
+                ],
+                "next_action": "review outcome and continue workflow"
+              }
+            },
+            "worker_pid": null,
+            "started_at": 1791019272,
+            "ended_at": 1791020493
+          },
+          {
+            "id": 2214,
+            "profile": "qa",
+            "step_key": null,
+            "status": "rate_limited",
+            "outcome": "rate_limited",
+            "summary": null,
+            "error": "pid 28648 exited rate-limited (quota wall) — requeued without counting a failure",
+            "metadata": {
+              "pid": 28648,
+              "claimer": "laptop:26200",
+              "exit_code": 75,
+              "retry_status": "ready",
+              "receipt": {
+                "status": "rate_limited",
+                "evidence_refs": [
+                  "error:pid 28648 exited rate-limited (quota wall) — requeued without counting a failure"
+                ],
+                "next_action": "review outcome and continue workflow"
+              }
+            },
+            "worker_pid": 28648,
+            "started_at": 1791020493,
+            "ended_at": 1791021421
+          }
+        ]
+      }
+    },
+    {
+      "id": "t_ee2ad6bf",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_ee2ad6bf",
+          "title": "Telegram optimization: apply accepted native context cap and quiet tools",
+          "body": "task_type: ops\nApply exactly two independently accepted native company settings from NATIVE-CONFIG-CANDIDATE.json hash d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 in C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003. Full contract DECISION-AND-CONTRACT.md. Parent t_8a81338c must have positive independent exact-hash source/config verdict; terminal parent status alone is not acceptance. Preserve all listed keys/model/route/history and other profiles. Capture allowlisted before+rollback/source identity; if candidate/before drift or negative QA, NO application, durable specific report. Use official hermes config set compression.threshold_tokens 128000 and display.platforms.telegram.tool_progress off only after exact company binding and independent gates on THIS consumer. No force/whole-config copy/restart/update/delete/canary sends/secret reads. Verify exact stored+resolved values and hot-load consumer; distinguish naturally loaded vs merely stored. Output ROLLOUT-RECEIPT.json and short ROLLOUT.md with commands/exits/hashes/time. Baseline already saved; do not rerun seven-day scan. Real economic scope=company Telegram config, no purchase/new commitment; provider cash savings unknown. Completion=bounded truthful application/readback (or justified no-change); 10-call savings/e2e remain separate observation.",
+          "assignee": "operations",
+          "status": "todo",
+          "priority": 220,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": null,
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791016985,
+          "started_at": null,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1200,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": null,
+        "parents": [
+          "t_8a81338c",
+          "t_e87dad43"
+        ],
+        "children": [
+          "t_38a4b49e"
+        ],
+        "comments": [
+          {
+            "author": "company",
+            "body": "decision:company=go\nhead=d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105\ntask_type: ops\n\nConditional exact-artifact authorization: apply *** two native allowlisted settings after independent QA/review for THESE exact candidate bytes. No QA PASS=*** application; changed candidate = require new company binding. No protected source/other profile/restart/history mutation. Hypothesis: bounded context growth and quieter Telegram tool bubbles while preserving alerts/steering/tail; rollback exact allowlisted originals if context retention/latency/format/routing regresses. Profile-wide company compaction includes Desktop/cron and is not mislabeled Telegram-only. No purchase authorized; confirmed revenue/refunds/provider incremental cost/estimated usage cost=null (not investigated/unpriced), new commitments0, source config manifest+natural receipts; period rollout+24h/48h observation.",
+            "created_at": 1791017023
+          },
+          {
+            "author": "company",
+            "body": "Application remains withheld: prerequisite independent QA run2197 exited75 quota wall and was natively requeued ready; no verdict/PASS exists. Artifact preparation and child methodological review are not substitutes for actual independent gates. Preserve consumer no-op until QA genuinely accepted. Do not initiate correlated/paid synthetic fallback tests or config/model changes to bypass availability. Current measurement refinements saved in MEASUREMENT-REVIEW.md; candidate bytes remain original exact hash.",
+            "created_at": 1791017931
+          },
+          {
+            "author": "qa",
+            "body": "[EVIDENCE: exact-artifact QA PASS from independent qa source review t_8a81338c run 2214 — authorized publication per company anchor comment on this card; task type of consuming card: ops]\n\nExact candidate bytes: NATIVE-CONFIG-CANDIDATE.json sha256 d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 (recomputed from file this run).\n\nInstalled head bound: 9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f (= installed_head_at_capture in the candidate). Candidate-relevant consumer files verified clean vs this head; verdict is exact-artifact AND exact-head bound.\n\nResult: independent QA found no defect in the two-key candidate. Recomputed and probe-verified on the installed head, offline, no inference:\n- compression.threshold_tokens 128000 parses into CompressionSettings alongside the existing company compression section (protect_last 10, protect_first 3, lean tail, prune 48000/8000/4096, enabled, target_ratio 0.15) with every other key byte-equal; baseline for gpt-6.1-sol on openai-codex is ratio 0.85 + no token cap, so on the current 272K window the cap dominates and yields the intended earlier semantic compaction; (\"compression\",\"threshold_tokens\") is in _CACHE_BUSTING_CONFIG_KEYS (gateway/run.py L4399-4415) so a mid-gateway change invalidates the cached agent.\n- display.platforms.telegram.tool_progress new→off resolves explicit on the real company config (resolver normalises 'off', explicit YAML wins), disables Telegram tool-progress bubbles only (run_turn.py L3001 tool_progress_enabled = progress_mode not in {\"off\",\"log\"}); discord/global CLI surfaces stay 'all'; preserve set intact: grouping accumulate, busy_ack_detail false, busy_steer_ack true, interim true, long_running true, suppress_warning false, show_reasoning false, display.streaming true, rich_messages/rich_all true.\n- Profile-wide scope confirmed and honestly declared by the candidate (company profile incl. Telegram/Desktop/cron; not Telegram-only). Not a hard per-call cap; no cash-savings asserted.\n\nServing lineage independence for this review (author company gpt-6.1-sol; reviewer this run): session_model_usage readback shows MAIN glm-5.3 + glm-5.3-flash (zai) only, zero auxiliary/compression LLM rows (probes offline), zero sol/gpt rows in this session → no authorSol6.1 overlap.\n\nConditions unchanged: this satisfies ONLY the source-QA prerequisite. Application of these exact bytes remains gated on ALL prerequisites of this card, including the bounded alternate qa t_e87dad43 (qwen/custom). Changed candidate bytes require a new company binding and fresh review. Durable verdict with commands/exits/findings: QA-CONFIG-VERDICT.md in the t_8a81338c workspace.",
+            "created_at": 1791020904
+          }
+        ],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "operations",
+              "status": "todo",
+              "parents": [
+                "t_8a81338c"
+              ],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791016985,
+            "run_id": null
+          },
+          {
+            "kind": "dependency_wait",
+            "payload": {
+              "reason": "parent_not_done",
+              "parent": "t_8a81338c"
+            },
+            "created_at": 1791016985,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 904
+            },
+            "created_at": 1791017024,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 511
+            },
+            "created_at": 1791017931,
+            "run_id": null
+          },
+          {
+            "kind": "linked",
+            "payload": {
+              "parent": "t_e87dad43",
+              "child": "t_ee2ad6bf"
+            },
+            "created_at": 1791019879,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "qa",
+              "len": 2666
+            },
+            "created_at": 1791020904,
+            "run_id": null
+          }
+        ],
+        "runs": []
+      }
+    },
+    {
+      "id": "t_cef261ac",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_cef261ac",
+          "title": "Telegram optimization: compact heavy company hubs without losing procedures",
+          "body": "task_type: code\nSOURCE-ONLY hands packet after product brief t_6282d6b9, anchored company skill bytes, never other profiles. Read DECISION-AND-CONTRACT.md at C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003. Deliver durable HUB-PACKET with only company skills autonomous-ai-agents/hermes-agent and fleet-ops/fleet-token-economy compact hubs+topic-focused references. Preserve exact name/frontmatter triggers, every safety invariant and unique procedure in mapped refs; no obsolete defaults overriding active owner directives. Product communication template recommendations go in packet/reference, NOT mandatory per-response skill/SOUL append duplicating existing rules. Primary acceptance: >=60% combined hub-character reduction, exact before/candidate hashes, exhaustive invariant/reference map, executed tests for all reference resolution/frontmatter/selective retrieval, offline prompt-size static before/proposed (chars/bytes !=tokens). No live skill/config/SOUL/model/cron/history/source overlay writes, no inference. Do NOT edit Telegram retirement files/tasks t_b3e6c428/t_45c34a6a or network lane. Official docs snapshots supplied; no repeat fleet-wide audit. Return exact manifest+test commands/exits+rollback candidates. Financial scope=this source packet, paid usage cost unknown, no purchase.",
+          "assignee": "tech",
+          "status": "running",
+          "priority": 210,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_cef261ac",
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791016986,
+          "started_at": 1791020431,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1800,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": null,
+        "parents": [
+          "t_6282d6b9"
+        ],
+        "children": [
+          "t_d5e37e14"
+        ],
+        "comments": [
+          {
+            "author": "company",
+            "body": "Authoritative product source now durable at C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/PRODUCT-BRIEF.md + SCENARIOS.json + PRODUCT-DELIVERY.json. Use these, not soon-cleaned original worker scratch or stale PDF.5 templates/12 unique fixture IDs verified structurally, not runtime. No mandatory response-format skill/SOUL expansion. Two hub candidate source acceptance remains unchanged. Owner-directed Telegram Qwen restoration is separate ops t_b8210384 and does not change your hands model or hub filenames. Do not conflate route model restoration with measured static hub reduction.",
+            "created_at": 1791020213
+          }
+        ],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "tech",
+              "status": "todo",
+              "parents": [
+                "t_6282d6b9"
+              ],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791016986,
+            "run_id": null
+          },
+          {
+            "kind": "dependency_wait",
+            "payload": {
+              "reason": "parent_not_done",
+              "parent": "t_6282d6b9"
+            },
+            "created_at": 1791016986,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 622
+            },
+            "created_at": 1791020213,
+            "run_id": null
+          },
+          {
+            "kind": "promoted",
+            "payload": null,
+            "created_at": 1791020232,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791021331,
+              "run_id": 2213
+            },
+            "created_at": 1791020431,
+            "run_id": 2213
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 25264,
+              "started_at": "|179102043204"
+            },
+            "created_at": 1791020432,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020454,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020514,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020581,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020641,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020701,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020761,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020821,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020881,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020941,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021001,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021062,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021122,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": {
+              "note": "Evidence grounded (anchors hashed, plugin+hot-reload confirmed). Building HUB-PACKET: candidates via verbatim-slice build script, then tests."
+            },
+            "created_at": 1791021122,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021182,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021242,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021302,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021362,
+            "run_id": 2213
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021422,
+            "run_id": 2213
+          }
+        ],
+        "runs": [
+          {
+            "id": 2213,
+            "profile": "tech",
+            "step_key": null,
+            "status": "running",
+            "outcome": null,
+            "summary": null,
+            "error": null,
+            "metadata": null,
+            "worker_pid": 25264,
+            "started_at": 1791020431,
+            "ended_at": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "t_d5e37e14",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_d5e37e14",
+          "title": "Telegram optimization: independent heavy-hub and template regression QA",
+          "body": "task_type: review\nIndependent SOURCE-only exact-manifest QA for parent t_cef261ac compact two-company-hub packet and product t_6282d6b9 templates. Scope/anchor/bans/acceptance in DECISION-AND-CONTRACT.md at C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003. Verify actual serving independence, candidate/before hashes, >=60% hub-char reduction calculated from bytes, every original unique safety/procedure maps to resolvable focused reference, original triggers/names retained, no unasked models/other-profile/config/history changes. Execute source packet tests yourself; review12 communication scenarios against owner rules/official docs/unchanged routes. Deliver QA-HUB-VERDICT.md PASS/BLOCK with hashes/commands/exits. Do not live-install or modify reviewed bytes. A negative verdict is completed QA, never gate bypass. Financial scope=this source QA, provider usage cost unknown/no purchase.",
+          "assignee": "qa",
+          "status": "todo",
+          "priority": 210,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": null,
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791017024,
+          "started_at": null,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1800,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": null,
+        "parents": [
+          "t_cef261ac"
+        ],
+        "children": [
+          "t_38a4b49e"
+        ],
+        "comments": [],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "qa",
+              "status": "todo",
+              "parents": [
+                "t_cef261ac"
+              ],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791017024,
+            "run_id": null
+          },
+          {
+            "kind": "dependency_wait",
+            "payload": {
+              "reason": "parent_not_done",
+              "parent": "t_cef261ac"
+            },
+            "created_at": 1791017024,
+            "run_id": null
+          }
+        ],
+        "runs": []
+      }
+    },
+    {
+      "id": "t_45c34a6a",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_45c34a6a",
+          "title": "QA: exact-hash source review of layer audit and Telegram skill retirement packet",
+          "body": "task_type: review\nНезависимый SOURCE_ONLY verdict, не live-PASS. Spec: C:/Users/max/AppData/Local/hermes/profiles/company/reports/skill-layer-20261003/DEFECT-AND-REPAIR-SPEC.md",
+          "assignee": "qa",
+          "status": "done",
+          "priority": 90,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_45c34a6a",
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791016131,
+          "started_at": 1791019699,
+          "completed_at": 1791020397,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1200,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_111921_e9959cd4",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": "SOURCE_ONLY QA-вердикт вынесен: SOURCE_PASS по staged-пакету (36/36 хэшей манифеста, 7/7 live-якорей, независимый rerun 18/18 exit 0, full-tree scan candidates=3 все на offender, git apply --check exit 0, patched-дерево без активных ссылок, transport-факты и стиль сохранены). Rollout-гейты WITHHELD: cron-пин c92f4e39c75d живой, kanban task-pins не swept, memory-операции не выполнены. Deployment acceptance не выдан.",
+        "parents": [
+          "t_b3e6c428"
+        ],
+        "children": [],
+        "comments": [
+          {
+            "author": "company",
+            "body": "Source package verified durable by company administrative check36/36 hashes, manifest2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62, actual isolated unittest18/18 exit0. This is readiness evidence, NOT independent QA. Source card's cron skill-pin ambiguity is a downstream live rollout prerequisite, not missing source permission; no need to read/rewrite cron storage. Review source-only retirement/executable regression independently; preserve original unique transport/style facts and owner safety. Candidate tests/logs/path in parent README. Verify own full runtime+auxiliary serving lineage independence before verdict; quota failure!=PASS. Do not apply live changes or require owner approval of ordinary source-stage metadata.",
+            "created_at": 1791019640
+          },
+          {
+            "author": "qa",
+            "body": "SOURCE_ONLY VERDICT: **SOURCE_PASS** (staged source package) — rollout gates WITHHELD.\n\nВсе проверки ниже выполнены QA независимо в этом ране (не из продюсерских логов):\n\n1. Манифест: sha256(MANIFEST.sha256.json)=2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62 — совпал с handoff; 36/36 записей пересчитаны, 0 mismatch/missing.\n2. Live-нейтральность: 7/7 spec-якорей совпадают с живым профилем company (prompt_audit.py 6d370466…, SOUL 758badb9…, offender SKILL 07c2ee89…, official-format ebab4c22…, notif-ops 7dbac2ad…, tg-message-format 0225f4cd…, google-forms 77cb3626…); snapshot-копии байт-в-байт 7/7; mtime всех 6 live-потребителей + prompt_audit.py + SOUL раньше создания карты (11:28:17; самый поздний релевантный — notif-ops SKILL.md 11:25:11); offender-скилл на месте, sha не изменился; DELETIONS.json staged/не применён; MEMORY.md:25 и USER.md:3 несут старые указатели (memory-операции подтверждённо НЕ выполнены); mtime-свип 38715 файлов live-профиля — только рантайм-шум (cache/cron-output/logs/state), ноль retirement-релевантных правок.\n3. Тесты: независимый rerun `python -m unittest discover -s tests -v` → Ran 18 tests, OK, exit 0 (третий прогон пакета). T01-фикстура = реальный живой скилл (hash-pinned, 6420 симв.); негативы исполняются; T10 drift-guard активен.\n4. Full-tree scan rerun: candidates=3 — все A1+A2+A3 на telegram-message-formatting, ноль находок на остальных живых скиллах; все статусы ARCHITECTURE_REVIEW_REQUIRED (кандидат, не вердикт — T07 подтверждает отсутствие verdict-лексики). Evidence: qa-fulltree-scan.json в workspace QA-карты.\n5. Кросс-слой: SOUL §«Финальный ответ: краткость и стиль» существует (заголовок подтверждён); живой adapter.py содержит все задокументированные якоря: _looks_like_html_payload:451, _rich_eligible:1616, _should_attempt_rich:1625, _try_send_rich:1740, rich_messages:762, строка приоритета HTML 3938 `if not html_payload and self._should_attempt_rich(...)` — tg-transport-internals.md документирует рантайм точно.\n6. Патч: `git apply --check -p1 consumers.patch` из profiles/company → exit 0 (независимо); пересчёт: 6 файлов +11/−10 — совпадает с handoff; patched-дерево: ноль активных ссылок на выводимый скилл (независимый grep, исключения только historical-контекст); official-format.md перенесён байт-в-байт (sha равен); patched tg-message-format.md sha = манифесту (f1539265…).\n7. Пины (rollout-пререквизиты, WITHHELD): cron-пин подтверждён живым — jobs.json, job report-delivery-trigger (id c92f4e39c75d): skills+skill+prompt ссылаются на telegram-message-formatting (3 вхождения); kanban task-pins не swept (PINS-VERIFICATION.md честно фиксирует); memory-операции только предложены.\n\nFindings (не блокирующие):\n- LOW: retirement/make_manifest.py присутствует в пакете, но отсутствует в \"files\" манифеста (манифест самосогласован; генератор не хэширован).\n- LOW: __pycache__/*.pyc в audit_extension/ и tests/ не в манифесте (инертно, но дрейф инвентаря).\n- INFO: «5 guarded hunks» в handoff/README — семантическое перечисление; физический unified diff имеет 6 ханков (init soul_text отдельным ханком). Семантика совпадает с описанием, поведенческого разрыва нет.\n- INFO: порог A2 0.025 откалиброван на текущем корпусе (README ограничений это фиксирует; T10 остановит stale-патч).\n\nModel lineage: QA-ран исполнен на glm-5.3-flash (provider zai) по natural-run session metadata; reviewer ≠ автор (tech-раны 2195/2200/2208); GPT-6.1 Sol не участвовал ни на одной стороне по записям ранов.\n\nИтог: source-пакет READY FOR ROLLOUT-DECISION (company). НЕ выдано: live deployment acceptance. Rollout блокирован до: (1) перепина/снятия cron-пина c92f4e39c75d (бэкап jobs.json + JSON-валидация, НЕ `hermes cron edit`), (2) sweep kanban task-pins, (3) company-native memory-операций, далее — порядок гейтов из candidate/README.md (consumers.patch → staged prompt_audit/skill_layer_audit → DELETIONS → live-прогон).",
+            "created_at": 1791020382
+          }
+        ],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "qa",
+              "status": "todo",
+              "parents": [
+                "t_b3e6c428"
+              ],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791016131,
+            "run_id": null
+          },
+          {
+            "kind": "dependency_wait",
+            "payload": {
+              "reason": "parent_not_done",
+              "parent": "t_b3e6c428"
+            },
+            "created_at": 1791016131,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 749
+            },
+            "created_at": 1791019640,
+            "run_id": null
+          },
+          {
+            "kind": "promoted",
+            "payload": null,
+            "created_at": 1791019659,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791020599,
+              "run_id": 2209
+            },
+            "created_at": 1791019699,
+            "run_id": 2209
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 18540,
+              "started_at": "|179101969986"
+            },
+            "created_at": 1791019699,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019714,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019775,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019835,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019896,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019956,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020032,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020093,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020154,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020214,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020277,
+            "run_id": 2209
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020338,
+            "run_id": 2209
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "qa",
+              "len": 3895
+            },
+            "created_at": 1791020382,
+            "run_id": null
+          },
+          {
+            "kind": "completed",
+            "payload": {
+              "result_len": 0,
+              "summary": "SOURCE_ONLY QA-вердикт вынесен: SOURCE_PASS по staged-пакету (36/36 хэшей манифеста, 7/7 live-якорей, независимый rerun 18/18 exit 0, full-tree scan candidates=3 все на offender, git apply --check exit 0, patched-дерево без активных ссылок, transport-факты и стиль сохранены). Rollout-гейты WITHHELD: cron-пин c92f4e39c75d живой, kanban task-pins не swept, memory-операции не выполнены. Deployment ac"
+            },
+            "created_at": 1791020397,
+            "run_id": 2209
+          }
+        ],
+        "runs": [
+          {
+            "id": 2209,
+            "profile": "qa",
+            "step_key": null,
+            "status": "done",
+            "outcome": "completed",
+            "summary": "SOURCE_ONLY QA-вердикт вынесен: SOURCE_PASS по staged-пакету (36/36 хэшей манифеста, 7/7 live-якорей, независимый rerun 18/18 exit 0, full-tree scan candidates=3 все на offender, git apply --check exit 0, patched-дерево без активных ссылок, transport-факты и стиль сохранены). Rollout-гейты WITHHELD: cron-пин c92f4e39c75d живой, kanban task-pins не swept, memory-операции не выполнены. Deployment acceptance не выдан.",
+            "error": null,
+            "metadata": {
+              "anchor_matches_live": 7,
+              "blocking_pins": [
+                "cron report-delivery-trigger c92f4e39c75d (skills+skill+prompt)",
+                "kanban task-pins not swept"
+              ],
+              "candidate_manifest_sha256": "2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62",
+              "comment_id": 5515,
+              "cron_pin_confirmed_live": true,
+              "deploy_acceptance": "WITHHELD",
+              "git_apply_check_exit": 0,
+              "independent_scan_candidates": 3,
+              "live_changes_by_tech": false,
+              "manifest_files_verified": 36,
+              "memory_ops_executed": false,
+              "patch_files": 6,
+              "patch_removed": 10,
+              "reviewer_model": "glm-5.3-flash (zai)",
+              "reviewer_vs_author_independence": "independent; author=tech runs 2195/2200/2208",
+              "tests_exit_code": 0,
+              "tests_rerun_by_qa": 18,
+              "verdict": "SOURCE_PASS",
+              "worker_session_id": "20261003_122826_c41e61",
+              "receipt": {
+                "status": "done",
+                "evidence_refs": [],
+                "next_action": "verify outcome"
+              }
+            },
+            "worker_pid": null,
+            "started_at": 1791019699,
+            "ended_at": 1791020397
+          }
+        ]
+      }
+    },
+    {
+      "id": "t_b8210384",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_b8210384",
+          "title": "Owner Telegram: restore Qwen main model without changing Desktop or specialists",
+          "body": "task_type: ops\nOwner explicitly orders restore Qwen as Telegram main model and continue optimization. Exact deliverable/acceptance/bans/anchor: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/QWEN-RESTORE-CONTRACT.md. Native-only company DM+forum default incl fresh topics; preserve Desktop Sol and specialist model pins. Existing providers configured; root cause default Sol with only some session Qwen pins. Verify multiplex channel consumer BEFORE writes; no global host channel rule affecting other bots. Native parked-company gateway start allowed ONLY if required/safe, no host/Desktop restart/kill or secret reads/paid probe. Use authorized normal runtime API/client, no direct state.db/modelpin SQL writes. Source-only/Stored !=live; receipts+readback. Output QWEN-RESTORE.md/.json with exact commands/state/source and rollback; if native scoped default unsupported, exact narrow blocker, no invented keys or false success. Finance no purchase; usage cost unknown. Highest scoped owner request priority.",
+          "assignee": "operations",
+          "status": "blocked",
+          "priority": 16000,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_b8210384",
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791019514,
+          "started_at": 1791019638,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1800,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": "FLEET POLICY BLOCKED [secret_read_or_write] pattern=secret_read_or_write call_index=60 next_step=секреты вне правил; стоп, не повторяй вызов, пометь карту needs_input [continues: owner]",
+        "parents": [],
+        "children": [],
+        "comments": [
+          {
+            "author": "company",
+            "body": "Owner exact scoped authorization to restore company Telegram main model Qwen/custom; authority and boundaries are QWEN-RESTORE-CONTRACT.md. Native metadata confirms parked company (not host down), and new topics lack /model overrides while defaultSol is inherited. Do not globally repin company/root model or specialist bots. Any company-only hot activation uses documented named-profile gateway start, never --all/--force/host restart. Supported baseline/proof distinction required. Current Desktop conversation remains Sol. No paid test/new commitment; incremental usage unpriced/null.",
+            "created_at": 1791019546
+          },
+          {
+            "author": "operations",
+            "body": "BLOCKED: FLEET POLICY BLOCKED [secret_read_or_write] pattern=secret_read_or_write call_index=60 next_step=секреты вне правил; стоп, не повторяй вызов, пометь карту needs_input [continues: owner]",
+            "created_at": 1791020053
+          },
+          {
+            "author": "operations",
+            "body": "## Auto-block (fleet-policy): secret_read_or_write deny #1 → task_already_blocked\n\n**Trigger**: `ls C:/Users/max/AppData/Local/hermes/profiles/company/sessions/` → policy classify \"secret\" via \"sessions\" substring (FALSE-POSITIVE — это session registry, не секреты; но правило существующее).\n\n**State discovered BEFORE deny (evidence-backed, все шаги логированы в events)**:\n\n### Consumer blocker — точный native code path\nФайл: `gateway/run_turn.py:253-268` + `gateway/run_config_loaders.py:101-125`.\n- `_get_channel_override(config=self.config, ...)` где `self.config` — GatewayConfig **launch-профиля**, не parked company.\n- `_profile_runtime_scope(profile_home)` переключает только `_hermes_home` (config.yaml path для `_resolve_gateway_model`), но **НЕ** `self.config`.\n- Вывод: `platforms.telegram.channel_overrides` в company/config.yaml **НЕ** применяются для parked company. Подтверждено чтением source @ `9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f`.\n\n### Host state (pre-action snapshot)\n- Host gateway PID **26200** (matched contract anchor), launch profile = **default**, multiplex ON, `host-gateway.json` (C:/Users/max/.local/state/hermes/gateway-locks/host-gateway.json, updated 2026-10-03T09:05:20Z) profiles served = `[default, design, finance, product, qa, research, sales, tech, ux, video-director, video-editor]`.\n- **company НЕ в served list** → паркнут. company/gateway.parked пустой marker; company/state/gateway.lifecycle.json phase=exited, pid=7420, exit_code=0, exited_at=2026-09-22T01:11:54Z (11 дней назад).\n- company profile config: `model.default=gpt-6.1-sol`, `model.provider=openai-codex`, providers.custom = DashScope qwen3.8-max (base_url=https://dashscope.aliyuncs.com/compatible-mode/v1), reasoning_overrides.qwen3.8-max=max. `platforms.telegram.channel_overrides` — **отсутствует**.\n- Launch (default) profile `C:/Users/max/AppData/Local/hermes/config.yaml` — вообще без `platforms.telegram` блока (только webhook). Значит даже если записать channel_overrides в company — multiplexer их не прочитает (читает default's config).\n\n### Что это значит для deliverable\n\"Company-only fresh-topic default to qwen3.8-max/custom\" через channel_overrides **native не поддержан** в текущем loaded multiplexer: единственный потребитель channel_overrides смотрит в launch-profile config, а не в company. Перечисленные альтернативы и почему каждая закрыта контрактом:\n1. **Изменить company `model.default` → qwen3.8-max + provider=custom** — затронет Desktop и cron company (запрещено контрактом: «no change to company Desktop default Sol6.1»).\n2. **channel_overrides в default profile** — это host-global для всех profiles (запрещено: «Do NOT write a host-global channel rule that unintentionally changes specialist bots in the same group»; default профиль вообще без Telegram, а channel_overrides там не привязаны к company's bot).\n3. **Per-session POST /api/sessions/{sid}/model** — лечит активные сессии, но **НЕ** fresh topics (новая сессия = дефолтный model resolver → gpt-6.1-sol). Контракт явно: «Session-only repair is not fresh-topic default».\n4. **Unpark+serve company через `hermes -p company gateway start`** (разрешено контрактом) — но даже когда company served, `_get_channel_override(self.config)` всё ещё читает **default's** GatewayConfig (мультиплексер держит один self.config). Source code это подтверждает: `self._profile_configs[profile_name] = profile_cfg` кэшируется для host-wide passes, но `_get_channel_override` использует `self.config` напрямую, не `_profile_configs`.\n\n### Blocker для company decision\nТочный consumer: `gateway/run_turn.py::_run_turn` line 253-268 + `gateway/run_config_loaders.py::_resolve_model_for_channel` line 101-125. Исправление — source patch в этих двух точках чтобы `_channel_override` читал routed profile's config из `_profile_configs`, а не launch config. Это — **source remediation**, не native config; контракт явно велит: «Stage source remediation separately with company decision if actually necessary».\n\n### Самое безопасное достигнутое перед deny\n- Полная диагностика + anchor confirmation (PID 26200 = anchor, host-gateway.json подтверждён).\n- Подтверждение, что company — parked (не активно обслуживается).\n- Подтверждение, что единственный native путь — company `model.default` switch (что запрещено контрактом) ИЛИ source patch (вне скоупа).\n\n### Чего не успел\n- Snapshot active session pins через sessions/registry (sessions/ dir read → policy deny).\n- Before/after readback per chat_id.\n- Любые writes (все были бы запрещены контрактом в любом случае до решения по consumer blocker).\n\n### Recovery path\nСо стороны company:\n- Вариант A (рекомендуется): company staging task на source remediation (gateway/run_turn.py + run_config_loaders.py читать routed profile's channel_overrides через _profile_configs). После мержа — эта задача может быть retry'нута для применения channel_overrides.\n- Вариант B (owner override): owner явно разрешает менять company `model.default` с пониманием что Desktop тоже перейдёт на qwen3.8-max. Контракт это запрещает, нужен owner override.\n- Вариант C (ограниченный scope): per-session pins на активные DM1256122537 + forum-1004426332349 sessions через `/model` или API. Это частичное решение: fresh topics всё равно получат gpt-6.1-sol.\n\nПомечаю карту needs_input через final text (kanban_block сам тоже будет denied — task уже blocked; recovery только через company bootstrap: binding comment + unblock + re-run per t_281fd2c3 precedent).\n\nblocker_kind: capability + needs_input (native unsupported + policy deny pre-block)",
+            "created_at": 1791020128
+          },
+          {
+            "author": "company",
+            "body": "Installed consumer caveat confirmed: GatewayRunner.config is launch profile config; _resolve_session_agent_runtime reads _get_channel_override(cfg,...). Secondary _profile_configs maps used elsewhere. Do not blindly store company channel_overrides and assert runtime proof in multiplex; prove correct profile-selected consumer. No undocumented gateway.model/platforms.telegram.model keys: _resolve_gateway_model only reads model.default. Root-host channel override could affect other specialist bots in same group: prohibited unless narrowly profile-scoped consumer is proven. Keep exact native default+active-session distinction; send no artificial LLM question. Source9aae3c23 still anchor at check.",
+            "created_at": 1791020213
+          },
+          {
+            "author": "company",
+            "body": "Company chooses native-source recovery, not global model change: SOURCE-only TGR-01 code card t_e8c66b4a, exact spec TGR-01-SOURCE-SPEC.md in evidence root. Your blocked native task is a FUTURE consumer only after accepted corrected source is loaded. Do not re-unblock/retry denied sessions-directory read or use control DB/unsupported route keys. Recovery will narrow readback to approved runtime metadata/normal transport, with actual consumer scope change first. Root dirty overlays and Desktop/otherprofile defaults remain untouched. Estimated usage/incremental costs=null without invoice; no purchase.",
+            "created_at": 1791020940
+          }
+        ],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "operations",
+              "status": "ready",
+              "parents": [],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791019514,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 587
+            },
+            "created_at": 1791019546,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791020538,
+              "run_id": 2207
+            },
+            "created_at": 1791019638,
+            "run_id": 2207
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 8232,
+              "started_at": "|179101963875"
+            },
+            "created_at": 1791019638,
+            "run_id": 2207
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019657,
+            "run_id": 2207
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019720,
+            "run_id": 2207
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019780,
+            "run_id": 2207
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019840,
+            "run_id": 2207
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019901,
+            "run_id": 2207
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791019962,
+            "run_id": 2207
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020022,
+            "run_id": 2207
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "operations",
+              "len": 194
+            },
+            "created_at": 1791020053,
+            "run_id": null
+          },
+          {
+            "kind": "blocked",
+            "payload": {
+              "reason": "FLEET POLICY BLOCKED [secret_read_or_write] pattern=secret_read_or_write call_index=60 next_step=секреты вне правил; стоп, не повторяй вызов, пометь карту needs_input [continues: owner]",
+              "kind": "policy_denied",
+              "recurrences": 1,
+              "source_status": "ready"
+            },
+            "created_at": 1791020053,
+            "run_id": 2207
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "operations",
+              "len": 5547
+            },
+            "created_at": 1791020128,
+            "run_id": null
+          },
+          {
+            "kind": "terminal_worker_reaped",
+            "payload": {
+              "pid": 8232,
+              "worker_started_at": "|179101963875",
+              "prev_pid": 8232,
+              "host_local": true,
+              "termination_attempted": true,
+              "terminated": true,
+              "sigkill": false
+            },
+            "created_at": 1791020187,
+            "run_id": 2207
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 701
+            },
+            "created_at": 1791020213,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 606
+            },
+            "created_at": 1791020940,
+            "run_id": null
+          }
+        ],
+        "runs": [
+          {
+            "id": 2207,
+            "profile": "operations",
+            "step_key": null,
+            "status": "blocked",
+            "outcome": "policy_denied",
+            "summary": "FLEET POLICY BLOCKED [secret_read_or_write] pattern=secret_read_or_write call_index=60 next_step=секреты вне правил; стоп, не повторяй вызов, пометь карту needs_input [continues: owner]",
+            "error": null,
+            "metadata": {
+              "receipt": {
+                "status": "policy_denied",
+                "evidence_refs": [],
+                "next_action": "apply remediation route in the block reason; retry only after the denied precondition changes"
+              }
+            },
+            "worker_pid": null,
+            "started_at": 1791019638,
+            "ended_at": 1791020053
+          }
+        ]
+      }
+    },
+    {
+      "id": "t_e8c66b4a",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_e8c66b4a",
+          "title": "Telegram TGR-01: fix profile-local model/provider selection in multiplex",
+          "body": "task_type: code\nTGR-01 source-only minimal routed-profile channel model/provider fix. Exact base9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f; pristine isolated worktree, NEVER live dirty checkout. Spec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/TGR-01-SOURCE-SPEC.md. Fix native multiplex consumer in run_config_loaders + run_turn using existing profile config scope/cache, consistent model AND provider, session override highest. Fresh company DM/forum should inherit company Qwen rules; DesktopSol and other bots in samegroup unchanged. Acceptance actual old-base RED→new GREEN, routing/cache/override/fallback regression matrix and native nearby suites, SHA/diff/cleanliness/rollback. No live config/model/source overlays, Hermes update, restart, controls DB/secret reads or paid probe. Deliver exact commit+MODEL-ROUTING-HANDOFF.md/patch/logs in durable evidence root. Stage only for independent QA. Finance scope source tests, usage estimate unknown, no purchase.",
+          "assignee": "tech",
+          "status": "running",
+          "priority": 18000,
+          "tenant": null,
+          "workspace_kind": "worktree",
+          "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\.worktrees\\tg-qwen-profile-routing-20261003",
+          "branch_name": "wt/t_e8c66b4a",
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791020899,
+          "started_at": 1791020921,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 2400,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": null,
+        "parents": [],
+        "children": [
+          "t_fb38959c"
+        ],
+        "comments": [],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "tech",
+              "status": "ready",
+              "parents": [],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "worktree",
+              "workspace_path": "C:/Users/max/AppData/Local/hermes/hermes-agent/.worktrees/tg-qwen-profile-routing-20261003",
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791020899,
+            "run_id": null
+          },
+          {
+            "kind": "claimed",
+            "payload": {
+              "lock": "laptop:26200",
+              "expires": 1791021821,
+              "run_id": 2215
+            },
+            "created_at": 1791020921,
+            "run_id": 2215
+          },
+          {
+            "kind": "spawned",
+            "payload": {
+              "pid": 22636,
+              "started_at": "|179102093194"
+            },
+            "created_at": 1791020931,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791020951,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021018,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021095,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021175,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021238,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021298,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021358,
+            "run_id": 2215
+          },
+          {
+            "kind": "heartbeat",
+            "payload": null,
+            "created_at": 1791021424,
+            "run_id": 2215
+          }
+        ],
+        "runs": [
+          {
+            "id": 2215,
+            "profile": "tech",
+            "step_key": null,
+            "status": "running",
+            "outcome": null,
+            "summary": null,
+            "error": null,
+            "metadata": null,
+            "worker_pid": 22636,
+            "started_at": 1791020921,
+            "ended_at": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "t_fb38959c",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_fb38959c",
+          "title": "Telegram TGR-01: independent exact-head routing isolation QA",
+          "body": "task_type: review\nIndependent exact-head source QA for parent TGR-01 t_e8c66b4a. Spec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/TGR-01-SOURCE-SPEC.md. Freeze actual implementationSHA; verify RED old-base9aae3c23→GREEN current, company DM/forum fresh topics Qwen/custom, DesktopSol unchanged, another specialist in samegroup unaffected, explicit sessionpins preserved, missing/unknown/standalone safe fallback and cache reload. Re-run relevant native gateway model/provider/slash/cache/multiplex suites, baseline attributable. Review minimal diff/no runtime dirty tree changes. Complete main+auxiliary lineage must differ from actual code author; no claim from model label or task done. Deliver durable MODEL-ROUTING-QA.md PASS/BLOCK with SHA/hashes/commands/exits. No live writes/restart/update/secret/control DB access/paid probe. Source PASS≠loaded/Qwen live. Financial scope=this exact source QA, paid usage estimated unknown/no purchase.",
+          "assignee": "qa",
+          "status": "todo",
+          "priority": 18000,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": null,
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791020940,
+          "started_at": null,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 2400,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": null,
+        "parents": [
+          "t_e8c66b4a"
+        ],
+        "children": [
+          "t_373184d0"
+        ],
+        "comments": [],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "qa",
+              "status": "todo",
+              "parents": [
+                "t_e8c66b4a"
+              ],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791020940,
+            "run_id": null
+          },
+          {
+            "kind": "dependency_wait",
+            "payload": {
+              "reason": "parent_not_done",
+              "parent": "t_e8c66b4a"
+            },
+            "created_at": 1791020940,
+            "run_id": null
+          }
+        ],
+        "runs": []
+      }
+    },
+    {
+      "id": "t_373184d0",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_373184d0",
+          "title": "Telegram TGR-01: authorize verified source release and scoped Qwen restoration",
+          "body": "task_type: ops\nTGR-01 exact source-acceptance/release decision consumer after t_fb38959c. Read TGR-01-SOURCE-SPEC.md at C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003. Deliver decision bound to ACTUAL reviewedSHA, independent lineage/tests/baseline matrix verified; source PASS≠loaded. If positive, create ONE bounded operations release/configuration consumer through supported attested path, preserve all unrelated dirty overlays, Desktop session/defaultSol and specialist pins. No agents invoke Hermes update or unreviewed runtime overlays. Determine supported source loading and bounded drain/recovery/backup/rollback before any host lifecycle action; no unqualified restart/kill. Then narrow existing native t_b8210384 recovery to approved nonsecret runtime metadata, no sessions-directory/controlDB read or duplicate ops replacement. Exact Qwen/custom on company DM+forum freshtopics must be observed naturally before restoration claim; no paid canary. If load mechanism blocked, durable exact blocker/owner not genericretry. Finance artifact/actual usage/null reasons/no purchase. Owner report<=6lines only real progress.",
+          "assignee": "company",
+          "status": "todo",
+          "priority": 18000,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": null,
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791021138,
+          "started_at": null,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1800,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": null,
+        "parents": [
+          "t_fb38959c"
+        ],
+        "children": [],
+        "comments": [],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "company",
+              "status": "todo",
+              "parents": [
+                "t_fb38959c"
+              ],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791021138,
+            "run_id": null
+          },
+          {
+            "kind": "dependency_wait",
+            "payload": {
+              "reason": "parent_not_done",
+              "parent": "t_fb38959c"
+            },
+            "created_at": 1791021138,
+            "run_id": null
+          }
+        ],
+        "runs": []
+      }
+    },
+    {
+      "id": "t_38a4b49e",
+      "exit_code": 0,
+      "data": {
+        "task": {
+          "id": "t_38a4b49e",
+          "title": "Telegram optimization: exact acceptance, hub rollout authorization and natural-run savings",
+          "body": "task_type: ops\nClose owner Telegram optimization loop, not a status-only handoff. Parents native config rollout t_ee2ad6bf and exact-hub QA t_d5e37e14. Contract/evidence C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/DECISION-AND-CONTRACT.md. Verify real exact verdict/lineage/tests and config receipt; do not treat done as PASS. If hub QA positive, record company decision bound to immutable accepted manifest on ONE new idempotent operations consumer (idempotency tg-opt-20261003-hubs-rollout), scoped company two hubs only, preserve names/ref links and use native skill interfaces/backup/rollback; material installation by operations, not company. Integrate existing Telegram-retirement t_b3e6c428/t_45c34a6a only if independent exact verdict is genuinely ready; otherwise leave unchanged and report that boundary. No bypass of owner retirement directive/no mandatory formatting skill. Collect minimum10 actual natural post-change Telegram completion lines and compare same model/task strata baseline, cache separately, routing/context retention; if insufficient give bounded WAIT with check_at via existing audit/notification mechanism (no new recurring controller or paid probe). Outcome must distinguish applied/resolved/live and proved saving, with receipt/artifact. Source-only work ≠live complete. No secret reads, models/profile/global changes/restart/history deletion. Short owner result<=6lines, financial actual/unknown separately per contract.",
+          "assignee": "company",
+          "status": "todo",
+          "priority": 210,
+          "tenant": null,
+          "workspace_kind": "scratch",
+          "workspace_path": null,
+          "branch_name": null,
+          "project_id": null,
+          "created_by": "company",
+          "created_at": 1791017076,
+          "started_at": null,
+          "completed_at": null,
+          "result": null,
+          "skills": [],
+          "max_runtime_seconds": 1800,
+          "max_retries": null,
+          "model_override": null,
+          "provider_override": null,
+          "session_id": "20261003_112457_c18754",
+          "workflow_template_id": null,
+          "current_step_key": null,
+          "completion_contract": "local-only",
+          "last_failure_error": null
+        },
+        "latest_summary": null,
+        "parents": [
+          "t_d5e37e14",
+          "t_ee2ad6bf"
+        ],
+        "children": [],
+        "comments": [
+          {
+            "author": "company",
+            "body": "Accepted measurement correction: review MEASUREMENT-REVIEW.md and measurement-strata.json. Revised minimum natural after-change sample=10 comparable Telegram calls PER observed model/provider stratum, not pooled changed model mix. Actual API baseline span23.515h; no weekly extrapolation. Output/input/cache/unknown separately; no theoretical cache-price conversion without verified provider tariff/quota semantics. Telegram observations remain valid TG-scope observations; include outside-TG effects only for company-wide conclusions. Candidate128000 is trigger, not ceiling. Child second eye was methodology advice only; native independent QA still required.",
+            "created_at": 1791017771
+          }
+        ],
+        "events": [
+          {
+            "kind": "created",
+            "payload": {
+              "assignee": "company",
+              "status": "todo",
+              "parents": [
+                "t_ee2ad6bf",
+                "t_d5e37e14"
+              ],
+              "creator_task_id": null,
+              "tenant": null,
+              "workspace_kind": "scratch",
+              "workspace_path": null,
+              "branch_name": null,
+              "project_id": null,
+              "skills": null,
+              "goal_mode": null,
+              "model_override": null,
+              "provider_override": null
+            },
+            "created_at": 1791017076,
+            "run_id": null
+          },
+          {
+            "kind": "dependency_wait",
+            "payload": {
+              "reason": "parent_not_done",
+              "parent": "t_ee2ad6bf"
+            },
+            "created_at": 1791017076,
+            "run_id": null
+          },
+          {
+            "kind": "commented",
+            "payload": {
+              "author": "company",
+              "len": 660
+            },
+            "created_at": 1791017771,
+            "run_id": null
+          }
+        ],
+        "runs": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "base": "bda33b601d194fb8a43e5660c57542aad14aa372",
+  "head_after": "bda33b601d194fb8a43e5660c57542aad14aa372",
+  "status_before": "?? .fixture-home/\n?? .test-temp/",
+  "status_after": "?? .fixture-home/\n?? .test-temp/",
+  "python": "C:/Users/max/AppData/Local/hermes/hermes-agent/.venv/Scripts/python.exe",
+  "fixture_root": "C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4",
+  "import_probe_exit": 0,
+  "scope": "stock baseline, not candidate acceptance or a real update",
+  "shards": [
+    {
+      "file": "test_update_completion_process.py",
+      "command": [
+        "C:/Users/max/AppData/Local/hermes/hermes-agent/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/hermes_cli/test_update_completion_process.py",
+        "-o",
+        "cache_dir=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\cache\\test_update_completion_process",
+        "--basetemp=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\test_update_completion_process",
+        "--junitxml=C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_completion_process.xml"
+      ],
+      "exit_code": 1,
+      "elapsed_s": 18.344,
+      "log": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_completion_process.log",
+      "xml": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_completion_process.xml",
+      "tests": 23,
+      "failures": 13,
+      "errors": 0,
+      "skipped": 3,
+      "passed": 7
+    },
+    {
+      "file": "test_update_completion_routing.py",
+      "command": [
+        "C:/Users/max/AppData/Local/hermes/hermes-agent/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/hermes_cli/test_update_completion_routing.py",
+        "-o",
+        "cache_dir=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\cache\\test_update_completion_routing",
+        "--basetemp=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\test_update_completion_routing",
+        "--junitxml=C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_completion_routing.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_s": 2.426,
+      "log": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_completion_routing.log",
+      "xml": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_completion_routing.xml",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 16
+    },
+    {
+      "file": "test_update_fleet_completion.py",
+      "command": [
+        "C:/Users/max/AppData/Local/hermes/hermes-agent/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/hermes_cli/test_update_fleet_completion.py",
+        "-o",
+        "cache_dir=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\cache\\test_update_fleet_completion",
+        "--basetemp=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\test_update_fleet_completion",
+        "--junitxml=C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_fleet_completion.xml"
+      ],
+      "exit_code": 1,
+      "elapsed_s": 2.762,
+      "log": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_fleet_completion.log",
+      "xml": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_fleet_completion.xml",
+      "tests": 5,
+      "failures": 5,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0
+    },
+    {
+      "file": "test_update_launch_completion.py",
+      "command": [
+        "C:/Users/max/AppData/Local/hermes/hermes-agent/.venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/hermes_cli/test_update_launch_completion.py",
+        "-o",
+        "cache_dir=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\cache\\test_update_launch_completion",
+        "--basetemp=C:\\Users\\max\\Documents\\hermes-update-test-fixtures-20261001\\baseline-v4\\test_update_launch_completion",
+        "--junitxml=C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_launch_completion.xml"
+      ],
+      "exit_code": 0,
+      "elapsed_s": 9.055,
+      "log": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_launch_completion.log",
+      "xml": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\hermes-update-locks-20261001\\BASELINE-V4-test_update_launch_completion.xml",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 27
+    }
+  ]
+}

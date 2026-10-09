@@ -1,29 +1,32 @@
 # Changelog
 
-## [1.2.18] - 2026-09-13
+## [1.2.39] - 2026-10-09
 
 ### Security
-- Human-boundary v2 (t_c91076d0, delta of t_e7e74526 + t_25908a44) over the
-  v1.2.5 substrate: class X1 updater boundary — any invocation, inspection,
-  planning or dependency on the external auto-updater is denied before any
-  other classification (``updater_dependency``); detection is word-bounded
-  over tool names, terminal commands/workdirs and path/URL arguments, prose
-  describing the boundary stays writable.
+- Human-boundary v2 (t_c91076d0, delta of t_e7e74526 + t_25908a44),
+  refreshed onto the released v1.2.36 base including the live per-class
+  token caps (refresh t_f68e8bed; v2 semantics unchanged, next
+  collision-free pin after 1.2.36 with 1.2.37/1.2.38 claimed by open
+  PRs): class X1 updater boundary — any invocation, inspection, planning
+  or dependency on the external auto-updater is denied before any other
+  classification (``updater_dependency``); detection is word-bounded
+  over tool names, terminal commands/workdirs and path/URL arguments,
+  prose describing the boundary stays writable.
 - Decision-namespace forgery guard: board free-text writes (kanban bodies,
   comments, reasons) authored by a worker context cannot mint company or
-  owner authority — the 2026-09-04 worker-comment company-binding regression
-  class is closed at the classifier level.
+  owner authority — the 2026-09-04 worker-comment company-binding
+  regression class is closed at the classifier level.
 - Hard-gate bindings carry the full ADR-001 v2 tuple: nonce (issued at
   approve), expires_at (24h TTL, enforced at consumption; an expired grant
   is refused, surfaced as expired, and re-armed as a fresh pending cycle),
-  principal_ref fingerprint, decision channel, amount_rub and scope digest;
-  legacy rows keep v1 semantics (NULL expiry = never expires).
+  principal_ref fingerprint, decision channel, amount_rub and scope
+  digest; legacy rows keep v1 semantics (NULL expiry = never expires).
 
 ### Added
 - A4 non-blocking product review path: ordinary product/UX/brand-risk
   changes (exact lexical vocabulary) queue one ``a4_review_notice`` event
   and proceed — review never blocks execution (ADR-001 v2 section 4).
-- ``tests/test_v1218_human_boundary_v2.py``: 23 contract tests — X1
+- ``tests/test_v1239_human_boundary_v2.py``: 23 contract tests — X1
   boundaries (tool/command/workdir vs prose), decision-namespace forgery,
   binding tuple fields, legacy compatibility, nonce rotation on
   expiry-at-consume, consume-once, A4 non-blocking + single notice,
@@ -33,6 +36,464 @@
 - ``docs/FLEET_POLICY.md``: owner principal + binding tuple + X1 boundary +
   A4 review path documented alongside the mandate (same-PR doc sync per
   ADR-001 consequences).
+
+## [1.2.36] - 2026-10-04
+
+### Added
+- SPEC v5 native auto-routing in the dispatch pre-claim path (t_a0f026dd,
+  GO anchors 0e41574d/dcc08f35/2734b0fc; spec
+  docs/fleet-ops/model-routing-20261003/SPEC-v5-native-integration.md).
+  The router stops being a company advisor and becomes part of the dispatch
+  path: at card claim the model/pattern recommendation is produced
+  automatically; company loses the manual-pin duty (stays the rules owner).
+- `scripts/router_hook.py` (219 lines ≤ 220, stdlib-only, zero network):
+  modes `off|shadow|enforce` from `ROUTER_ACTIVE.json` next to the hook
+  (missing/corrupt file → off, canon 7); `shadow` appends one row per
+  dispatch to ROUTING-LOG.md and sets NO model; `enforce` returns
+  model+provider+pattern (action=override) ONLY for classes listed in
+  `"classes"`, a class outside the list behaves as shadow; missing/foreign
+  task_type degrades to «default: профильный дефолт» with a `degrade` log
+  row (override impossible); availability `status_file`
+  `{"<provider|model>": {"available": false}}` skips a rail BEFORE selection
+  (reuses model_router D1; the status file is produced by a script-only
+  cron, the hook itself never runs commands). `--selftest` runs 7 cases
+  (off/shadow/enforce-in-list/enforce-out-of-list/no-task_type/status-skip/
+  corrupt-active) in temp dirs from any cwd, exit 0.
+- `src/fleet_policy/router_bridge.py` — plugin↔hook bridge. Called from the
+  EXISTING official pre-claim guard (`kanban_task_claimed`), right beside
+  the pre-dispatch task_type check, ONLY behind the new config flag
+  `router_hook.enabled` (master switch; delivered `true` with runtime
+  mode=shadow). Best-effort contract: routing NEVER blocks a claim — every
+  failure degrades silently to the profile default (canon 7) and stays
+  observable via a policy-store event `kind="router_hook"`. Card payload =
+  the same fields as `model_router.py --card` (title/body from
+  load_task_context, task_type from the pre-dispatch check,
+  pinned_model/prior_run_failed from a read-only query of the board DB
+  (tasks.model_override/consecutive_failures); author_model is not
+  knowable in the dispatcher process → env fallback or absent, documented
+  conservative degrade). enforce applies the pin via the OFFICIAL CLI
+  (`hermes kanban --board <b> set-model … --provider …` + comment
+  `ROUTER vN: model=… pattern=… rules_sha=…`, child env without
+  HERMES_KANBAN_* per the card_readiness.kanban pattern).
+- `config/fleet-policy.yaml` → `router_hook:` section (enabled/script/
+  active_file/log_file/status_file; nulls = documented defaults, script
+  default `<hermes>/profiles/company/scripts/router_hook.py`).
+- `scripts/model_router.py` — byte-identical repo copy of the live router v4
+  after the t_f98bb636 rails review (sha256
+  1ae2e34d08cd17cc4a4ea41d2af7c4c80ddece8977bfde86ffb56466c6548df1,
+  rules_sha 5499e01c152d): CI must exercise router_hook `--selftest` on the
+  exact head, which is impossible without the rules source. Live file is
+  NOT touched by this release; deployment verifies live==repo byte
+  identity.
+- `scripts/ROUTER_ACTIVE.json.example` — the delivered runtime file shape:
+  `{"mode": "shadow", "classes": [], "status_file": null, "log_file":
+  "…/model-routing-20261003/ROUTING-LOG.md"}` (empty canary list: even an
+  accidental mode flip pins nothing without an explicit company class
+  decision).
+
+### Semantics / rollback
+- enforce pin timing is the NATIVE kanban semantic: `set-model` “applies on
+  the next dispatch” — a pin set at claim governs the next (re)dispatch of
+  the card; the delivered mode is shadow anyway (no pins), and the enforce
+  canary is a separate company decision after a week of shadow (SPEC v5
+  «Запрещено»: enforce is NOT enabled on production classes in this release).
+- Rollback gate (SPEC v5 acceptance): `ROUTER_ACTIVE.json` →
+  `{"mode": "off"}` — dispatch behaviour identical to before, no redeploy;
+  second layer: `router_hook.enabled: false` in config.
+- Deployment (activation = this release's single SHA): fast-forward the
+  deployed plugin checkout to the activation SHA, copy
+  `scripts/router_hook.py` (+ verify `scripts/model_router.py` byte
+  identity) into `profiles/company/scripts/`, write
+  `profiles/company/scripts/ROUTER_ACTIVE.json` from the `.example`
+  (mode=shadow). Order: scripts first, then the plugin checkout flip —
+  a missing hook file degrades to a silent no-op.
+
+### Tests
+- `tests/test_v1236_router_hook.py` — hook: selftest exit 0 (subprocess,
+  two cwds), line budget ≤220, zero network imports (AST scan), all 6 SPEC
+  mode/degrade/status cases at the decide() level with pinned sha of the
+  repo model_router copy (CRLF-normalized so Windows checkouts match the
+  LF live bytes); bridge: flag off → no-op, shadow → decision+event and no
+  CLI mutation, enforce → exact set-model/comment command shapes with a
+  clean child env, missing hook → None, store failure tolerated; plugin
+  source carries the flag-gated best-effort call inside
+  `kanban_task_claimed`.
+## [1.2.34] - 2026-10-02
+
+Card t_d94dde9d (fleet-ops). Live evidence: run 2125 of this card produced
+16 `policy_denied` events / 5 rule_ids across 4 distinct root-cause classes
+while doing READ-ONLY diagnostics; the runtime then collapsed every follow-up
+call into `task_already_blocked` and auto-triaged. Company unblocked on
+02.10.2026 17:55 with the instruction to implement the W1–W5 design from
+comment 5367 on this version.
+
+### Fixed
+- W1 (FP case 4): the `secret_read_or_write` name-guard carve-out for
+  git-tracked plain source (v1.2.26) now also triggers on the sec+ret token
+  family — a tracked product file such as `agent/sec…ret_scope.py` matched
+  `**/*sec…ret*` and was denied for every profile, while the identical
+  credential-named case was carved out. The fail-closed chain is unchanged:
+  untracked, nonexistent, symlink/reparse, hard-secret (`.env*`, `auth.json`,
+  key material) and control-plane STORE names keep their deny. Relative
+  operands of tools without a `workdir` binding now resolve against an
+  explicit base (`arguments.workdir` else `os.getcwd()` — the plugin runs
+  in-process with the worker, so CWD is the task workspace).
+- W2(a) (FP cases 1/5): bare version probes joined the read lane as a
+  per-program flag map (`python -V/--version`, `py`, `node -v/--version`,
+  `npm`, `uv -V`, `git --version`, `sqlite3`, `gh`, `jq`) — exactly a
+  two-token stage, nothing else. A diagnostics chain ending in
+  `python --version` no longer flips the whole command to state_change and
+  into a `policy_control_plane_mutation` hard deny. `python -v` (the
+  verbose-import REPL) deliberately does NOT buy the lane.
+- W2(b) (FP cases 2/3): narrow lexical lane for in-process `python -c`
+  read probes, plus quote-aware stage splitting (`_simple_commands` no
+  longer shreds `;`/`|` inside balanced quotes; unbalanced quoting falls
+  back to the historical blind split). Two templates, everything else fails
+  closed: T-sqlite — `import sqlite3`; conn assignment via a `file:` URI
+  carrying `mode=ro` with `uri=True`; read-verb `execute(...).fetchall()/
+  fetchone()` (every `.execute(` must carry a quoted SELECT/WITH/VALUES/
+  EXPLAIN or assignment-free PRAGMA literal); `print(...)`; `close()`;
+  global deny-token scan (SQL mutation verbs, executescript/executemany,
+  commit/rollback, `open(`, `os.`, subprocess, eval/exec, `__import__`,
+  socket/urllib/requests, shutil/pathlib, write, `system(`, popen,
+  `shell=true`, `input(`). T-gh — imports limited to {subprocess, json,
+  sys}; exactly one `subprocess.run([...string literals...], kwargs)` with
+  `capture_output`/`text`/`timeout` only, argv[0] == `gh` and the argv
+  passing the existing gh read-verb/GET allowlist; `json.loads(x.stdout)`;
+  `print(...)`. SUPERSEDES the v1.2.31 re-scope note "in-process
+  `python -c` sqlite form stays denied" (see [1.2.31] Tests) per the
+  company decision of 02.10.2026 on t_d94dde9d: the card's deliverable (1)
+  explicitly lists `python -c` mode=ro among read-only shapes that must not
+  deny. The v1.2.23 adversary shape (bare `sqlite3.connect(...)` without
+  assignment) stays denied; without `mode=ro` the control-plane deny on
+  store literals stands.
+- W2(c): the `policy_control_plane_mutation` remediation text now states the
+  truth: the worker HAS read access to the control plane (read_file; single
+  sqlite3 -readonly SELECT; gh api GET; version probes; complex probes via
+  script files) — the old text implied none. Route owner stays `company`.
+- W3: `_BINDING_HEAD` hex budget widened `{7,40}` → `{7,64}` so sha256
+  artifact heads bind for work that has no git head (verbal company
+  decisions, doc/bundle artifacts — deliverable (5)). The prefix-equality
+  check in `missing_gates()` is unchanged: a 7..64-char bound head must be
+  an exact prefix of the company-go anchor; foreign, unbound, stale and
+  self-attested markers stay fail-closed; 40-hex git flows are bit-identical.
+- W4 (FP case 2b): risk-regex span exemption. The hard-deny and rule-table
+  scans see the raw command, so deny phrases QUOTED AS DATA (echo/grep
+  arguments, `git commit -m` prose, `gh --body` text, heredoc report lines)
+  triggered evidence-gated categories or hard denies for commands that
+  execute nothing. A match lying entirely inside a shell-quoted span is now
+  exempt UNLESS the span is executable input: the token before the opening
+  quote is a code-flag form (-c/--command/-e/--eval or a cluster ending in
+  c/e), or the span shares its line with an interpreter/executor program
+  (bash/python/sh/perl/node/…, eval, awk/sed, ssh, xargs, sqlite3/psql,
+  docker/kubectl, …). Quoted URL spans stay scanned (real targets).
+  Unbalanced quoting disables every exemption (fail-closed). Untouched: the
+  path guard and its `python -c` code extraction (F5), MUTATOR/write-marker
+  effect scans, and the runtime gate-forgery checks.
+
+### Tests
+- `tests/test_v1234_fp_corpus.py` — the FP corpus from comment 5367 (all 5
+  classes → allow, including the verbatim run-2125 chain) and TP controls
+  (python -c negatives incl. no-mode=ro board-DB probe → control-plane deny;
+  gh write forms; executable-span approval mutators incl. heredoc bare
+  names; real rm/force-push/control-plane writes/secret reads; version-lane
+  narrowness; W3 64-hex exact/prefix arming and foreign/unbound/self-attest
+  fail-closed; W2(c) route text).
+- `tests/test_v1226_tracked_source_carveout.py` — the
+  `test_other_name_patterns_are_not_carved_out` pin is INVERTED per W1 into
+  `test_secret_named_tracked_source_is_carved_out_v1234` (tracked → allow,
+  untracked twin → deny); all other v1.2.26 controls unchanged.
+
+### Residual risks (documented)
+- The python lane and the span exemption are LEXICAL: string-concatenation
+  obfuscation inside an otherwise template-shaped probe, or a deny phrase
+  assembled at runtime inside an executed span, remains the pre-existing
+  scanner-gap class (the F4 free-text note). Executing `python` at all is a
+  scoped state change the fleet accepts for workers; the lane only decides
+  read-vs-mutation labeling.
+- `ssh host "cmd"` spans stay scanned via the same-line interpreter rule,
+  but remote-side composition (quoted payload split across args) is outside
+  lexical reach — same class as above.
+- `grep -c`-style clusters ending in c/e keep their quoted pattern scanned
+  (fail-closed); a rare prose FP there is accepted over a code-execution hole.
+
+## [1.2.31] - 2026-09-25
+
+### Changed
+- §2.1 budgets: `review` 150k/120min/150calls → 250k/180min/250calls;
+  `ops` 150k/180min/150calls → 250k/240min/250calls. Evidence (fleet-policy
+  event store, 14-day window): review/ops are the only classes where
+  budget_exhausted denies censor at the limit (review max 151 tool_calls =
+  101% of limit; ops max 152 calls / 187 min = 101%/104%; 11 denies total).
+  New ceilings are ≥1.6× the censored observed max and ≤4× P90, so runaway
+  stays excluded; retries=3 unchanged. research/code untouched (P90 59–81%,
+  zero denies).
+
+### Added
+- §2.2 scratch-root exemption for the literal recursive+force delete rule
+  (`_rm_rf_targets` shared parser + `_safe_rm_targets`): a single pure rm
+  shape whose targets ALL normalize — env-expanded $TMPDIR/$TEMP/$TMP,
+  `..`-free, physically resolved so symlink escapes fail — strictly inside
+  an allowed ephemeral root (temp env roots, `<hermes_profiles>/*/cache/
+  scratch/**`, the current task workspace and its tmp/cache/temp children)
+  classifies as autonomous `ephemeral_workspace_cleanup` (allow) instead of
+  `irreversible_data_loss` (approval_required). Note: the SPEC suggested the
+  `destructive_change` label; that category is evidence-gated (backup+scope),
+  so workers would be re-denied at runtime as evidence_gate_missing — the
+  very hang this exemption removes. The ungated v1.2.28 ephemeral cleanup
+  category preserves the SPEC's observable contract (safe → allow, unsafe/
+  escape → approval_required). Every other trigger of the same rule
+  (`reset --hard`, force-push, `drop table`, `truncate`) is untouched.
+  Motivation: 45 denies / 41 cards in 14 days, mostly workers deleting their
+  own scratch.
+- Read lane for single-statement read-only `sqlite3` calls (allowlisted
+  flags; db + ONE `SELECT`/`WITH`/`VALUES`/`EXPLAIN` or assignment-free
+  `PRAGMA` statement; no `;` splicing, no dot-commands, no interactive
+  sessions): a read diagnostic is a read; mutating and unbounded shapes
+  stay state_change.
+
+### Fixed
+- Protected-store denies now carry the TRUE effect: a read-only probe
+  (cat/head/grep/sqlite-SELECT) of a secret-pattern path is still denied
+  (`secret_read_or_write`) but with effect=read instead of a hard-coded
+  state_change. The mislabel made the blocked-task override mask such denies
+  as `task_already_blocked`, which produced a deny death spiral for
+  read-only diagnostics on blocked cards (t_82941e23 run evidence).
+  Read-only shell on a blocked card is now allowed end-to-end; mutations on
+  a blocked card stay denied.
+
+### Tests
+- `tests/test_v1231_limits.py` — red/green regressions for every branch
+  above: safe → allow; unsafe path, `..` escape, symlink-out, mixed targets,
+  env root itself, globs, unset env reference → approval_required;
+  policy-controlled read pins (ls/cat/grep/head/tail/sed -n/du/wc/stat);
+  blocked-task runtime matrix; §2.1 budget assertions.
+- v1.2.23 adversary pin update: `sqlite3 <db> "SELECT ..."` moved out of
+  `test_echo_read_lane_adversaries_stay_out` into a boundary test
+  (`test_sqlite_read_lane_boundary_v1231`) per the company re-scope; the
+  in-process `python -c` sqlite form stays denied. The v1.2.28 workspace
+  lane tests are env-isolated (pytest tmp_path lives under the real %TEMP%,
+  whose children §2.2 now treats as disposable scratch).
+
+## [1.2.30] - 2026-09-22
+
+### Fixed
+- CRITICAL head-binding deadlock: v1.2.12 C1 made `missing_gates()` require
+  `context["head"]`, but `kanban_context.py` never produced it — expected_head
+  was always empty and the fail-closed branch killed every PASS marker. All
+  five evidence-gated categories (deploy_external_runtime,
+  release_to_protected_branch, public_product_action, financial_action,
+  destructive_change) were permanently unsatisfiable for workers regardless of
+  correct markers. Reproduced on live v1.2.24: activation card t_498a2d8f died
+  4 times identically (runs 1497/1502/1600/1604, evidence_gate_missing with all
+  five markers present and head-bound). Commit tests passed because they inject
+  `context["head"]` manually — no production producer existed.
+- Fix: when `context["head"]` is absent, derive the expected head from the
+  authorized `decision:company=go` marker's own `head=` binding (company-go is
+  the deploy anchor). Every gate PASS must still be head-bound (prefix match)
+  to that anchor; foreign-head / unbound / stale markers stay fail-closed;
+  explicit `context["head"]` wins when supplied (back-compat). Security intent
+  of v1.2.12 C1 fully preserved (15 contract tests green).
+
+### Added
+- `tests/test_head_binding_deadlock.py` — 8 regression tests (fail pre-fix,
+  pass post-fix), incl. blast-radius guard over all gated categories.
+
+Owner GO: 22.09.2026 (вариант 1). Live hotfix applied to all 10 profiles
+(runtime.py sha256 86cc4ac2…) before this durable integration; versions of
+live pins intentionally NOT stamped (release discipline: version is assigned
+only via trunk). Diagnosis:
+Documents/autocompany-remediation-2026-09-19/DEFECT-head-binding-deadlock.md
+
+## [1.2.29] - 2026-09-22
+
+### Added
+- Version-collision guard `scripts/check_version_uniqueness.py` (root cause
+  of the 1.2.25 duplicate): deterministic JSON verdict comparing the branch
+  `plugin.yaml` version against the released set (trunk `CHANGELOG.md`) and
+  every other open PR head (PR API resolution with a read-only remote
+  fallback; own head exempted); non-zero exit on collision. Wired into
+  `fleet-policy-ci.yml` as the `Version-collision guard` step before the
+  static/drift checks, with `pull-requests: read` permission added.
+- Pin-convergence check `scripts/check_pin_convergence.py`: verifies every
+  deployed `<profiles-root>/*/plugins/fleet-policy` checkout sits on one
+  expected sha (argv[1]); fail-closed — unresolvable entries are divergent,
+  never skipped. Fixture-only unit tests; the live scan is a Phase-R
+  runtime concern, not part of this release.
+- `docs/FLEET_POLICY.md` "Version reservation" section: next version =
+  released_max(trunk CHANGELOG) + 1, claimed at branch creation and
+  enforced by CI; never pick a version by eye.
+- Test suites `tests/test_version_guard.py` (12 tests) and
+  `tests/test_pin_convergence.py` (8 tests), fixture-based, no network.
+
+## [1.2.28] - 2026-09-22
+
+### Changed
+- Integration release: merged three separately QA-passed branches into
+  one activation SHA — v1.2.25 (worker-deny no-park + read-lane
+  false-positive fixes), v1.2.27 (path-guard tracked-source carve-out
+  hardened against store-pattern db names and symlink indirection),
+  and the P1 recovery controller v3 (scripts only). No behavior
+  changes beyond the union of the merged components; all version
+  pins resolved to 1.2.28.
+
+## [1.2.27] - 2026-09-22
+
+### Fixed
+- QA t_14a79801 HIGH-1: the v1.2.26 tracked-source carve-out reclassified
+  control-plane STORE-pattern filenames (a db name combining a store token
+  with the guarded name-token, e.g. `kan…ban.<token>.db`) to an ordinary
+  read when git-tracked. The carve-out now refuses any path matching the
+  policy-controlled substrings or a store-token db-family name
+  (`.db`, `.db-wal`, `.db-shm`, `.db-journal`) regardless of tracked status;
+  those keep the hard `sec…ret_read_or_write` deny.
+- QA t_14a79801 HIGH-2: symlink indirection was not failed closed — an
+  untracked symlink whose name matches, pointing at a tracked target,
+  resolved through and passed the tracked check. The carve-out now requires
+  the physical (realpath) identity to equal the requested absolute path and
+  the final component to carry no link/reparse tag, so untracked links,
+  tracked links, and directory-hop links all stay denied.
+- Adversarial regression suite
+  `tests/test_v1227_store_symlink_failclosed.py` (12 tests) covers both
+  findings plus the two intended carve-out behaviors; synthetic temp repos
+  only, no live policy state involved.
+
+## [1.2.26] - 2026-09-22
+
+### Fixed
+- Path-guard carve-out for git-tracked source files whose NAME matches the
+  broad `**/*cre…dential*` pattern (incident t_13ae7092; blocked P2 delivery
+  t_b18b6d29 and QA t_df71875b): ordinary tracked source (e.g.
+  `agent/cre…dential_pool.py`) classifies as read_only / scoped_state_change
+  instead of the hard `sec…ret_read_or_write` deny. The carve-out is
+  fail-closed on every axis: the matched pattern must carry the trigger
+  token; the PHYSICAL (resolved) file must exist and be a regular file; it
+  must be git-tracked in the containing repository (`git ls-files
+  --error-unmatch`, 10s timeout); hard secret stores (`.env*`, `auth.json`,
+  `id_*` keys, `*.pem/*.key/*.p12/*.pfx`) stay denied even when tracked;
+  untracked or nonexistent matched paths stay denied; other name patterns
+  (`**/*sec…ret*`) are untouched. Regression suite
+  `tests/test_v1226_tracked_source_carveout.py` asserts both directions with
+  synthetic temp repos only — no live policy state involved.
+
+## [1.2.25] - 2026-09-21
+
+### Fixed
+- **Worker-deny = пауза, не парковка карты** (канон 17.09): deny-классы с
+  маршрутом `who=worker` (`evidence_gate_missing`, `same_failure_loop`,
+  `identical_call_loop`, `worker_code_execution`) больше не проецируют
+  `kanban block` — воркер получает `next_step=… [continues: worker]` в
+  сообщении и продолжает в этом же ране. company/owner-классы паркуют карту
+  как раньше, с машиночитаемым `CONTINUATION[who=…]` контрактом.
+- **Read-lane false positives (живой инцидент 21.09, компания-профиль):**
+  - `git --no-pager …` теперь read-форма (флаг не ломал git-ветку READ_COMMAND);
+  - стадия `VAR=value` — shell-binding, не мутация (аналог `cd <dir>` no-op;
+    `$(`/backtick в значении по-прежнему fail-closed через метасимволы);
+  - редирект в `/dev/null` (stderr/stdout discard) больше не считается записью;
+    редиректы в реальные пути и `/dev/null.txt`-подобные цели остались записью;
+  - process substitution `<(git show ref:path)` с read-only внутренним
+    содержимым — read-паттерн; мутирующее/вложенное/неизвестное содержимое и
+    output-substitution `>(…)` fail-closed;
+  - `diff` добавлен в read-утилиты.
+- Богатая русская таблица remediation-маршрутов (REMEDIATIONS) покрывает все
+  известные rule_id; каждый маршрут несёт who=worker|company|owner.
+
+### Added
+- Опциональный пин модели доставки нотификаций: `FP_DELIVERY_MODEL` /
+  `FP_DELIVERY_PROVIDER` (инцидент 21.09 — восстановленная тяжёлая сессия с
+  исчерпанной моделью глушила все delivery-батчи по таймауту). Без env
+  поведение прежнее.
+- Тесты: `tests/test_v1225_readlane.py` (15 парных сценариев allow/deny),
+  `tests/test_v1225_worker_route.py` (worker-no-park, company-park, owner-park,
+  формат сообщения/контракта).
+
+## [1.2.24] - 2026-09-19
+
+### Added
+- Unified remediation branches: the canonical typed `policy_denied` projection
+  and machine-readable remediation routes (`remediation_for`, from
+  fix/company-policy-remediation 4297b44) merged onto the live pinned base
+  (156ce1b / v1.2.23). One branch, one code path — the divergent manual
+  iteration (fix/deny-remediation-routes) is superseded.
+
+## [1.2.23] - 2026-09-17
+
+### Fixed
+- F1 (shadow baseline t_64099bc7, incidents t_e7a0a31f/t_d654a389): stdout-only
+  `echo`/`printf` and `true` join the read utilities, so pure-read diagnostics
+  chained with section markers (`grep … fleet-policy.yaml; echo "==="; grep …`,
+  `git merge-base --is-ancestor X Y && echo OK || echo NO`) classify read_only
+  again instead of being hard-denied as `policy_control_plane_mutation` by the
+  echo stage alone. This was the dominant false-positive first-pass failure
+  family. Safety unchanged: redirects/`tee` still fail closed via the
+  write-marker scan; command substitution, backticks and heredocs via
+  `_SHELL_METACHARACTERS`; `date` deliberately stays fail-closed (clock-setting
+  `-s`/`--set` forms are hard to bound lexically); env prefixes stay fail-closed.
+- Regression suite `tests/test_v1223_echo_read_stages.py`: 9 read-only incident
+  commands GREEN, 8 adversarial variants confirmed out of the read lane, and
+  policy-controlled `write_file` still hard-denied.
+
+## [1.2.22] - 2026-09-16
+
+### Fixed
+- Read-only terminal commands no longer fall into evidence-gated state-change
+  classes because of words INSIDE quoted argument literals: MUTATOR now scans
+  the command with quoted spans stripped (same unquote regex as the
+  write-marker scan), so `grep -rn "deploy" scripts/` is a read again. The
+  RAW text still feeds the write-marker scan — redirects and mutating flags
+  outside quotes stay fail-closed.
+- `find` joins the read utilities for read-only forms; path/pattern prose
+  like `find . -path "*cleanup*"` no longer lands in destructive_change.
+  Its mutating primaries (-delete, -exec/-execdir, -ok/-okdir, -fls/-fprint)
+  are excluded from the read lane by lookahead AND join the token-based
+  write-marker scan as a second fail-closed layer.
+- Invariant made explicit at the runtime layer: reads never require evidence
+  gates (gated categories imply effect=state_change).
+
+## [1.2.21] - 2026-09-15
+
+### Fixed
+- Shell tilde spellings (`~`, `~/...`, `~user`) are rejected from the bounded
+  workspace-cleanup lane so home-directory expansion remains fail-closed.
+- A policy-projected blocked task can still use Kanban lifecycle tools to
+  report, hand off, block, or complete. Executive state changes remain denied
+  and lifecycle calls remain bounded by the hard tool budget.
+
+## [1.2.20] - 2026-09-15
+
+### Fixed
+- A pure `rm -rf` of child artifacts inside the current Hermes task workspace
+  now classifies as bounded `ephemeral_workspace_cleanup` instead of serious
+  `irreversible_data_loss`. This unblocks reproducible scratch refreshes without
+  weakening protection for workspace-root deletion, parent traversal, globbing,
+  command chains, or cleanup outside a task workspace.
+- Added regression coverage for relative and absolute in-scope cleanup plus
+  fail-closed traversal, root, chained-command, and foreign-workdir cases.
+
+## [1.2.19] - 2026-09-13
+
+### Fixed
+- Read-only terminal commands no longer fall into fail-closed state-change
+  classes (incident 13.09.2026, t_6f335dd6 — 40+ false denies burning runs):
+  - `git config` query forms (`--get*`, `--list`, bare `key` with no value),
+    `git worktree list`, and `git merge-base` classify as reads; MUTATOR's
+    `merge` no longer matches `merge-base`. A `git config` write (value
+    argument, `--unset`) stays a state change.
+  - `git -C <path>` wrapper is accepted on read verbs (status/diff/log/...)
+    and — symmetrically — on MUTATOR's git verbs, so `git -C repo push`
+    cannot dodge the mutator scan into the read lane. The wrapper match is
+    case-sensitive (`-c` injects per-invocation config and stays fail-closed).
+  - `cat` joins the stdout-only read utilities; redirect/tee forms are still
+    caught by the write-marker scan.
+  - `gh api --jq/-q` (space and fused `=` forms) joins the read-safe option
+    allowlist: it only projects the JSON response and cannot change the
+    method or carry a payload. Method writes, hostname overrides, absolute
+    URLs, and unknown options still fail closed. The v1.2.7 F-01 test case
+    that pinned `--jq` as fail-closed is replaced by `--permissive`.
+  - Deliberately NOT relaxed: bare `VAR=value` env prefixes in front of
+    `python -m pytest` stay fail-closed (PATH/LD_PRELOAD rebind the binary).
+- Contract tests: `tests/test_v1219_read_classifier.py` (42 cases across the
+  four incident families plus adversarial variants).
 
 ## [1.2.17] - 2026-09-12
 

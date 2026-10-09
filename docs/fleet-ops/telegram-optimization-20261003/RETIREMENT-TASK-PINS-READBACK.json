@@ -1,0 +1,97 @@
+{
+  "observed_at": "2026-10-03T13:04:49.569021+03:00",
+  "scope": "active native Kanban pin metadata; company-only retirement; no DB/storage reads or writes",
+  "boards": [
+    {
+      "board": "default",
+      "active_count": 3,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    },
+    {
+      "board": "fleet-ops",
+      "active_count": 137,
+      "pin_fields_omitted": [],
+      "pins": [
+        {
+          "id": "t_4aabc1fb",
+          "assignee": "company",
+          "status": "todo",
+          "skills": [
+            "company-os",
+            "kanban-card-authoring",
+            "hermes-agent",
+            "telegram-message-formatting"
+          ]
+        }
+      ],
+      "company_body_refs": []
+    },
+    {
+      "board": "freelance",
+      "active_count": 1,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    },
+    {
+      "board": "general",
+      "active_count": 0,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    },
+    {
+      "board": "portfolio",
+      "active_count": 8,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    },
+    {
+      "board": "rr-team",
+      "active_count": 38,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    },
+    {
+      "board": "seo-site",
+      "active_count": 6,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    },
+    {
+      "board": "venture-lab",
+      "active_count": 4,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    },
+    {
+      "board": "video",
+      "active_count": 15,
+      "pin_fields_omitted": [],
+      "pins": [],
+      "company_body_refs": []
+    }
+  ],
+  "company_pin_hits": [
+    {
+      "id": "t_4aabc1fb",
+      "assignee": "company",
+      "status": "todo",
+      "skills": [
+        "company-os",
+        "kanban-card-authoring",
+        "hermes-agent",
+        "telegram-message-formatting"
+      ],
+      "board": "fleet-ops"
+    }
+  ],
+  "other_profile_pin_hits": [],
+  "unknown_if_missing_fields": false
+}

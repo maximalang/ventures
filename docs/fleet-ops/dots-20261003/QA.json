@@ -1,0 +1,74 @@
+{
+  "task_id": "t_a3c78661",
+  "reviewer_profile": "qa",
+  "task_type": "review",
+  "date": "2026-10-04 (UTC+03:00)",
+  "verdict": "PASS",
+  "verdict_scope": "installation + integrity + methodology boundaries; methodology/filesystem only; behavior benefit and new runtime functionality NOT measured",
+  "effective_evidence_basis": "original frozen reports + EVIDENCE-ERRATA.md (t_bf24d51d)",
+  "subject_manifest_hashes": {
+    "METHOD-CANDIDATE.md": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "METHOD-CANDIDATE.md_sha1": "fd6c26f5dbebba33baa17761f43a80e22ed17427",
+    "LOAD-HOOK.md": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+    "BRAIN-PACKET.json": "f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9",
+    "SOURCE-AUDIT.md": "9bc7d4a5c71a2befb1f6c7947c5a4805ad7cf03ae4ba7f9c9bf8631dc3acbca4",
+    "ROLLOUT.md": "b01b0cdce4124a44010f83ee61483d5d1a33c3e30c39e4fce53e902afed1dd36",
+    "ROLLOUT.json": "1d63c2f8d33bbde63074fe186c464580e86b6e04e197b477cc2a8fba88b7cdc1",
+    "EVIDENCE-ERRATA.md": "e07e24518f29029102deb430f92f0c061512fff9e3ca5caeede222b551485c94",
+    "install_script": "f75cd3641b20232a9b4ae55274849f165e1a53b6ac920db3aa29294fa0e827",
+    "verify_script": "cba3323d761a660ec1388aac2b7362c14945ba6da4ff17deaee74a2f06a034c6",
+    "AUTHOR-READBACK.json": "68def3834652ad7a161a579ee0141e02df3e8a0160c3c0596eb1a706ce2cc351"
+  },
+  "verified_targets_count": 12,
+  "targets": ["company", "research", "product", "operations", "qa", "tech", "finance", "sales", "design", "ux", "video-director", "video-editor"],
+  "checks": {
+    "Q1_targets": "PASS",
+    "Q2_reference_hashes": "PASS",
+    "Q3_hook_backups": "PASS",
+    "Q4_fresh_no_unrelated": "PASS (bounded to 12 company-os roots; default profile untouched)",
+    "Q5_loader_registration": "PASS (hermes -p <p> skills list rc=0 x12, company-os enabled x12)",
+    "Q6_natural_load": "PASS (skill_view from qa run, installed qa path)",
+    "Q7_scenarios": "PASS (14 semantic scenarios; 1 executed natural load)",
+    "Q8_source_audit_effective": "PASS (original report defects confirmed; errata supersessions verified against frozen bytes)",
+    "Q9_integrity_rollback": "PASS (own script exit 0, 25/25; rollback freshness gap real, superseded by errata §8)",
+    "Q10_handoff": "PASS (this report + QA.json)"
+  },
+  "original_report_defects_confirmed": [
+    "SOURCE-AUDIT.md lines 47/48: attributes [codex-not-dots]/deny-first framing to candidate; candidate contains none",
+    "SOURCE-AUDIT.md lines 57/65: cites candidate R0/R6 clauses and line34 artifacts-receipt text; actual line34 is the Attention/verifier template field",
+    "ROLLOUT.md line 3: wrong parent t_2c44dd2f; native read gives parents=[t_f41c3c15]",
+    "ROLLOUT.md line 24: claims 11 BRAIN-PACKET members; actual input_members=10",
+    "ROLLOUT.md line 119: 'no spend authorized or incurred' unsupported without billing",
+    "ROLLOUT.md rollback step 2: reference removal lacks freshness hash check"
+  ],
+  "observations_non_blocking": [
+    "OBS-1: errata §2 'no text about idempotency' slightly overbroad; candidate line 87 has 'idempotent recovery' (different context)",
+    "OBS-2: producer originals remain byte-unchanged; errata carries the corrections"
+  ],
+  "scenario_review_count": 14,
+  "tests_run": [
+    "python _qa_check_t_a3c78661.py -> OVERALL PASS EXIT=0 (25 checks)",
+    "python scratch/_qa_sources_check.py -> 13/13 OK EXIT=0",
+    "sha256sum batch (10 packet files) -> EXIT=0 all match",
+    "hermes -p <12 profiles> skills list -> rc=0 x12",
+    "skill_view company-os references/dots-operating-method.md -> success",
+    "sed/grep spot checks of frozen sources and candidate -> EXIT=0"
+  ],
+  "observed_tool_load": {
+    "method": "skill_view(name='company-os', file_path='references/dots-operating-method.md')",
+    "source_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+    "result": "success"
+  },
+  "outcome_ref": "docs/fleet-ops/dots-20261003/QA.md",
+  "phase_result": "PASS",
+  "next_owner": "company",
+  "disposition_ref": "t_895a7d39",
+  "financial": {
+    "scope": "fleet-ops methodology QA",
+    "period": "2026-10-03 packet start -> this run",
+    "source": "task/tool receipts",
+    "revenue": null, "refunds": null, "incremental_paid_costs": null, "estimated_usage": null,
+    "null_cause": "not measured; receipts-only basis",
+    "new_paid_commitments": 0
+  }
+}

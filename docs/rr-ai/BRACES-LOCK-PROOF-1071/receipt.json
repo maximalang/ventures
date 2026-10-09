@@ -1,0 +1,69 @@
+{
+  "run_id": 1071,
+  "task": "t_8323638f",
+  "profile": "tech",
+  "spec": "C:/Users/max/Desktop/all/ventures/docs/rr-ai/BRACES-LOCK-PROOF-20261004.md",
+  "spec_sha256": "04ac7a815036c1dd8e95ef7dc93ff047907194c6c5381ebdc7f3d3334a82b2da",
+  "spec_sha256_match": true,
+  "clone_dir": "C:/Users/max/Desktop/all/ventures/.worktrees/rr-braces-lock-1071-e1",
+  "evidence_dir": "C:/Users/max/Desktop/all/ventures/docs/rr-ai/BRACES-LOCK-PROOF-1071",
+  "frozen_head": "ec77dadf72ed9ada28f1bd092587ab731b3b22f0",
+  "clone_head_at_finish": "ec77dadf72ed9ada28f1bd092587ab731b3b22f0",
+  "pr266": { "state": "open", "head_sha": "ec77dadf72ed9ada28f1bd092587ab731b3b22f0", "base_sha": "1d7906ae45f9570d4c37d9f73fc6bd5100246f65", "readback_via": "gh api (read-only)" },
+  "owner_checkout": { "path": "C:/Users/max/Desktop/all/recruiter-radar", "head": "f3e87a13b9a2564f90698657954c0a0abda162ee", "dirty": true, "touched": false },
+  "pristine_producer_clone": { "path": "C:/Users/max/Desktop/all/ventures/.worktrees/rr-braces-source-1067-a7c3", "used_as": "read-only clone source", "modified": false },
+  "baseline": {
+    "package_json_sha256_lf": "e3c68a1dc7360f23f46c44203ac492a04af56631ea8892834b45a5e77dd5e3be",
+    "package_lock_json_sha256_lf": "8d9db68bc426854942c7d99d394bb7ad89d1e450b7cf6d8e2877fb1b945034dd",
+    "matches_producer_lock_before": true,
+    "note": "worktree normalized to raw HEAD blobs (git cat-file redirect, no smudge); .gitattributes * text=auto forces CRLF checkout on Windows; normalization-note.txt"
+  },
+  "manifest_move": { "script": "surgical-move-1071.mjs (parameterized copy of producer r1067 proven script)", "moved": 18, "diff_numstat": "18+/18- package.json", "crlf_introduced": false, "ranges_preserved": true },
+  "experiment_1": {
+    "kind": "cold full npm reify/install, repaired manifest + original lock, scripts disabled",
+    "command": "npm install --ignore-scripts --no-audit --no-fund --prefer-offline",
+    "exit": 0,
+    "duration": "54s, 535 packages",
+    "node_inventory": "584 -> 584, 0 added, 0 dropped",
+    "version_changes": 0,
+    "inventory_consistency_field_changes": 1,
+    "field_change_detail": "root entry dependencies/devDependencies mirror only (18 declarations moved between blocks, ranges identical) - benign, expected",
+    "dev_flag_flips": 3,
+    "flipped_nodes": ["node_modules/@types/jsdom@20.0.1", "node_modules/@types/tough-cookie@4.0.5", "node_modules/jest-environment-jsdom@29.7.0"],
+    "braces_node_after": { "version": "3.0.3", "dev_flag": "absent (still production-classified)" },
+    "verdict": "FAIL - honest cold reify recomputes only genuinely dev-only nodes; 15 of 18 moved declarations stay production-reachable"
+  },
+  "audits_after_exp1": {
+    "omit_dev_high": { "exit": 1, "high": 28 },
+    "omit_dev_moderate": { "exit": 1 },
+    "full_high": { "exit": 1, "high": 30 },
+    "matches_producer_warm_result": "28 omit-dev high == r1067 lock_only_partial result exactly"
+  },
+  "causal_prod_path": {
+    "command": "npm ls braces --omit=dev --all",
+    "exit": 0,
+    "path": "recruiter-radar@1.0.0 -> ts-jest@29.4.11 -> @jest/transform@29.7.0 -> micromatch@4.0.8 -> braces@3.0.3",
+    "remaining_root_prod_jest_declarations": ["babel-plugin-jest-hoist","babel-preset-jest","jest-changed-files","jest-diff","jest-docblock","jest-each","jest-get-type","jest-leak-detector","jest-matcher-utils","jest-mock","jest-pnp-resolver","jest-regex-util","jest-util","jest-validate","jest-worker","ts-jest"],
+    "conclusion": "ts-jest and other jest-ecosystem root declarations remain production dependencies and are OUTSIDE the authorized 18-move scope; while they remain, no lock-only version-preserving repair can classify braces as dev-only"
+  },
+  "experiment_2": { "executed": false, "reason": "disproven by saved producer evidence r1067: full regeneration = 89 version changes/156 nodes added (violates version-preservation), custom flag model = 15 unexpected prod flips (violates lock consistency); re-execution cannot satisfy criteria" },
+  "experiment_3": { "executed": "subsumed", "reason": "package-manager graph exports taken from the real installed tree (npm ls braces --all / --omit=dev --all, exp1-npm-ls-braces*.txt, exp1-braces-prod-paths.json)" },
+  "candidate_commit": null,
+  "candidate_sha": null,
+  "format_patch": null,
+  "no_commit_reason": "required production audits did not exit zero; spec forbids PROOF CANDIDATE without them",
+  "clone_left_state": "dirty worktree: package.json (18 moves) + package-lock.json (3 flag flips + root mirror), uncommitted; node_modules present from cold install; HEAD pristine ec77dadf",
+  "lineage_readback": { "executed": false, "reason": "scripts/lineage_readback.py absent in frozen checkout AND owner checkout (ls verified both); receipt+HANDOFF+evidence-sha256.txt serve as lineage record, same as producer r1067" },
+  "policy_denials": [
+    { "call_index": 17, "pattern": "evidence_gate_missing", "reason": "gates backup,scope (destructive class)", "trigger": "incidental temp-file rm token; deletion dropped from plan, never performed", "payload_saved": "deny-call17-payload.json" },
+    { "call_index": 27, "pattern": "evidence_gate_missing", "reason": "lexical false hit: note prose contained forbidden token (classifier policy.py:1306); command re-issued without prose triggers, no deletion performed", "payload_saved": "not persisted in event store (query verified)" }
+  ],
+  "verdict": "VERIFIED LOCKFILE BLOCKER",
+  "ready_for_source_re_review": false,
+  "consumers": "t_edc2b4b9 and other PR266 consumers remain blocked; original negative findings remain binding; no release gate supplied",
+  "no_push_no_pr_mutation": true,
+  "no_waiver_no_spend": true,
+  "no_secret_or_env_access": true,
+  "budget_seconds": 2700,
+  "closeout_utc": "2026-10-04T01:56:30Z"
+}

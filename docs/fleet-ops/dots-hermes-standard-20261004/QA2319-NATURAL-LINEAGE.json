@@ -1,0 +1,15 @@
+{
+  "scope": "Observed API-call stamps of the completed source-QA session only; no auxiliary/hidden-chain or billing claim; absence elsewhere is unknown, not zero",
+  "at_utc": "2026-10-04T00:58:50.380965+00:00",
+  "native_task": "t_d090b4ff",
+  "native_run": 2319,
+  "reviewer_session": "20261004_030640_cd335f",
+  "observed_main_api_calls": 60,
+  "observed_provider_models": [
+    {
+      "provider": "zai",
+      "model": "glm-5.3"
+    }
+  ],
+  "source_log": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log"
+}

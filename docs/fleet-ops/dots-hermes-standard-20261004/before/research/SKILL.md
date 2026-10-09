@@ -1,0 +1,40 @@
+---
+name: company-os
+description: "Use for portfolio, fleet-ops, and autonomous company work."
+---
+
+# Autonomous Company Operating Skill
+
+Read the canonical `AGENTS.md`, `PORTFOLIO.md`, `OPERATING_SYSTEM.md`, and `APPROVALS.md` under `C:/Users/max/Desktop/all/ventures`.
+
+## Decision protocol
+
+1. Orient from the board, project metric, latest evidence, and budget.
+2. `company` names one accountable owner and the smallest 2–5 role squad.
+3. For material decisions record: hypothesis, expected profit/metric effect, confidence, cost, kill criterion, rollback.
+4. Gather independent evidence: `research` for demand, `finance` for economics, `qa` for verification, `tech/operations` for delivery risk.
+5. `company` decides and posts `decision:company=go` or a reasoned NO-GO. Routine decisions do not go to the user.
+6. Execute autonomously, including main merge, deploy, publishing, and paid experiments after the required role gates.
+7. Escalate only the serious classes in `APPROVALS.md`.
+
+## Board taxonomy
+
+- `portfolio`: cross-project strategy, capital allocation, GO/NO-GO, incubation.
+- one board per registered product/venture with repo + owner + metric.
+- `fleet-ops`: shared accounts, capabilities, models, credentials, fleet infrastructure.
+- `general`: one-off work not belonging to a registered project.
+
+## Owner communication
+
+Routine work stays in Kanban. Send one short daily digest: metric movement, shipped outcomes, spend/remaining budget, blockers, next bets. Interrupt immediately only for critical incidents or serious escalation classes.
+
+## Fleet-policy pitfalls (learned)
+
+- Never write a literal `gate:<name>=pass` marker in kanban_comment unless your profile owns that gate (fleet_policy runtime.py GATE_AUTHORS: ci/review/qa→{tech,qa}, rollback→{tech,operations}, backup→{operations}, finance→{finance}, company_decision→{company}, scope→{qa,operations}). The regex catches the marker anywhere in the body — even inside prose/quotes — and denies with gate_forgery; repeating the denied call escalates to same_failure_loop block. `research` owns no gate: deliver review verdicts as plain prose ("VERDICT: PASS ...") without the marker syntax.
+- If kanban_complete fails repeatedly with "Goal completion rejected by judge: judge error: BadRequestError" (goal-mode judge LLM call is broken, payload-independent), do not loop retries: publish full acceptance evidence in a kanban_comment, then let the block-loop escalation route the task to triage for manual operator completion. From triage, complete/block are unavailable ("not in running/ready").
+- The judge BadRequestError can persist across provider recovery windows (observed spanning ~18h and two operator promotions on one task) - treat manual operator completion as the realistic path, not a transient retry case.
+- goal_mode tasks reject kanban_block with kind=transient (only dependency/needs_input allowed), and a repeated block-shaped call auto-triggers fleet-policy same_failure_loop, which moves the task to triage itself - after publishing evidence, stop calling instead of trying block variants.
+
+## Dots-style responsibility method
+
+For a long-lived responsibility, bounded delegation, continuation/stop, or cross-channel handoff, load [references/dots-operating-method.md](references/dots-operating-method.md). Apply only the parts relevant to your profile and exact task. This is a methodological adaptation, not OpenAI Dots access, a permission grant, a new scheduler, or a model/config change; existing fleet canon and Fleet Policy take precedence.

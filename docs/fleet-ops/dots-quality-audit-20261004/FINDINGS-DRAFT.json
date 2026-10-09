@@ -1,0 +1,97 @@
+{
+  "scope": "Current Dots/Hermes quality audit; observations are coordinator findings, not independent acceptance",
+  "findings": [
+    {
+      "id": "F01",
+      "kind": "defect",
+      "priority": "high",
+      "title": "False learned rule: finished cards allegedly reject comments and parent links",
+      "evidence": [
+        "NATIVE-SOURCE-PROBE.json",
+        "KANBAN-READBACK.json"
+      ],
+      "detail": "Native helpers accept a comment for done and return ready for a done parent in the isolated fixture; missing-id controls raise the exact errors. Mechanical correction card t_29903deb actually belongs to default, not fleet-ops. The old lesson attributed lookup errors to done status without evidence.",
+      "status": "Corrected only in active company procedural skill with skill_manage; no fleet-wide rollout."
+    },
+    {
+      "id": "F02",
+      "kind": "defect",
+      "priority": "medium",
+      "title": "Final ZIP is byte-valid but not self-contained for named checks and documented rollback paths",
+      "evidence": [
+        "AUDIT-EVIDENCE.json",
+        "../dots-hermes-standard-20261004/APPLY.md",
+        "../dots-hermes-standard-20261004/FINAL-QA.json"
+      ],
+      "detail": "Six named check/source artifacts and all 24 apply-backups paths are absent in the archive. Alternate before/ snapshots are present and byte-identical, so rollback bytes are NOT lost. Need explicit mapping or supplemental reproducibility archive; original ZIP remains immutable.",
+      "status": "Unfixed; inspect-only scope."
+    },
+    {
+      "id": "F03",
+      "kind": "defect",
+      "priority": "medium",
+      "title": "Corrected receipt still self-identifies as the original defective JSON",
+      "evidence": [
+        "../dots-hermes-standard-20261004/QA-CANDIDATE-FIXED.json"
+      ],
+      "detail": "Top artifact and artifacts.qa_candidate_json still name QA-CANDIDATE.json / this file, despite approved physical filename being QA-CANDIDATE-FIXED.json. Consumers using the explicit accepted filename are safe; self-link-following consumers may resolve to the preserved duplicate-key file. Need separate provenance/index, never silently change reviewer receipt.",
+      "status": "Unfixed; inspect-only scope."
+    },
+    {
+      "id": "F04",
+      "kind": "defect",
+      "priority": "medium",
+      "title": "Final company acceptance is outside the canonical card thread; receipt fix is on default board",
+      "evidence": [
+        "KANBAN-READBACK.json",
+        "../dots-hermes-standard-20261004/FINAL-ACCEPTANCE.md"
+      ],
+      "detail": "Both fleet-ops cards and the default-board mechanical fix are done. Exact native thread summaries do not contain the final company acceptance file/comment. Evidence exists on disk; registry trace is fragmented rather than missing. No proof that original unknown-id failures were caused by done.",
+      "status": "Unfixed; no retrospective lifecycle writes in this audit."
+    },
+    {
+      "id": "L01",
+      "kind": "limitation",
+      "priority": "informational",
+      "title": "Runtime behavioral benefit and full live loader eligibility are not tested",
+      "evidence": [
+        "../dots-hermes-standard-20261004/FINAL-ACCEPTANCE.md",
+        "../dots-hermes-standard-20261004/qa2321_loader.py",
+        "LIVE-SNAPSHOT.json"
+      ],
+      "detail": "Loader probes use isolated copies; they establish discoverability/parsing, not each original profile disabled-state, collision-resolution, future compliance, stop/cancel effects or economics. These were explicitly excluded, not failed promised tests."
+    },
+    {
+      "id": "L02",
+      "kind": "limitation",
+      "priority": "low",
+      "title": "LANE release-state is a pre-release snapshot, not current task truth",
+      "evidence": [
+        "../dots-hermes-standard-20261004/LANE.json",
+        "KANBAN-READBACK.json"
+      ],
+      "detail": "LANE still says held whereas actual cards are done; it declares audit binding, not a second registry. Preserve original and label snapshot time/supersession in a final index, do not use it as live state."
+    },
+    {
+      "id": "H01",
+      "kind": "hygiene",
+      "priority": "low",
+      "title": "Most byte duplicates are intentional preimages/backups, not live duplicate workflows",
+      "evidence": [
+        "AUDIT-EVIDENCE.json"
+      ],
+      "detail": "192 local files; 6 byte-equal groups; 579689 redundant bytes. Repeated before/reference/root snapshots are safety/provenance. _company_readback.py and _qa_verify.py are non-final helpers (11733 bytes together). Neither broad deletion nor dedup of independently named rollback receipts is justified."
+    },
+    {
+      "id": "O01",
+      "kind": "optimization",
+      "priority": "low",
+      "title": "One authoritative entry index and reproducible frozen file-list improve clarity",
+      "evidence": [
+        "../dots-hermes-standard-20261004/_package_standard.py",
+        "AUDIT-EVIDENCE.json"
+      ],
+      "detail": "Separate final accepted files, historical negative/checkpoint receipts and reproduction tools in an index; preserve exact bytes/hashes. Build supplements from a canonical explicit list plus referenced-source closure. Keep the existing scoped hook (already conditional), no new schema, dispatcher, mandatory template or whole-skill sync. Effects on costs/behavior remain unmeasured."
+    }
+  ]
+}

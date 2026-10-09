@@ -1,0 +1,308 @@
+{
+  "task_id": "t_ced9d357",
+  "deliverable": "TGR-01B continuation: bounded baseline/head regression evidence, exact patch, durable handoff (SOURCE ONLY)",
+  "runs": {
+    "author_run": 2225,
+    "continuation_run": 2241,
+    "date": "2026-10-03"
+  },
+  "company_go_decision": {
+    "comment_id": 8102,
+    "posted_at_utc": "2026-10-03T15:48:26+00:00",
+    "head_anchor": "c605e5b618cf20a2d94422bd2c995b864bd986c8",
+    "head_matches_anchor": true
+  },
+  "commit": {
+    "head": "c605e5b618cf20a2d94422bd2c995b864bd986c8",
+    "base": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+    "author": "teknium1 <127238744+teknium1@users.noreply.github.com>",
+    "author_date": "Sat, 3 Oct 2026 18:39:41 +0300",
+    "subject": "fix(gateway): scope channel overrides to the routed profile config (TGR-01B)",
+    "changed_paths": [
+      "gateway/run_config_loaders.py",
+      "gateway/run_turn.py",
+      "gateway/slash_commands_model.py",
+      "tests/gateway/test_profile_channel_override_routing.py"
+    ],
+    "frozen": true,
+    "new_source_commits_this_run": 0
+  },
+  "worktree": {
+    "path": "C:/Users/max/AppData/Local/hermes/hermes-agent/.worktrees/tg-qwen-profile-routing-bounded-20261003",
+    "head_before": "c605e5b618cf20a2d94422bd2c995b864bd986c8",
+    "head_after": "c605e5b618cf20a2d94422bd2c995b864bd986c8",
+    "status_porcelain_before_tests": "",
+    "status_porcelain_after_tests": ""
+  },
+  "baseline_tree": {
+    "method": "ordinary additive git clone --shared C:/Users/max/AppData/Local/hermes/hermes-agent into a never-before-existing unique scratch dir; no prefixed/follow-up deletion or ref-switch command",
+    "directory": "C:/Users/max/AppData/Local/hermes/profiles/tech/cache/scratch/tgr01b-base-9aae3c23-r2241",
+    "clone_head": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+    "clone_head_equals_base": true,
+    "status_porcelain_after_clone": "",
+    "status_porcelain_after_tests": "",
+    "durability_note": "managed scratch is prune-eligible after ~24h idle; recreate with the same additive recipe if QA needs it",
+    "live_checkout_usage": "input-only; no tests run there, no modification"
+  },
+  "tests": {
+    "command_template": "HERMES_PYTHON=C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe bash scripts/run_tests.sh tests/gateway/test_channel_overrides.py tests/gateway/test_empty_model_recovery.py tests/gateway/test_empty_model_fallback.py tests/gateway/test_model_command_profile_config.py tests/gateway/test_model_switch_persistence.py tests/gateway/test_agent_cache.py tests/gateway/test_agent_cache_release_profile_scope.py tests/gateway/test_busy_session_profile_scope.py tests/gateway/test_handoff_secondary_profile_adapter.py tests/gateway/test_model_command_custom_providers.py",
+    "execution": "canonical runner, foreground, once per tree, full stdout+stderr captured to durable logs",
+    "suite_files": [
+      "tests/gateway/test_channel_overrides.py",
+      "tests/gateway/test_empty_model_recovery.py",
+      "tests/gateway/test_empty_model_fallback.py",
+      "tests/gateway/test_model_command_profile_config.py",
+      "tests/gateway/test_model_switch_persistence.py",
+      "tests/gateway/test_agent_cache.py",
+      "tests/gateway/test_agent_cache_release_profile_scope.py",
+      "tests/gateway/test_busy_session_profile_scope.py",
+      "tests/gateway/test_handoff_secondary_profile_adapter.py",
+      "tests/gateway/test_model_command_custom_providers.py"
+    ],
+    "missing_named_file": {
+      "path": "tests/gateway/test_profile_route_ownership.py",
+      "present_in_baseline_tree": false,
+      "present_in_head_tree": false,
+      "action": "exact path checked in both trees only (test -f); recorded missing; not executed; no repo scan"
+    },
+    "baseline": {
+      "exit_code": 1,
+      "log": "TGR-01B-baseline-regressions.log",
+      "log_sha256": "fac830dde440f05b4e9880e773c271e5639f1e4ba9b39f6dd2007c46fa595835",
+      "per_file": {
+        "tests/gateway/test_empty_model_recovery.py": {
+          "raw": "[  1.5% |     1/~65 | ✓1 | ✗0] ✓ tests\\gateway\\test_empty_model_recovery.py (1✓, 9.0s)",
+          "seconds": 9.0,
+          "status": "passed",
+          "tests_passed": 1
+        },
+        "tests/gateway/test_channel_overrides.py": {
+          "raw": "[ 10.8% |     7/~65 | ✓7 | ✗0] ✓ tests\\gateway\\test_channel_overrides.py (6✓, 9.2s)",
+          "seconds": 9.2,
+          "status": "passed",
+          "tests_passed": 6
+        },
+        "tests/gateway/test_agent_cache_release_profile_scope.py": {
+          "raw": "[ 18.5% |    12/~65 | ✓12 | ✗ 0] ✓ tests\\gateway\\test_agent_cache_release_profile_scope.py (5✓, 9.2s)",
+          "seconds": 9.2,
+          "status": "passed",
+          "tests_passed": 5
+        },
+        "tests/gateway/test_model_command_profile_config.py": {
+          "raw": "[ 20.0% |    13/~65 | ✓13 | ✗ 0] ✓ tests\\gateway\\test_model_command_profile_config.py (1✓, 9.3s)",
+          "seconds": 9.3,
+          "status": "passed",
+          "tests_passed": 1
+        },
+        "tests/gateway/test_model_command_custom_providers.py": {
+          "raw": "[ 21.5% |    14/~65 | ✓14 | ✗ 0] ✓ tests\\gateway\\test_model_command_custom_providers.py (1✓, 9.3s)",
+          "seconds": 9.3,
+          "status": "passed",
+          "tests_passed": 1
+        },
+        "tests/gateway/test_handoff_secondary_profile_adapter.py": {
+          "raw": "[ 27.7% |    18/~65 | ✓18 | ✗ 0] ✓ tests\\gateway\\test_handoff_secondary_profile_adapter.py (4✓, 9.6s)",
+          "seconds": 9.6,
+          "status": "passed",
+          "tests_passed": 4
+        },
+        "tests/gateway/test_empty_model_fallback.py": {
+          "raw": "[ 40.0% |    26/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_empty_model_fallback.py (8 tests, 10.3s)",
+          "seconds": 10.3,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 8
+        },
+        "tests/gateway/test_agent_cache.py": {
+          "raw": "[ 86.2% |    56/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_agent_cache.py (30 tests, 10.4s)",
+          "seconds": 10.4,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 30
+        },
+        "tests/gateway/test_busy_session_profile_scope.py": {
+          "raw": "[ 87.7% |    57/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_busy_session_profile_scope.py (1 tests, 10.4s)",
+          "seconds": 10.4,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 1
+        },
+        "tests/gateway/test_model_switch_persistence.py": {
+          "raw": "[100.0% |    65/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_model_switch_persistence.py (8 tests, 10.5s)",
+          "seconds": 10.5,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 8
+        }
+      },
+      "summary": {
+        "files": 10,
+        "tests_passed": 18,
+        "tests_failed": 0,
+        "pct_complete": 100,
+        "wall_seconds": 10.5,
+        "workers": 18,
+        "raw": "=== Summary: 10 files, 18 tests passed, 0 failed (100% complete) in 10.5s (18 workers) ==="
+      },
+      "no_tests_ran_files": [
+        "tests/gateway/test_agent_cache.py",
+        "tests/gateway/test_busy_session_profile_scope.py",
+        "tests/gateway/test_empty_model_fallback.py",
+        "tests/gateway/test_model_switch_persistence.py"
+      ],
+      "retried_files": {},
+      "internal_error_signature": {
+        "home_io_guard_refusals": 10,
+        "tmp_path_stashkey_errors": 4
+      }
+    },
+    "head": {
+      "exit_code": 1,
+      "exit_code_note": "runner exits 1 because 4 files crashed with pytest-internal errors (environmental, see attribution); pytest-reported failed tests = 0 in both trees",
+      "log": "TGR-01B-head-regressions.log",
+      "log_sha256": "97eb80e301a8baf4a01311df391761e14b84ee422c598264c8d519849784c871",
+      "per_file": {
+        "tests/gateway/test_empty_model_recovery.py": {
+          "raw": "[  1.5% |     1/~65 | ✓1 | ✗0] ✓ tests\\gateway\\test_empty_model_recovery.py (1✓, 5.5s)",
+          "seconds": 5.5,
+          "status": "passed",
+          "tests_passed": 1
+        },
+        "tests/gateway/test_model_command_profile_config.py": {
+          "raw": "[  3.1% |     2/~65 | ✓2 | ✗0] ✓ tests\\gateway\\test_model_command_profile_config.py (1✓, 5.7s)",
+          "seconds": 5.7,
+          "status": "passed",
+          "tests_passed": 1
+        },
+        "tests/gateway/test_agent_cache_release_profile_scope.py": {
+          "raw": "[ 10.8% |     7/~65 | ✓7 | ✗0] ✓ tests\\gateway\\test_agent_cache_release_profile_scope.py (5✓, 5.8s)",
+          "seconds": 5.8,
+          "status": "passed",
+          "tests_passed": 5
+        },
+        "tests/gateway/test_model_command_custom_providers.py": {
+          "raw": "[ 12.3% |     8/~65 | ✓8 | ✗0] ✓ tests\\gateway\\test_model_command_custom_providers.py (1✓, 5.8s)",
+          "seconds": 5.8,
+          "status": "passed",
+          "tests_passed": 1
+        },
+        "tests/gateway/test_channel_overrides.py": {
+          "raw": "[ 21.5% |    14/~65 | ✓14 | ✗ 0] ✓ tests\\gateway\\test_channel_overrides.py (6✓, 5.8s)",
+          "seconds": 5.8,
+          "status": "passed",
+          "tests_passed": 6
+        },
+        "tests/gateway/test_handoff_secondary_profile_adapter.py": {
+          "raw": "[ 27.7% |    18/~65 | ✓18 | ✗ 0] ✓ tests\\gateway\\test_handoff_secondary_profile_adapter.py (4✓, 6.0s)",
+          "seconds": 6.0,
+          "status": "passed",
+          "tests_passed": 4
+        },
+        "tests/gateway/test_empty_model_fallback.py": {
+          "raw": "[ 40.0% |    26/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_empty_model_fallback.py (8 tests, 7.6s)",
+          "seconds": 7.6,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 8
+        },
+        "tests/gateway/test_model_switch_persistence.py": {
+          "raw": "[ 52.3% |    34/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_model_switch_persistence.py (8 tests, 7.7s)",
+          "seconds": 7.7,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 8
+        },
+        "tests/gateway/test_busy_session_profile_scope.py": {
+          "raw": "[ 53.8% |    35/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_busy_session_profile_scope.py (1 tests, 7.7s)",
+          "seconds": 7.7,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 1
+        },
+        "tests/gateway/test_agent_cache.py": {
+          "raw": "[100.0% |    65/~65 | ✓18 | ✗ 0] ✗ tests\\gateway\\test_agent_cache.py (30 tests, 7.9s)",
+          "seconds": 7.9,
+          "status": "crashed_no_tests_ran",
+          "tests_collected": 30
+        }
+      },
+      "summary": {
+        "files": 10,
+        "tests_passed": 18,
+        "tests_failed": 0,
+        "pct_complete": 100,
+        "wall_seconds": 7.9,
+        "workers": 18,
+        "raw": "=== Summary: 10 files, 18 tests passed, 0 failed (100% complete) in 7.9s (18 workers) ==="
+      },
+      "no_tests_ran_files": [
+        "tests/gateway/test_agent_cache.py",
+        "tests/gateway/test_busy_session_profile_scope.py",
+        "tests/gateway/test_empty_model_fallback.py",
+        "tests/gateway/test_model_switch_persistence.py"
+      ],
+      "retried_files": {},
+      "internal_error_signature": {
+        "home_io_guard_refusals": 10,
+        "tmp_path_stashkey_errors": 4
+      }
+    },
+    "comparison": {
+      "baseline_not_passed_files": [
+        "tests/gateway/test_agent_cache.py",
+        "tests/gateway/test_busy_session_profile_scope.py",
+        "tests/gateway/test_empty_model_fallback.py",
+        "tests/gateway/test_model_switch_persistence.py"
+      ],
+      "head_not_passed_files": [
+        "tests/gateway/test_agent_cache.py",
+        "tests/gateway/test_busy_session_profile_scope.py",
+        "tests/gateway/test_empty_model_fallback.py",
+        "tests/gateway/test_model_switch_persistence.py"
+      ],
+      "new_regressions_from_fix": [],
+      "files_recovered_by_fix": [],
+      "identical_not_passed_sets": true,
+      "identical_passed_counts_per_file": true,
+      "verdict": "NO regression from the fix: identical 6 green files with identical per-file passed counts (18 total) and identical 4-file environmental crash set in both trees"
+    },
+    "environmental_attribution": {
+      "affected_files": [
+        "tests/gateway/test_agent_cache.py",
+        "tests/gateway/test_busy_session_profile_scope.py",
+        "tests/gateway/test_empty_model_fallback.py",
+        "tests/gateway/test_model_switch_persistence.py"
+      ],
+      "classification": "pre-existing host-environment artifact at base, unrelated to the diff (diff touches only gateway/*); no test weakened, no assertion changed",
+      "mechanism": [
+        "pytest-internal crash 1: KeyError <_pytest.stash.StashKey> in tmp_path fixture teardown (session aborts before running tests)",
+        "pytest-internal crash 2: tests/home_io_guard.py AssertionError 'TEST BUG: file I/O against the REAL hermes home' fired when pytest traceback/linecache machinery os.stat()s interpreter stdlib sources, because on this host the managed Python runtime and venv live UNDER the real hermes home tree (C:/Users/max/AppData/Local/hermes/hermes-agent/.hermes-runtime and .../venv)"
+      ],
+      "signature_parity": "identical internal-error signature counts in both logs (see internal_error_signature per tree)",
+      "qa_repro_recommendation": "reproduce the 4 crashed files in an environment whose interpreter/runtime/TEMP live outside the guarded hermes home (e.g. CI layout); they should then collect and run normally"
+    }
+  },
+  "preserved_run2225_evidence": {
+    "red_log": {
+      "file": "TGR-01B-red-new-fixtures.log",
+      "sha256": "5527f80b482652e559f5cae9595605df803688aa5c5fcfd27d782b5a1a9b4283",
+      "verified_content": "12 failed, 6 passed (18 routing fixtures, genuine model/provider AssertionErrors, zero Type/Import/Attribute errors)",
+      "modified_this_run": false
+    },
+    "green_log": {
+      "file": "TGR-01B-green-new-fixtures.log",
+      "sha256": "5bb275f24379c51a9ff343e94323dbbfb18575f8597d3d8ffb3d1f5c92f423fb",
+      "verified_content": "18 tests passed, 0 failed",
+      "modified_this_run": false
+    }
+  },
+  "patch": {
+    "file": "TGR-01B-fix.patch",
+    "produced_by": "git format-patch -1 c605e5b618cf20a2d94422bd2c995b864bd986c8 --stdout (ordinary stdout redirect, additive)",
+    "bytes": 21106,
+    "sha256": "9b9a5cfb5c8f88be62efb7b464269a74af96434a77e650e083b9caa3a6629926"
+  },
+  "source_only": {
+    "live_qwen_restoration": false,
+    "statement": "SOURCE ONLY: live Qwen restoration remains FALSE; no runtime activation, no dirty-checkout overlay, no remote publication, no live config/model/pool/session/DB mutation",
+    "runtime_serving_untouched": true
+  },
+  "rollback": "revert source commit c605e5b618cf20a2d94422bd2c995b864bd986c8 in an isolated review worktree; never on a live runtime checkout",
+  "qa": {
+    "independent_qa_card": "t_d088d7f1",
+    "note": "this delivery is author evidence only, NOT independent QA and NOT permission to apply a runtime patch; company t_32f46379 decides the next legal activation step after the QA verdict"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "receipt": "BOT-RECOVERY-20261003",
+  "task_id": "t_0edb4ef8",
+  "run_id": 2224,
+  "board": "fleet-ops",
+  "owner": "operations",
+  "decision": "decision:company=go",
+  "installed_head": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+  "operation": {
+    "kind": "named-profile hot start (unpark + request_serve_profile_hot on living host)",
+    "command": "C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/hermes.exe -p company gateway start",
+    "invocations": 1,
+    "exit_code": 0,
+    "issued_at_utc": "2026-10-03T15:16:28Z",
+    "cli_result": "Profile 'company' unparked, but serving was not confirmed: host operation is still pending. The host retries on its next rescan (within 30s).",
+    "no_restart": true,
+    "no_force": true,
+    "no_config_change": true,
+    "no_model_change": true,
+    "policy_denials": 0
+  },
+  "before": {
+    "captured_at_utc": "2026-10-03T15:15:50Z",
+    "host_pid": 26200,
+    "host_alive": true,
+    "served_profiles": ["default", "design", "finance", "product", "qa", "research", "sales", "tech", "ux", "video-director", "video-editor"],
+    "company_state": "parked"
+  },
+  "after": {
+    "status_captured_at_utc": "2026-10-03T15:17:29Z",
+    "host_pid": 26200,
+    "served_profiles": ["default", "company", "design", "finance", "product", "qa", "research", "sales", "tech", "ux", "video-director", "video-editor"],
+    "company_state": "served",
+    "gateway_state_json": {
+      "pid": 26200,
+      "updated_at": "2026-10-03T15:19:53.562163+00:00",
+      "company:telegram": {
+        "state": "connected",
+        "error_code": null,
+        "error_message": null,
+        "needs_attention": false,
+        "retrying_since": null,
+        "updated_at": "2026-10-03T15:16:51.093773+00:00",
+        "writer_pid": 26200,
+        "writer_start_time": 179101792746
+      }
+    }
+  },
+  "log_deltas": {
+    "gateway_log": [
+      "2026-10-03 18:16:51,107 INFO gateway.run: telegram connected (profile: company)",
+      "2026-10-03 18:16:51,109 INFO gateway.run: [MULTIPLEX] Profile 'company': webhook is served by the default profile's listener at /p/company/ - not starting a second listener",
+      "2026-10-03 18:16:51,110 INFO gateway.run_profile_reconcile: [MULTIPLEX] Now serving profile 'company' (1 adapter(s) connected; control-socket)"
+    ],
+    "gateway_stdio_log": [
+      "2026-10-03 18:16:37,492 [Telegram] Discovering Telegram API fallback IPs via DNS-over-HTTPS",
+      "2026-10-03 18:16:39,159 [Telegram] Connecting to Telegram (attempt 1/8)",
+      "2026-10-03 18:16:51,096 [Telegram] Connected to Telegram (polling mode)"
+    ],
+    "observation_window_seconds": 195,
+    "fatal_errors": 0,
+    "duplicate_poller_evidence": 0,
+    "credential_conflict_evidence": 0,
+    "unauthorized_owner_block_evidence": 0
+  },
+  "host_integrity": {
+    "writer_pid_unchanged": true,
+    "host_pid_before": 26200,
+    "host_pid_after": 26200,
+    "host_start_time": 179101792746,
+    "webhook_listener_8644_owner_pid": 26200,
+    "host_state_writer_alive_at_utc": "2026-10-03T15:19:53Z"
+  },
+  "end_to_end_verified": false,
+  "end_to_end_note": "No natural owner inbound arrived during the observation window; per spec no synthetic canary was sent. Owner roundtrip remains a separate verification step: owner to resend ONE old message.",
+  "financial_scope": {
+    "period": "2026-10-03",
+    "revenue": null,
+    "refunds": null,
+    "provider_paid_cost": null,
+    "estimated_usage_cost": null,
+    "attribution": "absent",
+    "purchases": "none authorized or made"
+  },
+  "acceptance": {
+    "1_before_after_status_and_pid": "PASS",
+    "2_host_state_company_telegram_connected_errors_null_writer_pid_match_updated_after_op": "PASS",
+    "3_log_deltas_company_served_connected_polling_no_fatal_60s": "PASS",
+    "4_natural_owner_roundtrip": "PENDING (explicitly not verified; no inbound during window)",
+    "5_receipt_and_result_in_evidence_root": "PASS (this file + BOT-RECOVERY-RESULT.md)"
+  }
+}

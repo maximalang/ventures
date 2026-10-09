@@ -1,0 +1,462 @@
+From c605e5b618cf20a2d94422bd2c995b864bd986c8 Mon Sep 17 00:00:00 2001
+From: teknium1 <127238744+teknium1@users.noreply.github.com>
+Date: Sat, 3 Oct 2026 18:39:41 +0300
+Subject: [PATCH] fix(gateway): scope channel overrides to the routed profile
+ config (TGR-01B)
+
+---
+ gateway/run_config_loaders.py                 |  48 +++
+ gateway/run_turn.py                           |  13 +-
+ gateway/slash_commands_model.py               |  15 +-
+ .../test_profile_channel_override_routing.py  | 322 ++++++++++++++++++
+ 4 files changed, 382 insertions(+), 16 deletions(-)
+ create mode 100644 tests/gateway/test_profile_channel_override_routing.py
+
+diff --git a/gateway/run_config_loaders.py b/gateway/run_config_loaders.py
+index 5cd2a5d160..954558c93a 100644
+--- a/gateway/run_config_loaders.py
++++ b/gateway/run_config_loaders.py
+@@ -42,6 +42,54 @@ DEFAULT_HUMAN_DELAY_RANGE_MS: tuple[int, int] = (800, 2500)
+ _BUSY_INPUT_MODES = {"interrupt", "queue", "steer"}
+ 
+ 
++def _routed_profile_for_override(runner: Any, source: Any) -> Optional[str]:
++    """The profile an inbound source is routed to, for channel-override scoping only.
++
++    The pinned :class:`~gateway.session_identity.RoutingIdentity` is authoritative; a bare
++    ``source.profile`` (a routing result without a pinned identity) is the fallback.
++    ``None`` means the launcher/primary scope."""
++    if source is None:
++        return None
++    from gateway.session_identity import identity_of
++
++    identity = identity_of(source)
++    if identity is not None and identity.multiplexed:
++        return identity.runtime_profile or None
++    profile = getattr(source, "profile", None)
++    return profile.strip() if isinstance(profile, str) and profile.strip() else None
++
++
++def _get_channel_override_for_source(runner: Any, config: Any, source: Any) -> Optional[Any]:
++    """``_get_channel_override`` scoped to the config that actually owns *source*.
++
++    ``GatewayRunner.config`` is the LAUNCHER profile's typed config; under multiplex a routed
++    (secondary) profile's chats must match ``channel_overrides`` in THAT profile's own served
++    config from ``_profile_configs`` (populated/refreshed in run_adapters), never the
++    launcher's rules. A missing/unknown/unserved routed profile falls back to NO override
++    (the global default) — it must not borrow another profile's rule. Primary/standalone
++    sources keep the launcher config. ``system_prompt`` resolution is deliberately untouched
++    (different contract, keyed by platform/chat without a routed source)."""
++    from gateway.run import _get_channel_override
++
++    platform = getattr(source, "platform", None)
++    if source is None or platform is None:
++        return None
++    chat_id = str(getattr(source, "chat_id", "") or "")
++
++    def _lookup(cfg):
++        return _get_channel_override(
++            cfg, platform, chat_id,
++            thread_id=str(source.thread_id) if getattr(source, "thread_id", None) else None,
++            parent_id=str(source.parent_chat_id) if getattr(source, "parent_chat_id", None) else None,
++        )
++
++    routed = _routed_profile_for_override(runner, source)
++    primary = getattr(runner, "_primary_profile_name", None) or "default"
++    if not routed or routed == primary:
++        return _lookup(config)
++    return _lookup((getattr(runner, "_profile_configs", None) or {}).get(routed))
++
++
+ class GatewayConfigLoadersMixin:
+     """Config/env loaders (busy modes, reasoning, service tier, timeouts, fallback) for GatewayRunner."""
+ 
+diff --git a/gateway/run_turn.py b/gateway/run_turn.py
+index 66f895231e..8018ab913a 100644
+--- a/gateway/run_turn.py
++++ b/gateway/run_turn.py
+@@ -177,7 +177,7 @@ class GatewayTurnMixin:
+         Priority (highest first): session ``/model`` → ``channel_overrides`` → global config/env
+         (``_resolve_gateway_model(user_config)`` and default provider resolution)."""
+         from gateway.run import (
+-            _credential_pool_for_provider, _get_channel_override, _resolve_gateway_model,
++            _credential_pool_for_provider, _resolve_gateway_model,
+             _resolve_runtime_agent_kwargs, _resolve_runtime_agent_kwargs_for_provider,
+         )
+         skey = self._resolve_session_key_or_none(source, session_key)
+@@ -251,12 +251,11 @@ class GatewayTurnMixin:
+                 unavailable_override["provider"], unavailable_override.get("model"), runtime_kwargs.get("provider"), model)
+ 
+         cfg = getattr(self, "config", None)  # getattr: bare object.__new__ test runners
+-        if cfg and source is not None:
+-            ch = _get_channel_override(
+-                cfg, source.platform, str(source.chat_id) if source.chat_id else "",
+-                thread_id=str(source.thread_id) if getattr(source, "thread_id", None) else None,
+-                parent_id=str(source.parent_chat_id) if getattr(source, "parent_chat_id", None) else None,
+-            )
++        if source is not None:
++            from gateway.run_config_loaders import _get_channel_override_for_source
++            # Scoped to the routed profile's own served config under multiplex: runner.config
++            # is launcher scope only, so a routed chat's rule lives in _profile_configs (TGR-01B).
++            ch = _get_channel_override_for_source(self, cfg, source)
+             if ch:
+                 if ch.model:
+                     model = ch.model
+diff --git a/gateway/slash_commands_model.py b/gateway/slash_commands_model.py
+index 757df68700..52cdd8a08a 100644
+--- a/gateway/slash_commands_model.py
++++ b/gateway/slash_commands_model.py
+@@ -367,16 +367,13 @@ class GatewayModelCommandsMixin:
+             return await self._commit_model_switch_locked(result, ctx, source=source, picker=picker)
+ 
+     def _channel_override_for(self, source):
+-        """This chat's ``channel_overrides`` entry (model/provider), or None."""
+-        from gateway.run import _get_channel_override
+-        cfg = getattr(self, "config", None)
+-        if not cfg or source is None:
++        """This chat's ``channel_overrides`` entry (model/provider), or None — scoped to the
++        routed profile's own served config under multiplex, same as the turn runtime (TGR-01B)."""
++        from gateway.run_config_loaders import _get_channel_override_for_source
++        if source is None:
+             return None
+-        return _get_channel_override(
+-            cfg, source.platform, str(source.chat_id) if source.chat_id else "",
+-            thread_id=str(source.thread_id) if getattr(source, "thread_id", None) else None,
+-            parent_id=str(source.parent_chat_id) if getattr(source, "parent_chat_id", None) else None,
+-        )
++        return _get_channel_override_for_source(
++            self, getattr(self, "config", None), source)
+ 
+     def _model_switch_lock(self) -> asyncio.Lock:
+         """Runner-wide lock over a /model command's read-resolve-commit. Slash commands bypass the busy
+diff --git a/tests/gateway/test_profile_channel_override_routing.py b/tests/gateway/test_profile_channel_override_routing.py
+new file mode 100644
+index 0000000000..a628ba1062
+--- /dev/null
++++ b/tests/gateway/test_profile_channel_override_routing.py
+@@ -0,0 +1,322 @@
++"""Routed-profile channel-override scoping (TGR-01B).
++
++``GatewayRunner.config`` is the LAUNCHER profile's typed config. Under multiplex a routed
++(secondary) profile's Telegram chats (company DM ``1256122537``, company forum
++``-1004426332349`` — exact negative forum identifier) must match ``channel_overrides`` from
++THAT profile's own served config (``_profile_configs``, populated/refreshed in run_adapters),
++never from the launcher's rules. A missing/unknown/unserved routed profile falls back to the
++global default without borrowing another profile's rule. Primary/standalone sources keep the
++launcher config; an explicit session ``/model`` pin stays first priority; ``system_prompt``
++resolution semantics are unchanged.
++
++All fixtures are temporary/mock data; provider resolution is patched — no network calls.
++"""
++
++from pathlib import Path
++from unittest.mock import patch
++
++from gateway.config import ChannelOverride, GatewayConfig, Platform, PlatformConfig
++from gateway.run import GatewayRunner
++from gateway.session import SessionSource
++from gateway.session_identity import RoutingIdentity
++
++# Authoritative company targets (fixture copies; no live config is read).
++COMPANY_DM = "1256122537"
++COMPANY_FORUM = "-1004426332349"
++
++QWEN_MODEL = "qwen3.8-max"
++QWEN_PROVIDER = "custom"
++QWEN_URL = "https://llmapi.aliyun.com/compatible-mode/v1/"
++CODEX_MODEL = "gpt-6.1-sol"
++CODEX_PROVIDER = "openai-codex"
++CODEX_URL = "https://api.openai.com/v1"
++LAUNCHER_MODEL = "launcher/model"
++LAUNCHER_PROVIDER = "launcher-prov"
++LAUNCHER_URL = "https://launcher.example/v1"
++TECH_RULE_MODEL = "tech-rule-model"
++TECH_RULE_PROVIDER = "tech-prov"
++TECH_RULE_URL = "https://tech.example/v1"
++
++_PROVIDER_URLS = {
++    QWEN_PROVIDER: QWEN_URL,
++    CODEX_PROVIDER: CODEX_URL,
++    LAUNCHER_PROVIDER: LAUNCHER_URL,
++    TECH_RULE_PROVIDER: TECH_RULE_URL,
++}
++
++
++def _runtime(provider):
++    """A fresh provider runtime fixture (dict is mutated by the resolver: never shared)."""
++    return {
++        "provider": provider,
++        "api_key": "k-" + provider,
++        "base_url": _PROVIDER_URLS[provider],
++        "api_mode": "chat_completions",
++    }
++
++
++def _fake_for_provider(provider, target_model=None):
++    return _runtime(provider)
++
++
++def _tg_config(overrides):
++    return GatewayConfig(
++        platforms={
++            Platform.TELEGRAM: PlatformConfig(enabled=True, channel_overrides=dict(overrides)),
++        },
++    )
++
++
++def _company_cfg():
++    """Company profile's OWN served config: DM + forum rules for qwen3.8-max/custom."""
++    return _tg_config({
++        COMPANY_DM: ChannelOverride(model=QWEN_MODEL, provider=QWEN_PROVIDER),
++        COMPANY_FORUM: ChannelOverride(model=QWEN_MODEL, provider=QWEN_PROVIDER),
++    })
++
++
++def _tech_cfg():
++    """A specialist profile with its OWN rule for the same forum id."""
++    return _tg_config({
++        COMPANY_FORUM: ChannelOverride(model=TECH_RULE_MODEL, provider=TECH_RULE_PROVIDER),
++    })
++
++
++def _identity(profile):
++    home = Path("fixture-home") / profile
++    return RoutingIdentity(
++        transport_profile="default",
++        runtime_profile=profile,
++        authorization_home=home,
++        runtime_home=home,
++    )
++
++
++def _pin(source, profile):
++    """Pin the routed identity the way gateway.session_identity.resolve_identity does."""
++    setattr(source, "_identity", _identity(profile))
++    return source
++
++
++def _runner(launcher_cfg, configs=None, primary="default"):
++    runner = object.__new__(GatewayRunner)
++    runner.config = launcher_cfg
++    runner._session_model_overrides = {}
++    runner._profile_configs = dict(configs or {})
++    runner._primary_profile_name = primary
++    return runner
++
++
++def _resolve(runner, source, session_key=None):
++    """Drive the REAL turn entrypoint with patched provider resolution (offline)."""
++    with patch("gateway.run._resolve_gateway_model", return_value=CODEX_MODEL), \
++         patch("gateway.run._resolve_runtime_agent_kwargs",
++               side_effect=lambda: _runtime(CODEX_PROVIDER)), \
++         patch("gateway.run._resolve_runtime_agent_kwargs_for_provider",
++               side_effect=_fake_for_provider), \
++         patch("gateway.run._credential_pool_for_provider", return_value=None):
++        return runner._resolve_session_agent_runtime(
++            source=source, session_key=session_key,
++            user_config={"model": {"default": CODEX_MODEL}},
++        )
++
++
++def _dm_source(profile=None):
++    source = SessionSource(platform=Platform.TELEGRAM, chat_id=COMPANY_DM, user_id="u1")
++    return _pin(source, profile) if profile else source
++
++
++def _forum_source(thread_id=None, profile=None):
++    source = SessionSource(
++        platform=Platform.TELEGRAM, chat_id=COMPANY_FORUM,
++        chat_type="thread" if thread_id else "group",
++        thread_id=thread_id, user_id="u1",
++    )
++    return _pin(source, profile) if profile else source
++
++
++class TestRoutedCompanyRule:
++    """A routed company source must inherit the company profile's own rule (RED on base)."""
++
++    def test_company_dm_inherits_company_rule(self):
++        runner = _runner(_tg_config({}), {"company": _company_cfg()})
++        model, runtime = _resolve(runner, _dm_source("company"))
++        assert model == QWEN_MODEL
++        assert runtime["provider"] == QWEN_PROVIDER
++        assert runtime["base_url"] == QWEN_URL
++
++    def test_company_forum_root_message_inherits_forum_rule(self):
++        runner = _runner(_tg_config({}), {"company": _company_cfg()})
++        model, runtime = _resolve(runner, _forum_source(profile="company"))
++        assert model == QWEN_MODEL
++        assert runtime["provider"] == QWEN_PROVIDER
++        assert runtime["base_url"] == QWEN_URL
++
++    def test_company_forum_new_thread_inherits_forum_rule(self):
++        runner = _runner(_tg_config({}), {"company": _company_cfg()})
++        model, runtime = _resolve(runner, _forum_source(thread_id="99", profile="company"))
++        assert model == QWEN_MODEL
++        assert runtime["provider"] == QWEN_PROVIDER
++        assert runtime["base_url"] == QWEN_URL
++
++    def test_source_profile_without_pinned_identity_scopes_override(self):
++        runner = _runner(_tg_config({}), {"company": _company_cfg()})
++        source = SessionSource(
++            platform=Platform.TELEGRAM, chat_id=COMPANY_DM, user_id="u1", profile="company")
++        model, runtime = _resolve(runner, source)
++        assert model == QWEN_MODEL
++        assert runtime["provider"] == QWEN_PROVIDER
++
++    def test_pinned_identity_wins_over_stale_source_profile(self):
++        runner = _runner(
++            _tg_config({}), {"company": _company_cfg(), "tech": _tech_cfg()})
++        source = _forum_source(thread_id="77", profile="tech")
++        _pin(source, "company")
++        model, runtime = _resolve(runner, source)
++        assert model == QWEN_MODEL
++        assert model != TECH_RULE_MODEL
++        assert runtime["provider"] == QWEN_PROVIDER
++
++
++class TestNoCrossProfileBorrowing:
++    """Only the routed profile's OWN rule applies; never another profile's."""
++
++    def test_specialist_same_forum_uses_own_rule(self):
++        runner = _runner(
++            _tg_config({}), {"company": _company_cfg(), "tech": _tech_cfg()})
++        model, runtime = _resolve(runner, _forum_source(thread_id="77", profile="tech"))
++        assert model == TECH_RULE_MODEL
++        assert runtime["provider"] == TECH_RULE_PROVIDER
++        assert runtime["base_url"] == TECH_RULE_URL
++        assert model != QWEN_MODEL
++
++    def test_specialist_without_own_rule_uses_global_never_company(self):
++        runner = _runner(
++            _tg_config({}), {"company": _company_cfg(), "tech": _tg_config({})})
++        model, runtime = _resolve(runner, _forum_source(thread_id="77", profile="tech"))
++        assert model == CODEX_MODEL
++        assert runtime["provider"] == CODEX_PROVIDER
++        assert model != QWEN_MODEL
++
++    def test_routed_profile_never_borrows_launcher_rule(self):
++        launcher = _tg_config({
++            COMPANY_FORUM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),
++        })
++        runner = _runner(launcher, {"company": _company_cfg()})
++        model, runtime = _resolve(runner, _forum_source(thread_id="99", profile="company"))
++        assert model == QWEN_MODEL
++        assert runtime["provider"] == QWEN_PROVIDER
++        assert model != LAUNCHER_MODEL
++
++    def test_unserved_routed_profile_falls_back_to_global(self):
++        launcher = _tg_config({
++            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),
++        })
++        runner = _runner(launcher, {"company": _company_cfg()})
++        model, runtime = _resolve(runner, _dm_source("ghost"))
++        assert model == CODEX_MODEL
++        assert runtime["provider"] == CODEX_PROVIDER
++        assert model not in (QWEN_MODEL, LAUNCHER_MODEL)
++
++    def test_unknown_source_profile_falls_back_to_global(self):
++        launcher = _tg_config({
++            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),
++        })
++        runner = _runner(launcher, {"company": _company_cfg()})
++        source = SessionSource(
++            platform=Platform.TELEGRAM, chat_id=COMPANY_DM, user_id="u1", profile="ghost")
++        model, runtime = _resolve(runner, source)
++        assert model == CODEX_MODEL
++        assert model not in (QWEN_MODEL, LAUNCHER_MODEL)
++
++
++class TestPrimaryAndStandaloneUnchanged:
++    """Primary/standalone routing keeps the launcher config exactly as before."""
++
++    def test_primary_identity_uses_launcher_rule(self):
++        launcher = _tg_config({
++            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),
++        })
++        runner = _runner(launcher, {"company": _company_cfg()})
++        model, runtime = _resolve(runner, _dm_source("default"))
++        assert model == LAUNCHER_MODEL
++        assert runtime["provider"] == LAUNCHER_PROVIDER
++
++    def test_standalone_source_uses_launcher_rule(self):
++        launcher = _tg_config({
++            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),
++        })
++        runner = _runner(launcher, {"company": _company_cfg()})
++        model, runtime = _resolve(runner, _dm_source())
++        assert model == LAUNCHER_MODEL
++        assert runtime["provider"] == LAUNCHER_PROVIDER
++        assert runtime["base_url"] == LAUNCHER_URL
++
++
++class TestWarmCacheAndNextTurn:
++    """A legit served-profile cache replacement must reach the warm next turn."""
++
++    def test_warm_agent_signature_changes_after_cache_replacement(self):
++        runner = _runner(_tg_config({}), {})  # company config not served yet
++        source = _dm_source("company")
++        model1, runtime1 = _resolve(runner, source)
++        sig1 = GatewayRunner._agent_config_signature(model1, runtime1, [], "")
++        runner._profile_configs["company"] = _company_cfg()  # run_adapters refresh
++        model2, runtime2 = _resolve(runner, source)
++        sig2 = GatewayRunner._agent_config_signature(model2, runtime2, [], "")
++        assert (model2, runtime2["provider"]) == (QWEN_MODEL, QWEN_PROVIDER)
++        assert sig1 != sig2
++
++    def test_ordinary_next_turn_runtime_picks_new_values(self):
++        runner = _runner(_tg_config({}), {})
++        source = _dm_source("company")
++        model1, runtime1 = _resolve(runner, source)
++        assert (model1, runtime1["provider"]) == (CODEX_MODEL, CODEX_PROVIDER)
++        runner._profile_configs["company"] = _company_cfg()
++        _model2, runtime2 = _resolve(runner, source)
++        assert runtime2["provider"] == QWEN_PROVIDER
++        assert runtime2["base_url"] == QWEN_URL
++        assert runtime2["api_key"] == "k-" + QWEN_PROVIDER
++
++
++class TestSlashAndPromptParity:
++    """The slash/status consumer matches the turn; system_prompt semantics unchanged."""
++
++    def test_slash_channel_override_for_matches_turn(self):
++        runner = _runner(_tg_config({}), {"company": _company_cfg()})
++        source = _dm_source("company")
++        override = runner._channel_override_for(source)
++        assert override is not None
++        assert override.model == QWEN_MODEL
++        assert override.provider == QWEN_PROVIDER
++        model, runtime = _resolve(runner, source)
++        assert (model, runtime["provider"]) == (override.model, override.provider)
++
++    def test_slash_channel_override_primary_source_unchanged(self):
++        launcher = _tg_config({
++            COMPANY_DM: ChannelOverride(model=LAUNCHER_MODEL, provider=LAUNCHER_PROVIDER),
++        })
++        runner = _runner(launcher, {"company": _company_cfg()})
++        override = runner._channel_override_for(_dm_source())
++        assert override is not None
++        assert override.model == LAUNCHER_MODEL
++
++    def test_session_pin_wins_over_routed_company_rule(self):
++        runner = _runner(_tg_config({}), {"company": _company_cfg()})
++        source = _dm_source("company")
++        skey = "agent:company:telegram:dm:" + COMPANY_DM
++        runner._session_state(skey).conversation.model_override = {
++            "model": "explicit/pin", "provider": CODEX_PROVIDER, "api_key": "pin-key",
++        }
++        model, runtime = _resolve(runner, source, session_key=skey)
++        assert model == "explicit/pin"
++        assert runtime["api_key"] == "pin-key"
++
++    def test_system_prompt_resolution_stays_launcher_scoped(self):
++        launcher = _tg_config({
++            COMPANY_DM: ChannelOverride(system_prompt="LAUNCHER PROMPT"),
++        })
++        runner = _runner(launcher, {"company": _company_cfg()})
++        runner._ephemeral_system_prompt = "Global prompt"
++        prompt = runner._get_system_prompt_for_channel(Platform.TELEGRAM, COMPANY_DM)
++        assert prompt == "LAUNCHER PROMPT"
+-- 
+2.53.0.windows.3
+

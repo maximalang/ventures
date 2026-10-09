@@ -1,0 +1,114 @@
+▶ not activated — using HERMES_PYTHON: C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe
+▶ running per-file parallel test suite via run_tests_parallel.py
+  (TZ=UTC LANG=C.UTF-8 PYTHONHASHSEED=0; clean env)
+▶ pre-compiling bytecode cache
+▶ launching test runner
+Discovered 1 test files (~14 tests) under ['C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test_qa_tgr_routing.py']; running with -j 18
+[100.0% |    14/~14 | ✓24 | ✗ 2] ✗ C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py (24✓ 2✗, 9.6s)
+
+  ╔╍ Failed: C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║ .QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+  ║ QA_SLASH {"turn": ["qwen3.8-max", "custom"], "reply": "gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}"}
+  ║ FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-list-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+  ║ QA_SLASH {"turn": ["qwen3.8-max", "custom"], "reply": "gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}"}
+  ║ F.QA_ROUTE {"chat": null, "thread": null, "source_profile": null, "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+  ║ .QA_STATUS_MODULE gateway.slash_commands_status
+  ║ .
+  ║ ================================== FAILURES ===================================
+  ║ ___________ test_real_model_listing_agrees_with_effective_turn[dm] ____________
+  ║ ..\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn
+  ║     assert model in reply and rt["provider"] in reply, {"turn": (model, rt["provider"]), "slash_reply": reply}
+  ║ E   AssertionError: {'turn': ('qwen3.8-max', 'custom'), 'slash_reply': 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "...odex"}
+  ║ E     
+  ║ E     gateway.model.usage_switch_model {}
+  ║ E     gateway.model.usage_switch_provider {}
+  ║ E     gateway.model.usage_persist {}'}
+  ║ E   assert ('qwen3.8-max' in 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "openai-codex"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')
+  ║ __________ test_real_model_listing_agrees_with_effective_turn[forum] __________
+  ║ ..\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn
+  ║     assert model in reply and rt["provider"] in reply, {"turn": (model, rt["provider"]), "slash_reply": reply}
+  ║ E   AssertionError: {'turn': ('qwen3.8-max', 'custom'), 'slash_reply': 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "...odex"}
+  ║ E     
+  ║ E     gateway.model.usage_switch_model {}
+  ║ E     gateway.model.usage_switch_provider {}
+  ║ E     gateway.model.usage_persist {}'}
+  ║ E   assert ('qwen3.8-max' in 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "openai-codex"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')
+  ║ =========================== short test summary info ===========================
+  ║ FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[dm]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[forum]
+  ║ 2 failed, 24 passed in 2.20s
+  ║
+  ║  Repro: python -m pytest C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py -q -s --tb=short --junitxml=C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\evidence\qa-independent-head-v2.xml
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+
+=== Summary: 1 files, 24 tests passed, 2 failed (100% complete) in 9.8s (18 workers) ===
+
+=== Per-file subprocess time distribution ===
+  Files:   1
+  Total subprocess CPU-wall: 9.6s  (runner wall: 9.8s, parallelism: 18x)
+  P50: 9.59s  P90: 9.59s  P95: 9.59s  P99: 9.59s  Max: 9.59s
+  <1s: 0 files (0%)  <2s: 0 files (0%)
+  Top 10 slowest:
+      9.59s  C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py
+
+=== Failure output ===
+
+--- C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py ---
+QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-992", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-993", "source_profile": "tech", "actual": ["qa-specialist/v2", "qa-tech", "https://qa-tech.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-993", "source_profile": "tech", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "ghost", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "ghost", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-id-991", "source_profile": "tech", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "default", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": null, "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": null, "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["explicit-sol/v7", "openai-codex", "https://qa-pin.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["explicit-astra/v7", "qa-astra", "https://qa-astra.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-warm-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+QA_ROUTE {"chat": "-1004426332349", "thread": "qa-warm-991", "source_profile": "company", "actual": ["qa-next/v8", "qa-next", "https://qa-next.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "tech", "actual": ["qa-specialist/v2", "qa-tech", "https://qa-tech.invalid/v1/"]}
+QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-slash-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+QA_SLASH {"turn": ["qwen3.8-max", "custom"], "reply": "gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}"}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-list-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+QA_SLASH {"turn": ["qwen3.8-max", "custom"], "reply": "gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}"}
+F.QA_ROUTE {"chat": null, "thread": null, "source_profile": null, "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_STATUS_MODULE gateway.slash_commands_status
+.
+================================== FAILURES ===================================
+___________ test_real_model_listing_agrees_with_effective_turn[dm] ____________
+..\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn
+    assert model in reply and rt["provider"] in reply, {"turn": (model, rt["provider"]), "slash_reply": reply}
+E   AssertionError: {'turn': ('qwen3.8-max', 'custom'), 'slash_reply': 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "...odex"}
+E     
+E     gateway.model.usage_switch_model {}
+E     gateway.model.usage_switch_provider {}
+E     gateway.model.usage_persist {}'}
+E   assert ('qwen3.8-max' in 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "openai-codex"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')
+__________ test_real_model_listing_agrees_with_effective_turn[forum] __________
+..\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn
+    assert model in reply and rt["provider"] in reply, {"turn": (model, rt["provider"]), "slash_reply": reply}
+E   AssertionError: {'turn': ('qwen3.8-max', 'custom'), 'slash_reply': 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "...odex"}
+E     
+E     gateway.model.usage_switch_model {}
+E     gateway.model.usage_switch_provider {}
+E     gateway.model.usage_persist {}'}
+E   assert ('qwen3.8-max' in 'gateway.model.current_label {"model": "gpt-6.1-sol", "provider": "openai-codex"}\n\ngateway.model.usage_switch_model {}\ngateway.model.usage_switch_provider {}\ngateway.model.usage_persist {}')
+=========================== short test summary info ===========================
+FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[dm]
+FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[forum]
+2 failed, 24 passed in 2.20s
+
+=== 1 file with test failures (2 tests failed) ===
+  C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py  (2 tests failed)

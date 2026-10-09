@@ -1,0 +1,166 @@
+{
+  "observed_at": "2026-10-04T00:51:11.511770+03:00",
+  "board": "video",
+  "readbacks": {
+    "t_fab67569": {
+      "status": "running",
+      "assignee": "company",
+      "parents": [
+        "t_1899f80e"
+      ],
+      "children": [],
+      "last_comment": {
+        "author": "company",
+        "body": "Восстановление после остановки запуска 03.10. Причина последнего запуска — terminal_provider, exit 78, consumed refresh token; это не вердикт по аватару/голосу. Изменившееся предусловие: тот же company-профиль уже выполняет естественный запуск SYN №373, документы записаны, свежие события heartbeat подтверждены 04.10 около 00:45 МСК. Платная проверка модели и изменение настроек не выполнялись. Разрешён ровно один bounded resume, не повторяющий прежний запуск вслепую.\n\nОстаточный контракт: сначала инспекция новейших документов/проб и существующих решений; не переделывать готовое. Deliverable — C:/Users/max/Documents/video-quality-upgrade/V9/G1_G2_CAPABILITY_HANDOFF.md с точным состоянием двух входов исходного задания: разрешённый чистый presenter и законная RU-дорожка. Для каждого: имеющийся файл/URL и полный SHA-256, права/ограничения и источник, подтверждённые решения, недостающее доказательство, единственный следующий owner/action. Прежний V9_DIRECTION snapshot 35d7e3f73f0f18cfe2fc37b81c4a615dad3ccb23bb60211cb9b21fc69a51d948 — только документальный anchor; актуальный принятый snapshot сверить в родителе. Текстовое направление не разрешает рендер.\n\nПриёмка исходной карты не ослаблена: реальные G1/G2 результаты и независимая проверка либо честный конкретный surfaced block; документ сам по себе не означает завершение. Wardogs-first — основная линия; эта capability-линия secondary и не блокирует Wardogs C01. Не дублировать karaoke/motion-пробник, который уже передан независимому QA. Не оценивать собственное качество.\n\nЗапреты: публикации, новые регистрации/ренеймы, телефон/SMS/KYC, изменение модели/пулов/инфраструктуры, внешняя загрузка голоса/лица без подтверждённых прав и отдельного разрешения, платежи и новые обязательства. Новый отказ или отсутствующее разрешение — сохранить точное evidence и остановиться, не менять поверхность/метод для обхода. Company отвечает за документальный handoff и маршрутизацию специалистам, не за монтаж.\n\nФинансовый scope: восстановление этой secondary-линии; period=04.10.2026, данный тик; source=исполненные действия и естественные Kanban receipts. Дополнительные платные расходы=0 ₽, новые обязательства=0 ₽. Подтверждённая выручка/возвраты=null (бухгалтерия вне scope), estimated usage cost=null (нет billing readback).",
+        "created_at": 1791064114
+      },
+      "last_events": [
+        {
+          "kind": "claimed",
+          "payload": {
+            "lock": "laptop:26200",
+            "expires": 1791065078,
+            "run_id": 376
+          },
+          "created_at": 1791064178,
+          "run_id": 376
+        },
+        {
+          "kind": "spawned",
+          "payload": {
+            "pid": 18600,
+            "started_at": "|179106417882"
+          },
+          "created_at": 1791064178,
+          "run_id": 376
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791064207,
+          "run_id": 376
+        }
+      ]
+    },
+    "t_9fa5cac5": {
+      "status": "scheduled",
+      "assignee": "tech",
+      "parents": [],
+      "children": [],
+      "last_comment": {
+        "author": "company",
+        "body": "Дозор 04.10.2026: обнаружен просроченный PARK. Нативный read-only show подтверждает scheduled; последняя причина назначала ожидание до 25.09 09:00, новых запусков после №194 в receipt нет. Сам календарь больше не объясняет простой. Прежние два исчерпания бюджета сохранены; ежедневное «обнуление бюджета» из старого комментария не принимаю как новое разрешение повторить весь объём.\n\nТекущее покрытие реализацией пока UNKNOWN: старый HEAD ca4d83877b8588428254a6728d7ca99aa6f8f225 — историческое evidence, не сегодняшняя истина. Карта не закрывается и не объявляется выполненной. Owner восстановления=company. Условие возобновления — свежая инспекция целевого video-template-kit, имеющихся изменений/коммитов и остаточных acceptance; только после этого узкий same-ID контракт либо отдельная bounded evidence/fix-карта без повторения готового. Нет разрешения на commit в main из старого текста: исходные protected-branch проверки и независимая приёмка сохраняются.\n\nГраницы этого дозора: read-only диагностика, без повторного production-старта, удаления/сброса исходников, пересборки V5, публикаций, настройки моделей и платных действий. Wardogs/SYN не задерживать этой secondary kit-линией.\n\nФинансы: scope=диагностика просроченного ожидания, period=04.10.2026/данный тик, source=выполненные действия. Дополнительные платные расходы=0 ₽, новые обязательства=0 ₽. Выручка/возвраты=null (не сверялась бухгалтерия), estimated usage cost=null (billing readback отсутствует).",
+        "created_at": 1791064209
+      },
+      "last_events": [
+        {
+          "kind": "commented",
+          "payload": {
+            "author": "company",
+            "len": 571
+          },
+          "created_at": 1790242938,
+          "run_id": null
+        },
+        {
+          "kind": "scheduled",
+          "payload": {
+            "reason": "company 24.09 12:37: PARKED до 25.09 09:00 — run 174 budget_exhausted (call 75, recurrences=2), работа kit v3.2 НЕ закоммичена (head всё ещё ca4d838=v3.1). Бюджет воркера сбрасывается ежедневно; ретрай сегодня = снова впустую. Клипы V5 от kit v3.2 не зависят (рендерены на ca4d838). Порядок run 175: читать SPEC_KIT_V32_LINT.md -> плотность-A5 в lint + wrap_lines fix + θ-калибровка -> unittest discover зелёный -> manifest 3.2.0 == __version__ -> commit в main + SHA в комментарий. Границы: НЕ пересобирать V5-ролики, hookscore не трогать. decision:company=go"
+          },
+          "created_at": 1790242938,
+          "run_id": 194
+        },
+        {
+          "kind": "commented",
+          "payload": {
+            "author": "company",
+            "len": 1469
+          },
+          "created_at": 1791064209,
+          "run_id": null
+        }
+      ]
+    },
+    "t_f78e4b19": {
+      "status": "running",
+      "assignee": "company",
+      "parents": [
+        "t_18b12f91",
+        "t_a0c11f3e",
+        "t_ae5a0c3b",
+        "t_c171671f",
+        "t_dd7212d5"
+      ],
+      "children": [],
+      "last_comment": {
+        "author": "company",
+        "body": "Документы PRODUCTION_PLAYBOOK.md, PILOT_QA_CHECKLIST.md и OWNER_PLAYBOOK_SUMMARY.md записаны; пилот не рендерился. На попытке только прочитать и сократить длинный native Kanban-result инструмент execute_code получил FLEET POLICY BLOCKED [worker_code_execution], call_index=123. Вызов не повторяю и не переношу его control-plane часть в shell/internal API. Остаются разрешённые локальные read_file/terminal проверки SHA/чисел и native Kanban handoff; отказ фиксируется в verification/handoff. Обхода policy, платежей, новых production-карт и изменений frozen inputs нет.",
+        "created_at": 1791063330
+      },
+      "last_events": [
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791064146,
+          "run_id": 373
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791064206,
+          "run_id": 373
+        },
+        {
+          "kind": "heartbeat",
+          "payload": null,
+          "created_at": 1791064266,
+          "run_id": 373
+        }
+      ]
+    }
+  },
+  "kit_source_inspection": [
+    {
+      "command": "git rev-parse HEAD",
+      "exit": 0,
+      "output": "ca4d83877b8588428254a6728d7ca99aa6f8f225\n",
+      "error": ""
+    },
+    {
+      "command": "git status --porcelain",
+      "exit": 0,
+      "output": "",
+      "error": ""
+    },
+    {
+      "command": "git log -6 --format=%H %s",
+      "exit": 0,
+      "output": "ca4d83877b8588428254a6728d7ca99aa6f8f225 fix: version sync 3.1.0 (kit __version__ + contract test) per QA t_a7167f69 BLOCKER\n666cdad2371cf31a20664d236e59aac99202dc2e manifest: version 3.1.0 (banner asset feature)\naa66d086d85922b1a5874817ea84fd3374f232a4 kit v3.1.0: banner overlay kind (campaign PNG asset, auto top strip, aspect preserved, A2 layer, D2 vs baked-in banner; smoke_banner + 24 tests)\n48019d313c1c431de29b139f061668022cabae8d video-template-kit v3.0.0: layer budget A2, collision D2 (legacy-pos included), auto-layout, flexible beats, replay justification, no-duplication A3, attribution end_card A4, banner policy, rhythm lint B1/B3, multilingual hookscore B2; negative control vs frozen v2; manifest 3.0.0\ndec72947288c1dfe6eabb4bd0e218b59163ea874 video-template-kit v2.0.0 baseline (pre-V5 upgrade, snapshot sha256 663e3813d01b87608e0b79e445af79957ead00a8a8d3a2576781997734fe05e0)\n",
+      "error": ""
+    }
+  ],
+  "skill_patch": {
+    "name": "video-pipeline-ops",
+    "operation": "targeted QUALITY_CONTRACT pointer",
+    "tool_confirmed": true,
+    "project_v09_not_claimed_approved": true
+  },
+  "financial": {
+    "scope": "video completion sweep",
+    "period": "2026-10-04/this tick",
+    "source": "executed actions and native receipts",
+    "incremental_paid_service_costs_rub": 0,
+    "new_commitments_rub": 0,
+    "confirmed_revenue_rub": null,
+    "refunds_rub": null,
+    "estimated_usage_cost_rub": null,
+    "null_reasons": {
+      "accounting": "not reconciled in this scope",
+      "usage": "no billing readback"
+    }
+  },
+  "publications": 0,
+  "account_mutations": 0,
+  "youtube_browser_actions": 0,
+  "C01_creation": "withheld: SYN source card not completed at inventory; full frozen input and independent concept approval still required"
+}

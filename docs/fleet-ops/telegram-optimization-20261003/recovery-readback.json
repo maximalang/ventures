@@ -1,0 +1,257 @@
+[
+  {
+    "id": "t_b8210384",
+    "status": "running",
+    "parents": [],
+    "children": [],
+    "model_override": null,
+    "provider_override": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Owner exact scoped authorization to restore company Telegram main model Qwen/custom; authority and boundaries are QWEN-RESTORE-CONTRACT.md. Native metadata confirms parked company (not host down), and new topics lack /model overrides while defaultSol is inherited. Do not globally repin company/root model or specialist bots. Any company-only hot activation uses documented named-profile gateway start, never --all/--force/host restart. Supported baseline/proof distinction required. Current Desktop conversation remains Sol. No paid test/new commitment; incremental usage unpriced/null.",
+        "created_at": 1791019546
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2207,
+        "profile": "operations",
+        "step_key": null,
+        "status": "running",
+        "outcome": null,
+        "summary": null,
+        "error": null,
+        "metadata": null,
+        "worker_pid": 8232,
+        "started_at": 1791019638,
+        "ended_at": null
+      }
+    ],
+    "latest_summary": null
+  },
+  {
+    "id": "t_e87dad43",
+    "status": "ready",
+    "parents": [],
+    "children": [
+      "t_ee2ad6bf"
+    ],
+    "model_override": "qwen3.8-max",
+    "provider_override": "custom",
+    "last_comments": [],
+    "latest_run": [],
+    "latest_summary": null
+  },
+  {
+    "id": "t_ee2ad6bf",
+    "status": "todo",
+    "parents": [
+      "t_8a81338c",
+      "t_e87dad43"
+    ],
+    "children": [
+      "t_38a4b49e"
+    ],
+    "model_override": null,
+    "provider_override": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "decision:company=go\nhead=d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105\ntask_type: ops\n\nConditional exact-artifact authorization: apply *** two native allowlisted settings after independent QA/review for THESE exact candidate bytes. No QA PASS=*** application; changed candidate = require new company binding. No protected source/other profile/restart/history mutation. Hypothesis: bounded context growth and quieter Telegram tool bubbles while preserving alerts/steering/tail; rollback exact allowlisted originals if context retention/latency/format/routing regresses. Profile-wide company compaction includes Desktop/cron and is not mislabeled Telegram-only. No purchase authorized; confirmed revenue/refunds/provider incremental cost/estimated usage cost=null (not investigated/unpriced), new commitments0, source config manifest+natural receipts; period rollout+24h/48h observation.",
+        "created_at": 1791017023
+      },
+      {
+        "author": "company",
+        "body": "Application remains withheld: prerequisite independent QA run2197 exited75 quota wall and was natively requeued ready; no verdict/PASS exists. Artifact preparation and child methodological review are not substitutes for actual independent gates. Preserve consumer no-op until QA genuinely accepted. Do not initiate correlated/paid synthetic fallback tests or config/model changes to bypass availability. Current measurement refinements saved in MEASUREMENT-REVIEW.md; candidate bytes remain original exact hash.",
+        "created_at": 1791017931
+      }
+    ],
+    "latest_run": [],
+    "latest_summary": null
+  },
+  {
+    "id": "t_8a81338c",
+    "status": "running",
+    "parents": [],
+    "children": [
+      "t_ee2ad6bf"
+    ],
+    "model_override": null,
+    "provider_override": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Verified methodology clarification, no candidate-byte change: MEASUREMENT-REVIEW.md and measurement-strata.json saved beside contract. API baseline actual span23.515h (02.10 12:04→03.10 11:35), seven-day unique-tool audit is separate. Cache-known uncached medians Qwen1842.5/Sol3115; cached footprint reduction ≠ cash savings. Treat128000 as compaction trigger, not hard per-call cap; check quality/latency/summary retention and protected-tail behavior. Candidate immutable hash and company conditional binding unchanged. Independent child audit is advisory, NOT release/QA gate.",
+        "created_at": 1791017771
+      },
+      {
+        "author": "company",
+        "body": "Runtime blocker evidence read back natively: QA run2197 exited75, outcome rate_limited; error='pid20772 exited rate-limited (quota wall) — requeued without counting a failure'; current card ready under native retry policy. This is provider availability, NOT a negative candidate verdict, NOT independent acceptance. Do not force retries, spawn duplicate QA, use correlated company self-review, downgrade/re-pin config, or treat child measurement audit as gate. Native cooldown/recovery only; if retry again fails, record same failure with native availability evidence and stop speculative attempts. Candidate unchanged. Application withheld until actual independent acceptance.",
+        "created_at": 1791017931
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2197,
+        "profile": "qa",
+        "step_key": null,
+        "status": "rate_limited",
+        "outcome": "rate_limited",
+        "summary": null,
+        "error": "pid 20772 exited rate-limited (quota wall) — requeued without counting a failure",
+        "metadata": {
+          "pid": 20772,
+          "claimer": "laptop:24928",
+          "exit_code": 75,
+          "retry_status": "ready",
+          "receipt": {
+            "status": "rate_limited",
+            "evidence_refs": [
+              "error:pid 20772 exited rate-limited (quota wall) — requeued without counting a failure"
+            ],
+            "next_action": "review outcome and continue workflow"
+          }
+        },
+        "worker_pid": null,
+        "started_at": 1791017227,
+        "ended_at": 1791017288
+      }
+    ],
+    "latest_summary": null
+  },
+  {
+    "id": "t_b3e6c428",
+    "status": "done",
+    "parents": [],
+    "children": [
+      "t_45c34a6a"
+    ],
+    "model_override": null,
+    "provider_override": null,
+    "last_comments": [
+      {
+        "author": "tech",
+        "body": "Lifecycle-статус от tech (сессия атрибутирована ядром к run 2200 / pid 23560):\n\n1. Работа ВЫПОЛНЕНА полностью: SOURCE-ONLY пакет зелёный (18 unittest exit 0; full-tree scan candidates=3 — все на offender, ноль FP; consumers.patch git apply --check exit 0; 7/7 якорей sha256; MANIFEST 2932437590ff…, 36 файлов). Ноль live-правок. Детали — комментарий 5499 (12:00) и candidate/README.md.\n2. Терминальные вызовы из этой сессии отклонены ядром: kanban_complete → crash-receipt run 2200 («pid 23560 not alive» — pid-атрибуция: run 2195 timed_out при sigkill=false, сессия продолжила работу и была записана на run 2200, затем объявлена crashed); kanban_request_review → «task is not in running/ready». Карта в blocked после gave_up (failures 2/2, limit dispatcher).\n3. Требуется действие владельца/company (из записей zombie-рана допустимы только комментарии): закрыть карту kanban_complete с handoff на QA t_45c34a6a (пакет готов к SOURCE_ONLY verdict) ЛИБО reset retry-лимита/разблокировать для нового run — новому воркеру пересобирать НЕЧЕГО, достаточно верификации (cd candidate && python -m unittest discover -s tests -v; сверка MANIFEST.sha256.json).\n4. Напоминание по rollout-гейтам: cron-пин report-delivery-trigger (c92f4e39c75d) неразрешён — блокирует только live-удаление скилла; kanban task-pins не swept; memory-операции предложены, не выполнены (MEMORY-OPERATIONS-NOTE.md).",
+        "created_at": 1791018271
+      },
+      {
+        "author": "company",
+        "body": "Company administrative SOURCE-ONLY closure scope clarified after owner 'check and continue'. Original deliverable is staged regression/retirement package, NOT live cron repin or runtime installation. Pending report-delivery-trigger pin is downstream rollout prerequisite, not a missing input to source package. Independently reran administrative source checks:36 manifest files matched; manifest2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62; isolated unittest18/18 exit0. Evidence: C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/retirement-source-admin-check.json + retirement-source-admin-test.txt. No QA/review/production acceptance issued; t_45c34a6a must independently assess source before rollout. No live edits, gate weakening or owner input required for THIS source closure. Finance scope source check this run, revenue/refunds/paid usage estimate=null, new commitments0.",
+        "created_at": 1791019640
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2195,
+        "profile": "tech",
+        "step_key": null,
+        "status": "timed_out",
+        "outcome": "timed_out",
+        "summary": null,
+        "error": "elapsed 1233s > limit 1200s",
+        "metadata": {
+          "pid": 27244,
+          "elapsed_seconds": 1233,
+          "limit_seconds": 1200,
+          "sigkill": false,
+          "retry_status": "ready",
+          "receipt": {
+            "status": "timed_out",
+            "evidence_refs": [
+              "error:elapsed 1233s > limit 1200s"
+            ],
+            "next_action": "review outcome and continue workflow"
+          }
+        },
+        "worker_pid": null,
+        "started_at": 1791016117,
+        "ended_at": 1791017350
+      }
+    ],
+    "latest_summary": "SOURCE-ONLY пакет принят как доставленный: 36/36 хэшей подтверждены, изолированный повторный unittest — 18/18, exit 0. Неоднозначность cron-пина относится к будущему rollout, не к исходной реализации; независимая QA остаётся отдельной обязательной стадией, live не менялся."
+  },
+  {
+    "id": "t_45c34a6a",
+    "status": "running",
+    "parents": [
+      "t_b3e6c428"
+    ],
+    "children": [],
+    "model_override": null,
+    "provider_override": null,
+    "last_comments": [
+      {
+        "author": "company",
+        "body": "Source package verified durable by company administrative check36/36 hashes, manifest2932437590ff2bf2e133c43d5952e1b541ef4d71ddd0b4a56519e5c0dbd31e62, actual isolated unittest18/18 exit0. This is readiness evidence, NOT independent QA. Source card's cron skill-pin ambiguity is a downstream live rollout prerequisite, not missing source permission; no need to read/rewrite cron storage. Review source-only retirement/executable regression independently; preserve original unique transport/style facts and owner safety. Candidate tests/logs/path in parent README. Verify own full runtime+auxiliary serving lineage independence before verdict; quota failure!=PASS. Do not apply live changes or require owner approval of ordinary source-stage metadata.",
+        "created_at": 1791019640
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2209,
+        "profile": "qa",
+        "step_key": null,
+        "status": "running",
+        "outcome": null,
+        "summary": null,
+        "error": null,
+        "metadata": null,
+        "worker_pid": 18540,
+        "started_at": 1791019699,
+        "ended_at": null
+      }
+    ],
+    "latest_summary": null
+  },
+  {
+    "id": "t_6282d6b9",
+    "status": "blocked",
+    "parents": [],
+    "children": [
+      "t_cef261ac"
+    ],
+    "model_override": null,
+    "provider_override": null,
+    "last_comments": [
+      {
+        "author": "product",
+        "body": "BLOCKER / same-ID recovery required. task_type: research. Fleet Policy denied terminal call_index=55 with [secret_read_or_write], next_step=stop/needs_input; no retry, parallel replacement or alternate-tool bypass performed. Denied call intended to hash explicitly allowlisted docs/company SOUL and two SKILL.md hubs into workspace SOURCE-ANCHORS.json; no .env/auth/credential-store/dump path was selected. Company/policy owner must diagnose the exact deny and grant a bounded safe documentation/evidence path if appropriate; product cannot approve its own denied call.\n\nPartial deliverables already on disk at C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/workspaces/t_6282d6b9/: PRODUCT-BRIEF.md, SCENARIOS.json, PRODUCT-BRIEF.print.html, PRODUCT-BRIEF.pdf. Measured structural count: 12 unique S01–S12 fixture IDs; these are authored expected examples, NOT observed model/Telegram behavior and not independent QA. Offline Edge PDF rendering exited 0; PDF contains 2 page objects, /Count=2, 93,981 bytes; PDF readback extracted all five templates and 12 examples. Edge emitted renderer fallback warnings, no render exit failure.\n\nPending before completion: SOURCE-ANCHORS.json and exact final hashes/self-check evidence, current PDF re-render (MD's forum minus was corrected to literal ASCII -1004426332349 after the initial render, so initial PDF is not final exact revision), native attachment persistence and completion/readback. The initial MD hash 8a72ba9366ae300fad1005694d023dbb6b19f9982541fe4ea77bcca14b58b123 is PRE-correction and must NOT be used as final hash.\n\nRead-only source hub baseline before the deny: hermes-agent 13,278 chars, sha256 a21232e109527dc470bb2271bd43fa10a99de681732260f8bed762eaa44888dc; fleet-token-economy 19,800 chars, sha256 2d6a90ced0f9e297dad1ee711e58f34e1f5c531123593ca76c54bf6134e817b8; combined 33,078 chars, not tokens. SOUL hash 758badb9e051e3f7485eaf2ec941dc777e0b2c91bcae143531d6e4ee80b9ff85. No live config/SOUL/skill/cron/model/other-profile changes, purchase, inference probe or new watcher. Costs remain unknown.\n\nNext owner: company/policy owner for exact deny disposition; recover t_6282d6b9, do not create a replacement or release t_cef261ac before evidence is complete. Existing downstream tech t_cef261ac → independent qa t_d5e37e14 stays dependency-gated. Product recommendation and runtime savings remain NEEDS-EVIDENCE.",
+        "created_at": 1791018945
+      },
+      {
+        "author": "company",
+        "body": "Owner says check+continue. Keep product delivery minimal: PRODUCT-BRIEF.md only, <=2pages/12 scenario tests. No PDF, browser, dependency/package capability scan or aesthetic artifacts required; all official sources already saved. Do not re-run full audits. Produce the Markdown decision brief, exact hash and evidence, then close source task. New separate owner-directed ops restores TG Qwen default; this does not change your GPT brain model or brief scope. Reduce work, not quality.",
+        "created_at": 1791019514
+      }
+    ],
+    "latest_run": [
+      {
+        "id": 2198,
+        "profile": "product",
+        "step_key": null,
+        "status": "crashed",
+        "outcome": "crashed",
+        "summary": null,
+        "error": "pid 23644 not alive Worker's last output: 'able,\\'paths\\':{k:str(pathlib.Path(v)) for k,v in paths.items() if pathlib.Path(v).is_file()},\\'modules\\':{k:bool(importlib.util.find_spec(k)) for k in (\\'fpdf\\',\\'docx\\',\\'weasyprint\\',\\'markdown\\',\\'PIL\\')}},sort_keys=True))\"  0.8s ┊ 📚 навык     fleet-browser-routing  0.5s ┊ 📖 чтение    hermes-telegram-official.txt L1792-1819  0.9s ┊ 📖 чтение    openai-caching-official.txt L850-899  1.0s ┊ 🔎 файлы     *  1.3s'",
+        "metadata": {
+          "pid": 23644,
+          "claimer": "laptop:24928",
+          "worker_output": "able,'paths':{k:str(pathlib.Path(v)) for k,v in paths.items() if pathlib.Path(v).is_file()},'modules':{k:bool(importlib.util.find_spec(k)) for k in ('fpdf','docx','weasyprint','markdown','PIL')}},sort_keys=True))\"  0.8s ┊ 📚 навык     fleet-browser-routing  0.5s ┊ 📖 чтение    hermes-telegram-official.txt L1792-1819  0.9s ┊ 📖 чтение    openai-caching-official.txt L850-899  1.0s ┊ 🔎 файлы     *  1.3s",
+          "retry_status": "ready",
+          "receipt": {
+            "status": "crashed",
+            "evidence_refs": [
+              "error:pid 23644 not alive Worker's last output: 'able,\\'paths\\':{k:str(pathlib.Path(v)) for k,v in paths.items() if pathlib.Path(v).is_file()},\\'modules\\':{k:bool(importlib.util.find_spec(k)) for k in (\\'fpdf\\',\\'docx\\',\\'weasyprint\\',\\'markdown\\"
+            ],
+            "next_action": "review outcome and continue workflow"
+          }
+        },
+        "worker_pid": null,
+        "started_at": 1791017288,
+        "ended_at": 1791018040
+      }
+    ],
+    "latest_summary": "FLEET POLICY BLOCKED [secret_read_or_write] pattern=secret_read_or_write call_index=55 next_step=секреты вне правил; стоп, не повторяй вызов, пометь карту needs_input [continues: owner]"
+  }
+]

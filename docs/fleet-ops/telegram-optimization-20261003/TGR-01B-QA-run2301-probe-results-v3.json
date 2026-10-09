@@ -1,0 +1,396 @@
+[
+  {
+    "label": "head",
+    "argv": [
+      "C:/Users/max/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin/bash.exe",
+      "scripts/run_tests.sh",
+      "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test_qa_tgr_routing.py",
+      "--",
+      "-q",
+      "-s",
+      "--tb=short",
+      "--junitxml=C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-independent-head-v3.xml"
+    ],
+    "cwd": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\head-r2301",
+    "probe": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test_qa_tgr_routing.py",
+    "started_at": "2026-10-03T20:17:17.492647+00:00",
+    "finished_at": "2026-10-03T20:17:23.655743+00:00",
+    "exit_code": 1,
+    "log": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-independent-head-v3.log",
+    "junit": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-independent-head-v3.xml",
+    "cases": [
+      {
+        "name": "test_fresh_company_entrypoint[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_fresh_company_entrypoint[negative-forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_fresh_company_entrypoint[new-topic-one]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_fresh_company_entrypoint[new-topic-two]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_specialist_same_forum_isolation[own-rule]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_specialist_same_forum_isolation[own-global]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[unknown-identity]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[unknown-source]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[unserved]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[missing-cache]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_bare_routed_source_is_supported",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_authoritative_identity_beats_conflicting_source_profile",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_primary_and_standalone_unchanged[primary]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_primary_and_standalone_unchanged[unrouted]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_primary_and_standalone_unchanged[standalone-identity]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_explicit_session_pin_has_priority[sol]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_explicit_session_pin_has_priority[astra]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_ordinary_next_turn_and_signature_follow_cache_replacement",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_a_b_a_no_mutation_or_config_borrowing",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_slash_override_helper_matches_turn[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_slash_override_helper_matches_turn[forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_real_model_listing_agrees_with_effective_turn[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn\n    assert model in reply and rt[\"provider\"] in reply, {\"turn\": (model, rt[\"provider\"]), \"slash_reply\": reply}\nE   AssertionError: {'turn': ('qwen3.8-max', 'custom'), 'slash_reply': 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"...odex\"}\nE     \nE     gateway.model.usage_switch_model {}\nE     gateway.model.usage_switch_provider {}\nE     gateway.model.usage_persist {}'}\nE   assert ('qwen3.8-max' in 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\\n\\ngateway.model.usage_switch_model {}\\ngateway.model.usage_switch_provider {}\\ngateway.model.usage_persist {}')"
+      },
+      {
+        "name": "test_real_model_listing_agrees_with_effective_turn[forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn\n    assert model in reply and rt[\"provider\"] in reply, {\"turn\": (model, rt[\"provider\"]), \"slash_reply\": reply}\nE   AssertionError: {'turn': ('qwen3.8-max', 'custom'), 'slash_reply': 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"...odex\"}\nE     \nE     gateway.model.usage_switch_model {}\nE     gateway.model.usage_switch_provider {}\nE     gateway.model.usage_persist {}'}\nE   assert ('qwen3.8-max' in 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\\n\\ngateway.model.usage_switch_model {}\\ngateway.model.usage_switch_provider {}\\ngateway.model.usage_persist {}')"
+      },
+      {
+        "name": "test_real_telegram_picker_agrees_with_effective_turn[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:212: in test_real_telegram_picker_agrees_with_effective_turn\n    assert (captured.get(\"current_model\"), captured.get(\"current_provider\")) == (model, rt[\"provider\"])\nE   AssertionError: assert (None, None) == ('qwen3.8-max', 'custom')\nE     \nE     At index 0 diff: None != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_real_telegram_picker_agrees_with_effective_turn[forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:212: in test_real_telegram_picker_agrees_with_effective_turn\n    assert (captured.get(\"current_model\"), captured.get(\"current_provider\")) == (model, rt[\"provider\"])\nE   AssertionError: assert (None, None) == ('qwen3.8-max', 'custom')\nE     \nE     At index 0 diff: None != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_system_prompt_legacy_scope_and_fallback_preserved",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_no_source_keeps_global_route",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_status_entrypoint_scope_locator",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      }
+    ],
+    "counts": {
+      "passed": 24,
+      "failed": 4,
+      "error": 0,
+      "skipped": 0,
+      "total": 28
+    }
+  },
+  {
+    "label": "base",
+    "argv": [
+      "C:/Users/max/AppData/Local/hermes/tools/git-2.53.0+3-win32-x64/usr/bin/bash.exe",
+      "scripts/run_tests.sh",
+      "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test_qa_tgr_routing.py",
+      "--",
+      "-q",
+      "-s",
+      "--tb=short",
+      "--junitxml=C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-independent-base-v3.xml"
+    ],
+    "cwd": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\base-r2301",
+    "probe": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test_qa_tgr_routing.py",
+    "started_at": "2026-10-03T20:17:23.656745+00:00",
+    "finished_at": "2026-10-03T20:17:30.109164+00:00",
+    "exit_code": 1,
+    "log": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-independent-base-v3.log",
+    "junit": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\evidence\\qa-independent-base-v3.xml",
+    "cases": [
+      {
+        "name": "test_fresh_company_entrypoint[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint\n    assert_route(runner(), source(chat=chat, thread=thread), QWEN)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_fresh_company_entrypoint[negative-forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint\n    assert_route(runner(), source(chat=chat, thread=thread), QWEN)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_fresh_company_entrypoint[new-topic-one]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint\n    assert_route(runner(), source(chat=chat, thread=thread), QWEN)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_fresh_company_entrypoint[new-topic-two]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:101: in test_fresh_company_entrypoint\n    assert_route(runner(), source(chat=chat, thread=thread), QWEN)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_specialist_same_forum_isolation[own-rule]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:106: in test_specialist_same_forum_isolation\n    assert_route(runner(served=served), source(\"tech\", FORUM, \"qa-new-993\"), expected)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qa-specialist/v2', 'qa-tech', 'https://qa-tech.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qa-speciali....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qa-specialist/v2'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_specialist_same_forum_isolation[own-global]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:106: in test_specialist_same_forum_isolation\n    assert_route(runner(served=served), source(\"tech\", FORUM, \"qa-new-993\"), expected)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[unknown-identity]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe\n    assert_route(r, s, GLOBALS)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[unknown-source]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe\n    assert_route(r, s, GLOBALS)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[unserved]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe\n    assert_route(r, s, GLOBALS)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_unknown_and_unserved_fail_safe[missing-cache]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:113: in test_unknown_and_unserved_fail_safe\n    assert_route(r, s, GLOBALS)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('gpt-6.1-sol', 'openai-codex', 'https://qa-default.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('gpt-6.1-sol....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'gpt-6.1-sol'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_bare_routed_source_is_supported",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:117: in test_bare_routed_source_is_supported\n    assert_route(runner(), source(identity=False), QWEN)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_authoritative_identity_beats_conflicting_source_profile",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:123: in test_authoritative_identity_beats_conflicting_source_profile\n    assert_route(runner(), s, QWEN)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_primary_and_standalone_unchanged[primary]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_primary_and_standalone_unchanged[unrouted]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_primary_and_standalone_unchanged[standalone-identity]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_explicit_session_pin_has_priority[sol]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_explicit_session_pin_has_priority[astra]",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_ordinary_next_turn_and_signature_follow_cache_replacement",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:146: in test_ordinary_next_turn_and_signature_follow_cache_replacement\n    m1, rt1 = assert_route(r, s, QWEN)\n              ^^^^^^^^^^^^^^^^^^^^^^^^\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_a_b_a_no_mutation_or_config_borrowing",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:162: in test_a_b_a_no_mutation_or_config_borrowing\n    assert_route(r, s, QWEN)\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_slash_override_helper_matches_turn[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:173: in test_slash_override_helper_matches_turn\n    model, rt = assert_route(r, s, QWEN)\n                ^^^^^^^^^^^^^^^^^^^^^^^^\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_slash_override_helper_matches_turn[forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:173: in test_slash_override_helper_matches_turn\n    model, rt = assert_route(r, s, QWEN)\n                ^^^^^^^^^^^^^^^^^^^^^^^^\n..\\test_qa_tgr_routing.py:95: in assert_route\n    assert actual == expected, {\"expected\": expected, \"actual\": actual}\nE   AssertionError: {'expected': ('qwen3.8-max', 'custom', 'https://qa-company.invalid/v1/'), 'actual': ('qa-launch/v3', 'qa-launcher', 'https://qa-launch.invalid/v1/')}\nE   assert ('qa-launch/v....invalid/v1/') == ('qwen3.8-max....invalid/v1/')\nE     \nE     At index 0 diff: 'qa-launch/v3' != 'qwen3.8-max'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_real_model_listing_agrees_with_effective_turn[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn\n    assert model in reply and rt[\"provider\"] in reply, {\"turn\": (model, rt[\"provider\"]), \"slash_reply\": reply}\nE   AssertionError: {'turn': ('qa-launch/v3', 'qa-launcher'), 'slash_reply': 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provid...odex\"}\nE     \nE     gateway.model.usage_switch_model {}\nE     gateway.model.usage_switch_provider {}\nE     gateway.model.usage_persist {}'}\nE   assert ('qa-launch/v3' in 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\\n\\ngateway.model.usage_switch_model {}\\ngateway.model.usage_switch_provider {}\\ngateway.model.usage_persist {}')"
+      },
+      {
+        "name": "test_real_model_listing_agrees_with_effective_turn[forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:192: in test_real_model_listing_agrees_with_effective_turn\n    assert model in reply and rt[\"provider\"] in reply, {\"turn\": (model, rt[\"provider\"]), \"slash_reply\": reply}\nE   AssertionError: {'turn': ('qa-launch/v3', 'qa-launcher'), 'slash_reply': 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provid...odex\"}\nE     \nE     gateway.model.usage_switch_model {}\nE     gateway.model.usage_switch_provider {}\nE     gateway.model.usage_persist {}'}\nE   assert ('qa-launch/v3' in 'gateway.model.current_label {\"model\": \"gpt-6.1-sol\", \"provider\": \"openai-codex\"}\\n\\ngateway.model.usage_switch_model {}\\ngateway.model.usage_switch_provider {}\\ngateway.model.usage_persist {}')"
+      },
+      {
+        "name": "test_real_telegram_picker_agrees_with_effective_turn[dm]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:212: in test_real_telegram_picker_agrees_with_effective_turn\n    assert (captured.get(\"current_model\"), captured.get(\"current_provider\")) == (model, rt[\"provider\"])\nE   AssertionError: assert (None, None) == ('qa-launch/v...'qa-launcher')\nE     \nE     At index 0 diff: None != 'qa-launch/v3'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_real_telegram_picker_agrees_with_effective_turn[forum]",
+        "classname": "test_qa_tgr_routing",
+        "status": "failed",
+        "evidence": "..\\test_qa_tgr_routing.py:212: in test_real_telegram_picker_agrees_with_effective_turn\n    assert (captured.get(\"current_model\"), captured.get(\"current_provider\")) == (model, rt[\"provider\"])\nE   AssertionError: assert (None, None) == ('qa-launch/v...'qa-launcher')\nE     \nE     At index 0 diff: None != 'qa-launch/v3'\nE     Use -v to get more diff"
+      },
+      {
+        "name": "test_system_prompt_legacy_scope_and_fallback_preserved",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_no_source_keeps_global_route",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      },
+      {
+        "name": "test_status_entrypoint_scope_locator",
+        "classname": "test_qa_tgr_routing",
+        "status": "passed",
+        "evidence": null
+      }
+    ],
+    "counts": {
+      "passed": 8,
+      "failed": 20,
+      "error": 0,
+      "skipped": 0,
+      "total": 28
+    }
+  }
+]

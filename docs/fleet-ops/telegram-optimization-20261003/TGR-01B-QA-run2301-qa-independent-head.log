@@ -1,0 +1,170 @@
+▶ not activated — using HERMES_PYTHON: C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe
+▶ running per-file parallel test suite via run_tests_parallel.py
+  (TZ=UTC LANG=C.UTF-8 PYTHONHASHSEED=0; clean env)
+▶ pre-compiling bytecode cache
+▶ launching test runner
+Discovered 1 test files (~14 tests) under ['C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_307fc218\\test_qa_tgr_routing.py']; running with -j 18
+[100.0% |    14/~14 | ✓24 | ✗ 2] ✗ C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py (24✓ 2✗, 10.4s)
+
+  ╔╍ Failed: C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+  ║             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:189: in run
+  ║     with Runner(debug=debug) as runner:
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:59: in __enter__
+  ║     self._lazy_init()
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:137: in _lazy_init
+  ║     self._loop = events.new_event_loop()
+  ║                  ^^^^^^^^^^^^^^^^^^^^^^^
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:810: in new_event_loop
+  ║     return get_event_loop_policy().new_event_loop()
+  ║            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:699: in new_event_loop
+  ║     return self._loop_factory()
+  ║            ^^^^^^^^^^^^^^^^^^^^
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\windows_events.py:315: in __init__
+  ║     super().__init__(proactor)
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:639: in __init__
+  ║     self._make_self_pipe()
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:784: in _make_self_pipe
+  ║     self._ssock, self._csock = socket.socketpair()
+  ║                                ^^^^^^^^^^^^^^^^^^^
+  ║ ..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\socket.py:621: in _fallback_socketpair
+  ║     csock.connect((addr, port))
+  ║ ..\test_qa_tgr_routing.py:21: in no_connect
+  ║     raise AssertionError("offline probe attempted network")
+  ║ E   AssertionError: offline probe attempted network
+  ║ =========================== short test summary info ===========================
+  ║ FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[dm]
+  ║ FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[forum]
+  ║ 2 failed, 24 passed in 2.41s
+  ║
+  ║  Repro: python -m pytest C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py -q -s --tb=short --junitxml=C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\evidence\qa-independent-head.xml
+  ╚╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+
+
+=== Summary: 1 files, 24 tests passed, 2 failed (100% complete) in 10.6s (18 workers) ===
+
+=== Per-file subprocess time distribution ===
+  Files:   1
+  Total subprocess CPU-wall: 10.4s  (runner wall: 10.6s, parallelism: 18x)
+  P50: 10.36s  P90: 10.36s  P95: 10.36s  P99: 10.36s  Max: 10.36s
+  <1s: 0 files (0%)  <2s: 0 files (0%)
+  Top 10 slowest:
+     10.36s  C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py
+
+=== Failure output ===
+
+--- C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py ---
+QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-992", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-993", "source_profile": "tech", "actual": ["qa-specialist/v2", "qa-tech", "https://qa-tech.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-new-993", "source_profile": "tech", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "ghost", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "ghost", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-id-991", "source_profile": "tech", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "default", "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": null, "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": null, "actual": ["qa-launch/v3", "qa-launcher", "https://qa-launch.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["explicit-sol/v7", "openai-codex", "https://qa-pin.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["explicit-astra/v7", "qa-astra", "https://qa-astra.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-warm-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+QA_ROUTE {"chat": "-1004426332349", "thread": "qa-warm-991", "source_profile": "company", "actual": ["qa-next/v8", "qa-next", "https://qa-next.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "tech", "actual": ["qa-specialist/v2", "qa-tech", "https://qa-tech.invalid/v1/"]}
+QA_ROUTE {"chat": "-1004426332349", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "-1004426332349", "thread": "qa-slash-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+.QA_ROUTE {"chat": "1256122537", "thread": null, "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+FQA_ROUTE {"chat": "-1004426332349", "thread": "qa-list-991", "source_profile": "company", "actual": ["qwen3.8-max", "custom", "https://qa-company.invalid/v1/"]}
+F.QA_ROUTE {"chat": null, "thread": null, "source_profile": null, "actual": ["gpt-6.1-sol", "openai-codex", "https://qa-default.invalid/v1/"]}
+.QA_STATUS_MODULE gateway.slash_commands_status
+.C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unraisableexception.py:33: RuntimeWarning: coroutine 'GatewayModelCommandsMixin._handle_model_command' was never awaited
+  gc.collect()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\max\AppData\Local\hermes\hermes-agent\venv\Lib\site-packages\_pytest\unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <function BaseEventLoop.__del__ at 0x000001CC41E013A0>
+
+Traceback (most recent call last):
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\base_events.py", line 695, in __del__
+    self.close()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py", line 696, in close
+    self._close_self_pipe()
+  File "C:\Users\max\AppData\Local\hermes\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py", line 776, in _close_self_pipe
+    self._ssock.close()
+    ^^^^^^^^^^^
+AttributeError: 'ProactorEventLoop' object has no attribute '_ssock'
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+
+================================== FAILURES ===================================
+___________ test_real_model_listing_agrees_with_effective_turn[dm] ____________
+..\test_qa_tgr_routing.py:181: in test_real_model_listing_agrees_with_effective_turn
+    reply = asyncio.run(r._handle_model_command(event))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:189: in run
+    with Runner(debug=debug) as runner:
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:810: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:699: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\windows_events.py:315: in __init__
+    super().__init__(proactor)
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:639: in __init__
+    self._make_self_pipe()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:784: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\socket.py:621: in _fallback_socketpair
+    csock.connect((addr, port))
+..\test_qa_tgr_routing.py:21: in no_connect
+    raise AssertionError("offline probe attempted network")
+E   AssertionError: offline probe attempted network
+__________ test_real_model_listing_agrees_with_effective_turn[forum] __________
+..\test_qa_tgr_routing.py:181: in test_real_model_listing_agrees_with_effective_turn
+    reply = asyncio.run(r._handle_model_command(event))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:189: in run
+    with Runner(debug=debug) as runner:
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:59: in __enter__
+    self._lazy_init()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:810: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\events.py:699: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\windows_events.py:315: in __init__
+    super().__init__(proactor)
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:639: in __init__
+    self._make_self_pipe()
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\asyncio\proactor_events.py:784: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\..\hermes-agent\.hermes-runtime\python\generation-1787344632-9344-6ccee02c\cpython-3.11-windows-x86_64-none\Lib\socket.py:621: in _fallback_socketpair
+    csock.connect((addr, port))
+..\test_qa_tgr_routing.py:21: in no_connect
+    raise AssertionError("offline probe attempted network")
+E   AssertionError: offline probe attempted network
+=========================== short test summary info ===========================
+FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[dm]
+FAILED ..\test_qa_tgr_routing.py::test_real_model_listing_agrees_with_effective_turn[forum]
+2 failed, 24 passed in 2.41s
+
+=== 1 file with test failures (2 tests failed) ===
+  C:\Users\max\AppData\Local\hermes\kanban\boards\fleet-ops\workspaces\t_307fc218\test_qa_tgr_routing.py  (2 tests failed)

@@ -1,0 +1,186 @@
+{
+  "task": "t_daf14af6",
+  "prepared_by": "operations",
+  "prepared_at_utc": "2026-10-03T15:34:14.995172+00:00",
+  "live_applied": false,
+  "target": "company profile ONLY (active), via native skill_manage single atomic call; operations profile MUST NOT apply",
+  "source_anchor": {
+    "manifest_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\HUB-PACKET\\MANIFEST.json",
+    "manifest_sha256": "aca8e05c554e5998b1b461e12ff182733140c4283b6b463be08805b31ee15e6c",
+    "manifest_expected_sha256": "aca8e05c554e5998b1b461e12ff182733140c4283b6b463be08805b31ee15e6c",
+    "qa_verdict_path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\QA-VERDICT-t_d5e37e14.md",
+    "qa_verdict_sha256": "2196ca2b02bfa7cfdf7edfa9e8cabc4b8ae1131d83b82242b4c7f9f3f5f9b98c",
+    "qa_verdict_expected_sha256": "2196ca2b02bfa7cfdf7edfa9e8cabc4b8ae1131d83b82242b4c7f9f3f5f9b98c",
+    "independent_qa_task": "t_d5e37e14 (SOURCE_PASS, 17-suite+15-probes+32-audit)"
+  },
+  "prelive_anchor_refresh": {
+    "script": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_daf14af6\\refresh_anchors.py",
+    "result_json": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_daf14af6\\anchor_refresh_result.json",
+    "anchor_files_checked": 29,
+    "anchor_drift_count": 0,
+    "additive_paths_checked": 9,
+    "additive_collisions": 0,
+    "verdict": "29/29 before_tree anchors byte-exact at company profile; 9/9 additive paths absent"
+  },
+  "fresh_package_test": {
+    "command": "C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-PACKET/tests/test_hub_packet.py",
+    "log": "C:\\Users\\max\\AppData\\Local\\hermes\\kanban\\boards\\fleet-ops\\workspaces\\t_daf14af6\\fresh-test-run.txt",
+    "exit_code": 0,
+    "result": "Ran 17 tests, OK",
+    "log_tail_ok": true
+  },
+  "apply_payload": {
+    "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\HUB-NATIVE-APPLY-PAYLOAD.json",
+    "sha256": "5e888a5408b29fbe91d60eb44edd81633c4d5aaa0f4d03268cacce2ed0462883",
+    "file_sha256": "5e888a5408b29fbe91d60eb44edd81633c4d5aaa0f4d03268cacce2ed0462883",
+    "operations_count": 11,
+    "shape": "{operations:[ 2x {name,action:patch,content=<exact candidate hub SKILL.md>}, 9x {name,action:write_file,file_path,content=<exact candidate ref>} ]}",
+    "field_hashes": [
+      {
+        "op": "patch hermes-agent (SKILL.md)",
+        "sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0",
+        "matches_manifest": true
+      },
+      {
+        "op": "patch fleet-token-economy (SKILL.md)",
+        "sha256": "f4853d61aed45b57598ca11682558810d493823773d7e4117f8784b9ffb24b58",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file hermes-agent references/product-overview.md",
+        "sha256": "b0b1caa5cd0a92069852d4c05e4af5ddcfdf035e36975d54f09e742510003b24",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file hermes-agent references/quickstart-and-paths.md",
+        "sha256": "c4cd378d9c280b4811702f9add7bf8e57d4725e653c2c42e0fdc021f0e218711",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file hermes-agent references/spawning-instances.md",
+        "sha256": "1e1cdc1d11a11af811d222ea90a8cfbc2f65abb6f7821ef5ce9b109b5fa340fd",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file fleet-token-economy references/audit-to-program.md",
+        "sha256": "488cdf1d73943f875f9d1821845f08fb41dc71d1fb409479e284e18a2789f688",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file fleet-token-economy references/levers-playbook.md",
+        "sha256": "ed0e81d9d2fc365355a422c2cbd90aeca11b8fc53ed67a23da1b7f195ff85cce",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file fleet-token-economy references/measure-first-details.md",
+        "sha256": "d724f33562717ecb07b5fd4b8c52fe7c978d71fddfcb54e0d217605f3db246bc",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file fleet-token-economy references/mechanics-pitfalls.md",
+        "sha256": "da24439e22474546dca9f967c69aff9696d031fbd5d192ebf44e64843cd09bd2",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file fleet-token-economy references/prompt-audit-lane.md",
+        "sha256": "a3eb73959b8f735498afe698f56be6f79ae01dc298d89a45e2fa971ea250df06",
+        "matches_manifest": true
+      },
+      {
+        "op": "write_file fleet-token-economy references/routing-audit-safeguards.md",
+        "sha256": "f47a0f801d999fa3b5ddf6eed7f93fffc3cfe2cbc19a917d22b08a184a8d04c9",
+        "matches_manifest": true
+      }
+    ]
+  },
+  "rollback_payload": {
+    "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\telegram-optimization-20261003\\HUB-NATIVE-ROLLBACK-PAYLOAD.json",
+    "sha256": "f4bba00194fc7e625d24c266256a4852ae0004a0be58bd78409d08788886fb04",
+    "file_sha256": "f4bba00194fc7e625d24c266256a4852ae0004a0be58bd78409d08788886fb04",
+    "operations_count": 11,
+    "shape": "{operations:[ 2x {name,action:patch,content=<exact prior hub SKILL.md from packet rollback snapshots>}, 9x {name,action:remove_file,file_path=<only the nine additive refs>} ]}",
+    "field_hashes": [
+      {
+        "op": "patch hermes-agent (restore SKILL.md)",
+        "sha256": "a21232e109527dc470bb2271bd43fa10a99de681732260f8bed762eaa44888dc",
+        "matches_manifest": true
+      },
+      {
+        "op": "patch fleet-token-economy (restore SKILL.md)",
+        "sha256": "2d6a90ced0f9e297dad1ee711e58f34e1f5c531123593ca76c54bf6134e817b8",
+        "matches_manifest": true
+      },
+      {
+        "op": "remove_file hermes-agent references/product-overview.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file hermes-agent references/quickstart-and-paths.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file hermes-agent references/spawning-instances.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file fleet-token-economy references/audit-to-program.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file fleet-token-economy references/levers-playbook.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file fleet-token-economy references/measure-first-details.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file fleet-token-economy references/mechanics-pitfalls.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file fleet-token-economy references/prompt-audit-lane.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      },
+      {
+        "op": "remove_file fleet-token-economy references/routing-audit-safeguards.md",
+        "sha256": null,
+        "matches_manifest": "n/a (deletion)"
+      }
+    ]
+  },
+  "roundtrip_verified": true,
+  "rollback_preconditions": [
+    "Apply consumer must be the active company profile session (skill_manage has no target-profile parameter).",
+    "Before apply: re-run the 29-file anchor check and 9-path absence check; abort on any drift/collision.",
+    "Apply is ONE atomic skill_manage call carrying all 11 operations from HUB-NATIVE-APPLY-PAYLOAD.json, verbatim.",
+    "After apply: readback sha256 of both hub SKILL.md files must equal candidate hashes 0f2486ca...7df0 and f4853d61...4b58; the nine refs must equal MANIFEST candidate_tree hashes.",
+    "Rollback preconditions: trigger on any lost goal/source/steering slice, route leakage, warning/attachment failure, or owner stop directive. Rollback is ONE atomic skill_manage call from HUB-NATIVE-ROLLBACK-PAYLOAD.json; post-rollback readback must equal anchored before hashes a21232e1...88dc and 2d6a90ce...17b8, and the nine additive refs must be absent.",
+    "Neither payload touches existing refs/scripts/templates, other profiles, config/SOUL/cron/model/history/plugins, or gateway lifecycle."
+  ],
+  "bans_observed": "no live skill/config/SOUL/model/pool/history/cron/task-pin/plugin changes; no gateway lifecycle/network/update; no other-profile writes; live_applied=false",
+  "finance": {
+    "scope": "staged payload preparation period actual run 2026-10-03, source manifest/QA/tests",
+    "static_hub_reduction": {
+      "combined_bytes_before": 36294,
+      "combined_bytes_candidate": 12928,
+      "combined_bytes_reduction_pct": 64.38,
+      "combined_chars_before": 33372,
+      "combined_chars_candidate": 12523,
+      "combined_chars_reduction_pct": 62.47,
+      "note": "chars/bytes are NOT tokens. PRODUCT-BRIEF cites 33,078 source chars; measured here 33,372 chars / 36,294 bytes from anchored sha256 bytes (294-char method delta noted, reduction computed from measured anchor)."
+    },
+    "revenue_refunds_provider_paid_estimated_usage": null,
+    "purchases_new_commitments": 0,
+    "note": "static size reduction only; not token/cash evidence"
+  },
+  "kill_criteria": "anchor drift or any fleet-policy denial -> recorded stop, no alternate spelling/tool/issuer"
+}

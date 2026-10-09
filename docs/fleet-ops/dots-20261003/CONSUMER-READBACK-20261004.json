@@ -1,0 +1,132 @@
+{
+  "verified_at_utc": "2026-10-03T21:57:00.547235+00:00",
+  "owner": "company",
+  "scope": "consumer direct exact-file acceptance evidence; not independent QA",
+  "frozen_member_count": 10,
+  "target_count": 12,
+  "reference_variant_count": 1,
+  "original_preservation": "12/12 raw backup equality",
+  "subject_hashes": {
+    "BRAIN-PACKET.json": "f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9",
+    "METHOD-CANDIDATE.md": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "LOAD-HOOK.md": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9",
+    "SOURCE-AUDIT.md": "9bc7d4a5c71a2befb1f6c7947c5a4805ad7cf03ae4ba7f9c9bf8631dc3acbca4",
+    "ROLLOUT.md": "b01b0cdce4124a44010f83ee61483d5d1a33c3e30c39e4fce53e902afed1dd36",
+    "ROLLOUT.json": "1d63c2f8d33bbde63074fe186c464580e86b6e04e197b477cc2a8fba88b7cdc1",
+    "EVIDENCE-ERRATA.md": "e07e24518f29029102deb430f92f0c061512fff9e3ca5caeede222b551485c94",
+    "QA.md": "6567e7c91103c0ee34b6262de238843ec055d8c342ac4df8342260c3b7dcc6cd",
+    "QA.json": "7f45e721449ce9c28cd011e1e6805059b6b96d3cc1c0786d0be40fbd00bc7451",
+    "QA-CHECK-t_a3c78661.json": "ec2f6db860e2d5d856c3f1bbbbbd3f54b335aa8e22d47548ad4cbe65555d7c71"
+  },
+  "primary_QA_actual_checks_count": 23,
+  "primary_QA_report_literal_exclusions": [
+    {
+      "claim": "install_script",
+      "report_literal": "f75cd3641b20232a9b4ae55274849f165e1a53b6ac920db3aa29294fa0e827",
+      "literal_length": 62,
+      "actual_sha256": "f75cd3641b20232a9b4ae55274849f165e1a1e53b6ac920db3aa29294fa0e827",
+      "assessment": "consumer excludes incorrect report literal; actual artifact independently hashed; no subject edit"
+    }
+  ],
+  "pending_input": "QA-ERRATA.md and native final consumer disposition",
+  "targets": [
+    {
+      "profile": "company",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "root_sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "43bfa18f524f7ee3eec9924e7ed8345b9c0bf73a27c94f62880d6825bf92b954",
+      "checks": "PASS"
+    },
+    {
+      "profile": "research",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+      "root_sha256": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "f15d886338ac184f81b38d07655ee1d32c09c4ff2c709bc33f844e920c42b53f",
+      "checks": "PASS"
+    },
+    {
+      "profile": "product",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "operations",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "qa",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "tech",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "finance",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "sales",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "design",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "ux",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "video-director",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    },
+    {
+      "profile": "video-editor",
+      "root": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+      "root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+      "backup_sha256": "a49234022e957c810db63b0c20cc36f7247dffcdadd66b521b4787e0a500f01d",
+      "checks": "PASS"
+    }
+  ],
+  "model_independence": "Reviewer profile independent of author/installer; actual QA serving lineage not established by these artifacts, model independence unproven",
+  "proof_limits": "No host-wide negative, historical check replay, future-obedience assertion or measured savings. Current exact files and original preservation only."
+}

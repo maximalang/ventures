@@ -1,0 +1,724 @@
+EEEEEEEEsEEEEEssEEEEEEE                                                  [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_old_process_new_git_tree_completes_in_fresh_python[None] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_old_process_new_git_tree_completes_in_fresh_python[None]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_old_process_new_git_tree_completes_in_fresh_python[request] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_old_process_new_git_tree_completes_in_fresh_python[request]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_old_process_new_git_tree_completes_in_fresh_python[receipt] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_old_process_new_git_tree_completes_in_fresh_python[receipt]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_missing_child_result_fails_boundary_receipt_and_releases_lock[0] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_missing_child_result_fails_boundary_receipt_and_releases_lock[0]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_missing_child_result_fails_boundary_receipt_and_releases_lock[23] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_missing_child_result_fails_boundary_receipt_and_releases_lock[23]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[None] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[None]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[kill] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[kill]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[wait] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[wait]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_failed_build_preserves_exit_status_without_maintenance _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_failed_build_preserves_exit_status_without_maintenance>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+___ ERROR at setup of test_prepare_failure_preserves_correlated_pm_receipt ____
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_prepare_failure_preserves_correlated_pm_receipt>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+___ ERROR at setup of test_bootstrap_does_not_initialize_old_site_packages ____
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_bootstrap_does_not_initialize_old_site_packages>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_progress_is_forwarded_before_held_stage_is_released[prepare] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_progress_is_forwarded_before_held_stage_is_released[prepare]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_progress_is_forwarded_before_held_stage_is_released[selected] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_progress_is_forwarded_before_held_stage_is_released[selected]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_taskkill_failure_still_reaps_child_and_preserves_interrupt[launch] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_taskkill_failure_still_reaps_child_and_preserves_interrupt[launch]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_taskkill_failure_still_reaps_child_and_preserves_interrupt[timeout] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_taskkill_failure_still_reaps_child_and_preserves_interrupt[timeout]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_taskkill_failure_still_reaps_child_and_preserves_interrupt[nonzero] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_taskkill_failure_still_reaps_child_and_preserves_interrupt[nonzero]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8-sig] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8-sig]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+_ ERROR at setup of test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8-sig] _
+
+fixturedef = <FixtureDef argname='tmp_path' scope='function' baseid=''>
+request = <SubRequest 'tmp_path' for <Function test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8-sig]>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+
+..\..\AppData\Local\hermes\hermes-agent\.venv\Lib\site-packages\pytest_asyncio\plugin.py:728: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: in mkdir
+    os.mkdir(self, mode)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (WindowsPath('C:/Users/max/Documents/hermes-update-baseline-20261001/.test-temp/test_update_completion_process'), 448)
+kwargs = {}
+
+    @wraps(original)
+    def guarded(*args, **kwargs):
+        for index, (parameter, descriptor) in enumerate(parameters):
+            value = args[index] if index < len(args) else kwargs.get(parameter)
+            self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+                       destructive=destructive(args, kwargs) if callable(destructive) else destructive)
+>       return original(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 3] Системе не удается найти указанный путь: 'C:\\Users\\max\\Documents\\hermes-update-baseline-20261001\\.test-temp\\test_update_completion_process'
+
+tests\home_io_guard.py:169: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR tests/hermes_cli/test_update_completion_process.py::test_old_process_new_git_tree_completes_in_fresh_python[None]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_old_process_new_git_tree_completes_in_fresh_python[request]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_old_process_new_git_tree_completes_in_fresh_python[receipt]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_missing_child_result_fails_boundary_receipt_and_releases_lock[0]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_missing_child_result_fails_boundary_receipt_and_releases_lock[23]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[None]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[kill]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_interrupt_after_child_success_demotes_gateway_marker_at_boundary[wait]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_failed_build_preserves_exit_status_without_maintenance
+ERROR tests/hermes_cli/test_update_completion_process.py::test_prepare_failure_preserves_correlated_pm_receipt
+ERROR tests/hermes_cli/test_update_completion_process.py::test_bootstrap_does_not_initialize_old_site_packages
+ERROR tests/hermes_cli/test_update_completion_process.py::test_progress_is_forwarded_before_held_stage_is_released[prepare]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_progress_is_forwarded_before_held_stage_is_released[selected]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_taskkill_failure_still_reaps_child_and_preserves_interrupt[launch]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_taskkill_failure_still_reaps_child_and_preserves_interrupt[timeout]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_taskkill_failure_still_reaps_child_and_preserves_interrupt[nonzero]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_only_correlated_terminal_receipt_can_acknowledge_success[False-utf-8-sig]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8]
+ERROR tests/hermes_cli/test_update_completion_process.py::test_only_correlated_terminal_receipt_can_acknowledge_success[True-utf-8-sig]
+3 skipped, 20 errors in 1.15s

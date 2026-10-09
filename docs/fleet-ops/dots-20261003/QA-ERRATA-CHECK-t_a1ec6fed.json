@@ -1,0 +1,317 @@
+{
+  "checks": {
+    "A.candidate_sha256": {
+      "pass": true,
+      "detail": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    "A.candidate_sha1": {
+      "pass": true,
+      "detail": "fd6c26f5dbebba33baa17761f43a80e22ed17427"
+    },
+    "A.hook_sha256": {
+      "pass": true,
+      "detail": "2e10a1c6153947db1c2f335ea7037fa0522111f5be6ec31d83ebb345b9768ec9"
+    },
+    "A.brain_packet_sha256": {
+      "pass": true,
+      "detail": "f76a04a02d97e19a97d3dc912a11569d64e608c728aeed342536b5fe719d9bc9"
+    },
+    "A.brain_members_10_10": {
+      "pass": true,
+      "detail": "10/10 OK"
+    },
+    "A.originals_byte_unchanged": {
+      "pass": true,
+      "detail": "SA=9bc7d4a5c71a RM=b01b0cdce412 RJ=1d63c2f8d33b"
+    },
+    "A.errata_sha256": {
+      "pass": true,
+      "detail": "e07e24518f29029102deb430f92f0c061512fff9e3ca5caeede222b551485c94"
+    },
+    "A.original_QA_md_sha256": {
+      "pass": true,
+      "detail": "6567e7c91103c0ee34b6262de238843ec055d8c342ac4df8342260c3b7dcc6cd"
+    },
+    "A.original_QA_json_sha256": {
+      "pass": true,
+      "detail": "7f45e721449ce9c28cd011e1e6805059b6b96d3cc1c0786d0be40fbd00bc7451"
+    },
+    "B.Q1_count_12": {
+      "pass": true,
+      "detail": "n=12"
+    },
+    "B.Q1_profiles_unique": {
+      "pass": true,
+      "detail": "['company', 'design', 'finance', 'operations', 'product', 'qa', 'research', 'sales', 'tech', 'ux', 'video-director', 'video-editor']"
+    },
+    "B.Q1_paths_unique": {
+      "pass": true,
+      "detail": ""
+    },
+    "B.Q1_no_case_collisions": {
+      "pass": true,
+      "detail": ""
+    },
+    "B.Q1_exact_profile_set": {
+      "pass": true,
+      "detail": "['company', 'design', 'finance', 'operations', 'product', 'qa', 'research', 'sales', 'tech', 'ux', 'video-director', 'video-editor']"
+    },
+    "B.Q1_root_exists_all": {
+      "pass": true,
+      "detail": ""
+    },
+    "B.Q1_reference_exists_all": {
+      "pass": true,
+      "detail": "missing=[]"
+    },
+    "B.Q1_rollout_matches_baseline": {
+      "pass": true,
+      "detail": ""
+    },
+    "C.Q2_all_refs_equal_candidate": {
+      "pass": true,
+      "detail": ""
+    },
+    "C.Q2_unique_hash_count_1": {
+      "pass": true,
+      "detail": "unique=['f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f']"
+    },
+    "D.Q3_hook_count_1_all": {
+      "pass": true,
+      "detail": "{\"company\": 1, \"research\": 1, \"product\": 1, \"operations\": 1, \"qa\": 1, \"tech\": 1, \"finance\": 1, \"sales\": 1, \"design\": 1, \"ux\": 1, \"video-director\": 1, \"video-editor\": 1}"
+    },
+    "D.Q3_link_valid_all": {
+      "pass": true,
+      "detail": ""
+    },
+    "D.Q3_minus_hook_reproduces_backup": {
+      "pass": true,
+      "detail": "{\"company\": \"direct\", \"research\": \"direct\", \"product\": \"direct\", \"operations\": \"direct\", \"qa\": \"direct\", \"tech\": \"direct\", \"finance\": \"direct\", \"sales\": \"direct\", \"design\": \"direct\", \"ux\": \"direct\", \"video-director\": \"direct\", \"video-editor\": \"direct\"}"
+    },
+    "D.Q3_backup_sha_chain_ok": {
+      "pass": true,
+      "detail": ""
+    },
+    "D.Q3_frontmatter_intact": {
+      "pass": true,
+      "detail": ""
+    },
+    "E.Q4_fresh_matches_after_manifest_all12": {
+      "pass": true,
+      "detail": "{\"company\": true, \"research\": true, \"product\": true, \"operations\": true, \"qa\": true, \"tech\": true, \"finance\": true, \"sales\": true, \"design\": true, \"ux\": true, \"video-director\": true, \"video-editor\": true}"
+    },
+    "E.Q4_default_profile_untouched": {
+      "pass": true,
+      "detail": "default_ref_exists=False default_hook_present=False"
+    },
+    "F.defects_present_in_originals": {
+      "pass": true,
+      "detail": "{\"SA47_48_codex_not_dots_attribution_present\": true, \"SA57_65_R0_R6_attribution_present\": true, \"ROLLOUT_line3_has_t_2c44dd2f\": true, \"ROLLOUT_line24_claims_11\": true, \"ROLLOUT_line119_no_spend_incurred\": true}"
+    },
+    "F.candidate_free_of_false_attributions": {
+      "pass": true,
+      "detail": "line34='Attention: <existing channel + threshold>; independent verifier: <profile>'"
+    },
+    "F.OBS1_candidate_line87_idempotent_recovery": {
+      "pass": true,
+      "detail": "Ambiguous external write требует readback/idempotent recovery или hold, не blind replay. Destructive rollback требует прежних backup/scope gates. Эта reference не grants stop-all/root/delete authority."
+    },
+    "G.E1_no_install_time_member_receipt": {
+      "pass": true,
+      "detail": "{\"rollout_json_has_member_receipts\": false, \"installer_hashes_fixed_inputs_only\": true, \"baseline_has_file_inventory\": false, \"verify_check6_performs_comparison\": false}"
+    },
+    "G.E2_no_before_inventory_no_comparison": {
+      "pass": true,
+      "detail": "baseline_target_keys=['baseline_sha256', 'new_reference_path', 'profile', 'reference_exists', 'root_path', 'skill_root']"
+    }
+  },
+  "findings": [],
+  "brain_members_count": 10,
+  "ref_hashes_fresh": {
+    "company": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "research": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "product": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "operations": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "qa": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "tech": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "finance": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "sales": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "design": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "ux": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "video-director": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f",
+    "video-editor": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+  },
+  "targets_q3": {
+    "company": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "research": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "product": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "operations": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "qa": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "tech": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "finance": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "sales": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "design": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "ux": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "video-director": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    },
+    "video-editor": {
+      "hook_count": 1,
+      "link_ok": true,
+      "minus_hook_mode": "direct",
+      "backup_sha_ok": true,
+      "frontmatter_ok": true
+    }
+  },
+  "root_drift_fresh": {
+    "company": {
+      "fresh": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "manifest_after": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "match": true
+    },
+    "research": {
+      "fresh": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "manifest_after": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "match": true
+    },
+    "product": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "operations": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "qa": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "tech": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "finance": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "sales": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "design": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "ux": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "video-director": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    },
+    "video-editor": {
+      "fresh": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "manifest_after": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "match": true
+    }
+  },
+  "report_checks": {
+    "SA47_48_codex_not_dots_attribution_present": true,
+    "SA57_65_R0_R6_attribution_present": true,
+    "candidate_contains_codex_or_DoT_or_deny_first": false,
+    "candidate_contains_R0_R6": false,
+    "candidate_line34": "Attention: <existing channel + threshold>; independent verifier: <profile>",
+    "ROLLOUT_line3_has_t_2c44dd2f": true,
+    "ROLLOUT_line24_claims_11": true,
+    "ROLLOUT_line119_no_spend_incurred": true,
+    "brain_members_actual": 10,
+    "rollback_sec_checks_ref_hash": true,
+    "candidate_line87_has_idempotent_recovery": true
+  },
+  "residual_errata_overclaims": {
+    "E1_install_time_member_verification_unreceipted": true,
+    "E2_baseline_before_inventory_absent_no_comparison": true,
+    "detail": {
+      "rollout_json_has_member_receipts": false,
+      "installer_hashes_fixed_inputs_only": true,
+      "baseline_has_file_inventory": false,
+      "verify_check6_performs_comparison": false
+    }
+  },
+  "overall_all_checks_pass": true,
+  "check_count": 31
+}

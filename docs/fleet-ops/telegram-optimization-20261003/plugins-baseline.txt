@@ -1,0 +1,5 @@
+enabled      git pinned@4908dd4d 1.2.31   fleet-policy
+enabled      user              hookdeck
+enabled      git      0.3.0    hermes-session-reset-policy
+enabled      git pinned@e905f3bc 1.0.0    telegram-business
+enabled      user     1.0.0    tg-owner-control

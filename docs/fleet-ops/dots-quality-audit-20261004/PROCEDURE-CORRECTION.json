@@ -1,0 +1,12 @@
+{
+  "scope": "Procedural-memory correction in active company ONLY; not installation/rollout",
+  "source": "prior read_file/skill_view preserved tool result plus successful skill_manage patch; exact helper source and in-memory probe independently available",
+  "old_quote_from_tool_read": "- **Once a card reaches `done`, native `kanban_comment` returns `unknown task` for it (comment writes are refused on finished cards) and `kanban_create --parents <done-id>` fails with `unknown parent task(s)`. A follow-up on a completed card needs a NEW standalone card that references the finished one in its body; don't retry comments/links against the done id.**",
+  "new_quote_from_confirmed_edit": "- **Treat `unknown task` / `unknown parent task(s)` as lookup failures, NOT evidence that finished cards forbid comments or parent links. The native data layer checks existence independently of terminal status; a `done` parent can release a ready child. First verify the exact task id, explicit board and active storage routing through native readback. Company-only read-only CLI lookup may clear company-session board pins in a child process; worker pins stay intact. Never create a standalone replacement or retry a write on another surface merely to escape an unknown-id error. An in-memory helper probe proves data-layer semantics only, not live policy admission.**",
+  "current_file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\devops\\exact-head-acceptance-qa\\SKILL.md",
+  "current_sha256": "47d1bf971555f4acde4c30bce1fa8802d27e3fb185e697b575e2863c4d7c365e",
+  "old_rule_absent": true,
+  "new_rule_once": true,
+  "evidence": "NATIVE-SOURCE-PROBE.json",
+  "note": "The fixture establishes native data-layer semantics only; no live comment or parent-write test is claimed. Current default-board location of t_29903deb is verified by native readback."
+}

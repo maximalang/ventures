@@ -1,0 +1,7 @@
+== pristine base (candidate stashed) ==
+bda33b601d194fb8a43e5660c57542aad14aa372
+== pytest tests/pm/test_worker_publication.py on PRISTINE base ==
+ERROR tests/pm/test_worker_publication.py::test_explicit_publication_keeps_its_intent_through_tool_acquisition
+ERROR tests/pm/test_worker_publication.py::test_stale_enablement_cannot_replace_a_newer_selection
+1 passed, 37 errors in 1.38s
+note: the 37 errors are the isolated_python uv-sync fixture failing identically on base and candidate (environmental, uv sync exited 2), not a regression

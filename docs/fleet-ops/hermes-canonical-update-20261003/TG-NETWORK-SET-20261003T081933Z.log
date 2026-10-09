@@ -1,0 +1,10 @@
+=== TG-NETWORK-SET 20261003T081933Z ===
+--- pre-change readback ---
+Config key not set: telegram.proxy_url
+pre_exit=1
+--- set ---
+✓ Set telegram.proxy_url = http://127.0.0.1:10809 in C:\Users\max\AppData\Local\hermes\profiles\company\config.yaml
+set_exit=0
+--- post-change readback ---
+http://127.0.0.1:10809
+post_exit=0

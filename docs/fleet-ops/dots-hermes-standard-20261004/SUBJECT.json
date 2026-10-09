@@ -1,0 +1,155 @@
+{
+  "scope": "Source comparison + exact reference/hook candidate; no current installation acceptance",
+  "created_at_utc": "2026-10-03T23:09:53.595259+00:00",
+  "members": [
+    {
+      "name": "BASELINE.json",
+      "bytes": 61388,
+      "sha256": "5490e880fcd4d596029d127e1a1bf4011df7003b53e9faca3fef9680fa61f817"
+    },
+    {
+      "name": "COMPANY-BRIEF.md",
+      "bytes": 14999,
+      "sha256": "777ccef2b70795bfb6fe190678a5e1b3ec8f6697b82551af680fd7dfd551d628"
+    },
+    {
+      "name": "COMPANY-MATRIX.md",
+      "bytes": 18855,
+      "sha256": "f59705dae752a63ccba37fb008895be69d1e2e94ae95d84e2a73547f2f3c4296"
+    },
+    {
+      "name": "REFERENCE-CANDIDATE.md",
+      "bytes": 7821,
+      "sha256": "80933ccf80e99e6b9d62b6f15c5c4f8cf69e9ee79ab1b2e9296173b99cdf4def"
+    },
+    {
+      "name": "HOOK-CANDIDATE.md",
+      "bytes": 697,
+      "sha256": "40b6f5e5edad6b8349c3143e032e29d2d02fa5cd1362c9ba9c10dbdbc2bdc88d"
+    },
+    {
+      "name": "AUTHOR-LINEAGE.json",
+      "bytes": 1157,
+      "sha256": "eb13f9fa542ea1471ef9f924a9ac71bc38ddab8f2a86651389a59cd8293c9061"
+    }
+  ],
+  "mechanism_ids": [
+    "M01",
+    "M02",
+    "M03",
+    "M04",
+    "M05",
+    "M06",
+    "M07",
+    "M08",
+    "M09",
+    "M10",
+    "M11",
+    "M12",
+    "M13",
+    "M14",
+    "M15",
+    "M16",
+    "M17"
+  ],
+  "targets": [
+    {
+      "profile": "company",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "b19e361ba6cffaad90c76aed494bcffdb3cc521c3bbd2ae55a7c2df9aa1addf8",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "research",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "b31bf0f396d54f48ab0e66b430e93f066743356b6dd7f213a71566cb458502b8",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "product",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "operations",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "qa",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "tech",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "finance",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "sales",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "design",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "ux",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "video-director",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    },
+    {
+      "profile": "video-editor",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+      "reference_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\references\\dots-operating-method.md",
+      "before_root_sha256": "1a796b7c6743c70332a9fcf8771b58847724e2245aa7b95e966bae5f29901054",
+      "before_reference_sha256": "f2a85ced87b620bf08cdfc2f3de85ce004a2912efded4da85b668148f00dce6f"
+    }
+  ],
+  "financial_scope": {
+    "scope": "fleet-ops internal workflow normalization",
+    "period_start_utc": "2026-10-03T22:33:54+00:00",
+    "period_end_utc": null,
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "new_commitments": null,
+    "estimated_usage_cost": null,
+    "source": "Source collection and task scope; no billing/ledger readback",
+    "unknown_reason": "Not a revenue experiment; billing not measured; no paid capability/order is permitted"
+  },
+  "candidate_sha256": "80933ccf80e99e6b9d62b6f15c5c4f8cf69e9ee79ab1b2e9296173b99cdf4def",
+  "hook_sha256": "40b6f5e5edad6b8349c3143e032e29d2d02fa5cd1362c9ba9c10dbdbc2bdc88d"
+}

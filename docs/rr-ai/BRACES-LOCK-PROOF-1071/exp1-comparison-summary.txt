@@ -1,0 +1,2 @@
+nodes 584 -> 584 | added 0 | dropped 0 | verChanges 0 | fieldChanges 1 | devFlagFlips 3
+flips: [{"node":"node_modules/@types/jsdom","before":false,"after":true,"version":"20.0.1"},{"node":"node_modules/@types/tough-cookie","before":false,"after":true,"version":"4.0.5"},{"node":"node_modules/jest-environment-jsdom","before":false,"after":true,"version":"29.7.0"}]

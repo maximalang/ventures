@@ -1,0 +1,407 @@
+{
+  "task": "t_cef261ac",
+  "entries": [
+    {
+      "id": "HA-FM",
+      "skill": "hermes-agent",
+      "kind": "frontmatter_triggers",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "span": {
+        "type": "frontmatter",
+        "start": null,
+        "end": null
+      },
+      "slice": "frontmatter",
+      "markers": [],
+      "note": "name/description/version/metadata byte-identical; extended trigger line preserved in body."
+    },
+    {
+      "id": "HA-TITLE-TRIG",
+      "skill": "hermes-agent",
+      "kind": "trigger",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "slice": "title_block",
+      "markers": [],
+      "span": {
+        "type": "anchors",
+        "start": "# Hermes Agent",
+        "end": "Hermes Agent is an open-source"
+      }
+    },
+    {
+      "id": "HA-INTRO",
+      "skill": "hermes-agent",
+      "kind": "unique_content",
+      "disposition": "moved_verbatim",
+      "dest": "references/product-overview.md",
+      "slice": "intro",
+      "markers": [],
+      "span": {
+        "type": "anchors",
+        "start": "Hermes Agent is an open-source",
+        "end": "**This skill is a hub.**"
+      }
+    },
+    {
+      "id": "HA-HUBDECL",
+      "skill": "hermes-agent",
+      "kind": "procedure",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "slice": "hub_decl",
+      "markers": [],
+      "span": {
+        "type": "anchors",
+        "start": "**This skill is a hub.**",
+        "end": "## Scope & Verification"
+      }
+    },
+    {
+      "id": "HA-SCOPE",
+      "skill": "hermes-agent",
+      "kind": "safety_invariant",
+      "disposition": "moved_verbatim",
+      "dest": "references/product-overview.md",
+      "slice": "scope",
+      "hub_markers": [
+        "llms.txt",
+        "llms-full.txt",
+        "Never answer \"Hermes can't do that\" from memory.",
+        "product-overview.md"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Scope & Verification",
+        "end": "## Quick Start"
+      }
+    },
+    {
+      "id": "HA-QS",
+      "skill": "hermes-agent",
+      "kind": "unique_procedure",
+      "disposition": "moved_verbatim",
+      "dest": "references/quickstart-and-paths.md",
+      "slice": "quickstart",
+      "hub_markers": [
+        "quickstart-and-paths.md"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Quick Start",
+        "end": "## Key Paths"
+      }
+    },
+    {
+      "id": "HA-KP",
+      "skill": "hermes-agent",
+      "kind": "unique_procedure",
+      "disposition": "moved_verbatim",
+      "dest": "references/quickstart-and-paths.md",
+      "slice": "keypaths",
+      "hub_markers": [
+        "$HERMES_HOME",
+        "never hardcode `~/.hermes`"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Key Paths",
+        "end": "## Routing Table"
+      }
+    },
+    {
+      "id": "HA-RT",
+      "skill": "hermes-agent",
+      "kind": "procedure",
+      "disposition": "kept_in_hub_verbatim_plus_rows",
+      "dest": "SKILL.md",
+      "slice": "routing",
+      "markers": [],
+      "note": "Every original routing row preserved byte-exact; 3 additive rows for new refs (MANIFEST.routing_addition).",
+      "span": {
+        "type": "anchors",
+        "start": "## Routing Table",
+        "end": "## Spawning Additional Hermes Instances"
+      }
+    },
+    {
+      "id": "HA-THEMING",
+      "skill": "hermes-agent",
+      "kind": "safety_invariant",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "slice": null,
+      "markers": [
+        "you apply skins yourself",
+        "never fork `default`, which drops the palette"
+      ],
+      "span": {
+        "type": "none",
+        "start": null,
+        "end": null
+      }
+    },
+    {
+      "id": "HA-SPAWN",
+      "skill": "hermes-agent",
+      "kind": "unique_procedure",
+      "disposition": "moved_verbatim",
+      "dest": "references/spawning-instances.md",
+      "slice": "spawning",
+      "hub_markers": [
+        "spawning-instances.md",
+        "Prefer `delegate_task` for quick subtasks",
+        "cronjob"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Spawning Additional Hermes Instances",
+        "end": "## Surfaces (quick orientation)"
+      }
+    },
+    {
+      "id": "HA-SURF",
+      "skill": "hermes-agent",
+      "kind": "unique_content",
+      "disposition": "moved_verbatim",
+      "dest": "references/product-overview.md",
+      "slice": "surfaces",
+      "hub_markers": [
+        "product-overview.md"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Surfaces (quick orientation)",
+        "end": "## Hard Invariants"
+      }
+    },
+    {
+      "id": "HA-INV",
+      "skill": "hermes-agent",
+      "kind": "safety_invariant",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "slice": "invariants",
+      "markers": [
+        "Never break prompt caching",
+        "Message role alternation",
+        "Secrets in `.env`, settings in `config.yaml`",
+        "Profile-safe paths",
+        "Never hand-edit `config.yaml` for the user"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Hard Invariants",
+        "end": null
+      }
+    },
+    {
+      "id": "FTE-FM",
+      "skill": "fleet-token-economy",
+      "kind": "frontmatter_triggers",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "slice": "frontmatter",
+      "markers": [],
+      "span": {
+        "type": "frontmatter",
+        "start": null,
+        "end": null
+      }
+    },
+    {
+      "id": "FTE-TITLE",
+      "skill": "fleet-token-economy",
+      "kind": "procedure",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "slice": "title_class",
+      "markers": [],
+      "span": {
+        "type": "anchors",
+        "start": "# Fleet Token Economy",
+        "end": "## Measure first (never guess)"
+      }
+    },
+    {
+      "id": "FTE-MEASURE",
+      "skill": "fleet-token-economy",
+      "kind": "unique_procedure",
+      "disposition": "moved_verbatim",
+      "dest": "references/measure-first-details.md",
+      "slice": "measure",
+      "hub_markers": [
+        "hermes insights --days N",
+        "prompt-size --json",
+        "mode=ro",
+        "hermes cron list",
+        "Wasted-turn audit",
+        "measure-first-details.md"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Measure first (never guess)",
+        "end": "## Levers (typical impact order)"
+      }
+    },
+    {
+      "id": "FTE-LEVERS",
+      "skill": "fleet-token-economy",
+      "kind": "unique_procedure",
+      "disposition": "moved_corrected",
+      "corrections": [
+        "C1a",
+        "C1b"
+      ],
+      "dest": "references/levers-playbook.md",
+      "slice": "levers",
+      "hub_markers": [
+        "moa.presets.default.enabled",
+        "compression.protect_last_n",
+        "skills.disabled",
+        "bot-chat:<profile>",
+        "levers-playbook.md"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Levers (typical impact order)",
+        "end": "## Mechanics & pitfalls"
+      }
+    },
+    {
+      "id": "FTE-LEV4-EFFORT",
+      "skill": "fleet-token-economy",
+      "kind": "owner_directive_safety",
+      "disposition": "kept_in_hub_verbatim",
+      "dest": "SKILL.md",
+      "slice": "lever4",
+      "markers": [
+        "ЗАПРЕЩЁННЫЙ рычаг",
+        "reasoning **max**",
+        "DashScope"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "4. **Reasoning effort",
+        "end": "5. **Skills index**"
+      }
+    },
+    {
+      "id": "FTE-MECH",
+      "skill": "fleet-token-economy",
+      "kind": "unique_procedure",
+      "disposition": "moved_corrected",
+      "corrections": [
+        "C2"
+      ],
+      "dest": "references/mechanics-pitfalls.md",
+      "slice": "mechanics",
+      "hub_markers": [
+        "hermes config set key value",
+        "timestamped backup",
+        "Unknown-key warning",
+        "kanban_*",
+        "mechanics-pitfalls.md"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Mechanics & pitfalls",
+        "end": "## Routing-audit safeguards"
+      }
+    },
+    {
+      "id": "FTE-RSA",
+      "skill": "fleet-token-economy",
+      "kind": "safety_invariant",
+      "disposition": "moved_verbatim",
+      "dest": "references/routing-audit-safeguards.md",
+      "slice": "rsa",
+      "hub_markers": [
+        "routing-audit-safeguards.md",
+        "cost_status"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Routing-audit safeguards",
+        "end": "## From audit to program"
+      }
+    },
+    {
+      "id": "FTE-PROG",
+      "skill": "fleet-token-economy",
+      "kind": "unique_procedure",
+      "disposition": "moved_verbatim",
+      "dest": "references/audit-to-program.md",
+      "slice": "program",
+      "hub_markers": [
+        "audit-to-program.md",
+        "boundary snapshot"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## From audit to program",
+        "end": "## Prompt-audit лейн"
+      }
+    },
+    {
+      "id": "FTE-PA",
+      "skill": "fleet-token-economy",
+      "kind": "unique_procedure",
+      "disposition": "moved_verbatim",
+      "dest": "references/prompt-audit-lane.md",
+      "slice": "prompt_audit",
+      "hub_markers": [
+        "prompt-audit-lane.md",
+        "prompt_audit.py",
+        "d341b0d4a136"
+      ],
+      "span": {
+        "type": "anchors",
+        "start": "## Prompt-audit лейн",
+        "end": "## Support files"
+      }
+    },
+    {
+      "id": "FTE-SUP",
+      "skill": "fleet-token-economy",
+      "kind": "procedure",
+      "disposition": "kept_in_hub_verbatim_expanded",
+      "dest": "SKILL.md",
+      "slice": "support_bullets",
+      "markers": [],
+      "span": {
+        "type": "support_bullets",
+        "start": null,
+        "end": null
+      }
+    }
+  ],
+  "corrections": {
+    "C1a": {
+      "skill": "fleet-token-economy",
+      "before": "are IGNORED by the current kernel",
+      "after": "are ignored by the bare kernel (UPDATE 2026-10-03 per evidence-root DECISION-AND-CONTRACT.md: plugin hermes-session-reset-policy 0.3.0 IS installed on this host and implements session_reset — the old blanket «reset keys are inert» advice is incomplete here; owner directive 2026-10-03: do NOT shorten/reset/archive sessions as an economy shortcut — this correction is not a permission to reset/restart)",
+      "rationale": "Obsolete blanket default must not override active owner directive; contract line 13 documents installed reset-policy plugin.",
+      "evidence": "DECISION-AND-CONTRACT.md §'Evidence already collected' line 13; profiles/company/plugins/hermes-session-reset-policy exists (ls).",
+      "dest": "references/levers-playbook.md"
+    },
+    "C1b": {
+      "skill": "fleet-token-economy",
+      "before": "(grep it in config_defaults.py / runtime)",
+      "after": "(grep it in config_defaults.py / runtime / installed plugins)",
+      "rationale": "Consumer verification must include installed plugins, not only kernel source.",
+      "evidence": "DECISION-AND-CONTRACT.md line 13 + line 17 ('Check installed consumers, not documentation alone').",
+      "dest": "references/levers-playbook.md"
+    },
+    "C2": {
+      "skill": "fleet-token-economy",
+      "before": "config applies to NEW sessions only;",
+      "after": "application varies per key — «NEW sessions only» is not blanket-true (UPDATE 2026-10-03: the official configuration snapshot in the evidence root documents gateway hot-reload of compression/context length; verify the installed consumer for the specific key);",
+      "rationale": "PRODUCT-BRIEF.md: fix obsolete blanket advice about 'only new sessions'; hot reload must be checked against installed consumer.",
+      "evidence": "hermes-configuration-official.txt line 2532 'Gateway hot-reload of compression and context length'; PRODUCT-BRIEF.md §delta.",
+      "dest": "references/mechanics-pitfalls.md"
+    }
+  },
+  "method": "Each source section is a slice between unique anchors; disposition tells where the slice lives in the applied tree (candidate hub and/or new reference). moved_corrected = verbatim slice minus the recorded surgical corrections. Tests re-slice live source and assert substring/marker presence."
+}

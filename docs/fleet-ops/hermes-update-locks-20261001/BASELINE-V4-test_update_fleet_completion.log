@@ -1,0 +1,384 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+_ test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-current] _
+
+update_complete = True, state = 'current'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FC266C04D0>
+
+    @pytest.mark.parametrize(
+        "update_complete,state",
+        [(True, "current"), (False, "current"), (True, "stale"), (True, "down"), (True, None)],
+    )
+    def test_fleet_completion_preserves_runtime_verdict_and_restart_obligation(
+        update_complete, state, monkeypatch,
+    ):
+        refreshed, migrated = [], []
+        snapshot = [{"profile": "default", "pid": 1234, "state": state}] if state else []
+        restart = update_cmd_fleet._GatewayRestartOutcome(
+            incomplete=False, phase_errors=[], pre_restart_gateway_pids=[1234],
+            restarted_services=["hermes-gateway"], failed_or_stale_units=[],
+            relaunched_profiles=[], externally_supervised_profiles=[], killed_pids=set(),
+        )
+        monkeypatch.setattr(update_cmd_fleet, "_print_legacy_units_warning", lambda: None)
+        monkeypatch.setattr(update_cmd, "_surviving_pre_update_serve_runtimes", lambda plan: [])
+        monkeypatch.setattr(
+            update_cmd_maint, "_refresh_dashboard_after_update",
+            lambda **kwargs: refreshed.append(kwargs),
+        )
+        monkeypatch.setattr(update_receipt, "_code_identity", lambda **kwargs: {})
+        monkeypatch.setattr(
+            "hermes_cli.gateway_migrate.maybe_auto_migrate_after_update", lambda: migrated.append(True),
+        )
+    
+        def collect(outcome, rows_expected):
+            assert outcome is restart
+            assert rows_expected is True
+            return snapshot
+    
+        monkeypatch.setattr(update_cmd_fleet, "_collect_fleet_snapshot", collect)
+>       update_cmd_fleet._write_fleet_restart_pending_marker()
+
+tests\hermes_cli\test_update_fleet_completion.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\update_cmd_fleet.py:101: in _write_fleet_restart_pending_marker
+    if _m()._pytest_owns_live_checkout(_fleet_restart_pending_marker_path().parent):
+       ^^^^
+hermes_cli\update_cmd.py:159: in _m
+    from hermes_cli import main
+hermes_cli\main.py:28: in <module>
+    if _early_recovery_mod.restore_interrupted_pull():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\_early_recovery.py:455: in restore_interrupted_pull
+    if not marker.is_file() or _pytest_owns_live_checkout(root):
+           ^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/.git/worktrees/updater-base-tests-20261001/hermes-update-pull')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.git\worktrees\updater-base-tests-20261001\hermes-update-pull
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+_ test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[False-current] _
+
+update_complete = False, state = 'current'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FC26796A90>
+
+    @pytest.mark.parametrize(
+        "update_complete,state",
+        [(True, "current"), (False, "current"), (True, "stale"), (True, "down"), (True, None)],
+    )
+    def test_fleet_completion_preserves_runtime_verdict_and_restart_obligation(
+        update_complete, state, monkeypatch,
+    ):
+        refreshed, migrated = [], []
+        snapshot = [{"profile": "default", "pid": 1234, "state": state}] if state else []
+        restart = update_cmd_fleet._GatewayRestartOutcome(
+            incomplete=False, phase_errors=[], pre_restart_gateway_pids=[1234],
+            restarted_services=["hermes-gateway"], failed_or_stale_units=[],
+            relaunched_profiles=[], externally_supervised_profiles=[], killed_pids=set(),
+        )
+        monkeypatch.setattr(update_cmd_fleet, "_print_legacy_units_warning", lambda: None)
+        monkeypatch.setattr(update_cmd, "_surviving_pre_update_serve_runtimes", lambda plan: [])
+        monkeypatch.setattr(
+            update_cmd_maint, "_refresh_dashboard_after_update",
+            lambda **kwargs: refreshed.append(kwargs),
+        )
+        monkeypatch.setattr(update_receipt, "_code_identity", lambda **kwargs: {})
+        monkeypatch.setattr(
+            "hermes_cli.gateway_migrate.maybe_auto_migrate_after_update", lambda: migrated.append(True),
+        )
+    
+        def collect(outcome, rows_expected):
+            assert outcome is restart
+            assert rows_expected is True
+            return snapshot
+    
+        monkeypatch.setattr(update_cmd_fleet, "_collect_fleet_snapshot", collect)
+>       update_cmd_fleet._write_fleet_restart_pending_marker()
+
+tests\hermes_cli\test_update_fleet_completion.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\update_cmd_fleet.py:101: in _write_fleet_restart_pending_marker
+    if _m()._pytest_owns_live_checkout(_fleet_restart_pending_marker_path().parent):
+       ^^^^
+hermes_cli\update_cmd.py:159: in _m
+    from hermes_cli import main
+hermes_cli\main.py:28: in <module>
+    if _early_recovery_mod.restore_interrupted_pull():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\_early_recovery.py:455: in restore_interrupted_pull
+    if not marker.is_file() or _pytest_owns_live_checkout(root):
+           ^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/.git/worktrees/updater-base-tests-20261001/hermes-update-pull')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.git\worktrees\updater-base-tests-20261001\hermes-update-pull
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+_ test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-stale] _
+
+update_complete = True, state = 'stale'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FC2899C550>
+
+    @pytest.mark.parametrize(
+        "update_complete,state",
+        [(True, "current"), (False, "current"), (True, "stale"), (True, "down"), (True, None)],
+    )
+    def test_fleet_completion_preserves_runtime_verdict_and_restart_obligation(
+        update_complete, state, monkeypatch,
+    ):
+        refreshed, migrated = [], []
+        snapshot = [{"profile": "default", "pid": 1234, "state": state}] if state else []
+        restart = update_cmd_fleet._GatewayRestartOutcome(
+            incomplete=False, phase_errors=[], pre_restart_gateway_pids=[1234],
+            restarted_services=["hermes-gateway"], failed_or_stale_units=[],
+            relaunched_profiles=[], externally_supervised_profiles=[], killed_pids=set(),
+        )
+        monkeypatch.setattr(update_cmd_fleet, "_print_legacy_units_warning", lambda: None)
+        monkeypatch.setattr(update_cmd, "_surviving_pre_update_serve_runtimes", lambda plan: [])
+        monkeypatch.setattr(
+            update_cmd_maint, "_refresh_dashboard_after_update",
+            lambda **kwargs: refreshed.append(kwargs),
+        )
+        monkeypatch.setattr(update_receipt, "_code_identity", lambda **kwargs: {})
+        monkeypatch.setattr(
+            "hermes_cli.gateway_migrate.maybe_auto_migrate_after_update", lambda: migrated.append(True),
+        )
+    
+        def collect(outcome, rows_expected):
+            assert outcome is restart
+            assert rows_expected is True
+            return snapshot
+    
+        monkeypatch.setattr(update_cmd_fleet, "_collect_fleet_snapshot", collect)
+>       update_cmd_fleet._write_fleet_restart_pending_marker()
+
+tests\hermes_cli\test_update_fleet_completion.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\update_cmd_fleet.py:101: in _write_fleet_restart_pending_marker
+    if _m()._pytest_owns_live_checkout(_fleet_restart_pending_marker_path().parent):
+       ^^^^
+hermes_cli\update_cmd.py:159: in _m
+    from hermes_cli import main
+hermes_cli\main.py:28: in <module>
+    if _early_recovery_mod.restore_interrupted_pull():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\_early_recovery.py:455: in restore_interrupted_pull
+    if not marker.is_file() or _pytest_owns_live_checkout(root):
+           ^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/.git/worktrees/updater-base-tests-20261001/hermes-update-pull')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.git\worktrees\updater-base-tests-20261001\hermes-update-pull
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+_ test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-down] _
+
+update_complete = True, state = 'down'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FC28CB9490>
+
+    @pytest.mark.parametrize(
+        "update_complete,state",
+        [(True, "current"), (False, "current"), (True, "stale"), (True, "down"), (True, None)],
+    )
+    def test_fleet_completion_preserves_runtime_verdict_and_restart_obligation(
+        update_complete, state, monkeypatch,
+    ):
+        refreshed, migrated = [], []
+        snapshot = [{"profile": "default", "pid": 1234, "state": state}] if state else []
+        restart = update_cmd_fleet._GatewayRestartOutcome(
+            incomplete=False, phase_errors=[], pre_restart_gateway_pids=[1234],
+            restarted_services=["hermes-gateway"], failed_or_stale_units=[],
+            relaunched_profiles=[], externally_supervised_profiles=[], killed_pids=set(),
+        )
+        monkeypatch.setattr(update_cmd_fleet, "_print_legacy_units_warning", lambda: None)
+        monkeypatch.setattr(update_cmd, "_surviving_pre_update_serve_runtimes", lambda plan: [])
+        monkeypatch.setattr(
+            update_cmd_maint, "_refresh_dashboard_after_update",
+            lambda **kwargs: refreshed.append(kwargs),
+        )
+        monkeypatch.setattr(update_receipt, "_code_identity", lambda **kwargs: {})
+        monkeypatch.setattr(
+            "hermes_cli.gateway_migrate.maybe_auto_migrate_after_update", lambda: migrated.append(True),
+        )
+    
+        def collect(outcome, rows_expected):
+            assert outcome is restart
+            assert rows_expected is True
+            return snapshot
+    
+        monkeypatch.setattr(update_cmd_fleet, "_collect_fleet_snapshot", collect)
+>       update_cmd_fleet._write_fleet_restart_pending_marker()
+
+tests\hermes_cli\test_update_fleet_completion.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\update_cmd_fleet.py:101: in _write_fleet_restart_pending_marker
+    if _m()._pytest_owns_live_checkout(_fleet_restart_pending_marker_path().parent):
+       ^^^^
+hermes_cli\update_cmd.py:159: in _m
+    from hermes_cli import main
+hermes_cli\main.py:28: in <module>
+    if _early_recovery_mod.restore_interrupted_pull():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\_early_recovery.py:455: in restore_interrupted_pull
+    if not marker.is_file() or _pytest_owns_live_checkout(root):
+           ^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/.git/worktrees/updater-base-tests-20261001/hermes-update-pull')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.git\worktrees\updater-base-tests-20261001\hermes-update-pull
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+_ test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-None] _
+
+update_complete = True, state = None
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FC287FF490>
+
+    @pytest.mark.parametrize(
+        "update_complete,state",
+        [(True, "current"), (False, "current"), (True, "stale"), (True, "down"), (True, None)],
+    )
+    def test_fleet_completion_preserves_runtime_verdict_and_restart_obligation(
+        update_complete, state, monkeypatch,
+    ):
+        refreshed, migrated = [], []
+        snapshot = [{"profile": "default", "pid": 1234, "state": state}] if state else []
+        restart = update_cmd_fleet._GatewayRestartOutcome(
+            incomplete=False, phase_errors=[], pre_restart_gateway_pids=[1234],
+            restarted_services=["hermes-gateway"], failed_or_stale_units=[],
+            relaunched_profiles=[], externally_supervised_profiles=[], killed_pids=set(),
+        )
+        monkeypatch.setattr(update_cmd_fleet, "_print_legacy_units_warning", lambda: None)
+        monkeypatch.setattr(update_cmd, "_surviving_pre_update_serve_runtimes", lambda plan: [])
+        monkeypatch.setattr(
+            update_cmd_maint, "_refresh_dashboard_after_update",
+            lambda **kwargs: refreshed.append(kwargs),
+        )
+        monkeypatch.setattr(update_receipt, "_code_identity", lambda **kwargs: {})
+        monkeypatch.setattr(
+            "hermes_cli.gateway_migrate.maybe_auto_migrate_after_update", lambda: migrated.append(True),
+        )
+    
+        def collect(outcome, rows_expected):
+            assert outcome is restart
+            assert rows_expected is True
+            return snapshot
+    
+        monkeypatch.setattr(update_cmd_fleet, "_collect_fleet_snapshot", collect)
+>       update_cmd_fleet._write_fleet_restart_pending_marker()
+
+tests\hermes_cli\test_update_fleet_completion.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+hermes_cli\update_cmd_fleet.py:101: in _write_fleet_restart_pending_marker
+    if _m()._pytest_owns_live_checkout(_fleet_restart_pending_marker_path().parent):
+       ^^^^
+hermes_cli\update_cmd.py:159: in _m
+    from hermes_cli import main
+hermes_cli\main.py:28: in <module>
+    if _early_recovery_mod.restore_interrupted_pull():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+hermes_cli\_early_recovery.py:455: in restore_interrupted_pull
+    if not marker.is_file() or _pytest_owns_live_checkout(root):
+           ^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1267: in is_file
+    return S_ISREG(self.stat().st_mode)
+                   ^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1013: in stat
+    return os.stat(self, follow_symlinks=follow_symlinks)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\home_io_guard.py:167: in guarded
+    self.check(value, dir_fd=kwargs.get(descriptor) if descriptor else None, metadata=metadata,
+tests\home_io_guard.py:107: in check
+    self.refuse(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = WindowsPath('C:/Users/max/AppData/Local/hermes/hermes-agent/.git/worktrees/updater-base-tests-20261001/hermes-update-pull')
+
+    @staticmethod
+    def refuse(value):
+>       raise AssertionError(
+            f"TEST BUG: file I/O against the REAL hermes home: {value}\n"
+            "Use the isolated HERMES_HOME or a temporary fixture instead."
+        )
+E       AssertionError: TEST BUG: file I/O against the REAL hermes home: C:\Users\max\AppData\Local\hermes\hermes-agent\.git\worktrees\updater-base-tests-20261001\hermes-update-pull
+E       Use the isolated HERMES_HOME or a temporary fixture instead.
+
+tests\home_io_guard.py:140: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/hermes_cli/test_update_fleet_completion.py::test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-current]
+FAILED tests/hermes_cli/test_update_fleet_completion.py::test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[False-current]
+FAILED tests/hermes_cli/test_update_fleet_completion.py::test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-stale]
+FAILED tests/hermes_cli/test_update_fleet_completion.py::test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-down]
+FAILED tests/hermes_cli/test_update_fleet_completion.py::test_fleet_completion_preserves_runtime_verdict_and_restart_obligation[True-None]
+5 failed in 2.28s

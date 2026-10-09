@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import load_config
-from .models import PolicyDecision
+from .models import PolicyDecision, remediation_for
 from .policy import Classification, _normalize_tool_name, _is_updater_call, classify, infer_task_type, is_lifecycle_tool
 from .redaction import args_hash, redact, stable_id
 from .storage import BINDING_TTL_HOURS, PolicyStore, iso_later_hours, utc_now
@@ -77,7 +77,13 @@ class FleetPolicyRuntime:
     }
 
     # v1.2.12 C1: lexical binding tokens used inside comment bodies.
-    _BINDING_HEAD = re.compile(r"(?i)\bhead[=:\s]+([0-9a-f]{7,40})\b")
+    # v1.2.34 W3: the hex budget widens 40 → 64 so sha256 artifact heads
+    # bind for work that has no git head (verbal company decisions,
+    # doc/bundle artifacts — card t_d94dde9d). The prefix-equality check in
+    # missing_gates() is unchanged, so a 7..64-char bound head still must be
+    # an exact prefix of the anchor: 40-hex git flows behave identically,
+    # foreign-head / unbound / stale markers stay fail-closed.
+    _BINDING_HEAD = re.compile(r"(?i)\bhead[=:\s]+([0-9a-f]{7,64})\b")
     _BINDING_TYPE = re.compile(r"(?i)\btask_type\s*[=:]\s*([a-z_-]+)")
     _BINDING_ARTIFACT = re.compile(r"(?i)\bartifact[=:\s]+([^\s]+)")
     _NO_GO = "decision:company=no-go"
@@ -111,6 +117,31 @@ class FleetPolicyRuntime:
         missing: list[str] = []
         assignee = str(context.get("assignee") or "").lower()
         expected_head = str(context.get("head") or "").strip().lower()
+        if not expected_head:
+            # v1.2.29 HOTFIX (head-binding deadlock): kanban_context.py never
+            # produced context["head"] — v1.2.12 C1 added the consumer but no
+            # producer, so expected_head was ALWAYS empty and the fail-closed
+            # branch (state=None) fired for EVERY PASS marker. Result: every
+            # evidence-gated category (deploy/merge/publish/spend/destructive)
+            # was permanently unsatisfiable for workers, regardless of correct
+            # markers. Derive the expected head from the authorized company go
+            # marker instead: decision:company=go is the deploy anchor, so its
+            # head= binding is the canonical expected head. Security intent is
+            # preserved — each gate PASS must still be head-bound (prefix match)
+            # to THIS anchor; foreign-head, unbound, or stale markers stay
+            # fail-closed exactly as v1.2.12 intended. If context["head"] is
+            # supplied in future (a real producer), it wins (back-compat).
+            for record in records:
+                if str(record.get("author") or "").lower() != "company":
+                    continue
+                rec_body = str(record.get("body") or "")
+                rec_lines = [ln.strip().lower() for ln in rec_body.splitlines()]
+                if not any(ln == "decision:company=go" or ln.startswith("decision:company=go ")
+                           for ln in rec_lines):
+                    continue
+                hm = self._BINDING_HEAD.search(rec_body)
+                if hm:
+                    expected_head = hm.group(1).lower()
         body_text = str(context.get("task_body") or "")
         type_match = infer_task_type(body_text)
         expected_type = (type_match[0] or "").lower()
@@ -189,9 +220,16 @@ class FleetPolicyRuntime:
         the poison-marker attack lands the comment on someone else's card.
         An explicit target card that cannot be resolved fails closed."""
         from .kanban_context import task_assignee_resolved
-        lowered = text.lower()
-        gates = [match.group(1) for match in re.finditer(r"gate:([a-z_]+)=pass", lowered)]
-        if "decision:company=go" in lowered:
+        # Match the line-level attestation syntax consumed by missing_gates.
+        # A marker quoted in ordinary prose cannot arm a gate and must not
+        # prevent a worker from reporting which independent verdict it needs.
+        lines = [line.strip().lower() for line in text.splitlines()]
+        gates = [
+            match.group(1)
+            for line in lines
+            if (match := re.match(r"^gate:([a-z_]+)=pass(?:$| )", line))
+        ]
+        if any(line == "decision:company=go" or line.startswith("decision:company=go ") for line in lines):
             gates.append("company_decision")
         if not gates:
             return True
@@ -315,7 +353,12 @@ class FleetPolicyRuntime:
                 )
             else:
                 result = classify(tool_name, arguments, self.config, worker=worker)
-            if worker and context.get("task_status") == "blocked" and result.effect != "read":
+            if (
+                worker
+                and context.get("task_status") == "blocked"
+                and result.effect != "read"
+                and not is_lifecycle_tool(tool_name)
+            ):
                 result = Classification("state_change", "task_already_blocked", "deny", "Kanban task is blocked")
 
         if worker:
@@ -335,10 +378,15 @@ class FleetPolicyRuntime:
         # implementation/review work that produces their evidence. Applying
         # gates to every configured category creates a lifecycle deadlock: a
         # worker cannot edit or test before it has backup/scope/review output.
+        # v1.2.22 invariant: reads NEVER require evidence gates — gated
+        # categories imply effect=state_change, so this clause is
+        # defense-in-depth that keeps that guarantee explicit even if a
+        # category/effect pairing drifts later.
         missing = (
             self.missing_gates(result.category, context)
             if worker
             and result.decision == "allow"
+            and result.effect != "read"
             and result.category in self.EVIDENCE_GATED_CATEGORIES
             else []
         )
@@ -500,6 +548,7 @@ class FleetPolicyRuntime:
             timestamp=utc_now(),
             budget_snapshot=snapshot,
             approval_card=approval_card,
+            remediation=remediation_for(rule_id),
             pattern_category=result.category,
             call_index=max(1, int(snapshot.get("used", {}).get("tool_calls", 0))),
             deny_nonce=deny_nonce,

@@ -1,0 +1,102 @@
+{
+  "task": {
+    "id": "t_ced9d357",
+    "title": "TGR-01B: bounded native Telegram profile model/provider fix, no ancillary reads",
+    "body": "task_type: code\nSpec C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/TGR-01B-SOURCE-SPEC.md. Base9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f; source-only own14+fixtures, scoped3files; ancillary denied read excluded, no retry/bypass/live changes. FullSHA+RED/GREEN/logs/patch.",
+    "assignee": "tech",
+    "status": "running",
+    "priority": 19000,
+    "tenant": null,
+    "workspace_kind": "worktree",
+    "workspace_path": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\.worktrees\\tg-qwen-profile-routing-bounded-20261003",
+    "branch_name": "wt/t_ced9d357",
+    "project_id": null,
+    "created_by": "company",
+    "created_at": 1791040886,
+    "started_at": 1791040894,
+    "completed_at": null,
+    "result": null,
+    "skills": [
+      "worker-tool-discipline",
+      "test-driven-development"
+    ],
+    "max_runtime_seconds": 1800,
+    "max_retries": null,
+    "model_override": null,
+    "provider_override": null,
+    "session_id": "20261003_112457_c18754",
+    "workflow_template_id": null,
+    "current_step_key": null,
+    "completion_contract": "local-only",
+    "last_failure_error": null
+  },
+  "latest_summary": null,
+  "parents": [],
+  "children": [],
+  "comments": [],
+  "events": [
+    {
+      "kind": "created",
+      "payload": {
+        "assignee": "tech",
+        "status": "ready",
+        "parents": [],
+        "creator_task_id": null,
+        "tenant": null,
+        "workspace_kind": "worktree",
+        "workspace_path": "C:/Users/max/AppData/Local/hermes/hermes-agent/.worktrees/tg-qwen-profile-routing-bounded-20261003",
+        "branch_name": null,
+        "project_id": null,
+        "skills": [
+          "worker-tool-discipline",
+          "test-driven-development"
+        ],
+        "goal_mode": null,
+        "model_override": null,
+        "provider_override": null
+      },
+      "created_at": 1791040886,
+      "run_id": null
+    },
+    {
+      "kind": "claimed",
+      "payload": {
+        "lock": "laptop:26200",
+        "expires": 1791041794,
+        "run_id": 2225
+      },
+      "created_at": 1791040894,
+      "run_id": 2225
+    },
+    {
+      "kind": "spawned",
+      "payload": {
+        "pid": 22092,
+        "started_at": "|179104090421"
+      },
+      "created_at": 1791040904,
+      "run_id": 2225
+    },
+    {
+      "kind": "heartbeat",
+      "payload": null,
+      "created_at": 1791040918,
+      "run_id": 2225
+    }
+  ],
+  "runs": [
+    {
+      "id": 2225,
+      "profile": "tech",
+      "step_key": null,
+      "status": "running",
+      "outcome": null,
+      "summary": null,
+      "error": null,
+      "metadata": null,
+      "worker_pid": 22092,
+      "started_at": 1791040894,
+      "ended_at": null
+    }
+  ]
+}

@@ -122,6 +122,7 @@ def test_nonzero_transport_child_releases_claim_and_keeps_rows_pending(tmp_path)
 
 
 def test_release_allows_a_successful_retry(tmp_path):
+    """A released transient failure is retried after its backoff window passes."""
     chat_attempts = 0
 
     def runner(command, timeout):
@@ -137,6 +138,9 @@ def test_release_allows_a_successful_retry(tmp_path):
     projector = HermesProjector(runner)
     assert projector.drain_company(store) == 0
     assert [row["event_id"] for row in store.pending_notifications()] == ["event-0"]
+    # The bounded backoff window elapses before the next drain eligibility.
+    with store.connect() as connection:
+        connection.execute("UPDATE notification_outbox SET next_retry_at=NULL WHERE event_id='event-0'")
     assert projector.drain_company(store) == 1
     assert chat_attempts == 2
     assert store.pending_notifications() == []

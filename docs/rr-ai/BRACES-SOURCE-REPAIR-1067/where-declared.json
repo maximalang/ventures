@@ -1,0 +1,84 @@
+{
+  "decl": {
+    "babel-jest": [
+      "root:dependencies@^29.7.0"
+    ],
+    "braces": [
+      "root:dependencies@^3.0.3"
+    ],
+    "create-jest": [
+      "root:dependencies@^29.7.0"
+    ],
+    "expect": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-circus": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-cli": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-config": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-environment-jsdom": [
+      "root:dependencies@^29.7.0",
+      "apps/web:devDependencies@^29.7.0"
+    ],
+    "jest-environment-node": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-haste-map": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-message-util": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-resolve": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-resolve-dependencies": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-runner": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-runtime": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-snapshot": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-watcher": [
+      "root:dependencies@^29.7.0"
+    ],
+    "micromatch": [
+      "root:dependencies@^4.0.8"
+    ]
+  },
+  "declExtra": {
+    "ts-jest": [
+      "root:dependencies@^29.4.11",
+      "apps/web:devDependencies@^29.2.5"
+    ],
+    "jest-util": [
+      "root:dependencies@^29.7.0"
+    ],
+    "jest-environment-jsdom": [
+      "root:dependencies@^29.7.0",
+      "apps/web:devDependencies@^29.7.0"
+    ],
+    "jest": [
+      "apps/web:devDependencies@^29.7.0"
+    ],
+    "@types/jest": [
+      "apps/web:devDependencies@^29.5.14"
+    ],
+    "@testing-library/react": [
+      "apps/web:devDependencies@^16.1.0"
+    ],
+    "@testing-library/jest-dom": [
+      "apps/web:devDependencies@^6.6.3"
+    ]
+  }
+}

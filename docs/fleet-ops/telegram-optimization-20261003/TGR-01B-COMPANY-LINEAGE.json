@@ -1,0 +1,724 @@
+{
+  "observed_at": "2026-10-03T20:41:30.638960+00:00",
+  "check_at": "2026-10-04T20:41:30.638960+00:00",
+  "task": "t_32f46379",
+  "read_only": true,
+  "lineage": [
+    {
+      "profile": "tech",
+      "run": 2225,
+      "session": "20261003_182150_9ae44a",
+      "observed_api_calls": 29,
+      "main_serving_chain": [
+        {
+          "model": "qwen3.8-max",
+          "provider": "custom"
+        }
+      ],
+      "fallback_stamps": [],
+      "auxiliary_attestation": "unknown unless explicit model/provider event observed; no absence claim",
+      "records": [
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5355,
+          "stamp": "2026-10-03 18:21:58,269 INFO [20261003_182150_9ae44a] agent.turn_context: conversation turn: session=20261003_182150_9ae44a model=qwen3.8-max provider=custom platform=cli history=0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5359,
+          "stamp": "2026-10-03 18:22:10,565 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #1: model=qwen3.8-max provider=custom in=42686 out=30 total=42716 latency=11.0s cache=2048/42686 (5%) id=chatcmpl-c44932c1-f3a2-967f-8eef-1e5c0ddd29be"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5376,
+          "stamp": "2026-10-03 18:22:25,389 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #2: model=qwen3.8-max provider=custom in=46736 out=231 total=46967 latency=10.1s cache=42240/46736 (90%) id=chatcmpl-92ffa953-c5cc-9775-a80c-84e9523fb514"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5383,
+          "stamp": "2026-10-03 18:22:46,167 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #3: model=qwen3.8-max provider=custom in=48664 out=678 total=49342 latency=18.5s cache=46080/48664 (95%) id=chatcmpl-00065d2a-2469-915f-b71a-81d847f58de1"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5402,
+          "stamp": "2026-10-03 18:23:14,059 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #4: model=qwen3.8-max provider=custom in=66425 out=591 total=67016 latency=27.0s cache=48128/66425 (72%) id=chatcmpl-71a38762-8d64-9f09-ba93-70c1cef8ab6f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5422,
+          "stamp": "2026-10-03 18:23:38,724 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #5: model=qwen3.8-max provider=custom in=69247 out=472 total=69719 latency=23.3s cache=65536/69247 (95%) id=chatcmpl-cbd6d177-a4d3-9e54-93de-531edd44a845"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5430,
+          "stamp": "2026-10-03 18:23:53,089 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #6: model=qwen3.8-max provider=custom in=73665 out=364 total=74029 latency=13.2s cache=68608/73665 (93%) id=chatcmpl-658892a5-b0f3-9c18-bbd7-96c7bd3fe8e1"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5449,
+          "stamp": "2026-10-03 18:24:20,850 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #7: model=qwen3.8-max provider=custom in=78358 out=383 total=78741 latency=26.5s cache=77824/78358 (99%) id=chatcmpl-20a57e5f-d35a-9878-9b22-0c4d774a55d4"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5454,
+          "stamp": "2026-10-03 18:24:41,754 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #8: model=qwen3.8-max provider=custom in=82890 out=595 total=83485 latency=19.7s cache=77824/82890 (94%) id=chatcmpl-46a2f78b-6463-9c75-8e6b-04a7ab9d1414"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5475,
+          "stamp": "2026-10-03 18:25:00,603 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #9: model=qwen3.8-max provider=custom in=84082 out=363 total=84445 latency=17.7s cache=81920/84082 (97%) id=chatcmpl-5818a07e-c397-9dfa-a1c6-0e310407ff63"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5578,
+          "stamp": "2026-10-03 18:28:42,442 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #10: model=qwen3.8-max provider=custom in=71924 out=7799 total=79723 latency=220.7s cache=49152/71924 (68%) id=chatcmpl-8a75d4a2-28d9-94df-b1a9-ec84d1d0df3f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5597,
+          "stamp": "2026-10-03 18:29:29,289 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #11: model=qwen3.8-max provider=custom in=81185 out=1176 total=82361 latency=43.0s cache=71680/81185 (88%) id=chatcmpl-b1c6356b-ad22-9ab2-8af7-0b5d245b7acf"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5601,
+          "stamp": "2026-10-03 18:29:58,770 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #12: model=qwen3.8-max provider=custom in=82997 out=424 total=83421 latency=28.7s cache=80896/82997 (97%) id=chatcmpl-212a3d71-111d-9821-a9e3-e89804e6d09f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5758,
+          "stamp": "2026-10-03 18:35:33,243 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #13: model=qwen3.8-max provider=custom in=84075 out=13760 total=97835 latency=333.4s cache=82944/84075 (99%) id=chatcmpl-8e61ceb6-bbeb-911c-a2e3-fc1bca564884"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5781,
+          "stamp": "2026-10-03 18:35:50,533 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #14: model=qwen3.8-max provider=custom in=97994 out=227 total=98221 latency=13.4s cache=83968/97994 (86%) id=chatcmpl-d56bbc4d-11e8-9542-ab76-0509a4bc3076"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5799,
+          "stamp": "2026-10-03 18:36:18,609 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #15: model=qwen3.8-max provider=custom in=98804 out=300 total=99104 latency=19.7s cache=97280/98804 (98%) id=chatcmpl-9f4e66bd-d795-96b5-ad90-e5d2a2273d8d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5802,
+          "stamp": "2026-10-03 18:36:41,457 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #16: model=qwen3.8-max provider=custom in=99194 out=839 total=100033 latency=22.2s cache=98304/99194 (99%) id=chatcmpl-95bfe535-783f-93b7-aa14-139c7031a944"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5837,
+          "stamp": "2026-10-03 18:37:18,152 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #17: model=qwen3.8-max provider=custom in=101048 out=830 total=101878 latency=34.9s cache=98304/101048 (97%) id=chatcmpl-d3c8724e-056e-9385-9ec9-1df7e8463afc"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5857,
+          "stamp": "2026-10-03 18:37:48,540 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #18: model=qwen3.8-max provider=custom in=103438 out=743 total=104181 latency=23.9s cache=100352/103438 (97%) id=chatcmpl-99818fc3-5352-9563-a7f4-5b521c771f53"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5875,
+          "stamp": "2026-10-03 18:38:31,788 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #19: model=qwen3.8-max provider=custom in=104405 out=964 total=105369 latency=37.6s cache=103424/104405 (99%) id=chatcmpl-6db0bf44-abb1-9340-aed8-34f12f6604f3"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5895,
+          "stamp": "2026-10-03 18:39:13,396 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #20: model=qwen3.8-max provider=custom in=105569 out=1261 total=106830 latency=41.4s cache=103424/105569 (98%) id=chatcmpl-a17feeec-7748-9388-a216-1adf5184c645"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5913,
+          "stamp": "2026-10-03 18:39:40,081 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #21: model=qwen3.8-max provider=custom in=106954 out=358 total=107312 latency=25.9s cache=105472/106954 (99%) id=chatcmpl-522d6f21-8bef-926b-a683-9e22a919c973"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5948,
+          "stamp": "2026-10-03 18:40:34,431 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #22: model=qwen3.8-max provider=custom in=107598 out=1834 total=109432 latency=52.5s cache=106496/107598 (99%) id=chatcmpl-a27d5f5c-5106-911c-a4f0-57ee9575b48f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 5983,
+          "stamp": "2026-10-03 18:41:21,236 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #23: model=qwen3.8-max provider=custom in=109632 out=1065 total=110697 latency=46.7s cache=109568/109632 (100%) id=chatcmpl-f96a95df-e18f-99a4-86e9-910d06864a9d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6046,
+          "stamp": "2026-10-03 18:42:27,061 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #24: model=qwen3.8-max provider=custom in=110744 out=1737 total=112481 latency=60.0s cache=109568/110744 (99%) id=chatcmpl-6aebe554-b3cc-998d-a72f-5a0a81d51af3"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6148,
+          "stamp": "2026-10-03 18:43:26,105 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #25: model=qwen3.8-max provider=custom in=117627 out=2070 total=119697 latency=58.9s cache=110592/117627 (94%) id=chatcmpl-288e3b01-6b7f-977a-b1ee-e3d303bd3964"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6177,
+          "stamp": "2026-10-03 18:44:02,207 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #26: model=qwen3.8-max provider=custom in=119742 out=1046 total=120788 latency=36.0s cache=116736/119742 (97%) id=chatcmpl-9be8544c-67bf-9b7f-831d-fe3d59faaa1f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6197,
+          "stamp": "2026-10-03 18:44:39,393 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #27: model=qwen3.8-max provider=custom in=121025 out=1075 total=122100 latency=36.9s cache=118784/121025 (98%) id=chatcmpl-432e074b-369c-9fa4-b3d7-5e9da71dba87"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6231,
+          "stamp": "2026-10-03 18:45:39,720 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #28: model=qwen3.8-max provider=custom in=123919 out=1725 total=125644 latency=59.6s cache=52224/123919 (42%) id=chatcmpl-f477e8e4-89c5-9028-93a4-93ed85edebba"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6253,
+          "stamp": "2026-10-03 18:46:19,769 INFO [20261003_182150_9ae44a] agent.conversation_loop: API call #29: model=qwen3.8-max provider=custom in=125686 out=1193 total=126879 latency=39.4s cache=123904/125686 (99%) id=chatcmpl-b7f6857e-4a34-91dc-8e9c-62dd5e86b73b"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6254,
+          "stamp": "2026-10-03 18:46:19,945 INFO [20261003_182150_9ae44a] agent.conversation_loop: Turn ended: reason=text_response(finish_reason=stop) model=qwen3.8-max api_calls=29/500 budget=29/500 tool_turns=27 last_msg_role=assistant response_len=2128 session=20261003_182150_9ae44a"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 6258,
+          "stamp": "2026-10-03 18:46:20,235 INFO [20261003_182150_9ae44a] agent.turn_context: conversation turn: session=20261003_182150_9ae44a model=qwen3.8-max provider=custom platform=cli history=76"
+        }
+      ]
+    },
+    {
+      "profile": "tech",
+      "run": 2241,
+      "session": "20261003_194421_d5f14b",
+      "observed_api_calls": 15,
+      "main_serving_chain": [
+        {
+          "model": "qwen3.8-max",
+          "provider": "custom"
+        }
+      ],
+      "fallback_stamps": [],
+      "auxiliary_attestation": "unknown unless explicit model/provider event observed; no absence claim",
+      "records": [
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8141,
+          "stamp": "2026-10-03 19:44:29,832 INFO [20261003_194421_d5f14b] agent.turn_context: conversation turn: session=20261003_194421_d5f14b model=qwen3.8-max provider=custom platform=cli history=0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8146,
+          "stamp": "2026-10-03 19:44:37,292 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #1: model=qwen3.8-max provider=custom in=42690 out=66 total=42756 latency=6.4s cache=25344/42690 (59%) id=chatcmpl-9a390f63-eebf-9606-be94-6ac898e5d616"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8183,
+          "stamp": "2026-10-03 19:45:49,855 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #2: model=qwen3.8-max provider=custom in=50636 out=2706 total=53342 latency=70.4s cache=42240/50636 (83%) id=chatcmpl-08a54b55-212d-993e-a6ff-c134491343f0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8239,
+          "stamp": "2026-10-03 19:47:26,430 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #3: model=qwen3.8-max provider=custom in=56717 out=3138 total=59855 latency=93.4s cache=50176/56717 (88%) id=chatcmpl-0183f747-ce70-914f-ba66-d47277097ad0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8276,
+          "stamp": "2026-10-03 19:48:24,285 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #4: model=qwen3.8-max provider=custom in=59954 out=1436 total=61390 latency=43.2s cache=56320/59954 (94%) id=chatcmpl-3f14fde8-d48d-94c2-86c2-7d02c776101f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8295,
+          "stamp": "2026-10-03 19:49:00,250 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #5: model=qwen3.8-max provider=custom in=61505 out=659 total=62164 latency=24.0s cache=59392/61505 (97%) id=chatcmpl-2f251726-ea91-9dd2-b05d-da386f2ee5e3"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8330,
+          "stamp": "2026-10-03 19:50:13,931 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #6: model=qwen3.8-max provider=custom in=64420 out=1018 total=65438 latency=73.1s cache=61440/64420 (95%) id=chatcmpl-ce3a86b5-f933-9116-8627-f0e9e62bba13"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8537,
+          "stamp": "2026-10-03 19:52:52,703 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #7: model=qwen3.8-max provider=custom in=70267 out=5744 total=76011 latency=156.8s cache=63488/70267 (90%) id=chatcmpl-e7e48751-2c8f-96e0-9129-183d7d62aba8"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8603,
+          "stamp": "2026-10-03 19:54:04,279 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #8: model=qwen3.8-max provider=custom in=77151 out=1004 total=78155 latency=61.1s cache=69632/77151 (90%) id=chatcmpl-d5a9f0cd-ddef-99fe-9ad6-9ca8d9fe5f39"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8672,
+          "stamp": "2026-10-03 19:56:12,946 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #9: model=qwen3.8-max provider=custom in=71445 out=4445 total=75890 latency=127.7s cache=42240/71445 (59%) id=chatcmpl-20662f00-6766-9034-9d41-8f58715afdff"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8778,
+          "stamp": "2026-10-03 19:59:52,824 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #10: model=qwen3.8-max provider=custom in=76954 out=8032 total=84986 latency=216.3s cache=70656/76954 (92%) id=chatcmpl-ce1366be-de71-95f7-9d0a-570af5729f58"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8780,
+          "stamp": "2026-10-03 20:00:13,915 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #11: model=qwen3.8-max provider=custom in=85118 out=194 total=85312 latency=19.3s cache=76800/85118 (90%) id=chatcmpl-664418e2-5092-9ead-bda5-33b5499cdb5d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8827,
+          "stamp": "2026-10-03 20:02:27,050 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #12: model=qwen3.8-max provider=custom in=86404 out=6004 total=92408 latency=132.6s cache=84992/86404 (98%) id=chatcmpl-3fbc8bd1-6e40-92bc-a9e8-62181d5e50d4"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8848,
+          "stamp": "2026-10-03 20:02:53,143 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #13: model=qwen3.8-max provider=custom in=98927 out=183 total=99110 latency=23.4s cache=86016/98927 (87%) id=chatcmpl-5184fcfa-18f2-9bcc-8068-678f09006a9b"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8869,
+          "stamp": "2026-10-03 20:03:54,169 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #14: model=qwen3.8-max provider=custom in=102017 out=2760 total=104777 latency=60.3s cache=98304/102017 (96%) id=chatcmpl-a6752be8-df87-9a57-852d-d8d54814e97a"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8872,
+          "stamp": "2026-10-03 20:04:28,076 INFO [20261003_194421_d5f14b] agent.conversation_loop: API call #15: model=qwen3.8-max provider=custom in=104827 out=1056 total=105883 latency=33.8s cache=101376/104827 (97%) id=chatcmpl-5895ab75-ea6d-957a-8ac9-d018401a5879"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8873,
+          "stamp": "2026-10-03 20:04:28,145 INFO [20261003_194421_d5f14b] agent.conversation_loop: Turn ended: reason=text_response(finish_reason=stop) model=qwen3.8-max api_calls=15/500 budget=15/500 tool_turns=14 last_msg_role=assistant response_len=2820 session=20261003_194421_d5f14b"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\logs\\agent.log",
+          "line": 8877,
+          "stamp": "2026-10-03 20:04:28,206 INFO [20261003_194421_d5f14b] agent.turn_context: conversation turn: session=20261003_194421_d5f14b model=qwen3.8-max provider=custom platform=cli history=46"
+        }
+      ]
+    },
+    {
+      "profile": "qa",
+      "run": 2301,
+      "session": "20261003_230029_32a7ed",
+      "observed_api_calls": 41,
+      "main_serving_chain": [
+        {
+          "model": "gpt-6.1-sol",
+          "provider": "openai-codex"
+        }
+      ],
+      "fallback_stamps": [],
+      "auxiliary_attestation": "unknown unless explicit model/provider event observed; no absence claim",
+      "records": [
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29544,
+          "stamp": "2026-10-03 23:00:35,878 INFO [20261003_230029_32a7ed] agent.turn_context: conversation turn: session=20261003_230029_32a7ed model=gpt-6.1-sol provider=openai-codex platform=cli history=0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29551,
+          "stamp": "2026-10-03 23:00:41,140 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #1: model=gpt-6.1-sol provider=openai-codex in=30015 out=16 total=30031 latency=5.2s id=resp_05af0b3e82fb9f97016ac15ee5ce1c87d288b462749f258712"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29571,
+          "stamp": "2026-10-03 23:01:03,457 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #2: model=gpt-6.1-sol provider=openai-codex in=43230 out=438 total=43668 latency=22.2s cache=29824/43230 (69%) id=resp_03961904082cc485016ac15ee9c3c487d298b785ccc08384a6"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29598,
+          "stamp": "2026-10-03 23:01:20,208 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #3: model=gpt-6.1-sol provider=openai-codex in=63276 out=220 total=63496 latency=15.3s cache=43136/63276 (68%) id=resp_05d2041ebb4ea818016ac15f012c1087d296c9c3790cb4224f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29677,
+          "stamp": "2026-10-03 23:01:39,204 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #4: model=gpt-6.1-sol provider=openai-codex in=68827 out=443 total=69270 latency=17.6s cache=63104/68827 (92%) id=resp_0484fb86c801d3ea016ac15f11ee9087d29667f7c814fc858d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29739,
+          "stamp": "2026-10-03 23:02:15,369 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #5: model=gpt-6.1-sol provider=openai-codex in=82876 out=944 total=83820 latency=34.9s cache=68736/82876 (83%) id=resp_0d93b1966ada065b016ac15f24c27087d29f046addda095231"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29871,
+          "stamp": "2026-10-03 23:03:50,213 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #6: model=gpt-6.1-sol provider=openai-codex in=55927 out=1985 total=57912 latency=72.4s cache=29824/55927 (53%) id=resp_05b1f82366a149fa016ac15f5f2cf887d2a5419ee8b42d409f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 29877,
+          "stamp": "2026-10-03 23:03:59,754 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #7: model=gpt-6.1-sol provider=openai-codex in=58075 out=160 total=58235 latency=8.4s cache=55808/58075 (96%) id=resp_0c2ef9d5f067b25f016ac15fa7b8dc87d2b94bd2a6d13f4d98"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30056,
+          "stamp": "2026-10-03 23:05:03,037 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #8: model=gpt-6.1-sol provider=openai-codex in=75721 out=880 total=76601 latency=40.1s cache=57984/75721 (77%) id=resp_01ba3c4b9eb32237016ac15fc87f8c87d29707076cb001dc8d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30109,
+          "stamp": "2026-10-03 23:05:54,984 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #9: model=gpt-6.1-sol provider=openai-codex in=101301 out=1556 total=102857 latency=50.2s cache=75520/101301 (75%) id=resp_0b10e0ef3ebaf51c016ac15ff1452887d2bb8766bed1813107"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30143,
+          "stamp": "2026-10-03 23:06:38,464 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #10: model=gpt-6.1-sol provider=openai-codex in=101751 out=1030 total=102781 latency=41.7s cache=29824/101751 (29%) id=resp_02dec8ece4939f7c016ac16025441887d2ac7bc0da2a7349bd"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30369,
+          "stamp": "2026-10-03 23:07:23,645 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #11: model=gpt-6.1-sol provider=openai-codex in=110788 out=892 total=111680 latency=36.2s cache=101632/110788 (92%) id=resp_02d61a4061bcb808016ac16057dc6887d2a07f665193360121"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30577,
+          "stamp": "2026-10-03 23:07:59,889 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #12: model=gpt-6.1-sol provider=openai-codex in=119852 out=774 total=120626 latency=34.5s cache=110592/119852 (92%) id=resp_0298920413b4b478016ac1607dc9f487d2835ffe7a34c0a34f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30585,
+          "stamp": "2026-10-03 23:08:12,090 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #13: model=gpt-6.1-sol provider=openai-codex in=123988 out=219 total=124207 latency=10.1s cache=119680/123988 (97%) id=resp_0939befa63defe68016ac160a2a70887d2a9bdebb386b8e803"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30655,
+          "stamp": "2026-10-03 23:10:12,807 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #14: model=gpt-6.1-sol provider=openai-codex in=124667 out=3610 total=128277 latency=118.0s cache=123904/124667 (99%) id=resp_094af36572f1fba5016ac160afb21c87d2a61ed37132582e1d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30710,
+          "stamp": "2026-10-03 23:11:40,177 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #15: model=gpt-6.1-sol provider=openai-codex in=129230 out=1304 total=130534 latency=51.1s cache=124544/129230 (96%) id=resp_0b5986ee51a8f96a016ac1614bbfc087d2bdb57b5f3477fbf0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30730,
+          "stamp": "2026-10-03 23:12:08,201 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #16: model=gpt-6.1-sol provider=openai-codex in=130757 out=518 total=131275 latency=26.4s cache=129024/130757 (99%) id=resp_0e4e13bf719db07a016ac1618318c487d2b5079f655d349c6e"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30755,
+          "stamp": "2026-10-03 23:12:32,649 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #17: model=gpt-6.1-sol provider=openai-codex in=143551 out=356 total=143907 latency=21.3s cache=130560/143551 (91%) id=resp_07505eb5d805d0e1016ac161a009a087d28ef3e7f51b5816a9"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 30851,
+          "stamp": "2026-10-03 23:13:12,421 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #18: model=gpt-6.1-sol provider=openai-codex in=147096 out=221 total=147317 latency=15.6s cache=143360/147096 (97%) id=resp_02e03221a8ffb7ca016ac161cba13c87d2ae9dc23a2c992ffe"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31071,
+          "stamp": "2026-10-03 23:13:50,205 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #19: model=gpt-6.1-sol provider=openai-codex in=120126 out=989 total=121115 latency=36.2s cache=29824/120126 (25%) id=resp_0120f99f9cc15788016ac161da9f7887d2a561fa7adeb34054"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31098,
+          "stamp": "2026-10-03 23:14:03,071 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #20: model=gpt-6.1-sol provider=openai-codex in=122349 out=77 total=122426 latency=6.6s cache=119936/122349 (98%) id=resp_016eeaa49b317d54016ac16204f4b887d293b25c8853437150"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31136,
+          "stamp": "2026-10-03 23:14:35,081 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #21: model=gpt-6.1-sol provider=openai-codex in=123017 out=182 total=123199 latency=10.9s cache=122240/123017 (99%) id=resp_0aea939f90ed3d43016ac16221a63887d2bb4d203fa11609c0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31388,
+          "stamp": "2026-10-03 23:16:40,510 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #22: model=gpt-6.1-sol provider=openai-codex in=127701 out=2650 total=130351 latency=124.2s cache=122880/127701 (96%) id=resp_0ff8bbc5fcc6d98c016ac1622d052087d2a58889b492e0abe0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31403,
+          "stamp": "2026-10-03 23:17:17,244 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #23: model=gpt-6.1-sol provider=openai-codex in=131781 out=775 total=132556 latency=32.7s cache=127616/131781 (97%) id=resp_00c3b468393a7592016ac162ad2ebc87d28e1c5f2dd7e96af2"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31493,
+          "stamp": "2026-10-03 23:19:30,284 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #24: model=gpt-6.1-sol provider=openai-codex in=141475 out=3045 total=144520 latency=118.5s cache=131584/141475 (93%) id=resp_0e1cbe0971d59081016ac162dc2a7c87d2859f7a6db6b63b88"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31529,
+          "stamp": "2026-10-03 23:20:07,784 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #25: model=gpt-6.1-sol provider=openai-codex in=146412 out=959 total=147371 latency=36.3s cache=141312/146412 (97%) id=resp_046b9a3d8d368470016ac16353cc1487d28c50a95ed3b3b7c3"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31538,
+          "stamp": "2026-10-03 23:20:21,218 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #26: model=gpt-6.1-sol provider=openai-codex in=148902 out=77 total=148979 latency=8.0s cache=146304/148902 (98%) id=resp_02ef7702419182b0016ac1637db22c87d2a3fe91936e88aa9b"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31548,
+          "stamp": "2026-10-03 23:20:39,299 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #27: model=gpt-6.1-sol provider=openai-codex in=149570 out=56 total=149626 latency=4.7s cache=148736/149570 (99%) id=resp_0c8bdcace10c013f016ac16393010487d2b83d670cdc01e167"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31571,
+          "stamp": "2026-10-03 23:20:50,902 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #28: model=gpt-6.1-sol provider=openai-codex in=151208 out=98 total=151306 latency=11.1s cache=149376/151208 (99%) id=resp_0225dff8f466d721016ac16398695087d286f55458a54cb3d9"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31576,
+          "stamp": "2026-10-03 23:21:04,817 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #29: model=gpt-6.1-sol provider=openai-codex in=152098 out=152 total=152250 latency=13.2s cache=151040/152098 (99%) id=resp_093e4bbbd97f224d016ac163a3fe6887d2be9db0f342735dd5"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31607,
+          "stamp": "2026-10-03 23:21:48,790 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #30: model=gpt-6.1-sol provider=openai-codex in=153720 out=1084 total=154804 latency=43.4s cache=151936/153720 (99%) id=resp_02940759b3bf6a61016ac163b1d21887d29f3ca122ad401442"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31616,
+          "stamp": "2026-10-03 23:22:03,949 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #31: model=gpt-6.1-sol provider=openai-codex in=157829 out=135 total=157964 latency=9.6s cache=153600/157829 (97%) id=resp_072898eb7b6ab297016ac163e2b8c487d2bb87b42e592a82f4"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31623,
+          "stamp": "2026-10-03 23:22:26,577 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #32: model=gpt-6.1-sol provider=openai-codex in=158556 out=170 total=158726 latency=9.7s cache=157696/158556 (99%) id=resp_0ba62fe4f8bea372016ac163f9698887d2928f4eae755de9cb"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31657,
+          "stamp": "2026-10-03 23:23:33,600 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #33: model=gpt-6.1-sol provider=openai-codex in=159478 out=1540 total=161018 latency=66.3s cache=158464/159478 (99%) id=resp_0b30541a9cb4c1df016ac16403a6b487d298af5c898d36b55f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31699,
+          "stamp": "2026-10-03 23:24:18,983 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #34: model=gpt-6.1-sol provider=openai-codex in=164049 out=834 total=164883 latency=40.2s cache=159360/164049 (97%) id=resp_0796336d5b998b15016ac1644b52c487d2b58aa51c90d0bb61"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31759,
+          "stamp": "2026-10-03 23:26:37,386 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #35: model=gpt-6.1-sol provider=openai-codex in=164951 out=4484 total=169435 latency=138.3s cache=163968/164951 (99%) id=resp_0bffb725f18bec1a016ac16473829487d294ddcc833bed0cf0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31784,
+          "stamp": "2026-10-03 23:27:30,014 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #36: model=gpt-6.1-sol provider=openai-codex in=173958 out=882 total=174840 latency=47.4s cache=164864/173958 (95%) id=resp_037e23705d1e84e5016ac16502fdf487d2938eb29cfac81279"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31793,
+          "stamp": "2026-10-03 23:27:39,962 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #37: model=gpt-6.1-sol provider=openai-codex in=177335 out=77 total=177412 latency=6.1s cache=173824/177335 (98%) id=resp_083925b2c60e57ee016ac165363c4087d2aede6ff660e78e20"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31817,
+          "stamp": "2026-10-03 23:28:31,064 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #38: model=gpt-6.1-sol provider=openai-codex in=177886 out=938 total=178824 latency=49.3s cache=177152/177886 (100%) id=resp_0213239c7d62ccd5016ac1653f8d3c87d295cd5fcfaffbbeb9"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31840,
+          "stamp": "2026-10-03 23:29:17,101 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #39: model=gpt-6.1-sol provider=openai-codex in=180320 out=1342 total=181662 latency=45.0s cache=177792/180320 (99%) id=resp_0bdc7763dd8f82c6016ac165707e7887d2ba63210e26cd2a0d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31849,
+          "stamp": "2026-10-03 23:29:31,026 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #40: model=gpt-6.1-sol provider=openai-codex in=130049 out=185 total=130234 latency=13.4s cache=29824/130049 (23%) id=resp_01e1208a8673bdca016ac1659dfdf487d285832fde3f6c770a"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31890,
+          "stamp": "2026-10-03 23:30:07,664 INFO [20261003_230029_32a7ed] agent.conversation_loop: API call #41: model=gpt-6.1-sol provider=openai-codex in=158743 out=841 total=159584 latency=36.3s cache=129920/158743 (82%) id=resp_09e3d70440a401c2016ac165abd94487d29526a94e80c7c922"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31891,
+          "stamp": "2026-10-03 23:30:07,803 INFO [20261003_230029_32a7ed] agent.conversation_loop: Turn ended: reason=text_response(finish_reason=stop) model=gpt-6.1-sol api_calls=41/500 budget=41/500 tool_turns=40 last_msg_role=assistant response_len=1560 session=20261003_230029_32a7ed"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\logs\\agent.log",
+          "line": 31895,
+          "stamp": "2026-10-03 23:30:07,926 INFO [20261003_230029_32a7ed] agent.turn_context: conversation turn: session=20261003_230029_32a7ed model=qwen3.8-max provider=custom platform=cli history=27"
+        }
+      ]
+    },
+    {
+      "profile": "company",
+      "run": 2304,
+      "session": "20261003_232959_80aa19",
+      "observed_api_calls": 11,
+      "main_serving_chain": [
+        {
+          "model": "gpt-6.1-sol",
+          "provider": "openai-codex"
+        }
+      ],
+      "fallback_stamps": [],
+      "auxiliary_attestation": "unknown unless explicit model/provider event observed; no absence claim",
+      "records": [
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20032,
+          "stamp": "2026-10-03 23:30:16,785 INFO [20261003_232959_80aa19] agent.turn_context: conversation turn: session=20261003_232959_80aa19 model=gpt-6.1-sol provider=openai-codex platform=cli history=0"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20056,
+          "stamp": "2026-10-03 23:30:21,838 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #1: model=gpt-6.1-sol provider=openai-codex in=31703 out=16 total=31719 latency=4.8s id=resp_075255daaa1756af016ac165db141c87d29d00da8d594698d7"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20061,
+          "stamp": "2026-10-03 23:30:30,424 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #2: model=gpt-6.1-sol provider=openai-codex in=36873 out=164 total=37037 latency=8.4s cache=31616/36873 (86%) id=resp_01a71eca9f3dc080016ac165de4d6087d28f1689600914c86b"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20097,
+          "stamp": "2026-10-03 23:30:54,022 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #3: model=gpt-6.1-sol provider=openai-codex in=80011 out=485 total=80496 latency=21.5s cache=36736/80011 (46%) id=resp_07a88cf8c5519820016ac165e8d4fc87d2b2c04c3515ebaf35"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20146,
+          "stamp": "2026-10-03 23:31:22,634 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #4: model=gpt-6.1-sol provider=openai-codex in=81676 out=664 total=82340 latency=27.0s cache=31616/81676 (39%) id=resp_0a92755714b72592016ac165fff22087d298286b31a63754a7"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20653,
+          "stamp": "2026-10-03 23:32:49,471 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #5: model=gpt-6.1-sol provider=openai-codex in=98986 out=2212 total=101198 latency=73.1s cache=81536/98986 (82%) id=resp_0c46aec23cf841e9016ac1662a41b487d28660c85fff3b9d9f"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20708,
+          "stamp": "2026-10-03 23:33:11,307 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #6: model=gpt-6.1-sol provider=openai-codex in=101419 out=426 total=101845 latency=15.8s cache=98816/101419 (97%) id=resp_056538a4c517b066016ac16677e49087d2a7e914c056bc79ed"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 20890,
+          "stamp": "2026-10-03 23:35:02,824 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #7: model=gpt-6.1-sol provider=openai-codex in=119168 out=1511 total=120679 latency=61.5s cache=101248/119168 (85%) id=resp_08604dd7f14f891c016ac166bb22e887d289b8940be3b0f5c4"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 21227,
+          "stamp": "2026-10-03 23:39:08,785 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #8: model=gpt-6.1-sol provider=openai-codex in=59542 out=205 total=59747 latency=10.9s id=resp_04fda14b78992a22016ac167e3b34887d29ad15fbbb9b616f7"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 21313,
+          "stamp": "2026-10-03 23:39:43,898 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #9: model=gpt-6.1-sol provider=openai-codex in=62397 out=759 total=63156 latency=33.7s cache=30720/62397 (49%) id=resp_079b53e88df99ca6016ac167ee95cc87d2a2ecbb3f53a243ab"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 21457,
+          "stamp": "2026-10-03 23:41:09,451 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #10: model=gpt-6.1-sol provider=openai-codex in=78472 out=1916 total=80388 latency=74.7s cache=62208/78472 (79%) id=resp_0b12c4a7ab0f401a016ac1681c12bc87d2a6ac7ece7173292d"
+        },
+        {
+          "file": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\logs\\agent.log",
+          "line": 21501,
+          "stamp": "2026-10-03 23:41:28,969 INFO [20261003_232959_80aa19] agent.conversation_loop: API call #11: model=gpt-6.1-sol provider=openai-codex in=80521 out=166 total=80687 latency=9.8s cache=78336/80521 (97%) id=resp_064085da24579ded016ac1686fc92487d2a35e2bdd3c94d5dc"
+        }
+      ]
+    }
+  ],
+  "source_git": [
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\.worktrees\\tg-qwen-profile-routing-bounded-20261003",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "c605e5b618cf20a2d94422bd2c995b864bd986c8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\.worktrees\\tg-qwen-profile-routing-bounded-20261003",
+        "show",
+        "-s",
+        "--format=%H%n%P%n%s",
+        "c605e5b618cf20a2d94422bd2c995b864bd986c8"
+      ],
+      "exit_code": 0,
+      "stdout": "c605e5b618cf20a2d94422bd2c995b864bd986c8\n9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f\nfix(gateway): scope channel overrides to the routed profile config (TGR-01B)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\.worktrees\\tg-qwen-profile-routing-bounded-20261003",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\.worktrees\\tg-qwen-profile-routing-bounded-20261003",
+        "diff",
+        "--name-status",
+        "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+        "c605e5b618cf20a2d94422bd2c995b864bd986c8"
+      ],
+      "exit_code": 0,
+      "stdout": "M\tgateway/run_config_loaders.py\nM\tgateway/run_turn.py\nM\tgateway/slash_commands_model.py\nA\ttests/gateway/test_profile_channel_override_routing.py\n",
+      "stderr": ""
+    }
+  ],
+  "qa_artifacts": {
+    "count": 41,
+    "matched": 41,
+    "mismatches": []
+  },
+  "patch": {
+    "bytes": 21106,
+    "sha256": "9b9a5cfb5c8f88be62efb7b464269a74af96434a77e650e083b9caa3a6629926",
+    "matches_commit_bytes": true,
+    "format_patch_exit": 0
+  },
+  "junit_head": {
+    "total": 28,
+    "failed": 4,
+    "errors": 0,
+    "passed": 24,
+    "failed_cases": [
+      "test_real_model_listing_agrees_with_effective_turn[dm]",
+      "test_real_model_listing_agrees_with_effective_turn[forum]",
+      "test_real_telegram_picker_agrees_with_effective_turn[dm]",
+      "test_real_telegram_picker_agrees_with_effective_turn[forum]"
+    ]
+  },
+  "junit_base": {
+    "total": 28,
+    "failed": 20,
+    "errors": 0,
+    "passed": 8,
+    "failed_cases": [
+      "test_fresh_company_entrypoint[dm]",
+      "test_fresh_company_entrypoint[negative-forum]",
+      "test_fresh_company_entrypoint[new-topic-one]",
+      "test_fresh_company_entrypoint[new-topic-two]",
+      "test_specialist_same_forum_isolation[own-rule]",
+      "test_specialist_same_forum_isolation[own-global]",
+      "test_unknown_and_unserved_fail_safe[unknown-identity]",
+      "test_unknown_and_unserved_fail_safe[unknown-source]",
+      "test_unknown_and_unserved_fail_safe[unserved]",
+      "test_unknown_and_unserved_fail_safe[missing-cache]",
+      "test_bare_routed_source_is_supported",
+      "test_authoritative_identity_beats_conflicting_source_profile",
+      "test_ordinary_next_turn_and_signature_follow_cache_replacement",
+      "test_a_b_a_no_mutation_or_config_borrowing",
+      "test_slash_override_helper_matches_turn[dm]",
+      "test_slash_override_helper_matches_turn[forum]",
+      "test_real_model_listing_agrees_with_effective_turn[dm]",
+      "test_real_model_listing_agrees_with_effective_turn[forum]",
+      "test_real_telegram_picker_agrees_with_effective_turn[dm]",
+      "test_real_telegram_picker_agrees_with_effective_turn[forum]"
+    ]
+  },
+  "capability_inventory": [
+    {
+      "board": "fleet-ops",
+      "error": "kanban: delegate_task child contexts cannot mutate Kanban tasks or boards\n"
+    },
+    {
+      "board": "default",
+      "error": "kanban: delegate_task child contexts cannot mutate Kanban tasks or boards\n"
+    }
+  ],
+  "limits": {
+    "positive_independence_gate": false,
+    "auxiliary_lineage": "unknown",
+    "original2225_native_session_join": "missing; matched exact-task initial log stamp/time",
+    "company_qa_main_overlap": "gpt-6.1-sol/openai-codex",
+    "new_live_calls": 0
+  }
+}

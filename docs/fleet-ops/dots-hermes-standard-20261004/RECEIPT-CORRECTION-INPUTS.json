@@ -1,0 +1,36 @@
+{
+  "document_head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "purpose": "Frozen inputs for receipt correction only; original review artifacts preserved; not a positive gate and not rewritten reviewer content",
+  "members": [
+    {
+      "name": "QA-CANDIDATE.md",
+      "sha256": "63f6a88e2de00ad0d48bdb1c2d17caec029ec3f3675e8fd90a8300f768f9d945",
+      "bytes": 15178
+    },
+    {
+      "name": "QA-CANDIDATE.json",
+      "sha256": "62362bcffb7a6d2d0458ef298a3aad1be1f96a0fb4f1514c1212ed3dda9ad843",
+      "bytes": 6314
+    },
+    {
+      "name": "QA-RUN2319-INTEGRITY.json",
+      "sha256": "1dd30d03fcb5e003aa7de26983061b166251314aac6337405dc89c2075bcec8d",
+      "bytes": 5791
+    },
+    {
+      "name": "QA2319-CONSUMER-CHECK.json",
+      "sha256": "78df6840b794196c4899da79721974dfe36d5fe265879559a3549bbb6e36ab90",
+      "bytes": 3218
+    },
+    {
+      "name": "QA2319-NATURAL-LINEAGE.json",
+      "sha256": "10a8f08ed01590657922b78cab4ae8614a006b50f6ed39335e6b79e725b34c7a",
+      "bytes": 551
+    },
+    {
+      "name": "BOARD-STATE-NOW.json",
+      "sha256": "1049e86eeccd60f05d3dae7c4a444d131bc5a91fbc20776e4b68ff1b692b8a98",
+      "bytes": 11668
+    }
+  ]
+}

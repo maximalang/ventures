@@ -1,0 +1,390 @@
+{
+  "captured_at": "2026-10-03T11:34:19.519294+03:00",
+  "window_start": "2026-09-26T08:34:19.519294+00:00",
+  "scope": "company Telegram messages timestamp-bounded; unique tool calls deduped by call id",
+  "message_rows": 54968,
+  "unique_tool_calls": 9401,
+  "unique_tool_results": 9399,
+  "tools_by_returned_chars": [
+    {
+      "tool": "skill_view",
+      "unique_results": 447,
+      "chars": 6816429,
+      "over_8000_chars": 274
+    },
+    {
+      "tool": "terminal",
+      "unique_results": 4522,
+      "chars": 6507352,
+      "over_8000_chars": 110
+    },
+    {
+      "tool": "read_file",
+      "unique_results": 789,
+      "chars": 4965167,
+      "over_8000_chars": 197
+    },
+    {
+      "tool": "kanban_show",
+      "unique_results": 58,
+      "chars": 1569307,
+      "over_8000_chars": 40
+    },
+    {
+      "tool": "patch",
+      "unique_results": 600,
+      "chars": 1173867,
+      "over_8000_chars": 1
+    },
+    {
+      "tool": "execute_code",
+      "unique_results": 433,
+      "chars": 1023802,
+      "over_8000_chars": 25
+    },
+    {
+      "tool": "search_files",
+      "unique_results": 464,
+      "chars": 953905,
+      "over_8000_chars": 18
+    },
+    {
+      "tool": "web_search",
+      "unique_results": 154,
+      "chars": 910799,
+      "over_8000_chars": 41
+    },
+    {
+      "tool": "session_search",
+      "unique_results": 36,
+      "chars": 582560,
+      "over_8000_chars": 19
+    },
+    {
+      "tool": "cronjob_manage",
+      "unique_results": 49,
+      "chars": 518240,
+      "over_8000_chars": 12
+    },
+    {
+      "tool": "web_extract",
+      "unique_results": 78,
+      "chars": 401737,
+      "over_8000_chars": 15
+    },
+    {
+      "tool": "write_file",
+      "unique_results": 767,
+      "chars": 270741,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "fact_store",
+      "unique_results": 67,
+      "chars": 200971,
+      "over_8000_chars": 8
+    },
+    {
+      "tool": "tool_describe",
+      "unique_results": 43,
+      "chars": 190563,
+      "over_8000_chars": 3
+    },
+    {
+      "tool": "vision_analyze",
+      "unique_results": 143,
+      "chars": 179940,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_list",
+      "unique_results": 4,
+      "chars": 171301,
+      "over_8000_chars": 2
+    },
+    {
+      "tool": "browser_snapshot",
+      "unique_results": 20,
+      "chars": 158225,
+      "over_8000_chars": 17
+    },
+    {
+      "tool": "computer_use",
+      "unique_results": 21,
+      "chars": 111107,
+      "over_8000_chars": 6
+    },
+    {
+      "tool": "memory",
+      "unique_results": 55,
+      "chars": 99237,
+      "over_8000_chars": 8
+    },
+    {
+      "tool": "delegate_task",
+      "unique_results": 20,
+      "chars": 64109,
+      "over_8000_chars": 2
+    },
+    {
+      "tool": "process_manage",
+      "unique_results": 44,
+      "chars": 53833,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "skill_manage",
+      "unique_results": 140,
+      "chars": 49242,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "browser_exec",
+      "unique_results": 14,
+      "chars": 39754,
+      "over_8000_chars": 1
+    },
+    {
+      "tool": "browser_press",
+      "unique_results": 88,
+      "chars": 33302,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "mcp__codegraph__codegraph_context",
+      "unique_results": 7,
+      "chars": 28892,
+      "over_8000_chars": 1
+    },
+    {
+      "tool": "tool_search",
+      "unique_results": 12,
+      "chars": 25052,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "browser_navigate",
+      "unique_results": 11,
+      "chars": 15275,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "clarify",
+      "unique_results": 13,
+      "chars": 13213,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "tool_call",
+      "unique_results": 9,
+      "chars": 11712,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "browser_type",
+      "unique_results": 28,
+      "chars": 11504,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "mcp__codegraph__codegraph_search",
+      "unique_results": 7,
+      "chars": 10619,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "browser_cdp",
+      "unique_results": 62,
+      "chars": 7969,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "browser_click",
+      "unique_results": 22,
+      "chars": 7528,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "browser_vision",
+      "unique_results": 5,
+      "chars": 7338,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "mcp__codegraph__codegraph_node",
+      "unique_results": 2,
+      "chars": 6877,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "browser_console",
+      "unique_results": 10,
+      "chars": 5928,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_create",
+      "unique_results": 28,
+      "chars": 4890,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_comment",
+      "unique_results": 74,
+      "chars": 4197,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_attachments",
+      "unique_results": 6,
+      "chars": 4021,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "mcp__codegraph__codegraph_files",
+      "unique_results": 4,
+      "chars": 2203,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "todo_list",
+      "unique_results": 2,
+      "chars": 1472,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_link",
+      "unique_results": 16,
+      "chars": 1296,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "mcp__codegraph__codegraph_status",
+      "unique_results": 1,
+      "chars": 1011,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_block",
+      "unique_results": 6,
+      "chars": 837,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_complete",
+      "unique_results": 3,
+      "chars": 817,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "mcp__timeweb__check_domain_availability",
+      "unique_results": 1,
+      "chars": 561,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_unblock",
+      "unique_results": 9,
+      "chars": 523,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "kanban_specify",
+      "unique_results": 4,
+      "chars": 232,
+      "over_8000_chars": 0
+    },
+    {
+      "tool": "skills_list",
+      "unique_results": 1,
+      "chars": 137,
+      "over_8000_chars": 0
+    }
+  ],
+  "repeat_candidates": [
+    {
+      "session_id": "20260928_233840_8776f9cb",
+      "tool": "browser_press",
+      "unique_calls": 26,
+      "args": "{\"key\":\"Control+f\"}"
+    },
+    {
+      "session_id": "20260928_233840_8776f9cb",
+      "tool": "browser_press",
+      "unique_calls": 26,
+      "args": "{\"key\":\"Escape\"}"
+    },
+    {
+      "session_id": "20260928_233840_8776f9cb",
+      "tool": "browser_press",
+      "unique_calls": 22,
+      "args": "{\"key\":\"Control+Alt+2\"}"
+    },
+    {
+      "session_id": "20260928_233840_8776f9cb",
+      "tool": "browser_snapshot",
+      "unique_calls": 17,
+      "args": "{\"full\":false}"
+    },
+    {
+      "session_id": "20260922_221913_1e44fb85",
+      "tool": "terminal",
+      "unique_calls": 15,
+      "args": "{\"command\": \"PID3457=$(netstat -ano | grep \\\":3457\\\" | grep LISTENING | awk '{print $NF}' | head -1); [ -n \\\"$PID3457\\\" ] && powershell -NoProfile -Command \\\"Stop-Process -Id $PID3"
+    },
+    {
+      "session_id": "20260922_221913_1e44fb85",
+      "tool": "terminal",
+      "unique_calls": 10,
+      "args": "{\"command\": \"powershell -NoProfile -Command \\\"(Start-Process cmd.exe -ArgumentList '/c','C:\\\\Users\\\\max\\\\AppData\\\\Local\\\\hermes\\\\profiles\\\\company\\\\cache\\\\scratch\\\\rr242-preview-la"
+    },
+    {
+      "session_id": "20261001_184404_82070a28",
+      "tool": "skill_view",
+      "unique_calls": 9,
+      "args": "{\"name\":\"hermes-agent\"}"
+    },
+    {
+      "session_id": "20260922_221913_1e44fb85",
+      "tool": "terminal",
+      "unique_calls": 7,
+      "args": "{\"command\": \"cd /c/tmp/rr-ee208805/apps/web && npx tsc -p tsconfig.test.json --noEmit; echo \\\"TSC:$?\\\"; npx jest src/__tests__/app/landing src/__tests__/app/home-page-section-intro"
+    },
+    {
+      "session_id": "20260929_114052_dab4e6f7",
+      "tool": "skill_view",
+      "unique_calls": 7,
+      "args": "{\"name\":\"fleet-doctrine\"}"
+    },
+    {
+      "session_id": "20261001_184404_82070a28",
+      "tool": "skill_view",
+      "unique_calls": 7,
+      "args": "{\"name\":\"company-os\"}"
+    },
+    {
+      "session_id": "20260922_221913_1e44fb85",
+      "tool": "terminal",
+      "unique_calls": 6,
+      "args": "{\"command\": \"PID3457=$(netstat -ano | grep \\\":3457\\\" | grep LISTENING | awk '{print $NF}' | head -1); [ -n \\\"$PID3457\\\" ] && powershell -NoProfile -Command \\\"Stop-Process -Id $PID3"
+    },
+    {
+      "session_id": "20260922_221913_1e44fb85",
+      "tool": "terminal",
+      "unique_calls": 6,
+      "args": "{\"command\": \"powershell -NoProfile -Command \\\"(Start-Process cmd.exe -ArgumentList '/c','C:\\\\Users\\\\max\\\\AppData\\\\Local\\\\hermes\\\\profiles\\\\company\\\\cache\\\\scratch\\\\rr242-preview-la"
+    },
+    {
+      "session_id": "20260922_221913_1e44fb85",
+      "tool": "terminal",
+      "unique_calls": 6,
+      "args": "{\"background\": true, \"command\": \"cd C:/tmp/rr-ee208805/apps/web && HOSTNAME=0.0.0.0 PORT=3457 NODE_ENV=production node .next/standalone/apps/web/server.js\", \"timeout\": 14400}"
+    },
+    {
+      "session_id": "20260929_114052_dab4e6f7",
+      "tool": "skill_view",
+      "unique_calls": 6,
+      "args": "{\"name\":\"hermes-agent\"}"
+    }
+  ]
+}

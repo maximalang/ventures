@@ -1,0 +1,18 @@
+▶ not activated — using HERMES_PYTHON: C:/Users/max/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe
+▶ running per-file parallel test suite via run_tests_parallel.py
+  (TZ=UTC LANG=C.UTF-8 PYTHONHASHSEED=0; clean env)
+▶ pre-compiling bytecode cache
+▶ launching test runner
+Discovered 1 test files (~18 tests) under ['tests\\gateway\\test_profile_channel_override_routing.py']; running with -j 18
+[100.0% |    18/~18 | ✓18 | ✗ 0] ✓ tests\gateway\test_profile_channel_override_routing.py (18✓, 7.8s)
+
+=== Summary: 1 files, 18 tests passed, 0 failed (100% complete) in 8.0s (18 workers) ===
+  Durations cached to test_durations.json (1 files)
+
+=== Per-file subprocess time distribution ===
+  Files:   1
+  Total subprocess CPU-wall: 7.8s  (runner wall: 8.0s, parallelism: 18x)
+  P50: 7.84s  P90: 7.84s  P95: 7.84s  P99: 7.84s  Max: 7.84s
+  <1s: 0 files (0%)  <2s: 0 files (0%)
+  Top 10 slowest:
+      7.84s  tests\gateway\test_profile_channel_override_routing.py

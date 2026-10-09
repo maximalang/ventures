@@ -11,30 +11,30 @@ safe_defaults:
   monetary_cost_when_unreported: unavailable
 budgets:
   research:
-    tokens: 120000
-    wall_clock_minutes: 90
-    tool_calls: 80
-    retries: 2
+    tokens: 250000
+    wall_clock_minutes: 240
+    tool_calls: 250
+    retries: 3
   code:
-    tokens: 180000
-    wall_clock_minutes: 120
-    tool_calls: 140
-    retries: 2
+    tokens: 400000
+    wall_clock_minutes: 300
+    tool_calls: 400
+    retries: 3
   review:
-    tokens: 60000
-    wall_clock_minutes: 45
-    tool_calls: 50
-    retries: 2
+    tokens: 250000
+    wall_clock_minutes: 180
+    tool_calls: 250
+    retries: 3
   ops:
-    tokens: 50000
-    wall_clock_minutes: 30
-    tool_calls: 40
-    retries: 2
+    tokens: 250000
+    wall_clock_minutes: 240
+    tool_calls: 250
+    retries: 3
 anti_loop:
-  max_identical_calls: 3
-  max_same_failure: 2
-  max_idle_turns: 3
-  max_retries: 2
+  max_identical_calls: 5
+  max_same_failure: 3
+  max_idle_turns: 4
+  max_retries: 3
 financial_mandate:
   currency: RUB
   max_transaction: 10000
@@ -124,3 +124,14 @@ overrides:
   model: narrowing_only
   allow_relaxation: false
   source: exact_task_markers
+# v1.2.36 (SPEC v5) — нативный автороутинг в pre-claim пути диспатча
+# (kanban_task_claimed). enabled — мастер-флаг вызова router_hook.py; рабочий
+# режим (off/shadow/enforce + канареечные классы + статус-файл доступности)
+# живёт в ROUTER_ACTIVE.json рядом с hook: откат = {"mode": "off"} без
+# передеплоя. Поставка — mode=shadow: ROUTING-LOG.md растёт, пин НЕ ставится.
+router_hook:
+  enabled: true
+  script: null       # дефолт: <hermes>/profiles/company/scripts/router_hook.py
+  active_file: null  # дефолт: ROUTER_ACTIVE.json рядом с script
+  log_file: null     # дефолт: log_file из ROUTER_ACTIVE.json → HERMES_ROUTING_LOG → раскладка флота
+  status_file: null  # дефолт: status_file из ROUTER_ACTIVE.json (генерирует script-only cron)

@@ -1,0 +1,59 @@
+{
+  "scope": "AST-extracted exact native helpers; in-memory synthetic DB; NOT production tool/policy behavior",
+  "sources": [
+    {
+      "file": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\hermes_cli\\kanban_db.py",
+      "file_sha256": "ed19affa223ddb49fd5afb55def54b85c89d7e4c40a39063df5078f72c9144f5",
+      "function": "add_comment",
+      "line_start": 1786,
+      "line_end": 1801,
+      "code": "def add_comment(conn: sqlite3.Connection, task_id: str, author: str, body: str) -> int:\n    if not body or not body.strip():\n        raise ValueError(\"comment body is required\")\n    if not author or not author.strip():\n        raise ValueError(\"comment author is required\")\n    now = int(time.time())\n    # ``allow_nested=True``: graph builders (kanban_swarm blackboard seeding)\n    # compose comment writes under one outer commit.\n    with write_txn(conn, allow_nested=True):\n        _require_task(conn, task_id)\n        cur = conn.execute(\n            \"INSERT INTO task_comments (task_id, author, body, created_at) \"\n            \"VALUES (?, ?, ?, ?)\", (task_id, author.strip(), body.strip(), now),\n        )\n        _append_event(conn, task_id, \"commented\", {\"author\": author, \"len\": len(body)})\n        return int(cur.lastrowid or 0)"
+    },
+    {
+      "file": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\hermes_cli\\kanban_db.py",
+      "file_sha256": "ed19affa223ddb49fd5afb55def54b85c89d7e4c40a39063df5078f72c9144f5",
+      "function": "_require_task",
+      "line_start": 1804,
+      "line_end": 1806,
+      "code": "def _require_task(conn: sqlite3.Connection, task_id: str) -> None:\n    if not conn.execute(\"SELECT 1 FROM tasks WHERE id = ?\", (task_id,)).fetchone():\n        raise ValueError(f\"unknown task {task_id}\")"
+    },
+    {
+      "file": "C:\\Users\\max\\AppData\\Local\\hermes\\hermes-agent\\hermes_cli\\kanban_db_graph.py",
+      "file_sha256": "b3aada2c8ec77fa0b4bcdcd6be084e2e91b9c9d57c68f7200b872232b94360ed",
+      "function": "initial_task_state",
+      "line_start": 25,
+      "line_end": 51,
+      "code": "def initial_task_state(\n    conn: sqlite3.Connection, parents: tuple[str, ...], initial_status: str,\n    triage: bool, tenant: Optional[str],\n) -> tuple[str, Optional[str]]:\n    \"\"\"Resolve state and tenant under the creator's write transaction.\n\n    Parent order breaks ties in this soft namespace; explicit tenant wins.\n    Validate parents even for parked tasks so links never dangle.\n    \"\"\"\n    rows = {}\n    if parents:\n        rows = {row[\"id\"]: row for row in conn.execute(\n            \"SELECT id, status, tenant FROM tasks WHERE id IN \"\n            \"(\" + \",\".join(\"?\" * len(parents)) + \")\", parents,\n        )}\n        missing = [pid for pid in parents if pid not in rows]\n        if missing:\n            raise ValueError(f\"unknown parent task(s): {', '.join(missing)}\")\n        if tenant is None:\n            tenant = next((rows[pid][\"tenant\"] for pid in parents if rows[pid][\"tenant\"]), None)\n    if initial_status == \"blocked\":\n        return \"blocked\", tenant\n    if triage:\n        return \"triage\", tenant\n    if any(row[\"status\"] != \"done\" for row in rows.values()):\n        return \"todo\", tenant\n    return \"ready\", tenant"
+    }
+  ],
+  "status_tests": [
+    {
+      "parent_status": "running",
+      "comment_persisted": true,
+      "child_initial_status": "todo"
+    },
+    {
+      "parent_status": "done",
+      "comment_persisted": true,
+      "child_initial_status": "ready"
+    },
+    {
+      "parent_status": "archived",
+      "comment_persisted": true,
+      "child_initial_status": "todo"
+    }
+  ],
+  "missing_controls": [
+    {
+      "function": "_require_task",
+      "raises_for_missing": true,
+      "message": "unknown task missing_in_this_fixture"
+    },
+    {
+      "function": "initial_task_state",
+      "raises_for_missing": true,
+      "message": "unknown parent task(s): missing_in_this_fixture"
+    }
+  ],
+  "conclusion": "Native data-layer does not reject comments or parent links because status is done. Missing-id errors describe lookup absence; wrong-board diagnosis requires native readback."
+}

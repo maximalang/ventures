@@ -1,0 +1,114 @@
+{
+  "generated_utc": "2026-10-04T08:21:47.321897+00:00",
+  "source": "native hermes kanban show --json via company read-only child; env board pins cleared; no lifecycle writes",
+  "records": [
+    {
+      "board": "fleet-ops",
+      "task_id": "t_d090b4ff",
+      "exit_code": 0,
+      "found": true,
+      "status": "done",
+      "assignee": "qa",
+      "run_id": null,
+      "available_keys": [
+        "task",
+        "latest_summary",
+        "parents",
+        "children",
+        "comments",
+        "events",
+        "runs"
+      ],
+      "comment_count": 11,
+      "comments_have_final_company_acceptance": false,
+      "runs": [
+        {
+          "id": 2317,
+          "profile": "qa",
+          "outcome": "rate_limited",
+          "started_at": 1791069280,
+          "ended_at": 1791069769
+        },
+        {
+          "id": 2318,
+          "profile": "qa",
+          "outcome": "policy_denied",
+          "started_at": 1791070077,
+          "ended_at": 1791070534
+        },
+        {
+          "id": 2319,
+          "profile": "qa",
+          "outcome": "completed",
+          "started_at": 1791072394,
+          "ended_at": 1791074003
+        }
+      ]
+    },
+    {
+      "board": "fleet-ops",
+      "task_id": "t_63f62c17",
+      "exit_code": 0,
+      "found": true,
+      "status": "done",
+      "assignee": "qa",
+      "run_id": null,
+      "available_keys": [
+        "task",
+        "latest_summary",
+        "parents",
+        "children",
+        "comments",
+        "events",
+        "runs"
+      ],
+      "comment_count": 6,
+      "comments_have_final_company_acceptance": false,
+      "runs": [
+        {
+          "id": 2320,
+          "profile": "operations",
+          "outcome": "review_requested",
+          "started_at": 1791076909,
+          "ended_at": 1791077203
+        },
+        {
+          "id": 2321,
+          "profile": "qa",
+          "outcome": "completed",
+          "started_at": 1791077215,
+          "ended_at": 1791078276
+        }
+      ]
+    },
+    {
+      "board": "default",
+      "task_id": "t_29903deb",
+      "exit_code": 0,
+      "found": true,
+      "status": "done",
+      "assignee": "qa",
+      "run_id": null,
+      "available_keys": [
+        "task",
+        "latest_summary",
+        "parents",
+        "children",
+        "comments",
+        "events",
+        "runs"
+      ],
+      "comment_count": 2,
+      "comments_have_final_company_acceptance": false,
+      "runs": [
+        {
+          "id": 44,
+          "profile": "qa",
+          "outcome": "completed",
+          "started_at": 1791076116,
+          "ended_at": 1791076314
+        }
+      ]
+    }
+  ]
+}

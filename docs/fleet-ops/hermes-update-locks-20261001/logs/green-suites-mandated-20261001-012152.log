@@ -1,0 +1,12 @@
+== probe ==
+3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]
+C:\Users\max\AppData\Local\hermes\hermes-agent\.venv\Scripts\python.exe
+C:\Users\max\Documents\hermes-update-lock-recovery\pm\install.py
+bda33b601d194fb8a43e5660c57542aad14aa372
+ pm/install.py | 104 +++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 96 insertions(+), 8 deletions(-)
+== pytest mandated: authority + core + new ==
+.......................................................................s [ 73%]
+..........................                                               [100%]
+97 passed, 1 skipped in 62.57s (0:01:02)
+pytest_exit=0

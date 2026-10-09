@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "task_id": "t_ee2ad6bf",
+  "run_id": 2218,
+  "applied_at_utc": "2026-10-03T10:14:00Z",
+  "candidate_sha256": "d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105",
+  "installed_head_at_capture": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+  "installed_head_at_apply": "9aae3c23e2c4f39f77d8d54b5e72ba4b90f4ba8f",
+  "profile": "company",
+  "config_path": "C:/Users/max/AppData/Local/hermes/profiles/company/config.yaml",
+  "config_before_sha256": "da314777a36989aecaac8e39d6d6a85ac2b10b066af16936839c12edfe21bd7d",
+  "config_after_sha256": "0ae171447005c117dfe9ade6b84e4d2afa44c39489518b96ae5023537ae203a3",
+  "config_before_backup": "C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/workspaces/t_ee2ad6bf/config-before.yaml",
+  "changes_applied": [
+    {
+      "key": "compression.threshold_tokens",
+      "before": null,
+      "after_stored": 128000,
+      "after_resolved": 128000,
+      "command": "hermes -p company config set compression.threshold_tokens 128000",
+      "exit_code": 0
+    },
+    {
+      "key": "display.platforms.telegram.tool_progress",
+      "before": "new",
+      "after_stored": "off",
+      "after_resolved": "off",
+      "resolved_explicit": true,
+      "command_initial": "hermes -p company config set display.platforms.telegram.tool_progress off",
+      "command_initial_note": "CLI YAML-parsed 'off' to boolean False; resolver normalises False->'off' correctly but stored value textually differed from candidate.",
+      "command_final": "hermes -p company config set display.platforms.telegram.tool_progress '\"off\"'",
+      "command_final_note": "Shell quoting embedded literal quote chars; corrected via direct YAML patch to tool_progress: \"off\"",
+      "exit_code": 0
+    }
+  ],
+  "preserved_keys_verified": {
+    "compression.enabled": true,
+    "compression.tail_mode": "lean",
+    "compression.protect_last_n": 10,
+    "compression.protect_first_n": 3,
+    "compression.proactive_prune_tokens": 48000,
+    "compression.proactive_prune_min_result_chars": 8000,
+    "compression.proactive_prune_min_reclaim_tokens": 4096,
+    "compression.target_ratio": 0.15,
+    "display.platforms.telegram.tool_progress_grouping": "accumulate",
+    "display.platforms.telegram.busy_steer_ack_enabled": true,
+    "display.platforms.telegram.interim_assistant_messages": true,
+    "display.platforms.telegram.long_running_notifications": true,
+    "display.platforms.telegram.suppress_warning_notifications": false,
+    "display.platforms.telegram.show_reasoning": false
+  },
+  "diff_summary": "exactly two lines changed: +threshold_tokens: 128000 at compression; tool_progress: new -> \"off\" at display.platforms.telegram",
+  "hot_load_consumer": {
+    "cache_busting_key_present": true,
+    "cache_busting_key_location": "gateway/run.py L4399-4415, (\"compression\",\"threshold_tokens\")",
+    "tool_progress_per_turn_resolved": true,
+    "tool_progress_resolver_location": "gateway/run_turn.py L2961, display_config.py L115-126",
+    "tool_progress_gate": "run_turn.py L3001: tool_progress_enabled = progress_mode not in {\"off\",\"log\"} and not is_webhook",
+    "restart_required": false,
+    "naturally_loaded_on_next_turn": true
+  },
+  "qa_gates": {
+    "primary": {
+      "card": "t_8a81338c",
+      "run": 2214,
+      "verdict": "SOURCE_PASS",
+      "verdict_sha256": "86e6e65554c264f9d956d279a34be236f7b502a0472023ef93c2ed8b0a9c4171"
+    },
+    "alternate": {
+      "card": "t_e87dad43",
+      "run": 2216,
+      "verdict": "SOURCE_PASS",
+      "verdict_sha256": "eb43d32b4f59afeab5143f584c4ff19c46ece4e47a97d0937044fca93f399d1f",
+      "model": "qwen3.8-max/custom"
+    }
+  },
+  "company_binding": "decision:company=go head=d7b59f1b29299d361b3539870f0789dbe089c790576be18126dedfc98ab2d105 (comment on this card 2026-10-03 11:43)",
+  "rollback_commands": [
+    "hermes -p company config set compression.threshold_tokens null",
+    "hermes -p company config set display.platforms.telegram.tool_progress new"
+  ],
+  "financial": {
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_paid_costs": null,
+    "estimated_usage_cost": null,
+    "new_commitments": 0,
+    "scope": "company Telegram native configuration, no purchase",
+    "unknown_reason": "provider invoice/usage attribution unavailable"
+  },
+  "canary_sends": 0,
+  "canary_note": "no synthetic canaries; natural owner turns preferred per contract",
+  "next_observation": "24h/48h natural-run delta vs usage-boundary.json (separate observation card)"
+}

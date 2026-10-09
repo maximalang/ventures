@@ -1,0 +1,104 @@
+{
+  "scope": "Company independent read-only consumer readback of live targets after apply and QA; actual bytes, no inference; not a rewrite of reviewer artifacts",
+  "head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "targets_checked": 12,
+  "all_ok": true,
+  "results": [
+    {
+      "profile": "company",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\company\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "research",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\research\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "product",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\product\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "operations",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\operations\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "qa",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\qa\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "tech",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\tech\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "finance",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\finance\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "sales",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\sales\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "design",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\design\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "ux",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\ux\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "video-director",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-director\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    },
+    {
+      "profile": "video-editor",
+      "root_path": "C:\\Users\\max\\AppData\\Local\\hermes\\profiles\\video-editor\\skills\\company-os\\SKILL.md",
+      "reference_exact": true,
+      "hook_embedded": true,
+      "no_old_hook_bytes": true,
+      "row_ok": true
+    }
+  ]
+}

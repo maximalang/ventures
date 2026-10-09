@@ -1,0 +1,90 @@
+╔══════════════════════════════════════════════════════════╗
+  ║                    📊 Hermes Insights                    ║
+  ║                  Last 7 days (telegram)                  ║
+  ╚══════════════════════════════════════════════════════════╝
+
+  Period: Sep 26, 2026 — Oct 03, 2026
+
+  📋 Overview
+  ────────────────────────────────────────────────────────
+  Sessions:          42            Messages:        6,506
+  Tool calls:        3,423         User messages:   1,047
+  Input tokens:      32,757,106    Output tokens:   5,601,511
+  Total tokens:      842,871,769
+  Active time:       ~7.1d         Avg session:     ~1.4d
+  Avg msgs/session:  154.9
+
+  💰 Cost
+  ────────────────────────────────────────────────────────
+  Included:           7 session(s) (subscription — no provider invoice)
+  Unknown:            35 session(s) (no pricing data)
+
+  🤖 Models Used
+  ────────────────────────────────────────────────────────
+  Model                          Sessions       Tokens
+  qwen3.8-max                          40  642,798,880
+  gpt-6-sol                             4  123,775,915
+  gpt-6.1-sol                           8   76,296,586
+  qwen-vl-max                           1          273
+  gpt-6-luna                            1          115
+
+  📱 Platforms
+  ────────────────────────────────────────────────────────
+  Platform       Sessions   Messages         Tokens
+  telegram             42      6,506    762,301,572
+
+  🔧 Top Tools
+  ────────────────────────────────────────────────────────
+  Tool                            Calls        %
+  terminal                        6,534    36.7%
+  read_file                       2,473    13.9%
+  skill_view                      1,768     9.9%
+  search_files                    1,266     7.1%
+  write_file                        903     5.1%
+  patch                             897     5.0%
+  execute_code                      759     4.3%
+  web_search                        549     3.1%
+  tool_call                         377     2.1%
+  web_extract                       240     1.3%
+  kanban_comment                    199     1.1%
+  skill_manage                      196     1.1%
+  vision_analyze                    167     0.9%
+  tool_describe                     145     0.8%
+  browser_press                     126     0.7%
+  ... and 32 more tools
+
+  🧠 Top Skills
+  ────────────────────────────────────────────────────────
+  Skill                          Loads   Edits   Last used
+  hermes-agent                     373       0      Oct 03
+  company-os                       215       0      Oct 03
+  fleet-notification-ops           159       0      Oct 03
+  telegram-message-formatting      122       0      Oct 03
+  kanban-card-authoring             97       0      Oct 03
+  fleet-doctrine                    95       0      Oct 03
+  fleet-workflow-efficiency         74       0      Oct 03
+  fleet-model-probing               72       0      Oct 02
+  hermes-botfleet-health            56       0      Oct 03
+  bot-dispatch                      49       0      Oct 02
+  Distinct skills: 59  Loads: 1,768  Edits: 0
+
+  📅 Activity Patterns
+  ────────────────────────────────────────────────────────
+  Mon  ██████████      7
+  Tue  ██████          4
+  Wed  █████████████   9
+  Thu  ███████████████ 10
+  Fri  ██████          4
+  Sat  ██████          4
+  Sun  ██████          4
+
+  Peak hours: 5PM (7), 7PM (6), 11AM (5), 9AM (4), 10AM (3)
+  Active days: 8
+  Best streak: 8 consecutive days
+
+  🏆 Notable Sessions
+  ────────────────────────────────────────────────────────
+  Longest session      2.9d               (Sep 28, 20260928_175402_)
+  Most messages        596 msgs           (Oct 01, 20261001_184404_)
+  Most tokens          5,889,888 tokens   (Sep 30, 20260930_174920_)
+  Most tool calls      342 calls          (Oct 01, 20261001_184404_)

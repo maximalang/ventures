@@ -1,0 +1,36 @@
+{
+  "scope": "immutable audit inputs; no live rollout",
+  "source_subject_head": "2fedef53211adc07445caee7d4d3ef3cac4df5e7544508ca35a26e040774600e",
+  "members": [
+    {
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-quality-audit-20261004\\audit_current.py",
+      "sha256": "b2854a51ba7f96b3b7686e316ccd43989b4aef2e13b3cef9d814d574b3cd5513",
+      "bytes": 11857
+    },
+    {
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-quality-audit-20261004\\AUDIT-EVIDENCE.json",
+      "sha256": "232c95c29d9646d1a78f0ef79037adc25b730fd76ab76c76b3c2fc9d92a06503",
+      "bytes": 49384
+    },
+    {
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-quality-audit-20261004\\LIVE-SNAPSHOT.json",
+      "sha256": "d14a4c29477b46f740aa4476dd517e876c37e2d189ebd1da9e65912d54793940",
+      "bytes": 148861
+    },
+    {
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-quality-audit-20261004\\NATIVE-SOURCE-PROBE.json",
+      "sha256": "e6f0700369a40d52fe063dce44cf818a780c2dd1c0f2d1dadef5fb15f66260a3",
+      "bytes": 4198
+    },
+    {
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-quality-audit-20261004\\KANBAN-READBACK.json",
+      "sha256": "e9af82845f59fd0b7443e975f70bb8e03fd65f400ecb4cf68c245e1421d15914",
+      "bytes": 2629
+    },
+    {
+      "path": "C:\\Users\\max\\Desktop\\all\\ventures\\docs\\fleet-ops\\dots-quality-audit-20261004\\FINDINGS-DRAFT.json",
+      "sha256": "f59c5f77f1ad5ed1a638e7bb6f759133f6edee4b6a02624827c33321e69be09b",
+      "bytes": 5376
+    }
+  ]
+}

@@ -1,0 +1,341 @@
+{
+  "task": "t_ede77548",
+  "prepared_by": "operations",
+  "period_utc": {
+    "start": "2026-10-03T15:58:14.318645+00:00",
+    "end": "2026-10-03T15:58:14.401388+00:00"
+  },
+  "live_applied": false,
+  "transport_transform": "CRLF -> LF only in content/file_content fields; no other edits",
+  "artifacts": {
+    "apply_windows_payload": {
+      "path": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-NATIVE-APPLY-WINDOWS-PAYLOAD.json",
+      "sha256": "62853682a910d2f5893016f96b6a6fc77ae2a2193e7159b25d295ce76a739f0a",
+      "size_bytes": 48523
+    },
+    "rollback_windows_payload": {
+      "path": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-NATIVE-ROLLBACK-WINDOWS-PAYLOAD.json",
+      "sha256": "b3c735dc5d80a4cb224c2b00cf65375d393ff72503968041672e15831ddada59",
+      "size_bytes": 37775
+    },
+    "original_apply_payload": {
+      "path": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-NATIVE-APPLY-PAYLOAD.json",
+      "sha256": "5e888a5408b29fbe91d60eb44edd81633c4d5aaa0f4d03268cacce2ed0462883"
+    },
+    "original_rollback_payload": {
+      "path": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-NATIVE-ROLLBACK-PAYLOAD.json",
+      "sha256": "f4bba00194fc7e625d24c266256a4852ae0004a0be58bd78409d08788886fb04"
+    },
+    "original_receipt": {
+      "path": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-PAYLOAD-PREPARATION-RECEIPT.json",
+      "sha256": "34df2b8b0138601ad0ae5b8eccad5cab00a36544a6bfb4ea7d5616149f47130e"
+    },
+    "source_manifest": {
+      "path": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/HUB-PACKET/MANIFEST.json",
+      "sha256": "aca8e05c554e5998b1b461e12ff182733140c4283b6b463be08805b31ee15e6c"
+    },
+    "source_qa_verdict": {
+      "path": "C:/Users/max/Desktop/all/ventures/docs/fleet-ops/telegram-optimization-20261003/QA-VERDICT-t_d5e37e14.md",
+      "sha256": "2196ca2b02bfa7cfdf7edfa9e8cabc4b8ae1131d83b82242b4c7f9f3f5f9b98c"
+    }
+  },
+  "installed_writer_source_hashes": {
+    "tools/skill_manager_tool.py": "a5103fa5849fb2e7055cf95e1aa22b2a1790f7e7ee355278340ded979bc68475",
+    "utils.py": "cfe09d9eb4ad803bd855fb2672e7021d9e533b0358ddb1d5a4468e43ca2b61d2",
+    "note": "Read-only hash evidence; implementations were not imported or invoked."
+  },
+  "field_matrix_13": [
+    {
+      "kind": "apply",
+      "op_index": 0,
+      "action": "patch",
+      "name": "hermes-agent",
+      "file_path": null,
+      "decoded_input_sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0",
+      "accepted_source_sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0",
+      "lf_wire_sha256": "815c5b7b135f38736ab9993353ea563af546038fe7cdccf1d38dec8c3d112469",
+      "simulated_output_sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0",
+      "crlf_in_input": 76,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 1,
+      "action": "patch",
+      "name": "fleet-token-economy",
+      "file_path": null,
+      "decoded_input_sha256": "f4853d61aed45b57598ca11682558810d493823773d7e4117f8784b9ffb24b58",
+      "accepted_source_sha256": "f4853d61aed45b57598ca11682558810d493823773d7e4117f8784b9ffb24b58",
+      "lf_wire_sha256": "57a824ad632840669ee1903df11c8d10969cac0984a460bf118201b9c5222e80",
+      "simulated_output_sha256": "f4853d61aed45b57598ca11682558810d493823773d7e4117f8784b9ffb24b58",
+      "crlf_in_input": 53,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 2,
+      "action": "write_file",
+      "name": "hermes-agent",
+      "file_path": "references/product-overview.md",
+      "decoded_input_sha256": "b0b1caa5cd0a92069852d4c05e4af5ddcfdf035e36975d54f09e742510003b24",
+      "accepted_source_sha256": "b0b1caa5cd0a92069852d4c05e4af5ddcfdf035e36975d54f09e742510003b24",
+      "lf_wire_sha256": "f5ca60322dc8a939ceed86e77d2c92a208d937d7c03648f032b50b43026694da",
+      "simulated_output_sha256": "b0b1caa5cd0a92069852d4c05e4af5ddcfdf035e36975d54f09e742510003b24",
+      "crlf_in_input": 35,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 3,
+      "action": "write_file",
+      "name": "hermes-agent",
+      "file_path": "references/quickstart-and-paths.md",
+      "decoded_input_sha256": "c4cd378d9c280b4811702f9add7bf8e57d4725e653c2c42e0fdc021f0e218711",
+      "accepted_source_sha256": "c4cd378d9c280b4811702f9add7bf8e57d4725e653c2c42e0fdc021f0e218711",
+      "lf_wire_sha256": "44f7b7a91233a9b935af0d48dcc1e5b09cc4ccb5906e2a2c7e6e9adb10a63788",
+      "simulated_output_sha256": "c4cd378d9c280b4811702f9add7bf8e57d4725e653c2c42e0fdc021f0e218711",
+      "crlf_in_input": 46,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 4,
+      "action": "write_file",
+      "name": "hermes-agent",
+      "file_path": "references/spawning-instances.md",
+      "decoded_input_sha256": "1e1cdc1d11a11af811d222ea90a8cfbc2f65abb6f7821ef5ce9b109b5fa340fd",
+      "accepted_source_sha256": "1e1cdc1d11a11af811d222ea90a8cfbc2f65abb6f7821ef5ce9b109b5fa340fd",
+      "lf_wire_sha256": "f8cf7516216df61239466a9624e4d640044d2f885c33bdb1c399e892b3c9d52a",
+      "simulated_output_sha256": "1e1cdc1d11a11af811d222ea90a8cfbc2f65abb6f7821ef5ce9b109b5fa340fd",
+      "crlf_in_input": 85,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 5,
+      "action": "write_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/audit-to-program.md",
+      "decoded_input_sha256": "488cdf1d73943f875f9d1821845f08fb41dc71d1fb409479e284e18a2789f688",
+      "accepted_source_sha256": "488cdf1d73943f875f9d1821845f08fb41dc71d1fb409479e284e18a2789f688",
+      "lf_wire_sha256": "0e9d658486d9125ef5ec4d787596b65cb61fdd19646e901b8502ffc6edca74c4",
+      "simulated_output_sha256": "488cdf1d73943f875f9d1821845f08fb41dc71d1fb409479e284e18a2789f688",
+      "crlf_in_input": 8,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 6,
+      "action": "write_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/levers-playbook.md",
+      "decoded_input_sha256": "ed0e81d9d2fc365355a422c2cbd90aeca11b8fc53ed67a23da1b7f195ff85cce",
+      "accepted_source_sha256": "ed0e81d9d2fc365355a422c2cbd90aeca11b8fc53ed67a23da1b7f195ff85cce",
+      "lf_wire_sha256": "96803a73d308c8d20249bc095f757062fccc4bee0024a20ff15d0c7cc3b9853b",
+      "simulated_output_sha256": "ed0e81d9d2fc365355a422c2cbd90aeca11b8fc53ed67a23da1b7f195ff85cce",
+      "crlf_in_input": 13,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 7,
+      "action": "write_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/measure-first-details.md",
+      "decoded_input_sha256": "d724f33562717ecb07b5fd4b8c52fe7c978d71fddfcb54e0d217605f3db246bc",
+      "accepted_source_sha256": "d724f33562717ecb07b5fd4b8c52fe7c978d71fddfcb54e0d217605f3db246bc",
+      "lf_wire_sha256": "279263f6077e31a73d294013619c0d204944d7ce3834f9695c12e3bdb325fd89",
+      "simulated_output_sha256": "d724f33562717ecb07b5fd4b8c52fe7c978d71fddfcb54e0d217605f3db246bc",
+      "crlf_in_input": 12,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 8,
+      "action": "write_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/mechanics-pitfalls.md",
+      "decoded_input_sha256": "da24439e22474546dca9f967c69aff9696d031fbd5d192ebf44e64843cd09bd2",
+      "accepted_source_sha256": "da24439e22474546dca9f967c69aff9696d031fbd5d192ebf44e64843cd09bd2",
+      "lf_wire_sha256": "2914f5bac78b7d05604a5d92756090237d31f8a2b98386dc4988bf52240baf1c",
+      "simulated_output_sha256": "da24439e22474546dca9f967c69aff9696d031fbd5d192ebf44e64843cd09bd2",
+      "crlf_in_input": 25,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 9,
+      "action": "write_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/prompt-audit-lane.md",
+      "decoded_input_sha256": "a3eb73959b8f735498afe698f56be6f79ae01dc298d89a45e2fa971ea250df06",
+      "accepted_source_sha256": "a3eb73959b8f735498afe698f56be6f79ae01dc298d89a45e2fa971ea250df06",
+      "lf_wire_sha256": "7eaf341baddb72ca9a50e88b154e2916d5fd640292fe37fc6c03cb0335d6f174",
+      "simulated_output_sha256": "a3eb73959b8f735498afe698f56be6f79ae01dc298d89a45e2fa971ea250df06",
+      "crlf_in_input": 18,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "apply",
+      "op_index": 10,
+      "action": "write_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/routing-audit-safeguards.md",
+      "decoded_input_sha256": "f47a0f801d999fa3b5ddf6eed7f93fffc3cfe2cbc19a917d22b08a184a8d04c9",
+      "accepted_source_sha256": "f47a0f801d999fa3b5ddf6eed7f93fffc3cfe2cbc19a917d22b08a184a8d04c9",
+      "lf_wire_sha256": "5b096a4c9668494e0cb35259743c85fa9f4c4d65d89531f310d92892b6ab8a19",
+      "simulated_output_sha256": "f47a0f801d999fa3b5ddf6eed7f93fffc3cfe2cbc19a917d22b08a184a8d04c9",
+      "crlf_in_input": 12,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "rollback",
+      "op_index": 0,
+      "action": "patch",
+      "name": "hermes-agent",
+      "file_path": null,
+      "decoded_input_sha256": "a21232e109527dc470bb2271bd43fa10a99de681732260f8bed762eaa44888dc",
+      "accepted_source_sha256": "a21232e109527dc470bb2271bd43fa10a99de681732260f8bed762eaa44888dc",
+      "lf_wire_sha256": "840ea2c6248ce0b9049a9aad787c785d645e6e3a8366a34b2e61d8fc5d6b3d33",
+      "simulated_output_sha256": "a21232e109527dc470bb2271bd43fa10a99de681732260f8bed762eaa44888dc",
+      "crlf_in_input": 216,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "rollback",
+      "op_index": 1,
+      "action": "patch",
+      "name": "fleet-token-economy",
+      "file_path": null,
+      "decoded_input_sha256": "2d6a90ced0f9e297dad1ee711e58f34e1f5c531123593ca76c54bf6134e817b8",
+      "accepted_source_sha256": "2d6a90ced0f9e297dad1ee711e58f34e1f5c531123593ca76c54bf6134e817b8",
+      "lf_wire_sha256": "189eba5c3692ef06f67d0f3946da4bf1ce8e1efc657ded07ae3b97306e5c2db1",
+      "simulated_output_sha256": "2d6a90ced0f9e297dad1ee711e58f34e1f5c531123593ca76c54bf6134e817b8",
+      "crlf_in_input": 78,
+      "crlf_in_wire": 0,
+      "lone_cr_in_wire": 0
+    },
+    {
+      "kind": "rollback",
+      "op_index": 2,
+      "action": "remove_file",
+      "name": "hermes-agent",
+      "file_path": "references/product-overview.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 3,
+      "action": "remove_file",
+      "name": "hermes-agent",
+      "file_path": "references/quickstart-and-paths.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 4,
+      "action": "remove_file",
+      "name": "hermes-agent",
+      "file_path": "references/spawning-instances.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 5,
+      "action": "remove_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/audit-to-program.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 6,
+      "action": "remove_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/levers-playbook.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 7,
+      "action": "remove_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/measure-first-details.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 8,
+      "action": "remove_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/mechanics-pitfalls.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 9,
+      "action": "remove_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/prompt-audit-lane.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    },
+    {
+      "kind": "rollback",
+      "op_index": 10,
+      "action": "remove_file",
+      "name": "fleet-token-economy",
+      "file_path": "references/routing-audit-safeguards.md",
+      "text_field": null,
+      "note": "no text payload; carried verbatim"
+    }
+  ],
+  "real_file_probe": {
+    "path": "C:/Users/max/AppData/Local/hermes/kanban/boards/fleet-ops/workspaces/t_ede77548\\transport_probe_real_file.txt",
+    "method": "open(path,'w',encoding='utf-8') default newline=None with LF wire string; read back bytes",
+    "input_candidate_sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0",
+    "on_disk_sha256": "0f2486ca0f260c458740bacf3db7ff94810b77c1f794c8df86e282bbc1ed7df0",
+    "match": true,
+    "crcrlf_present": false
+  },
+  "anchor_refresh": {
+    "checked": 29,
+    "drift": 0,
+    "absent_ok": 9,
+    "absent_bad": 0,
+    "details": []
+  },
+  "assertions": {
+    "total": 97,
+    "passed": 97,
+    "failed": []
+  },
+  "finance": {
+    "confirmed_revenue": null,
+    "refunds": null,
+    "incremental_provider_paid_costs": null,
+    "estimated_usage_cost": null,
+    "reason": "no attribution source in this preparation; no purchases or paid probes initiated",
+    "new_paid_commitments": 0
+  },
+  "boundaries": "no native live operation; no config/SOUL/model/pool/cron/plugin/gateway changes; evidence-root additions only"
+}
