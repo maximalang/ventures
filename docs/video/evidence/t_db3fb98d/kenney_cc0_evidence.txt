@@ -1,0 +1,4 @@
+SOURCE: https://kenney.nl/assets/pixel-platformer (пример страницы ассета)
+ACCESSED: 2026-10-09 via real browser
+VERBATIM: "License  Creative Commons CC0"
+Примечание: все ассеты Kenney публикуются под CC0 (license указана на странице каждого ассета); сайт kenney.nl, © 2010-2026.

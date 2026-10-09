@@ -1,0 +1,169 @@
+SOURCE: https://support.google.com/youtube/answer/10623810?hl=en
+DESC: YT Help: Create YouTube Shorts with remixed content
+ACCESSED: 2026-10-09 (real browser)
+LEN: 7182
+---
+Skip to main content
+YouTube Help
+Sign in
+Help Center
+Community
+Creator Tips
+YouTube
+Fix a problemWatch videosManage your account & settingsSupervised experiences on YouTubeYouTube PremiumCreate & grow your channelMonetize your contentPolicy, safety, & copyright
+Create ShortsCreate YouTube Shorts with remixed content
+
+Our teams are currently experiencing high support volumes. Please expect longer than usual wait times for responses to questions from email, chat, and @TeamYouTube on X
+
+Create YouTube Shorts with remixed content
+
+Use our Shorts creation tools to put your unique spin on the content you love. Get creative and use our remixing options to remix audio or add a video segment from videos across YouTube.
+
+Shorts made with remixed content are attributed back to the original work – a great opportunity for new viewers to discover your content!
+
+	
+
+
+The source of your remixed audio is credited on the Sound Library page (example above).
+
+Tap Sound  in the Shorts player to find a link to the source video alongside other Shorts using the same audio.
+
+	The source of your remixed video is credited in the Shorts player with a link to the video (example above).
+Android phone & tablet iPhone & iPad
+Create Shorts with remixed audio and effect
+
+How to add audio to your YouTube #shorts
+
+You can easily create your own Shorts using audio and effects from the original content.
+
+From the Shorts player
+
+To remix from another Short:
+
+Sign in to the YouTube app on mobile.
+Go to the Short you want to sample.
+In the lower-right corner, tap Sound  to find other Shorts that used the same audio and effect.
+Tap  Use this sound to Create a Short.
+From a video watch page
+
+To remix audio from a long-form video:
+
+Sign in to the YouTube app on mobile.
+Go to the video that you want to sample.
+Under the video player, tap Share   Remix   Use this sound .
+From an Official Artist Channel
+
+To remix audio from an Official Artist Channel:
+
+Open the Official Artist Channel.
+Go to the Shorts section and tap Popular.
+Select a Short.
+In the lower-right corner, tap Sound  to find other Shorts that used the same audio.
+Tap  Use this sound to Create a Short.
+
+You can also tap on a sound to view other videos featuring the song, or tap  to save the sound to your library.
+
+Create a music video remix in YouTube Shorts
+
+YouTube creators can use our Shorts creation tools to remix audio and visual content from music videos across YouTube. You can remix music video content in a few different ways, including Green Screen, Cut, and Sound.
+
+Learn more below about what types of sound recordings and music videos are eligible to remix for YouTube Shorts.
+
+You can remix in a few different ways:
+
+Green Screen: sample a music video as the background of your Short. You can sample either the visual only, or both audio and video.
+Cut: sample a 1-5 second segment of a music video. This includes both the audio and video from the music video.
+Sound: sample up to 90 seconds of the audio from the music video in your Short.
+
+Note: Depending on partner agreements with YouTube, some videos may be limited to 30 seconds of audio use in Shorts.
+
+For more info on Cut and Green Screen, check out these videos from the YouTube Creators channel:
+
+How to use Cut
+How to use Green Screen
+If you upload a short video you’ve created elsewhere, make sure that any copyright-protected material you’ve used is approved for your use on YouTube. Using copyright-protected material could lead to you getting a Content ID claim. Also if a copyright owner, artist’s label, or distributor sends us a valid and complete copyright takedown notice against your short video, it may be removed, and you could get a copyright strike.
+Create Shorts using a template
+
+Shorts templates are here
+
+Sign in to the YouTube app on mobile.
+Go to the Short you want to use as a template.
+Tap Remix   Use this template .
+Tip: Or on the Short video, tap Use template .
+Add your clips to the template and create your Short.
+Create Shorts with remixed video features
+
+You can remix video content from other Shorts and videos to use as sample cuts, video backgrounds, or collabs for your Short.
+
+Create Shorts with remixed video
+
+How to RESPOND to Shorts on Shorts 🗣️
+
+Remix from another Short
+Remix from a video
+Create Shorts with remixed video backgrounds
+
+Green Screen with other Shorts! 🟩🤳
+
+Remix from another Short
+Remix from a video
+Create Shorts with Collab
+
+How to ✨COLLAB✨ with other Shorts 🙌
+
+Remix from another Short
+Remix from a video
+Reimagine Shorts with AI
+
+Get Creative with Shorts Remix
+
+You can now use upgraded Remix features to reimagine Shorts with new, creative possibilities. Transform the video with your own prompts or choose from suggestions like adding yourself into a scene or putting a twist on the video.
+
+Note: Currently, this feature supports English language and prompts in English only. This feature will be rolling out to most users in the coming weeks.
+Sign in to the YouTube app .
+On an eligible Short, tap Remix .
+You can choose to:
+Enter your own custom prompt or select from suggested prompts. Tap Next  to generate.
+(Optional) Upload up to 3 reference photos from your gallery to transform the scene.
+Wait for your video to be generated, then preview.
+The generated video will automatically create new audio based on the prompt and context of the scene.
+You can choose to edit your video further with Shorts creation tools before you upload it.
+Note: All content on YouTube, including AI-generated creations from these tools, must follow our Community Guidelines.
+Tip: For the best video results, make sure your prompt includes a subject (person, object, or animal) and at least one reference photo. If you need specific audio to be generated for the video, be descriptive.
+Learn more about remixing content
+What content can I use to create a Short?
+Can I remix a remix?
+How do I know when someone remixes my content?
+How can I see the traffic I’ve gotten from visual remixes of my content?
+How do I restrict the use of my content in others’ Shorts?
+If I use YouTube Studio Content Manager, how can I control the remixing of my content?
+What happens when the content that I remix is restricted, edited, or deleted?
+What happens when I limit remixing, delete my video, or make edits in YouTube Studio?
+Why is my Short blocked?
+Why is my Short muted?
+Give feedback about this article
+Was this helpful?YesNo
+Need more help?
+Try these next steps:
+Post to the help community
+Get answers from community members
+Create Shorts
+Get started creating YouTube Shorts
+Create YouTube Shorts
+Enhance your Shorts
+Get Started with Shorts templates
+Effect Maker on YouTube
+Create YouTube Shorts from your videos
+Upload YouTube Shorts
+Create YouTube Shorts with remixed content
+Reply to comments with your YouTube Shorts
+Add a related video to your YouTube Shorts
+Understand three-minute YouTube Shorts
+Music eligibility for YouTube Shorts
+Create AI-generated soundtrack in Shorts with Dream Track
+Create content for Shorts using AI-generated features
+Create, use & manage your avatar on YouTube
+Your data and using AI features on YouTube
+©2026 Google  Privacy Policy  YouTube Terms of Service
+Language
+English‎

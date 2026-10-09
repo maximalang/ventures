@@ -1,0 +1,124 @@
+SOURCE: https://support.google.com/youtube/answer/2797468?hl=en
+DESC: YT Help: Creative Commons
+ACCESSED: 2026-10-09 (curl, HTTP 200)
+---
+ License types on YouTube - YouTube Help Skip to main content YouTube Help Sign in Google Help Help Center Fix a problem Watch videos Manage your account & settings Supervised experiences on YouTube YouTube Premium Create & grow your channel Monetize your content Policy, safety, & copyright Community YouTube Privacy Policy YouTube Terms of Service Submit feedback Send feedback on... This help content & information General Help Center experience Close Next Help Center Community Creator Tips YouTube Fix a problem Troubleshoot problems playing videos Troubleshoot account issues Fix upload problems Get help with the YouTube Partner Program Learn about recent updates on YouTube Get help with YouTube Watch videos Find videos to watch Change video settings Watch videos on different devices Comment, subscribe, & connect with creators Save or share videos & playlists Troubleshoot problems playing videos Purchase & manage movies, TV shows & products on YouTube Manage your account & settings Sign up and manage your account Manage account settings Manage privacy settings Manage ad settings Manage accessibility settings Troubleshoot account issues YouTube updates Supervised experiences on YouTube Supervised accounts for kids Supervised accounts for teens YouTube Premium Join YouTube Premium YouTube Premium benefits Manage your Premium membership Manage Premium billing & payments Fix YouTube Premium issues Create & grow your channel Upload videos Edit videos & video settings Create Shorts Edit videos with YouTube Create Customize & manage your channel Analyze performance with analytics Translate videos, subtitles, & captions Manage your posts & comments Live stream on YouTube YouTube Creator Community Become a podcast creator on YouTube Creator and Studio App updates Monetize your content YouTube Partner Program Make money on YouTube Get paid Understand ads and related policies Get help with the YouTube Partner Program YouTube for Content Managers Policy, safety, & copyright YouTube policies Reporting and enforcement Privacy and safety center Copyright and rights management Copyright and rights management License types on YouTube Notification 
+ 
+ Our teams are currently experiencing high support volumes. Please expect longer than usual wait times for responses to questions from email, chat, and @TeamYouTube on X
+ 
+
+ License types on YouTube 
+ 
+ 
+ 
+ 
+ A license gives someone legal permission to use content that other people own the rights to. Different licenses have different rules about how content can be used. 
+
+ When you upload content to YouTube, the license types you can choose from are: 
+
+ 
+ Standard YouTube license 
+ Creative Commons Attribution license 
+ 
+ 
+ 
+ 
+ 
+
+ Standard YouTube license 
+
+ The standard YouTube license is the default setting for all YouTube uploads. To review the terms of the standard YouTube license, go to our Terms of Service . 
+
+ Creative Commons Attribution license 
+
+ Creative Commons is a global nonprofit organization that give creators a standardized way to grant someone else permission to use their work. You can add a Creative Commons Attribution license to your video if the content is licenseable under the CC BY license . Examples include: 
+
+ 
+ Your originally created content 
+ Content released under a CC BY license 
+ Content in the public domain 
+ 
+
+ 
+ Note: If there's a Content ID claim on your video, you can’t add a Creative Commons Attribution license to your video. 
+ 
+
+ If you add a Creative Commons Attribution license to your video, it means other creators can reuse your work subject to the terms of the CC BY license . If you’re using someone else’s work under the Creative Commons Attribution license, you need to give them credit (attribution). 
+
+ Add a Creative Commons Attribution license to your video 
+
+ Using a computer, you can add a Creative Commons Attribution license to your video during video upload or after. 
+
+ During upload 
+
+ 
+ From a computer, sign in to YouTube Studio . 
+ In the top-right corner, click CREATE Upload videos . 
+ Select the video you want to upload. 
+ On the Details page, at the bottom, click Show more . 
+ Under License , click the dropdown to select Creative Commons - Attribution . 
+ 
+
+ After upload 
+
+ 
+ From a computer, sign in to YouTube Studio . 
+ From the left menu, select Content . 
+ Click on a video's title or thumbnail. 
+ On the Details page, at the bottom, click Show more . 
+ Under License , click the dropdown to select Creative Commons - Attribution . 
+ 
+
+ Credit another creator under the Creative Commons license 
+
+ To credit another creator, you can include the following info in your video and video description: 
+
+ 
+ Title of the work 
+ Author of the work 
+ Source of the work (URL) 
+ License info, such as “is licensed under CC BY.” 
+ 
+
+ Including this info in your video can be done in various ways, such as text overlay or voiceover. 
+
+ Frequently asked questions (FAQ) 
+ How do I find Creative Commons content on YouTube? 
+
+ 
+ To find Creative Commons content on YouTube, select Creative Commons from the list of  advanced search filters . 
+
+ You can also look in video descriptions to see license information. 
+ 
+ Can I monetize content with a Creative Commons Attribution license? 
+
+ 
+ You can monetize Creative Commons content if the license agreement grants you rights to use it commercially. Sometimes copyright owners require you to credit the creator of the content or give proof of purchase to use it in your video for commercial purposes. 
+
+ Learn more about what content you can monetize . 
+ 
+ What type of content is eligible for a Creative Commons Attribution license? 
+
+ 
+ You can mark your uploaded video with a Creative Commons (CC) Attribution license if it's all content that you can license under the CC BY license . Some examples are: 
+
+ 
+ 
+ Your originally created content 
+ Content released under a CC BY license 
+ Content in the public domain 
+ 
+
+ If there's a Content ID claim on your video, you can’t mark your video with the Creative Commons Attribution license. 
+ 
+ 
+ How do I get permission to use someone else’s content? 
+
+ 
+ YouTube can’t grant you rights to use someone else’s content and we can’t help you find the parties who can grant them to you. You’ll have to research and handle this process on your own or with a lawyer’s help. 
+
+ 
+ For example, YouTube cannot grant you the rights to use content that has already been uploaded to YouTube. If you want to use someone else’s YouTube content, you may want to reach out to them directly. Some creators list ways they can be contacted in their channel . 
+ If you’re looking to use someone else’s music, check out YouTube’s Audio Library for royalty-free music and sound effects that are free of charge. Learn more about using copyright-safe music on YouTube . 
+ 
+ Was this helpful? How can we improve it? Yes No Submit Need more help? Try these next steps: Post to the help community Get answers from community members true Copyright and rights management 1 of 5 Copyright on YouTube 2 of 5 Common copyright myths 3 of 5 License types on YouTube 4 of 5 Fair use on YouTube 5 of 5 Music in this video ©2026 Google Privacy Policy YouTube Terms of Service Language Afrikaans‎ azərbaycan‎ bosanski‎ català‎ dansk‎ Deutsch‎ eesti‎ English (United Kingdom)‎ español‎ español (Latinoamérica)‎ euskara‎ Filipino‎ français‎ français (Canada)‎ Gaeilge‎ galego‎ hrvatski‎ Indonesia‎ isiZulu‎ italiano‎ Kiswahili‎ latviešu‎ lietuvių‎ magyar‎ Malti‎ Melayu‎ Nederlands‎ norsk‎ o‘zbek‎ polski‎ português‎ português (Brasil)‎ română‎ shqip‎ slovenčina‎ slovenščina‎ suomi‎ svenska‎ Tiếng Việt‎ Türkçe‎ íslenska‎ čeština‎ Ελληνικά‎ беларуская‎ български‎ кыргызча‎ македонски‎ монгол‎ русский‎ српски‎ українська‎ қазақ тілі‎ հայերեն‎ ‏ עברית ‏ اردو ‏ العربية ‏ فارسی नेपाली‎ मराठी‎ हिन्दी‎ অসমীয়া‎ বাংলা‎ ਪੰਜਾਬੀ‎ ગુજરાતી‎ ଓଡ଼ିଆ‎ தமிழ்‎ తెలుగు‎ ಕನ್ನಡ‎ മലയാളം‎ සිංහල‎ ไทย‎ ລາວ‎ မြန်မာ‎ ქართული‎ አማርኛ‎ ខ្មែរ‎ 中文（简体）‎ 中文（繁體）‎ 中文（香港）‎ 日本語‎ 한국어‎ English‎ Enable Dark Mode Send feedback on... This help content & information General Help Center experience Search Clear search Close search Google apps Main menu 1050166463404299643 true Search Help Center false true true true true true 59 false false false false false 
