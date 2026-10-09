@@ -1,4 +1,4 @@
-"""v1.2.39 — ADR-001 v2 delta implementation contract tests (refreshed pin, formerly v1.2.18).
+"""v1.2.46 — ADR-001 v2 delta implementation contract tests (refreshed pin, formerly v1.2.18).
 
 Spec: t_c91076d0-human-boundary-v2.md. Matrix covered:
 - X1 updater deny (policy + runtime), word-bounded lexical detection;
