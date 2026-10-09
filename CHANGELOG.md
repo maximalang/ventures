@@ -1,5 +1,45 @@
 # Changelog
 
+## [1.2.46] - 2026-10-09
+
+### Security
+- Human-boundary v2 (t_c91076d0, delta of t_e7e74526 + t_25908a44),
+  refreshed onto the released v1.2.36 base including the live per-class
+  token caps (refresh t_f68e8bed; v2 semantics unchanged). Pin 1.2.46 is
+  the next collision-free version per the v1.2.29 guard contract:
+  1.2.37/1.2.38/1.2.39/1.2.40/1.2.41/1.2.42/1.2.44/1.2.45 are pinned by
+  open PR heads and 1.2.43 is announced in an open PR title (pin drift),
+  so 1.2.46 is the first value free of both pins and announced claims.
+  Class X1 updater boundary — any invocation, inspection, planning
+  or dependency on the external auto-updater is denied before any other
+  classification (``updater_dependency``); detection is word-bounded
+  over tool names, terminal commands/workdirs and path/URL arguments,
+  prose describing the boundary stays writable.
+- Decision-namespace forgery guard: board free-text writes (kanban bodies,
+  comments, reasons) authored by a worker context cannot mint company or
+  owner authority — the 2026-09-04 worker-comment company-binding
+  regression class is closed at the classifier level.
+- Hard-gate bindings carry the full ADR-001 v2 tuple: nonce (issued at
+  approve), expires_at (24h TTL, enforced at consumption; an expired grant
+  is refused, surfaced as expired, and re-armed as a fresh pending cycle),
+  principal_ref fingerprint, decision channel, amount_rub and scope
+  digest; legacy rows keep v1 semantics (NULL expiry = never expires).
+
+### Added
+- A4 non-blocking product review path: ordinary product/UX/brand-risk
+  changes (exact lexical vocabulary) queue one ``a4_review_notice`` event
+  and proceed — review never blocks execution (ADR-001 v2 section 4).
+- ``tests/test_v1246_human_boundary_v2.py``: 23 contract tests — X1
+  boundaries (tool/command/workdir vs prose), decision-namespace forgery,
+  binding tuple fields, legacy compatibility, nonce rotation on
+  expiry-at-consume, consume-once, A4 non-blocking + single notice,
+  revocation immutability, worker decide guard, v2 schema/heal.
+
+### Docs
+- ``docs/FLEET_POLICY.md``: owner principal + binding tuple + X1 boundary +
+  A4 review path documented alongside the mandate (same-PR doc sync per
+  ADR-001 consequences).
+
 ## [1.2.36] - 2026-10-04
 
 ### Added
