@@ -240,7 +240,6 @@ auxiliary:
     model: qwen3.8-max
     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
     api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
-    reasoning_effort: max
   moa_reference:
     provider: auto
     model: ''
