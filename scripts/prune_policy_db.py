@@ -12,9 +12,13 @@ WHAT IT DOES, in order, each step verified before the next:
   2. byte backup: SQLite online-backup API snapshot into
      `<db dir>/fleet-policy-backups/prune-<UTC stamp>/fleet-policy.db`,
      then MANIFEST.json + MANIFEST.sha256 over every artifact in the dir;
-  3. maintenance tick (forced): expired events archived to verified
-     JSONL.gz + .sha256 sidecars BEFORE deletion, expired rows of the other
-     tables deleted per the retention config, WAL checkpoint;
+  3. maintenance tick (forced, preserve_state=True): expired events
+     archived to verified JSONL.gz + .sha256 sidecars BEFORE deletion,
+     expired rows of the ledger tables (call_history / run_call_history /
+     budget_ledger / run_budget / financial_ledger) deleted per the
+     retention config, WAL checkpoint; the protected state tables
+     (task_state / run_state / approvals / notification_outbox) are never
+     deleted from — their horizon expiry stays the scheduled tick's job;
   4. full VACUUM (activates auto_vacuum on legacy stores);
   5. post-checks: size/counts delta, every archive sidecar re-verified,
      report JSON printed and written next to the backup.
@@ -44,9 +48,35 @@ from fleet_policy.maintenance import verify_archive  # noqa: E402
 from fleet_policy.runtime import FleetPolicyRuntime  # noqa: E402
 
 TABLES = (
-    "events", "call_history", "run_call_history", "approvals",
-    "budget_ledger", "run_budget", "notification_outbox", "task_state",
+    "events", "call_history", "run_call_history", "budget_ledger",
+    "run_budget", "financial_ledger", "task_state", "run_state",
+    "approvals", "notification_outbox", "maintenance_state",
 )
+
+# Protected state tables (card t_40022daf D2-b acceptance): the one-time
+# prune must leave these byte-for-byte intact. The forced maintenance tick
+# runs with preserve_state=True so retention never issues a DELETE against
+# them; the report captures pre/post counts and the tripwire below aborts
+# the run if any of them moved. maintenance_state is deliberately NOT in
+# this set: the tick legitimately stamps its own throttle keys there — it
+# is covered by TABLES preflight counts for observability only.
+PROTECTED_STATE_TABLES = (
+    "task_state", "run_state", "approvals", "notification_outbox",
+)
+
+
+def _state_preservation(pre_counts: dict[str, int], post_counts: dict[str, int]) -> dict[str, dict[str, Any]]:
+    """Per-protected-table before/after counts with an ok flag. This is the
+    report's assertion surface for the D2-b acceptance (state tables
+    unchanged): a False ok anywhere must abort the run below."""
+    return {
+        table: {
+            "pre": int(pre_counts.get(table, 0)),
+            "post": int(post_counts.get(table, 0)),
+            "ok": int(pre_counts.get(table, 0)) == int(post_counts.get(table, 0)),
+        }
+        for table in PROTECTED_STATE_TABLES
+    }
 
 
 def _utc_stamp() -> str:
@@ -113,7 +143,7 @@ def run(root: Path, *, dry_run: bool) -> dict:
     if dry_run:
         report["steps"] = [
             "backup: sqlite3 backup API snapshot + MANIFEST sha256",
-            "maintenance: forced tick (archive expired events w/ verify, retention, wal checkpoint)",
+            "maintenance: forced tick (archive expired events w/ verify, ledger retention, state tables preserved, wal checkpoint)",
             "vacuum: full VACUUM (activates auto_vacuum on legacy stores)",
             "post: size/counts delta + archive sidecar re-verify + report file",
         ]
@@ -127,11 +157,19 @@ def run(root: Path, *, dry_run: bool) -> dict:
     report["backup_sha256"] = _sha256(backup_db)
     report["backup_bytes"] = backup_db.stat().st_size
 
-    # step 3 — forced maintenance tick (archive -> verify -> delete)
-    maintenance_report = runtime.maybe_maintenance(None, force=True, source="one-time-prune")
+    # step 3 — forced maintenance tick (archive -> verify -> delete) in the
+    # one-time-prune posture: the ledger backlog drains per the retention
+    # config, the protected state tables are never deleted from
+    # (preserve_state=True).
+    maintenance_report = runtime.maybe_maintenance(
+        None, force=True, source="one-time-prune", preserve_state=True
+    )
     report["maintenance"] = maintenance_report
     if maintenance_report.get("error") or maintenance_report.get("errors"):
         report["aborted"] = "maintenance reported errors; DB left unvacuumed, backup intact"
+        report["state_preservation"] = _state_preservation(
+            report["pre"]["counts"], _preflight(db_path)["counts"]
+        )
         _write_manifest(backup_dir, {"aborted": True, "db_path": str(db_path)})
         return report
 
@@ -153,6 +191,20 @@ def run(root: Path, *, dry_run: bool) -> dict:
 
     post = _preflight(db_path)
     report["post"] = post
+    # Tripwire (card t_40022daf D2-b acceptance, QA F1): the protected state
+    # tables must come through the prune with their row counts exactly
+    # intact. preserve_state=True makes the deletion structurally
+    # impossible; this assertion is the loud alarm if that ever regresses.
+    preservation = _state_preservation(report["pre"]["counts"], post["counts"])
+    report["state_preservation"] = preservation
+    violated = [table for table, check in preservation.items() if not check["ok"]]
+    if violated:
+        report["aborted"] = (
+            "state preservation violated for: " + ", ".join(violated)
+            + "; restore from the backup snapshot before re-running"
+        )
+        _write_manifest(backup_dir, {"aborted": True, "db_path": str(db_path), "state_preservation": preservation})
+        return report
     report["size_delta_bytes"] = pre["db_size_bytes"] - post["db_size_bytes"]
     report["counts_delta"] = {
         table: pre["counts"].get(table, 0) - post["counts"].get(table, 0) for table in TABLES

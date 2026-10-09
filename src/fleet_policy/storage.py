@@ -809,7 +809,8 @@ class PolicyStore:
             return cursor.rowcount == 1
 
     def retention(self, event_days: int, call_days: int, approval_days: int,
-                  now: datetime | None = None, *, skip_events: bool = False) -> dict[str, int]:
+                  now: datetime | None = None, *, skip_events: bool = False,
+                  preserve_state: bool = False) -> dict[str, int]:
         """Horizon-based row expiry for every ledger table.
 
         ``skip_events`` leaves the events table untouched: the built-in
@@ -817,12 +818,23 @@ class PolicyStore:
         before deleting them, so the raw delete must not run first. The
         returned dict keeps the ``events`` key (0 when skipped) so existing
         callers keep a stable report shape.
+
+        ``preserve_state`` is the one-time operator prune posture (card
+        t_40022daf D2-b): the protected state tables (approvals,
+        notification_outbox, task_state) are NEVER deleted from — their
+        horizon expiry stays the scheduled tick's job, and the one-time
+        catch-up only drains the ledger backlog. The returned dict reports
+        0 for the preserved keys so the shape stays stable.
         """
         now = now or datetime.now(timezone.utc)
         deleted: dict[str, int] = {}
         with self.connect() as connection:
             tables = [("events", event_days)] if not skip_events else []
-            tables += [("call_history", call_days), ("approvals", approval_days), ("budget_ledger", call_days), ("financial_ledger", approval_days)]
+            tables += [("call_history", call_days), ("budget_ledger", call_days), ("financial_ledger", approval_days)]
+            if not preserve_state:
+                tables.append(("approvals", approval_days))
+            else:
+                deleted["approvals"] = 0
             for table, days in tables:
                 cutoff = (now - timedelta(days=days)).isoformat(timespec="seconds").replace("+00:00", "Z")
                 cursor = connection.execute(f"DELETE FROM {table} WHERE created_at < ?", (cutoff,))
@@ -834,13 +846,17 @@ class PolicyStore:
             call_cutoff = (now - timedelta(days=call_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
             connection.execute("DELETE FROM run_budget WHERE created_at < ?", (call_cutoff,))
             connection.execute("DELETE FROM run_call_history WHERE created_at < ?", (call_cutoff,))
-            event_cutoff = (now - timedelta(days=event_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
-            cursor = connection.execute(
-                "DELETE FROM notification_outbox WHERE status!='pending' AND created_at < ?", (event_cutoff,)
-            )
-            deleted["notification_outbox"] = cursor.rowcount
-            cursor = connection.execute("DELETE FROM task_state WHERE updated_at < ?", (event_cutoff,))
-            deleted["task_state"] = cursor.rowcount
+            if not preserve_state:
+                event_cutoff = (now - timedelta(days=event_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
+                cursor = connection.execute(
+                    "DELETE FROM notification_outbox WHERE status!='pending' AND created_at < ?", (event_cutoff,)
+                )
+                deleted["notification_outbox"] = cursor.rowcount
+                cursor = connection.execute("DELETE FROM task_state WHERE updated_at < ?", (event_cutoff,))
+                deleted["task_state"] = cursor.rowcount
+            else:
+                deleted["notification_outbox"] = 0
+                deleted["task_state"] = 0
         return deleted
 
     # ------------------------------------------------------------ maintenance

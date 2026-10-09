@@ -202,10 +202,17 @@ def _notify_size_guard(store: PolicyStore, cfg: dict[str, Any], context: dict[st
 
 def maybe_run(store: PolicyStore, config: dict[str, Any], *,
               context: dict[str, Any] | None = None, force: bool = False,
-              now: datetime | None = None, source: str = "") -> dict[str, Any]:
+              now: datetime | None = None, source: str = "",
+              preserve_state: bool = False) -> dict[str, Any]:
     """Throttled maintenance tick. Called from plugin hooks (register,
     kanban_task_claimed) and the operator CLI. Never raises: the gate must
-    survive a broken maintenance path, so every failure lands in the report."""
+    survive a broken maintenance path, so every failure lands in the report.
+
+    ``preserve_state=True`` is the one-time operator prune posture (card
+    t_40022daf D2-b): the protected state tables (task_state, run_state,
+    approvals, notification_outbox) are never deleted from — only the ledger
+    backlog is drained. Scheduled hook ticks keep the default False and the
+    configured horizon expiry for every table."""
     report: dict[str, Any] = {
         "ran": False, "forced": bool(force), "source": source,
         "archived_events": 0, "deleted": {}, "notices": [],
@@ -233,7 +240,7 @@ def maybe_run(store: PolicyStore, config: dict[str, Any], *,
         report["archived_events"] = _archive_expired_events(store, cfg, cutoff, report)
         report["deleted"] = store.retention(
             int(cfg["events_days"]), int(cfg["call_history_days"]), int(cfg["approvals_days"]),
-            now=now, skip_events=True,
+            now=now, skip_events=True, preserve_state=preserve_state,
         )
         store.wal_checkpoint_truncate()
         freelist = store.freelist_pages()

@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.2.44] - 2026-10-09
+
+Card t_40022daf (fleet-ops), QA review F1 on PR #65: the one-time operator
+prune script called the forced maintenance tick with the default retention
+posture, which horizon-deletes rows from the protected state tables
+(approvals, notification_outbox, task_state) — violating the card's D2-b
+acceptance that state tables stay exactly intact.
+
+### Fixed
+- `scripts/prune_policy_db.py` now runs the forced maintenance tick with
+  `preserve_state=True`: the protected state tables (task_state, run_state,
+  approvals, notification_outbox) are never deleted from by the one-time
+  prune; their horizon expiry stays the scheduled hook tick's job. The
+  report captures and asserts pre/post row counts for every protected
+  table (`state_preservation`) and aborts non-zero if any moved.
+- `scripts/prune_policy_db.py` TABLES preflight now also covers run_state,
+  maintenance_state and financial_ledger.
+- `docs/fleet-ops/fleet-policy-prune-runbook.md`: corrected the step-2
+  claims that said approvals / notification_outbox / task_state rows are
+  deleted by the one-time prune.
+
+### Added
+- `PolicyStore.retention(..., preserve_state=False)`,
+  `maintenance.maybe_run(..., preserve_state=False)` and
+  `FleetPolicyRuntime.maybe_maintenance(..., preserve_state=False)` — the
+  opt-in one-time-prune posture. The default is unchanged, so scheduled
+  retention semantics (approvals_days etc.) are untouched.
+- Regression coverage: storage-level preserve_state unit test
+  (test_storage.py), maintenance-level pass-through test
+  (test_v1242_retention_maintenance.py), and prune-level exact-content
+  preservation + tripwire tests (test_v1243_prune_script.py) seeding all
+  protected tables with 500-day-old rows.
+
 ## [1.2.43] - 2026-10-08
 
 Card t_40022daf (fleet-ops). Consolidates the in-flight fix branches (PR #56

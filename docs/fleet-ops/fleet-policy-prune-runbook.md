@@ -41,17 +41,24 @@ The script, in order (each step verified before the next):
    `.state/fleet-policy-backups/prune-<UTC stamp>/fleet-policy.db`
    (consistent even with live writers; NOT a raw file copy of a live WAL
    pair), then MANIFEST.json + MANIFEST.sha256 over the backup dir.
-2. **archive + delete** — forced maintenance tick: expired events
-   (>90 days) exported to `.state/fleet-policy-archive/events-*.jsonl.gz`
-   with sha256 sidecars; each batch's rows are deleted only AFTER the
-   batch's archive verifies (hash + gzip decode + row count). Expired rows
-   of call_history / run_call_history / budget_ledger / run_budget /
-   approvals / notification_outbox / task_state are deleted per the
-   retention config (they carry no long-term evidentiary value; events do).
+2. **archive + delete** — forced maintenance tick in the one-time-prune
+   posture (`preserve_state=True`): expired events (>90 days) exported to
+   `.state/fleet-policy-archive/events-*.jsonl.gz` with sha256 sidecars;
+   each batch's rows are deleted only AFTER the batch's archive verifies
+   (hash + gzip decode + row count). Expired rows of the ledger tables
+   (call_history / run_call_history / budget_ledger / run_budget /
+   financial_ledger) are deleted per the retention config. The protected
+   state tables — task_state, run_state, approvals, notification_outbox —
+   are NEVER deleted from by this runbook: their horizon expiry stays the
+   scheduled hook tick's job (approvals_days etc.), and the one-time
+   catch-up only drains the ledger backlog. The report captures pre/post
+   row counts for every protected table (`state_preservation`) and the
+   script aborts non-zero if any of them moved.
 3. **VACUUM** — full vacuum; activates `auto_vacuum=INCREMENTAL` on the
    legacy store so later ticks drain the freelist gradually.
-4. **post-checks** — size/counts delta, every archive sidecar re-verified,
-   PRUNE-REPORT.json written next to the backup.
+4. **post-checks** — size/counts delta, protected-state preservation
+   asserted (`state_preservation`, all ok), every archive sidecar
+   re-verified, PRUNE-REPORT.json written next to the backup.
 
 Expected result for the 2026-10-08 store (~450 MB, ~850k rows, oldest
 events from 2026-08): events older than 90 days archived, store size drops

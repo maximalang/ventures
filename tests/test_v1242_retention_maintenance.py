@@ -380,3 +380,36 @@ def test_failed_archive_does_not_consume_the_success_throttle(tmp_path, monkeypa
     assert second["archived_events"] == 3
     assert store.maintenance_get(LAST_RUN_KEY) is not None
     assert store.maintenance_get(CONSECUTIVE_FAILURES_KEY) == "0"
+
+def test_maybe_run_preserve_state_never_deletes_state_rows(tmp_path):
+    """v1.2.44 (t_40022daf D2-b, QA F1): the one-time operator prune posture
+    (preserve_state=True) drains the ledger backlog but never deletes from
+    the protected state tables — even rows older than every horizon."""
+    store = PolicyStore(tmp_path / ".state" / "fleet-policy.db")
+    store.migrate()
+    old = _ts(500)
+    _insert_events(store, "old", 10, days_ago=120)
+    with store.connect() as connection:
+        connection.execute("INSERT INTO task_state VALUES(?,?,?)", ("old-task", 2, old))
+        connection.execute("INSERT INTO run_state VALUES(?,?,?,?)", ("old-task", "rk", 1, old))
+        connection.execute(
+            "INSERT INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at) VALUES(?,?,?,?,?,?,?)",
+            ("old-appr", "t", "terminal", "deploy", "h", "rejected", old),
+        )
+        connection.execute(
+            "INSERT INTO notification_outbox(event_id,payload_json,status,created_at) VALUES(?,?,?,?)",
+            ("old-note", "{}", "failed", old),
+        )
+        connection.execute(
+            "INSERT INTO call_history VALUES(?,?,?,?,?,?)", ("old-call", "t", "sig", None, 1, old)
+        )
+    report = maybe_run(store, _config(), force=True, source="test", preserve_state=True)
+    assert report["ran"] is True and "error" not in report
+    assert report["archived_events"] == 10
+    assert report["deleted"]["call_history"] == 1
+    assert report["deleted"]["approvals"] == 0
+    assert report["deleted"]["task_state"] == 0
+    assert report["deleted"]["notification_outbox"] == 0
+    with store.connect() as connection:
+        for table in ("task_state", "run_state", "approvals", "notification_outbox"):
+            assert connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0] == 1
