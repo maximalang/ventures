@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.2.37] - 2026-10-09
+
+### Fixed
+- F1/F2 (t_fc317116, rework t_5a2b60e7): quoted file-operand path-guard
+  subjects. The F5 prose rule (quoted spans are never targets) let
+  `sqlite3 "<board db>" "<mutation>"` classify as allow:scoped_state_change
+  and `rm "<board db>"` as allow:destructive_change — an in-process bypass
+  of the protected-path guard (defect confirmed LIVE 09.10 by the company
+  23-case probe: C4/C5 allow instead of deny:policy_control_plane_mutation).
+  `_path_guard_subjects` now treats the FIRST quoted positional of an
+  allowlisted file-operand program (sqlite3, cp, mv, rm, del, copy, move,
+  xcopy, robocopy, tee) as a real filesystem target; sqlite3 is pinned to
+  exactly one file positional (every later positional stays SQL prose).
+- Extraction stays strictly allowlist-only: no unconditional quoted-span
+  scan, the value-flag prose exclusion (git commit -m "…") still applies,
+  non-allowlisted programs keep the quoted-prose behavior, and quoted READ
+  probes of policy-controlled stores remain allow:read_only via the guard's
+  read arm (cat/head/tail stay read verbs).
+- Reconciliation with the merged v1.2.34 W4 prose-mask (PR #53): the
+  value-flag corpus case `git commit -m "delete kanban.db notes"` now pins
+  category repository_change (the W4 mask strips the quoted span from the
+  risk scan; was destructive_change on the 1.2.31 base). Decision (allow)
+  and the no-protected-subject property are unchanged.
+
+### Lineage
+- Slice content is byte-identical to the never-merged PR #54 candidate
+  ea8f4263 (stale pin 1.2.35, dead anchor 4908dd4d), re-anchored on trunk
+  9b094449 with version re-pinned to 1.2.37; PR #54 is closed by
+  disposition, this PR supersedes it.
+
 ## [1.2.36] - 2026-10-04
 
 ### Added
