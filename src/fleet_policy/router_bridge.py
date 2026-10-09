@@ -25,6 +25,7 @@ import importlib.util
 import os
 import sqlite3
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Callable, Optional
 
@@ -54,19 +55,64 @@ def hook_script_path(config: Optional[dict[str, Any]], env: Optional[dict[str, s
     return home.joinpath(*_COMPANY_HOOK_PARTS)
 
 
+# Соседние stdlib-модули, которые hook импортирует из своего каталога
+# (top-level ``import model_router`` → sys.modules). Их mtime входят в
+# сигнатуру кэша: замена ТОЛЬКО таблицы правил инвалидирует кэш без правки
+# hook'а и без рестарта процесса (t_9d220da7: промоушен v6.2 оставил
+# долгоживущие процессы на v4-таблице до рестарта хоста).
+_HOOK_DEPS = ("model_router",)
+
+
+def _deps_signature(path: Path) -> tuple:
+    """Сигнатура кэша hook'а: его mtime + mtime каждого sibling-dep
+    (None для отсутствующего dep — import в hook'е тогда падает на exec,
+    как и раньше)."""
+    sig: list = [path.stat().st_mtime]
+    for name in _HOOK_DEPS:
+        try:
+            sig.append(path.parent.joinpath(f"{name}.py").stat().st_mtime)
+        except OSError:
+            sig.append(None)
+    return tuple(sig)
+
+
+def _evict_deps(path: Path) -> None:
+    """Сбросить dep-модули, импортированные ИЗ КАТАЛОГА hook'а, чтобы
+    top-level ``import model_router`` в свежем exec перечитал байты с диска
+    (контракт sys.path.insert(HERE) сохраняется). Одноимённый модуль из
+    ЧУЖОГО каталога не трогаем (status-quo связывание)."""
+    try:
+        hook_dir = path.resolve().parent
+    except OSError:
+        return
+    for name in _HOOK_DEPS:
+        mod = sys.modules.get(name)
+        mod_file = getattr(mod, "__file__", None) if mod is not None else None
+        if not mod_file:
+            continue
+        try:
+            same_dir = Path(str(mod_file)).resolve().parent == hook_dir
+        except OSError:
+            same_dir = False
+        if same_dir:
+            sys.modules.pop(name, None)
+
+
 def load_hook(path: Path) -> Any:
-    """Импорт router_hook.py с диска (кэш по path+mtime; stdlib-only модуль)."""
+    """Импорт router_hook.py с диска (кэш по path + mtime hook'а и его
+    sibling-deps; stdlib-only модуль). Hot-reload таблицы без рестарта."""
     key = str(path)
-    mtime = path.stat().st_mtime
+    sig = _deps_signature(path)
     cached = _HOOK_CACHE.get(key)
-    if cached is not None and cached[0] == mtime:
+    if cached is not None and cached[0] == sig:
         return cached[1]
+    _evict_deps(path)
     spec = importlib.util.spec_from_file_location("fleet_router_hook", path)
     if spec is None or spec.loader is None:
         raise ImportError(f"cannot load router hook: {path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    _HOOK_CACHE[key] = (mtime, module)
+    _HOOK_CACHE[key] = (sig, module)
     return module
 
 

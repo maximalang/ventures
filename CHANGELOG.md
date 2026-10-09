@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.2.45] - 2026-10-09
+
+### Fixed
+- `src/fleet_policy/router_bridge.py` — `load_hook` cache signature now
+  covers the mtimes of the hook's sibling deps (`_HOOK_DEPS =
+  ("model_router",)`), not just the hook file itself; on invalidation the
+  deps previously imported from the hook's own directory are evicted from
+  `sys.modules` BEFORE re-exec, so a rules-table-only promotion (ROUTES
+  v6.2, t_8e388c6e) takes effect in long-running processes WITHOUT a hook
+  edit or a host restart (t_9d220da7; 09.10 incident: enforce mode pinned
+  by the stale v4 table until restart). Foreign same-name modules are
+  never evicted; a missing dep degrades exactly as before. Twin change on
+  the dispatch-wiring side (`hermes_cli/kanban_db_dispatch.py`
+  `_load_router_module`) delivered as hermes-agent branch
+  `fix/router-hook-hot-reload` (d56dad782a5, base overlay-backup
+  bf5e243c0ef, applies cleanly to the live trunk tree).
+- Tests: `tests/test_v1236_router_hook.py` level 2b — a model_router swap
+  between two `decide()` calls in ONE process changes the decision's
+  `rules_sha`; cache hit on unchanged deps; foreign module survives
+  eviction. `test_active_status_file_is_used_when_no_override` is now
+  table-version-agnostic (v6.2 puts a `zai/` rail first in class `code`),
+  and the enforce-comment assertion tracks `ROUTER_VERSION` dynamically.
+
+### Changed
+- `scripts/model_router.py` mirror synced v4 → v6.2, byte-for-byte with
+  live `profiles/company/scripts/model_router.py` (sha256 LF-form
+  `10d4d59333e2cd57260601633a2ff52023fe296abe32c1835b4fafaf24b19607`;
+  Windows worktree CRLF-form `c8864f0380fe942d33603e2c1c4107ebbef35678bb3cde7dbf58c51d90ba9247`;
+  `ROUTER_LIVE_SHA` updated accordingly). `scripts/ROUTER_ACTIVE.json`
+  intentionally untouched — the runtime reads the profile scripts dir.
+
 ## [1.2.36] - 2026-10-04
 
 ### Added
