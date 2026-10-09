@@ -11,6 +11,7 @@ import ast
 import hashlib
 import importlib.util
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -22,8 +23,9 @@ ROOT = Path(__file__).resolve().parents[1]
 HOOK = ROOT / "scripts" / "router_hook.py"
 ROUTER = ROOT / "scripts" / "model_router.py"
 PLUGIN = ROOT / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
-# Живой router v4 после t_f98bb636 (лестница 03.10): репо-копия байт-в-байт.
-ROUTER_LIVE_SHA = "1ae2e34d08cd17cc4a4ea41d2af7c4c80ddece8977bfde86ffb56466c6548df1"
+# Живой router v6.2 после t_8e388c6e (промоушен 09.10): репо-копия байт-в-байт;
+# sha256 считается по LF-форме (см. _norm), CRLF-worktree live даёт тот же хэш.
+ROUTER_LIVE_SHA = "10d4d59333e2cd57260601633a2ff52023fe296abe32c1835b4fafaf24b19607"
 FORBIDDEN_IMPORTS = {
     "socket", "urllib", "requests", "http", "ftplib", "smtplib", "telnetlib",
     "subprocess", "ssl", "xmlrpc", "websocket", "asyncio",
@@ -190,7 +192,11 @@ def test_active_status_file_is_used_when_no_override(tmp_path, hook):
     active = _active(tmp_path, {"mode": "enforce", "classes": ["code"],
                                 "status_file": str(_active(tmp_path, {"zai": {"available": False}}, "s2.json"))})
     d = hook.decide(CODE_CARD, active_path=str(active), log_path=str(tmp_path / "L.md"))
-    assert d["model"] == hook.model_router.ROUTES["code"]["models"][0].split("/", 1)[1]
+    models = hook.model_router.ROUTES["code"]["models"]
+    expected = next(m.split("/", 1)[1] for m in models if not m.startswith("zai/"))
+    # zai-рельса пропускается ДО выбора (status_file из active-файла, t_9d220da7:
+    # проверка version-agnostic — v6.2 ставит zai/ первой рельсой класса code)
+    assert d["model"] == expected
 
 
 def test_log_write_failure_does_not_raise(tmp_path, hook):
@@ -276,7 +282,8 @@ def test_bridge_enforce_sets_model_and_comment(bridge, tmp_path, monkeypatch):
     comment_cmd = calls[1]
     assert comment_cmd[:5] == ["hermes", "kanban", "--board", "fleet-ops", "comment"]
     body = comment_cmd[6]
-    assert body.startswith("ROUTER v4:") and f"model={provider}/{model}" in body
+    assert body.startswith(f"ROUTER {hookmod.model_router.ROUTER_VERSION}:") \
+        and f"model={provider}/{model}" in body
     assert f"rules_sha={hookmod.model_router.RULES_SHA}" in body
     assert comment_cmd[-2:] == ["--author", "fleet-router"]
 
@@ -392,3 +399,88 @@ def test_plugin_source_keeps_call_flag_gated_and_guarded():
     assert "router_step(ctx, task_id" in fn
     assert "except Exception" in fn  # best-effort: никогда не блокирует claim
     assert fn.index("router_step(ctx") < fn.index("if not error:")  # до deny-возврата
+
+
+# --- уровень 2b: hot-reload таблицы правил (t_9d220da7) ------------------------
+
+HOOK_STUB = """
+import sys
+from pathlib import Path
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+import model_router
+
+
+def decide(card, **kwargs):
+    return {"rules_sha": model_router.RULES_SHA,
+            "router_version": model_router.ROUTER_VERSION}
+"""
+
+MR_V1 = 'ROUTER_VERSION = "v-test-1"\nRULES_SHA = "aaa111aaa111"\n'
+MR_V2 = 'ROUTER_VERSION = "v-test-2"\nRULES_SHA = "bbb222bbb222"\n'
+
+
+def _mk_hook_dir(tmp_path):
+    d = tmp_path / "scripts"
+    d.mkdir()
+    (d / "router_hook.py").write_text(HOOK_STUB, encoding="utf-8", newline="\n")
+    (d / "model_router.py").write_text(MR_V1, encoding="utf-8", newline="\n")
+    return d
+
+
+def _bump(path, offset=5.0):
+    st = path.stat()
+    os.utime(path, (st.st_atime, st.st_mtime + offset))
+
+
+@pytest.fixture()
+def _router_module_isolation():
+    # hook exec'ы делают sys.path.insert(HERE) и кладут model_router в
+    # sys.modules — снимок/восстановление, чтобы тесты не текли друг в друга.
+    saved = sys.modules.pop("model_router", None)
+    saved_path = list(sys.path)
+    try:
+        yield
+    finally:
+        sys.modules.pop("model_router", None)
+        if saved is not None:
+            sys.modules["model_router"] = saved
+        sys.path[:] = saved_path
+
+
+def test_load_hook_reloads_on_model_router_swap(bridge, tmp_path, _router_module_isolation):
+    """Замена ТОЛЬКО model_router.py между двумя decide() в ОДНОМ процессе
+    меняет rules_sha решения без рестарта (t_9d220da7)."""
+    d = _mk_hook_dir(tmp_path)
+    hook_path = d / "router_hook.py"
+    first = bridge.load_hook(hook_path)
+    assert first.decide({"task_id": "t"})["rules_sha"] == "aaa111aaa111"
+
+    (d / "model_router.py").write_text(MR_V2, encoding="utf-8", newline="\n")
+    _bump(d / "model_router.py")  # hook-файл и его mtime не тронуты
+
+    second = bridge.load_hook(hook_path)
+    assert second.decide({"task_id": "t"})["rules_sha"] == "bbb222bbb222"
+
+
+def test_load_hook_cache_hit_when_deps_unchanged(bridge, tmp_path, _router_module_isolation):
+    d = _mk_hook_dir(tmp_path)
+    first = bridge.load_hook(d / "router_hook.py")
+    assert bridge.load_hook(d / "router_hook.py") is first
+
+
+def test_load_hook_keeps_foreign_model_router(bridge, tmp_path, _router_module_isolation):
+    foreign_dir = tmp_path / "foreign"
+    foreign_dir.mkdir()
+    (foreign_dir / "model_router.py").write_text(
+        'ROUTER_VERSION = "v-foreign"\nRULES_SHA = "fff000fff000"\n',
+        encoding="utf-8", newline="\n")
+    spec = importlib.util.spec_from_file_location("model_router", foreign_dir / "model_router.py")
+    foreign = importlib.util.module_from_spec(spec)
+    sys.modules["model_router"] = foreign
+    spec.loader.exec_module(foreign)
+
+    d = _mk_hook_dir(tmp_path)
+    assert bridge.load_hook(d / "router_hook.py") is not None
+    assert sys.modules["model_router"] is foreign  # чужой каталог не вытесняется
