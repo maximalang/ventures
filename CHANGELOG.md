@@ -1,5 +1,264 @@
 # Changelog
 
+## [1.2.44] - 2026-10-09
+
+Card t_40022daf (fleet-ops), QA review F1 on PR #65: the one-time operator
+prune script called the forced maintenance tick with the default retention
+posture, which horizon-deletes rows from the protected state tables
+(approvals, notification_outbox, task_state) — violating the card's D2-b
+acceptance that state tables stay exactly intact.
+
+### Fixed
+- `scripts/prune_policy_db.py` now runs the forced maintenance tick with
+  `preserve_state=True`: the protected state tables (task_state, run_state,
+  approvals, notification_outbox) are never deleted from by the one-time
+  prune; their horizon expiry stays the scheduled hook tick's job. The
+  report captures and asserts pre/post row counts for every protected
+  table (`state_preservation`) and aborts non-zero if any moved.
+- `scripts/prune_policy_db.py` TABLES preflight now also covers run_state,
+  maintenance_state and financial_ledger.
+- `docs/fleet-ops/fleet-policy-prune-runbook.md`: corrected the step-2
+  claims that said approvals / notification_outbox / task_state rows are
+  deleted by the one-time prune.
+
+### Added
+- `PolicyStore.retention(..., preserve_state=False)`,
+  `maintenance.maybe_run(..., preserve_state=False)` and
+  `FleetPolicyRuntime.maybe_maintenance(..., preserve_state=False)` — the
+  opt-in one-time-prune posture. The default is unchanged, so scheduled
+  retention semantics (approvals_days etc.) are untouched.
+- Regression coverage: storage-level preserve_state unit test
+  (test_storage.py), maintenance-level pass-through test
+  (test_v1242_retention_maintenance.py), and prune-level exact-content
+  preservation + tripwire tests (test_v1243_prune_script.py) seeding all
+  protected tables with 500-day-old rows.
+
+## [1.2.43] - 2026-10-08
+
+Card t_40022daf (fleet-ops). Consolidates the in-flight fix branches (PR #56
+v1.2.37 lexical-delta capture, PR #57 v1.2.38 FP root classes, PR #63 v1.2.42
+built-in retention) onto current trunk and closes the residual read-lane
+false-positive class proven by live event
+f3b2e0d2cd9e0edaedaccbbaa88849fd7fa1b2703ce03f4ab4222876c09578ba
+(2026-10-08, task t_40022daf call 41: a read-only `sqlite3 mode=ro` FTS
+query blocked as irreversible_data_loss because the query text contained a
+risk keyword).
+
+### Fixed
+- `_SHELL_METACHARACTERS`: the bare-`&` alternative no longer matches the
+  `&` inside fd duplication (`2>&1`, `>&2`). The pre-existing comment
+  already claimed this exemption; the regex never implemented it, so every
+  read pipeline with stderr redirection failed closed into state_change and
+  the keyword rules. `cmd &`, `&> file` and `&>> file` still fail closed.
+- `_sqlite_stage_is_read_only`: a single trailing statement terminator
+  (`SELECT ...;`) no longer ejects the sqlite read lane; interior
+  separators still fail closed. fd-duplication tokens (`2>&1`) no longer
+  consume positional slots in the lane's two-positional validation.
+- MUTATOR pre-filter: search-tool operands (grep/rg/findstr/select-string/
+  find patterns, paths, and value-flag values) are masked as data, closing
+  the bare-pattern literal trap (`grep -rn deploy src/`) that v1.2.22 fixed
+  only for the quoted form. The view only feeds the MUTATOR pre-filter; the
+  write-marker scan keeps the raw command and every stage still passes its
+  own read-only check.
+- rm keyword rules: the `(?:^|\s)rm` anchor now accepts quote characters
+  (`(?:^|[\s"'])rm`), closing the quote-adjacent evasion
+  (`python -c "os.system('rm -rf ...')"`, `bash -c 'rm -rf ...'`) that
+  previously slipped through as scoped_state_change.
+
+### Added
+- `scripts/prune_policy_db.py` — operator-only one-time prune of the live
+  event store: pre-flight counts, SQLite backup-API snapshot with
+  MANIFEST.json + MANIFEST.sha256, forced maintenance tick (verified
+  archive before delete), full VACUUM, post-run archive sidecar
+  re-verification and PRUNE-REPORT.json. Dry-run by default posture;
+  `--yes` required to execute.
+- tests/test_v1243_readlane_fp.py (25 tests) and
+  tests/test_v1243_prune_script.py (3 tests).
+
+### Notes
+- `python -c` code strings keep their nested literals scanned (no nested
+  masking): prompt text embedded in code can still trip the keyword rules.
+  The sanctioned lane for prompt-heavy runners is a script file via
+  write_file + `python file.py` — file contents are data, not commands.
+
+## [1.2.42] - 2026-10-07
+
+### Fixed (root cause)
+- Unbounded policy event store (fleet-ops t_1d99b96b; 2026-10-07 incident:
+  deny-triage window queries timed out 3× at 240s against a 2.8 GB store, the
+  emergency hand-created index dropped them 14.5s→0.001s). The storage
+  manifesto — WAL with a sane autocheckpoint, auto_vacuum, retention, size
+  caps — is now a built-in feature of the storage layer instead of an
+  external cron plus manual hotfixes.
+
+### Fixed (QA boundary rework, fleet-ops t_7733d471)
+- Legacy auto_vacuum conversion (QA F1): the `PRAGMA auto_vacuum=2` staged in
+  `migrate()` never persisted — `journal_mode=WAL` materializes the database
+  header first, so even fresh stores silently stayed in mode NONE, and a
+  staged mode does not cross connections. The pragma is now issued BEFORE
+  the WAL switch (fresh stores are born INCREMENTAL) and re-issued by
+  `full_vacuum()` on the vacuuming connection (legacy stores convert on the
+  advertised one-time operator full vacuum), proven by freelist + file-size
+  reclamation, not a marker.
+- Maintenance CLI exit status (QA F2): a run whose report carries per-batch
+  errors (fail-closed archive verification) now exits 1 instead of 0.
+- Retry throttle (QA F3): a run with errors no longer stamps the success
+  throttle (`retention_last_run_epoch`), so the documented retry-next-tick
+  actually fires; failed attempts are ledgered separately
+  (`retention_last_failure_epoch`, `retention_consecutive_failures`).
+
+### Added
+- Schema v5 (idempotent, applied on every plugin load): hot-path indexes
+  `idx_events_created` (time window) and `idx_events_kind_created`
+  (class window) join the existing task window `idx_events_task_created`;
+  `maintenance_state` KV ledger for cross-process throttling. Index coverage
+  never again depends on a manual hotfix.
+- `src/fleet_policy/maintenance.py`: throttled maintenance tick invoked from
+  the plugin hooks (`register`, `kanban_task_claimed`) and the operator CLI —
+  not from an external cron. Expired events are archived to deterministic
+  `JSONL.gz` + `.sha256` sidecar + `manifest.jsonl` under
+  `.state/fleet-policy-archive/`; the archive is verified (hash + gzip decode
+  + row count) BEFORE the covered primary keys are deleted, so history stays
+  restorable for legal/incident review. After a run: WAL checkpoint(TRUNCATE)
+  and incremental vacuum when the freelist is large.
+- Size guard: DB size (pages + WAL) ≥ soft cap (default 100 MB) emits one
+  significant event per UTC day through the existing notification lane;
+  ≥ hard cap (default 300 MB) forces an immediate retention run regardless
+  of the interval. Maintenance never crashes the gate: every failure lands
+  in the returned report dict.
+- `fleet-policy maintenance [--full-vacuum]` CLI (operator run + one-time
+  auto_vacuum activation on legacy stores); `status` now reports
+  `db_size_bytes` and `maintenance_last_run_epoch`.
+- `PolicyStore.retention(..., skip_events=True)` for the archive-first path;
+  the legacy delete-only behavior is unchanged for the manual CLI.
+
+### Notes
+- No policy-semantics changes: deny/allow rules, protected paths, approver
+  roles and gates are untouched (storage lifecycle only).
+- Rollback: revert the merge and redeploy the previous bundle; the v5 schema
+  objects (indexes, maintenance_state) are additive and harmless to older
+  code, and archived events are never re-imported automatically.
+## [1.2.38] - 2026-10-05
+
+Card t_e393b6e8 (fleet-ops, RECOVERY-PROGRAM RR-3/RR-4 root-fix). Live
+evidence: policy-store deny events of the 04–05.10 activation incident —
+t_9eb08cc4 (worker control-plane deploy loop run 61 call_index=5;
+gate_forgery on a READ probe `hermes kanban show … | python -c …` at
+15:21Z), t_85547708/t_38c0f11a (QA verdict reports denied gate_forgery for
+echoing the company anchor), t_78852bc1/t_4971a23c/t_b46df615 (cards fenced
+by a broken task_type marker, every call denied), t_90c07896 run 41
+(`ls` of a sessions tree denied secret_read_or_write),
+t_b8752c3f/t_22153d76/t_c7312fde/t_e9ef9cc1 (sqlite heredoc read-probe deny
+loops against board/policy stores).
+
+### Fixed — FP-read-lane (RR-3, RR-4a, RR-4b)
+- Sanctioned read-only diagnostics route for policy state: new CLI
+  subcommands `events`, `task`, `show` (sqlite `mode=ro` only — no migrate,
+  no store or board writes) join `status`; the READ_COMMAND allowlist
+  accepts `fleet-policy status|show|events|task` and
+  `python -m fleet_policy.cli status|show|events|task` (global `--root`
+  tolerated). Mutating verbs never inherit the lane, and the
+  worker_self_approval guard now sees through the same `--root` gap.
+- Heredoc/multiline read probes stay fail-closed, but a READ-shaped denied
+  control-plane call now points at the sanctioned lane (CLI route;
+  single-statement `sqlite3 -readonly` SELECT; read_file; gh api GET).
+  SQL write verbs suppress the hint so denied writes get no read advice.
+- Directory-family secret patterns (sessions / request_dump / dumps) no
+  longer deny pure ENUMERATION: bare `ls`/`dir` stages or
+  `search_files(target=files)` pass as name listings. Every content read
+  (cat/grep/head/read_file/content search, redirects) and every hard-secret
+  FILE name (.env*, auth.json, *credential*, *secret*) stays denied.
+
+### Fixed — FP-literal-traps (RR-4c)
+- `infer_task_type` masks explicit quotes (blockquote lines, fenced code
+  blocks, «…»/"…"/`…` inline spans) and emission binding lines (any line
+  carrying `head=<hex>`) before matching: quoted task-type tokens are DATA
+  and can no longer classify a card. POISON regressions: a card does not
+  die from a quote; conflicting quoted markers do not count; the bare
+  company marker decides.
+- Gate-attestation literals inside fenced blocks / blockquotes are quoted
+  data in every consumer: they never arm a gate, never set the expected
+  head, and never trigger the gate_forgery write-guard. The bare binding
+  line of an authorized author stays the only legal attestation form;
+  other-role attestation, self-attestation and unanchored PASS markers stay
+  fail-closed (runs 58/60 behavior preserved).
+- The terminal forgery heuristic now requires the actual write form
+  (`hermes kanban comment` adjacency + a full `=pass`/`decision:company=go`
+  marker): READ probes piping `hermes kanban show` through scripts that
+  mention marker text are no longer denied (run 55 shape).
+- A card with a missing/corrupt task_type marker keeps its board lifecycle
+  channel (comment/block/heartbeat/show) so the worker can hand the poison
+  back to company instead of the card dying silently forever. State-changing
+  work and non-lifecycle reads stay denied (v1.2.10 F contract unchanged).
+
+### Changed — truthful remediation (RR-3)
+- `policy_control_plane_mutation` remediation now names the REAL route:
+  control-plane deploy is an operator action of the company session
+  (scripts/deploy_policy.sh, tag-only); the worker prepares bundle+runbook
+  and blocks with [continues: company]. The tech-card advice is scoped to
+  repo SOURCE changes (src/), not the live plane.
+- `missing_or_unknown_task_type` remediation documents the surviving
+  lifecycle channel.
+
+### Added
+- scripts/deploy_policy.sh — operator-only tag-based control-plane deploy:
+  tag resolution + worktree proof (full tests, build-bundle, verify-bundle),
+  RR-1 fail-closed drift gate (a dirty live tree deploys only when its
+  content is identical to the tag, otherwise aborts without --force),
+  detached checkout in the live plugin clone (.state/ survives), profile
+  symlink audit, JSON manifest with prev/new SHAs and rollback command.
+  Proven on disposable clones: clean dry-run, identical-drift dry-run,
+  dirty abort (exit 1), real checkout 287e86c→2f2f5ee.
+- docs/fleet-ops/fleet-policy-deploy-runbook.md — roles/contract, deploy
+  preconditions, command, post-deploy verification, rollback, worker
+  read-only diagnostics route.
+
+### Tests
+- tests/test_v1234_fp_corpus.py: v1.2.38 section — CLI read-lane allow +
+  mutator/self-approval TP controls (incl. `--root` forms), sessions
+  enumeration FP/TP matrix, sqlite-heredoc deny + CLI-route reason, control-
+  plane write without read-lane advice, POISON-quote inference regressions,
+  run-55 terminal read probe, run-58 other-role attestation, run-60
+  unanchored fail-closed, run-61 worker deploy deny + truthful remediation,
+  broken-marker lifecycle channel, bare-attestation control.
+
+## [1.2.37] - 2026-10-05
+
+Card t_9412d7d5 (fleet-ops). Capture of the live-clone lexical delta
+flagged by the post-merge QA verdict finding F-A (t_85547708): the
+deployed profiles clone carried an uncommitted classifier patch (source
+card t_f6acc5dc, archived; the code existed in no commit or branch) plus
+an untracked test — a repeat of the "live clone is the sole carrier"
+pattern from the v1.2.32→34 rescue. Any reinstall or checkout to trunk
+would have lost it. Captured byte-exact into git: the policy.py staged
+blob equals the live canonical blob cac7780534e6…, the test blob equals
+95d7b609e5de…. The live clone was NOT modified (read-only capture);
+its controlled apply follows the merge.
+
+### Fixed
+- D1 (F1, run2166 call19 class): an EMPTY-value dotted `git -c` config
+  assignment (option reset/disable, e.g. an empty helper value) is a
+  config-key NAME, not a filesystem operand, and no longer trips the
+  protected-name guard. Only the empty-value form directly after
+  `git -c` is exempt; every non-empty value stays guarded (fail-closed).
+- D2 (F2, run2172 call26 class): dispatcher worker env-pin bindings
+  (HERMES_KANBAN_DB / _BOARD / _TASK / _WORKSPACE / _WORKSPACES_ROOT,
+  HERMES_TENANT) as NAME=value tokens bind a child process and mutate no
+  store; they are no longer treated as filesystem operands. Unknown env
+  names carrying a store path stay denied.
+
+### Added
+- D2e (fail-closed tightening): when the same command expands a bound
+  pin ($PIN / ${PIN}), the bound value is re-injected into the
+  path-guard subjects, so expansion cannot smuggle a store path past the
+  guard — a shape previously allowed is now denied.
+- tests/test_policy_lexical_delta.py: FP recurrences F1/F2/F2b plus TP
+  controls (non-empty config values, hard-guarded file operands, unknown
+  env names, pin-expansion re-entry, control-plane writes, store
+  mutation) proving the delta weakens nothing. Quoted-operand forms
+  (F1-SALVAGE C4/C5) stay a documented negative baseline tracked by
+  PR #54 (v1.2.35).
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

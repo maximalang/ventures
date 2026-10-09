@@ -15,6 +15,36 @@ TASK_LINE = re.compile(r"(?im)^\s*task_type\s*:\s*([a-z_-]+)\s*$")
 TASK_TAG = re.compile(r"(?i)(?:^|[\s,;])task_type\s*=\s*([a-z_-]+)(?=$|[\s,;])")
 TASK_SKILL = re.compile(r"(?i)(?:^|[\s,;])task-type-(research|code|review|ops)(?=$|[\s,;])")
 
+# v1.2.38 FP-literal-traps (card t_e393b6e8, RECOVERY-PROGRAM RR-4c): a
+# task-type token inside an EXPLICIT QUOTE (markdown blockquote line, fenced
+# code block, «…» / "…" / `…` inline span) or inside a SANCTIONED emission
+# binding line (any line carrying a head=<hex> binding — company anchors,
+# gate verdicts quoted for verification) is DATA: an echo of an incident,
+# another card or an attestation contract. It never classifies THIS card.
+# The only literal that establishes a class is the bare marker line the
+# company writes into the body; the only legal literal form in a comment is
+# the authorized author's binding line, consumed by missing_gates — never
+# by this inference. Live POISON 04.10.2026: quoted markers classified
+# cards into the wrong class or fenced them as "unknown task_type" forever.
+_EMIT_BINDING_LINE = re.compile(r"(?im)^.*\bhead[=:\s]+[0-9a-f]{7,64}\b.*$")
+_BLOCKQUOTE_LINE = re.compile(r"(?m)^\s*>.*$")
+_FENCED_CODE_BLOCK = re.compile(r"(?ms)^[ \t]*(?:```|~~~).*?^[ \t]*(?:```|~~~)[ \t]*$")
+_INLINE_QUOTE_SPAN = re.compile(r"«[^»\n]*»|\"[^\"\n]*\"|`[^`\n]*`")
+
+
+def _mask_quoted_marker_text(text: str) -> str:
+    """Blank quoted/binding spans so their task-type tokens cannot classify.
+
+    Length-preserving (masked spans become spaces, fences keep their
+    newlines), so no new token adjacency is fabricated and match positions
+    stay stable. An unterminated fence is NOT masked — malformed bodies
+    fail closed to the historical first-marker behavior.
+    """
+    masked = _FENCED_CODE_BLOCK.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), text)
+    masked = _EMIT_BINDING_LINE.sub(lambda m: " " * len(m.group(0)), masked)
+    masked = _BLOCKQUOTE_LINE.sub(lambda m: " " * len(m.group(0)), masked)
+    return _INLINE_QUOTE_SPAN.sub(lambda m: " " * len(m.group(0)), masked)
+
 CANONICAL_PUBLIC_POLICY_DOC = (
     "c:/users/max/desktop/all/ventures/" + "app" + "rovals.md"
 )
@@ -46,12 +76,17 @@ def infer_task_type(*values: Any) -> tuple[str | None, str | None]:
     create a class for an unmarked body nor poison or switch an existing one.
     Within the body, the FIRST marker whose value is a canonical task type
     decides; non-canonical markers are reported only when the body carries
-    no canonical marker at all."""
+    no canonical marker at all.
+
+    v1.2.38 FP-literal-traps: quoted spans (blockquotes, fenced blocks,
+    «…»/"…"/`…`) and emission binding lines (head=<hex>) are masked out
+    BEFORE matching — their task-type tokens are data, never class markers.
+    """
     body = values[0] if values else None
     first_noncanonical: str | None = None
     items = body if isinstance(body, (list, tuple, set)) else [body]
     for item in items:
-        text = str(item or "")
+        text = _mask_quoted_marker_text(str(item or ""))
         matches: list[tuple[int, str]] = []
         for pattern in (TASK_LINE, TASK_TAG, TASK_SKILL):
             matches.extend((match.start(1), match.group(1)) for match in pattern.finditer(text))
@@ -140,6 +175,57 @@ def _is_control_plane_store_name(basename: str) -> bool:
     return bool(_STORE_DB_SUFFIX.search(lowered)) and any(
         token in lowered for token in _STORE_NAME_TOKENS
     )
+
+
+# v1.2.38 FP-read-lane (card t_e393b6e8, RR-4b): ENUMERATION of a
+# directory-family protected pattern (sessions / request_dump / dumps)
+# reveals NAMES, never contents — it is not a secret operation. Live FP
+# (t_90c07896 run 41): `ls <profiles>/tech/sessions/` denied as
+# secret_read_or_write while the sanctioned route (company guidance) was
+# exactly "перечисли имена файлов". Reading ANY file inside those trees
+# (cat/grep/read_file/search_files content mode) stays denied, and
+# hard-secret FILE names (.env*, auth.json, *credential*, *secret*, key
+# material) are deliberately NOT enumerable: `ls` on them is a
+# reconnaissance primitive for the exact stores the guard protects.
+_ENUMERABLE_DIRECTORY_SEGMENTS = frozenset({"sessions", "request_dump", "request_dumps", "dumps"})
+_ENUMERATION_PROGRAMS = frozenset({"ls", "dir"})
+
+
+def _enumerable_directory_pattern(pattern: str) -> bool:
+    """True when the protected pattern describes a directory family whose
+    NAME LISTING is not a secret read (sessions/dumps/request_dump trees)."""
+    parts = {
+        part.strip("*?")
+        for part in re.split(r"[\\/]", str(pattern).lower())
+        if part not in ("", "**", "*")
+    }
+    return bool(parts & _ENUMERABLE_DIRECTORY_SEGMENTS)
+
+
+def _enumeration_only_read(name: str, arguments: dict[str, Any], effect: str) -> bool:
+    """True when the call enumerates directory NAMES without touching file
+    contents: `search_files(target=files)` or a terminal command whose every
+    stage is a bare `ls`/`dir`. Fail-closed on any shell metacharacter,
+    write marker, mutator token, or non-enumeration program in any stage."""
+    if effect != "read":
+        return False
+    if name == "search_files":
+        return str(arguments.get("target") or "content").lower() == "files"
+    if name not in TERMINAL_TOOLS:
+        return False
+    command = str(arguments.get("command") or arguments.get("cmd") or "")
+    if not command or _SHELL_METACHARACTERS.search(command) or _has_write_marker(command):
+        return False
+    if MUTATOR.search(re.sub(r"\"[^\"]*\"|'[^']*'", " ", command)):
+        return False
+    stages = [stage for stage in _simple_commands(command) if stage.strip()]
+    if not stages:
+        return False
+    for stage in stages:
+        tokens = _stage_tokens(stage)
+        if not tokens or _program_name(tokens[0]) not in _ENUMERATION_PROGRAMS:
+            return False
+    return True
 
 
 def _git_tracked_source_file(word: str, arguments: dict[str, Any]) -> bool:
@@ -445,7 +531,18 @@ READ_COMMAND = re.compile(
     # hard to bound lexically (-us/-ns/-Iseconds all cluster with 's'), so it
     # stays fail-closed. echo/printf never read or write files; redirects,
     # tee, command substitution and backticks still fail closed elsewhere.
-    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|diff\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b)\b)",
+    # v1.2.38 FP-read-lane (card t_e393b6e8, RR-3/RR-4a): the sanctioned
+    # read-only diagnostics route for policy state joins the read lane —
+    # `fleet-policy status|show|events|task` (console script) and
+    # `python -m fleet_policy.cli status|show|events|task`, with the global
+    # `--root` option tolerated before the subcommand. The mutating verbs
+    # (approve/reject/revoke/override-expected-failure/retention/drain-*/
+    # grant-capability/build-*) are NOT listed, so they never inherit the
+    # lane; the worker_self_approval guard below additionally tolerates the
+    # same `--root` gap so the mutating verbs cannot slip past it either.
+    r"(?:rg|grep|findstr|ls|dir|pwd|type|get-content|select-string|sed|head|tail|stat|wc|file|du|sort|uniq|cut|tr|column|cat\b|echo\b|printf\b|true\b|diff\b|python\s+-m\s+pytest\b|npm\s+(?:test|run\s+(?:test|lint|build))\b|"
+    r"fleet[-_]policy(?:\.exe)?\s+(?:--root[=\s]\S+\s+)?(?:status|show|events|task)\b|"
+    r"(?:python|py)(?:\d+(?:\.\d+)*)?(?:\.exe)?\s+-m\s+fleet_policy\.cli\s+(?:--root[=\s]\S+\s+)?(?:status|show|events|task)\b)\b)",
     re.I,
 )
 MUTATOR = re.compile(
@@ -486,6 +583,58 @@ _ASSIGNMENT_STAGE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*=(?:\"[^\"]*\"|'[^']*'|\
 _OUTPUT_REDIRECT = re.compile(r"&>>|&>|>>|>")
 
 
+def _simple_command_spans(command: str) -> list[tuple[int, int]]:
+    """Span-keeping variant of the stage split (same quote-aware rules).
+
+    v1.2.34 W2(b): the split is quote-aware — `&&`, `||`, `;` and `|` inside
+    BALANCED single/double quotes are literal characters of one stage (the
+    shell never treats them as control operators). An unbalanced quote state
+    fails closed to the historical quote-blind split, so a stray apostrophe
+    can never swallow a later mutating stage into a "quoted" span.
+    """
+    spans: list[tuple[int, int]] = []
+    start = 0
+    quote: str | None = None
+    index = 0
+    length = len(command)
+    while index < length:
+        char = command[index]
+        if quote is not None:
+            if char == "\\" and quote == '"' and index + 1 < length:
+                index += 2
+                continue
+            if char == quote:
+                quote = None
+            index += 1
+            continue
+        if char in "\"'":
+            quote = char
+            index += 1
+            continue
+        if command[index:index + 2] in ("&&", "||"):
+            spans.append((start, index))
+            index += 2
+            start = index
+            continue
+        if char in ";|":
+            spans.append((start, index))
+            index += 1
+            start = index
+            continue
+        index += 1
+    if quote is not None:
+        # Unbalanced quoting: fall back to the historical blind split.
+        blind: list[tuple[int, int]] = []
+        cursor = 0
+        for match in re.finditer(r"&&|\|\||;|\|", command):
+            blind.append((cursor, match.start()))
+            cursor = match.end()
+        blind.append((cursor, length))
+        return [(s, e) for s, e in blind if command[s:e].strip()]
+    spans.append((start, length))
+    return [(s, e) for s, e in spans if command[s:e].strip()]
+
+
 def _simple_commands(command: str) -> list[str]:
     """Split a command line into stages: chains, lists and pipes.
 
@@ -498,45 +647,10 @@ def _simple_commands(command: str) -> list[str]:
     never swallow a later mutating stage into a "quoted" span; the MUTATOR
     and write-marker scans additionally run over the raw text.
     """
-    stages: list[str] = []
-    current: list[str] = []
-    quote: str | None = None
-    index = 0
-    length = len(command)
-    while index < length:
-        char = command[index]
-        if quote is not None:
-            current.append(char)
-            if char == "\\" and quote == '"' and index + 1 < length:
-                current.append(command[index + 1])
-                index += 2
-                continue
-            if char == quote:
-                quote = None
-            index += 1
-            continue
-        if char in "\"'":
-            quote = char
-            current.append(char)
-            index += 1
-            continue
-        if command[index:index + 2] in ("&&", "||"):
-            stages.append("".join(current))
-            current = []
-            index += 2
-            continue
-        if char in ";|":
-            stages.append("".join(current))
-            current = []
-            index += 1
-            continue
-        current.append(char)
-        index += 1
-    if quote is not None:
-        # Unbalanced quoting: fall back to the historical blind split.
-        return [part.strip() for part in re.split(r"&&|\|\||;|\|", command) if part.strip()]
-    stages.append("".join(current))
-    return [part.strip() for part in stages if part.strip()]
+    return [
+        command[start:end].strip()
+        for start, end in _simple_command_spans(command)
+    ]
 
 
 def _stage_tokens(segment: str) -> list[str]:
@@ -544,6 +658,65 @@ def _stage_tokens(segment: str) -> list[str]:
         return shlex.split(segment, posix=False)
     except ValueError:
         return segment.split()
+
+
+# v1.2.43 (t_40022daf): search-tool operands are DATA, never verbs. A bare
+# pattern like `grep -rn deploy src/` put the word `deploy` in front of the
+# MUTATOR scan (only QUOTED spans were neutralized by v1.2.22), flipping a
+# pure read into state_change and then into an evidence-gated lexical
+# category — the same literal-trap class as the quoted-form incident, one
+# quoting style down. Masking is safe by construction: it only affects the
+# MUTATOR pre-filter view, the write-marker scan keeps the raw command, and
+# every stage still passes its own read-only check afterwards, so a masked
+# operand can never launder a mutating stage (a mutator hidden in an operand
+# position would not be executed by these programs at all).
+_SEARCH_DATA_HEADS = {"grep", "rg", "findstr", "select-string", "find"}
+_SEARCH_DATA_VALUE_FLAGS = {
+    "-e", "--regexp", "-f", "--file", "-m", "--max-count",
+    "--include", "--exclude", "--glob", "-g", "--type", "-t",
+    "-name", "--name", "-iname", "-path", "-regex",
+}
+
+
+def _search_data_spans(command: str) -> list[tuple[int, int]]:
+    """Operand spans of search-tool stages (patterns, paths, value-flag
+    values). Flags themselves are never masked."""
+    spans: list[tuple[int, int]] = []
+    for stage_start, stage_end in _simple_command_spans(command):
+        segment = command[stage_start:stage_end]
+        tokens = list(re.finditer(r"\S+", segment))
+        if not tokens:
+            continue
+        if _program_name(tokens[0].group(0)) not in _SEARCH_DATA_HEADS:
+            continue
+        expect_value = False
+        for token in tokens[1:]:
+            bare = token.group(0).strip("\"'")
+            if expect_value:
+                expect_value = False
+                spans.append((stage_start + token.start(), stage_start + token.end()))
+                continue
+            if bare.startswith("-"):
+                flag = bare.split("=", 1)[0].lower()
+                if flag in _SEARCH_DATA_VALUE_FLAGS and "=" not in bare:
+                    expect_value = True
+                continue
+            spans.append((stage_start + token.start(), stage_start + token.end()))
+    return spans
+
+
+def _mask_mutator_view(command: str) -> str:
+    """Length-preserving MUTATOR pre-filter view: quoted spans (v1.2.22) and
+    search-tool operands (v1.2.43) are blanked; everything else keeps its
+    raw text and offsets."""
+    chars = list(command)
+    for match in re.finditer(r"\"[^\"]*\"|'[^']*'", command):
+        for pos in range(match.start(), match.end()):
+            chars[pos] = " "
+    for start, end in _search_data_spans(command):
+        for pos in range(start, end):
+            chars[pos] = " "
+    return "".join(chars)
 
 
 def _writes_via_option(program: str, args: list[str]) -> bool:
@@ -631,8 +804,14 @@ _GH_API_ENDPOINT_PATH = re.compile(r"/?[a-z0-9._-]+(?:/[a-z0-9._-]+)*")
 # Background jobs (`cmd &`) and unconditional chaining would otherwise
 # hide a second command behind a read-only first stage; fd duplication
 # like `2>&1` is handled by the redirect scanner, not matched here.
+# v1.2.43 (t_40022daf): make that comment true — the bare-`&` alternative
+# previously matched the `&` inside fd-duplication (`2>&1`, `>&2`), so any
+# read pipeline with stderr redirection failed closed into state_change
+# and then into the keyword rules (live incident: event
+# f3b2e0d2cd9e0edaedaccbbaa88849fd7fa1b2703ce03f4ab4222876c09578ba).
+# `&>`/`&>>` (write-both redirect) and `cmd &` still fail closed.
 _SHELL_METACHARACTERS = re.compile("[\\n\
-]|(?<!&)&(?!&)|\\$\\(|`|<\\(|>\\(")
+]|(?<![&>])&(?!&)|\\$\\(|`|<\\(|>\\(")
 # v1.2.25: read-only process substitution `<(...)` with a parenthesis-free
 # inner span (no nesting — nested forms fail closed). Verified inner-first
 # in _terminal_is_read_only, then neutralized so the metacharacter guard
@@ -946,6 +1125,10 @@ _SQLITE_SAFE_FLAGS = frozenset({
 })
 _SQLITE_READ_STATEMENT = re.compile(r"^(?:select|with|values|explain)\b", re.IGNORECASE)
 _SQLITE_READ_PRAGMA = re.compile(r"^pragma\b[^=]*$", re.IGNORECASE)
+# v1.2.43 (t_40022daf): fd-duplication (`2>&1`) is shell plumbing around
+# the sqlite3 call, not a database argument; it must not consume one of
+# the two positional slots the read lane validates.
+_SQLITE_FD_DUP = re.compile(r"\d?>&\d?")
 
 
 def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
@@ -954,6 +1137,8 @@ def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
     positionals: list[str] = []
     for raw in tokens[1:]:
         token = _clean_shell_token(raw)
+        if _SQLITE_FD_DUP.fullmatch(token):
+            continue
         if token.startswith("-"):
             if token.lower() in _SQLITE_SAFE_FLAGS:
                 continue
@@ -964,6 +1149,11 @@ def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
     if len(positionals) != 2:
         return False
     statement = positionals[1].strip()
+    # v1.2.43 (t_40022daf): a single trailing statement terminator is
+    # standard SQL, not a multi-statement chain — strip it before the
+    # separator check so `sqlite3 ro "SELECT ...;"` stays on the read
+    # lane. Interior separators still fail closed.
+    statement = re.sub(r";\s*$", "", statement)
     if not statement or statement.startswith(".") or ";" in statement:
         return False
     return bool(
@@ -1010,7 +1200,9 @@ def _terminal_is_read_only(command: str) -> bool:
     # category. The unquote regex is the same one _has_write_marker already
     # uses; the RAW text still feeds the write-marker scan below, so
     # redirects and mutating flags outside quotes stay fail-closed.
-    mutator_view = re.sub(r"\"[^\"]*\"|'[^']*'", " ", command)
+    # v1.2.43: the view additionally blanks search-tool OPERANDS (v1.2.22
+    # covered only the quoted form; a bare pattern hit the same trap).
+    mutator_view = _mask_mutator_view(command)
     if MUTATOR.search(mutator_view) or _has_write_marker(command):
         return False
     segments = _simple_commands(command)
@@ -1044,6 +1236,37 @@ def _effect_for(name: str, arguments: dict[str, Any]) -> Literal["read", "state_
     return "state_change"
 
 
+# --- lexical delta (card t_f6acc5dc): action-aware operand classification ---
+# D1 (F1, run2166 call19): an EMPTY-value dotted git config assignment
+# (`git -c <config-key>.helper=`) resets/disables the option; the token is a
+# config-key NAME, not a filesystem object. Only the empty-value form is
+# exempt and only directly after `git -c`; any non-empty value stays
+# guarded (fail-closed).
+_GIT_CONFIG_EMPTY_OPTION = re.compile(
+    r"^[A-Za-z][A-Za-z0-9_-]*(?:\.[A-Za-z0-9_-]+)+=$"
+)
+# D2 (F2, run2172 call26): dispatcher-provided worker binding pins are
+# nonsecret context facts. A NAME=value binding for a child process does not
+# mutate the referenced store, so the assignment token is not a filesystem
+# operand. Fail-closed: D2e (in _path_guard_subjects) re-injects the bound
+# value as a subject whenever the command expands the same pin ($NAME),
+# because the value can then re-enter as a real operand. Unknown names are
+# never exempt.
+_ENV_PIN_BINDING_NAMES = frozenset({
+    "HERMES_KANBAN_DB",
+    "HERMES_KANBAN_BOARD",
+    "HERMES_KANBAN_TASK",
+    "HERMES_KANBAN_WORKSPACE",
+    "HERMES_KANBAN_WORKSPACES_ROOT",
+    "HERMES_TENANT",
+})
+_ENV_PIN_BINDING = re.compile(
+    r"(?<![A-Za-z0-9_])("
+    + "|".join(sorted(_ENV_PIN_BINDING_NAMES))
+    + r")=(\"[^\"]*\"|'[^']*'|\S+)"
+)
+
+
 def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
     """F4: the path guard sees only path-like targets, never free text."""
     if name in TERMINAL_TOOLS:
@@ -1063,6 +1286,18 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
             "--format", "--output", "-name", "--name",
         }
         subjects: list[str] = []
+        # Lexical delta D2e (t_f6acc5dc): an expanded worker pin can feed the
+        # bound value back in as a real operand ($PIN / ${PIN}); inject the
+        # value so the guard sees it. Fail-closed: injection only ADDS a
+        # subject, it never allows anything by itself.
+        for binding_match in _ENV_PIN_BINDING.finditer(command):
+            pin_name = binding_match.group(1)
+            if pin_name in _ENV_PIN_BINDING_NAMES and re.search(
+                r"\$\{?" + pin_name + r"\b", command
+            ):
+                bound_value = binding_match.group(2).strip("'\"")
+                if _is_path_like(bound_value):
+                    subjects.append(bound_value)
         # A code-bearing flag value (python -c "…") is executable input, not
         # prose: its text is scanned as an operand even though it was quoted.
         for code_match in re.finditer(
@@ -1090,14 +1325,37 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
             # filesystem target — the original false-deny class (c2c46082);
             # later positionals stay guarded (needle auth.json → deny).
             head = stage[0] if stage else ""
-            search_head = PurePath(head.replace("\\", "/")).name.lower() in {
+            head_name = PurePath(head.replace("\\", "/")).name.lower()
+            search_head = head_name in {
                 "grep", "rg", "findstr", "select-string",
             }
+            git_head = head_name in {"git", "git.exe"}
             pattern_seen = False
             expect_value = False
+            expect_git_config = False
             for token in stage[1:]:
                 if expect_value:
                     expect_value = False  # flag value = prose, never a target
+                    continue
+                if expect_git_config:
+                    # Lexical delta D1 (t_f6acc5dc F1, run2166 call19): the
+                    # token after `git -c` is a config assignment. Only the
+                    # EMPTY-value dotted-key form (option reset/disable, e.g.
+                    # an empty helper) names no filesystem object; every
+                    # non-empty value falls through and stays guarded.
+                    expect_git_config = False
+                    if _GIT_CONFIG_EMPTY_OPTION.match(token):
+                        continue
+                if git_head and token == "-c":
+                    expect_git_config = True
+                    continue
+                pin_binding = _ENV_PIN_BINDING.match(token)
+                if pin_binding and pin_binding.group(1) in _ENV_PIN_BINDING_NAMES:
+                    # Lexical delta D2 (t_f6acc5dc F2, run2172 call26): a
+                    # dispatcher worker pin assignment binds the child
+                    # process; it is context, not a filesystem operand. The
+                    # bound value stays guarded via the D2e injection above
+                    # whenever the command expands the same pin.
                     continue
                 if token in value_flags:
                     expect_value = True
@@ -1519,6 +1777,29 @@ def _exempt_quote_spans(command: str) -> list[tuple[int, int]]:
     return spans
 
 
+# v1.2.38 FP-read-lane (RR-4a): a denied control-plane call whose command
+# TEXT shows read intent (mode=ro, sqlite3 -readonly, SELECT…FROM, kanban
+# show, CLI read verbs) keeps its fail-closed deny — heredocs/multiline
+# probes are never parsed — but the reason must point at the sanctioned
+# read lane instead of leaving the worker to guess (live deny loops 04.10:
+# t_b8752c3f, t_22153d76, t_c7312fde, t_e9ef9cc1, t_945d1772). SQL write
+# verbs suppress the hint so a denied WRITE never gets read-lane advice.
+_SQL_WRITE_VERB_HINT = re.compile(
+    r"(?i)\b(?:update|insert|delete|drop|alter|create|replace|vacuum|reindex|attach|detach|truncate)\b"
+)
+_READ_SHAPED_PROBE_HINT = re.compile(
+    r"(?i)mode=ro|sqlite3\s+-readonly|\bselect\b.+\bfrom\b|hermes\s+kanban\s+show"
+    r"|fleet[-_]policy(?:\.exe)?\s+(?:--\S+[=\s]\S+\s+)*(?:status|show|events|task)\b"
+    r"|fleet_policy\.cli\s+(?:status|show|events|task)\b"
+)
+
+
+def _read_shaped_probe(command: str) -> bool:
+    if not command or _SQL_WRITE_VERB_HINT.search(command):
+        return False
+    return _READ_SHAPED_PROBE_HINT.search(command) is not None
+
+
 def _mask_exempt_quote_spans(command: str) -> str:
     spans = _exempt_quote_spans(command)
     if not spans:
@@ -1557,7 +1838,28 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         if _is_policy_controlled(matched):
             if effect == "read":
                 return Classification("read", "read_only", "allow", "policy-controlled documents are readable by the fleet")
-            return Classification("state_change", "policy_control_plane_mutation", "deny", "policy-controlled files are immutable for the fleet")
+            reason = "policy-controlled files are immutable for the fleet"
+            if name in TERMINAL_TOOLS and _read_shaped_probe(
+                str(arguments.get("command") or arguments.get("cmd") or "")
+            ):
+                # v1.2.38 FP-read-lane (RR-4a): the deny stands (heredoc /
+                # multiline / metachar probes fail closed), but a READ-shaped
+                # probe is pointed at the sanctioned read lane instead of
+                # leaving the worker to guess and loop.
+                reason += (
+                    "; read-shaped probe failed closed (heredoc/multiline/metachars are not parsed)."
+                    " Sanctioned read lane: python -m fleet_policy.cli status|show|events|task;"
+                    " single-statement sqlite3 -readonly SELECT; read_file; gh api GET"
+                )
+            return Classification("state_change", "policy_control_plane_mutation", "deny", reason)
+        if (
+            _enumerable_directory_pattern(matched)
+            and _enumeration_only_read(name, arguments, effect)
+        ):
+            # v1.2.38 FP-read-lane (RR-4b): listing a sessions/dumps/
+            # request_dump tree reveals NAMES only — not a secret operation.
+            # Any content read inside those trees stays denied below.
+            continue
         if _tracked_source_carveout(matched, subject, arguments):
             continue
         # v1.2.31: the deny carries the TRUE effect. A read-only probe of a
@@ -1578,8 +1880,8 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     # Hard-deny checks inspect command/target fields only. They must never scan
     # generated code, card bodies, comments or file contents.
     if worker and (
-        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
-        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
+        re.search(r"(?:^|[\s/\\])fleet[-_]policy(?:\.exe)?\s+(?:--root[=\s]\S+\s+)?(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
+        or re.search(r"\bpython\s+-m\s+fleet_policy\.cli\s+(?:--root[=\s]\S+\s+)?(?:approve|reject|revoke|override-expected-failure)\b", subject, re.I)
         or re.search(r"\b(?:decide_approval|consume_exact_approval|ensure_approval|revoke_approval|mark_expected_failure)\b", subject, re.I)
         or re.search(r"\b(?:update|insert|delete)[^\n]*\bapprovals\b", subject, re.I)
     ):
@@ -1638,14 +1940,14 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"\b(?:kyc|phone verification|domain owner|bank owner|domain or bank ownership)\b", "phone_kyc_domain_or_bank_owner_action", "approval_required"),
         (r"\b(?:sign contract|legal commitment|regulated claim|material reputation|defamation|guaranteed return)\b", "legal_or_material_reputation_risk", "approval_required"),
         (r"\b(?:transfer ownership|root access|admin access expansion|recovery key|change owner)\b", "ownership_or_root_access_change", "approval_required"),
-        (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
+        (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|[\s\"'])rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
         (rf"(?:\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),
-        (r"(?:\b(?:delete|remove|cleanup|purge|git\s+clean|branch\s+-[dD]|tag\s+-d|stash\s+(?:drop|clear)|checkout\s+--\s+\.)\b|(?:^|\s)rm\s)", "destructive_change", "allow"),
+        (r"(?:\b(?:delete|remove|cleanup|purge|git\s+clean|branch\s+-[dD]|tag\s+-d|stash\s+(?:drop|clear)|checkout\s+--\s+\.)\b|(?:^|[\s\"'])rm\s)", "destructive_change", "allow"),
         (r"\b(?:create|open|register)[^\n]*(?:free service account|free account|trial account)\b", "free_service_account", "allow"),
     ]
     for pattern, category, decision in rules:

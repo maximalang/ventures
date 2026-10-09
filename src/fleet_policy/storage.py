@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS events(
   significant INTEGER NOT NULL DEFAULT 0, payload_json TEXT NOT NULL, created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_events_task_created ON events(task_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_events_created ON events(created_at);
+CREATE INDEX IF NOT EXISTS idx_events_kind_created ON events(kind, created_at);
 CREATE TABLE IF NOT EXISTS budget_ledger(
   task_id TEXT NOT NULL, metric TEXT NOT NULL, amount INTEGER NOT NULL, event_id TEXT NOT NULL,
   created_at TEXT NOT NULL, PRIMARY KEY(task_id, metric, event_id)
@@ -78,6 +80,20 @@ CREATE INDEX IF NOT EXISTS idx_run_calls_sig ON run_call_history(task_id,run_key
 CREATE INDEX IF NOT EXISTS idx_run_calls_failure ON run_call_history(task_id,run_key,failure_signature,created_at);
 """
 
+# v1.2.42: hot-path event indexes + the maintenance ledger. Root cause
+# (2026-10-07 deny-triage stall): window queries over events(created_at)
+# full-scanned the largest table because the schema never shipped the index;
+# the emergency fix created it by hand on the live store. The schema now
+# carries it for every install. maintenance_state is the tiny KV ledger the
+# built-in retention scheduler uses for cross-process throttling.
+SCHEMA_V5 = """
+CREATE INDEX IF NOT EXISTS idx_events_created ON events(created_at);
+CREATE INDEX IF NOT EXISTS idx_events_kind_created ON events(kind, created_at);
+CREATE TABLE IF NOT EXISTS maintenance_state(
+  key TEXT PRIMARY KEY, value TEXT NOT NULL, updated_at TEXT NOT NULL
+);
+"""
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -110,6 +126,7 @@ class PolicyStore:
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA busy_timeout=10000")
         connection.execute("PRAGMA foreign_keys=ON")
+        connection.execute("PRAGMA wal_autocheckpoint=1000")
         try:
             yield connection
             connection.commit()
@@ -124,6 +141,16 @@ class PolicyStore:
 
     def migrate(self) -> None:
         with self.connect() as connection:
+            # auto_vacuum=INCREMENTAL lets the maintenance tick return freed
+            # pages to the OS gradually (v1.2.42). ORDER MATTERS (QA F1,
+            # PR #63): journal_mode=WAL materializes the database header
+            # immediately, and a mode requested after the header exists is
+            # only staged in memory — it survives neither the commit nor the
+            # connection. Set it FIRST so fresh stores are born incremental;
+            # a legacy store (header already on disk) still stages it only,
+            # and the operator full VACUUM applies it (full_vacuum re-issues
+            # the pragma on the vacuuming connection for the same reason).
+            connection.execute("PRAGMA auto_vacuum=2")
             # Journal mode is a database-level setup operation. Re-running it on
             # every hot-path connection requires an exclusive lock and can make
             # concurrent workers exceed Hermes' 30s pre-tool hook timeout.
@@ -134,6 +161,7 @@ class PolicyStore:
                 self._heal_outbox_columns(connection)
                 self._heal_approvals_v4(connection)
                 self._heal_failure_overrides(connection)
+                self._heal_events_v5(connection)
                 return
             connection.executescript(SCHEMA)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(1,?)", (utc_now(),))
@@ -144,6 +172,7 @@ class PolicyStore:
             self._heal_approvals_v4(connection)
             self._heal_failure_overrides(connection)
             connection.execute("INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(4,?)", (utc_now(),))
+            self._heal_events_v5(connection)
 
     def _heal_v3_tables(self, connection: sqlite3.Connection) -> None:
         """Create any SCHEMA_V3 tables missing despite the v3 marker.
@@ -226,6 +255,19 @@ class PolicyStore:
                 overridden_at TEXT NOT NULL,
                 PRIMARY KEY(task_id, failure_signature, run_key)
             )"""
+        )
+
+    def _heal_events_v5(self, connection: sqlite3.Connection) -> None:
+        """v1.2.42 — hot-path event indexes + maintenance ledger, marker 5.
+
+        Idempotent IF NOT EXISTS DDL only: a store where the emergency
+        idx_events_created was created by hand no-ops; a fresh store already
+        carrying the indexes via SCHEMA no-ops; a half-migrated store heals in
+        place. Never drops or rewrites rows.
+        """
+        connection.executescript(SCHEMA_V5)
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_migrations(version,applied_at) VALUES(5,?)", (utc_now(),)
         )
 
     def mark_expected_failure(self, task_id: str, failure_signature: str, run_key: str | None,
@@ -767,24 +809,140 @@ class PolicyStore:
             return cursor.rowcount == 1
 
     def retention(self, event_days: int, call_days: int, approval_days: int,
-                  now: datetime | None = None) -> dict[str, int]:
+                  now: datetime | None = None, *, skip_events: bool = False,
+                  preserve_state: bool = False) -> dict[str, int]:
+        """Horizon-based row expiry for every ledger table.
+
+        ``skip_events`` leaves the events table untouched: the built-in
+        maintenance path archives expired events to verified JSONL.gz files
+        before deleting them, so the raw delete must not run first. The
+        returned dict keeps the ``events`` key (0 when skipped) so existing
+        callers keep a stable report shape.
+
+        ``preserve_state`` is the one-time operator prune posture (card
+        t_40022daf D2-b): the protected state tables (approvals,
+        notification_outbox, task_state) are NEVER deleted from — their
+        horizon expiry stays the scheduled tick's job, and the one-time
+        catch-up only drains the ledger backlog. The returned dict reports
+        0 for the preserved keys so the shape stays stable.
+        """
         now = now or datetime.now(timezone.utc)
         deleted: dict[str, int] = {}
         with self.connect() as connection:
-            for table, days in (("events", event_days), ("call_history", call_days), ("approvals", approval_days), ("budget_ledger", call_days), ("financial_ledger", approval_days)):
+            tables = [("events", event_days)] if not skip_events else []
+            tables += [("call_history", call_days), ("budget_ledger", call_days), ("financial_ledger", approval_days)]
+            if not preserve_state:
+                tables.append(("approvals", approval_days))
+            else:
+                deleted["approvals"] = 0
+            for table, days in tables:
                 cutoff = (now - timedelta(days=days)).isoformat(timespec="seconds").replace("+00:00", "Z")
                 cursor = connection.execute(f"DELETE FROM {table} WHERE created_at < ?", (cutoff,))
                 deleted[table] = cursor.rowcount
+            if skip_events:
+                deleted["events"] = 0
             # run_budget follows the call-history horizon but is pruned outside
             # the returned shape so v1.x callers keep a stable report dict.
             call_cutoff = (now - timedelta(days=call_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
             connection.execute("DELETE FROM run_budget WHERE created_at < ?", (call_cutoff,))
             connection.execute("DELETE FROM run_call_history WHERE created_at < ?", (call_cutoff,))
-            event_cutoff = (now - timedelta(days=event_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
-            cursor = connection.execute(
-                "DELETE FROM notification_outbox WHERE status!='pending' AND created_at < ?", (event_cutoff,)
-            )
-            deleted["notification_outbox"] = cursor.rowcount
-            cursor = connection.execute("DELETE FROM task_state WHERE updated_at < ?", (event_cutoff,))
-            deleted["task_state"] = cursor.rowcount
+            if not preserve_state:
+                event_cutoff = (now - timedelta(days=event_days)).isoformat(timespec="seconds").replace("+00:00", "Z")
+                cursor = connection.execute(
+                    "DELETE FROM notification_outbox WHERE status!='pending' AND created_at < ?", (event_cutoff,)
+                )
+                deleted["notification_outbox"] = cursor.rowcount
+                cursor = connection.execute("DELETE FROM task_state WHERE updated_at < ?", (event_cutoff,))
+                deleted["task_state"] = cursor.rowcount
+            else:
+                deleted["notification_outbox"] = 0
+                deleted["task_state"] = 0
         return deleted
+
+    # ------------------------------------------------------------ maintenance
+    # v1.2.42: the storage manifesto (WAL + sane autocheckpoint, auto_vacuum,
+    # retention, size caps) is a built-in feature of the store, not an external
+    # cron. PolicyStore owns the primitives; fleet_policy.maintenance owns the
+    # schedule and the size-guard policy.
+    def db_size_bytes(self) -> int:
+        """Main database pages plus any live WAL bytes (WAL is not yet in pages)."""
+        with self.connect() as connection:
+            page_count = int(connection.execute("PRAGMA page_count").fetchone()[0])
+            page_size = int(connection.execute("PRAGMA page_size").fetchone()[0])
+        total = page_count * page_size
+        try:
+            total += self.path.with_name(self.path.name + "-wal").stat().st_size
+        except OSError:
+            pass
+        return total
+
+    def freelist_pages(self) -> int:
+        with self.connect() as connection:
+            return int(connection.execute("PRAGMA freelist_count").fetchone()[0])
+
+    def maintenance_get(self, key: str) -> str | None:
+        with self.connect() as connection:
+            row = connection.execute("SELECT value FROM maintenance_state WHERE key=?", (key,)).fetchone()
+            return str(row["value"]) if row else None
+
+    def maintenance_set(self, key: str, value: str) -> None:
+        with self.connect() as connection:
+            connection.execute(
+                "INSERT INTO maintenance_state(key,value,updated_at) VALUES(?,?,?) "
+                "ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at",
+                (key, value, utc_now()),
+            )
+
+    def events_before(self, cutoff: str, limit: int) -> list[sqlite3.Row]:
+        """Oldest-first expired events for one archive batch."""
+        with self.connect() as connection:
+            return list(connection.execute(
+                "SELECT event_id,correlation_id,task_id,kind,significant,payload_json,created_at "
+                "FROM events WHERE created_at < ? ORDER BY created_at,event_id LIMIT ?",
+                (cutoff, int(limit)),
+            ))
+
+    def delete_events_by_ids(self, event_ids: list[str]) -> int:
+        """Delete exactly the rows a verified archive batch covers. The caller
+        passes primary keys read before archiving, so a concurrent writer's
+        fresh rows can never match the batch by accident."""
+        if not event_ids:
+            return 0
+        placeholders = ",".join("?" for _ in event_ids)
+        with self.connect() as connection:
+            cursor = connection.execute(
+                f"DELETE FROM events WHERE event_id IN ({placeholders})", tuple(event_ids)
+            )
+            return int(cursor.rowcount)
+
+    def wal_checkpoint_truncate(self) -> None:
+        with self.connect() as connection:
+            connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+
+    def incremental_vacuum(self, pages: int) -> None:
+        """Return up to ``pages`` freelist pages to the OS. Effective only on
+        stores running with auto_vacuum=INCREMENTAL; a silent no-op otherwise
+        (legacy stores need one operator ``maintenance --full-vacuum`` first)."""
+        if pages <= 0:
+            return
+        with self.connect() as connection:
+            connection.execute(f"PRAGMA incremental_vacuum({int(pages)})")
+
+    def full_vacuum(self) -> None:
+        """Operator-run full VACUUM: rebuilds the database file, applies a
+        pending auto_vacuum mode change, and reclaims every freelist page.
+        Never invoked from a hook path — CLI only, after a retention run.
+
+        A requested auto_vacuum mode is connection-scoped until a VACUUM
+        commits it: the mode migrate() set on its own connection does not
+        survive into this one, so the pragma must be re-issued here, on the
+        same connection as the VACUUM. Without that, a legacy auto_vacuum=0
+        store silently stays in mode NONE and later incremental_vacuum()
+        calls keep no-oping (QA F1, PR #63)."""
+        connection = sqlite3.connect(self.path, timeout=30)
+        try:
+            connection.execute("PRAGMA busy_timeout=30000")
+            connection.execute("PRAGMA auto_vacuum=2")
+            connection.execute("VACUUM")
+        finally:
+            connection.close()

@@ -1,2 +1,4 @@
 # Release evidence must retain canonical bytes on Windows checkouts.
 manifest-pristine-v1211.txt text eol=lf
+# Operator shell scripts must keep LF: git-bash bash.exe chokes on CRLF.
+*.sh text eol=lf

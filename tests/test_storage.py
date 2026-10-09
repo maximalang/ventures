@@ -13,9 +13,11 @@ def test_migrations_are_idempotent_and_indexed(tmp_path):
     store.migrate()
     store.migrate()
     with store.connect() as connection:
-        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 4
+        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 5
         indexes = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='index'")}
     assert "idx_events_task_created" in indexes
+    assert "idx_events_created" in indexes
+    assert "idx_events_kind_created" in indexes
     assert "idx_calls_task_sig" in indexes
     assert "idx_calls_task_failure" in indexes
     assert "idx_run_budget_lookup" in indexes
@@ -50,6 +52,33 @@ def test_retention_removes_old_rows(tmp_path):
         "budget_ledger": 1, "financial_ledger": 0,
         "notification_outbox": 1, "task_state": 1,
     }
+
+
+def test_retention_preserve_state_keeps_state_tables(tmp_path):
+    """v1.2.44 (t_40022daf D2-b, QA F1): the one-time operator prune posture
+    never deletes protected state-table rows — even 500-day-old ones far
+    beyond every horizon — while the ledger backlog still drains."""
+    store = PolicyStore(tmp_path / "policy.db")
+    store.migrate()
+    old = (datetime.now(timezone.utc) - timedelta(days=500)).isoformat(timespec="seconds").replace("+00:00", "Z")
+    with store.connect() as connection:
+        connection.execute("INSERT INTO events VALUES(?,?,?,?,?,?,?)", ("old", "c", "t", "x", 0, "{}", old))
+        connection.execute("INSERT INTO call_history VALUES(?,?,?,?,?,?)", ("old", "t", "c", None, 1, old))
+        connection.execute("INSERT INTO approvals(rule_key,task_id,action,target,args_hash,status,created_at) VALUES(?,?,?,?,?,?,?)", ("old", "t", "a", "x", "h", "rejected", old))
+        connection.execute("INSERT INTO budget_ledger VALUES(?,?,?,?,?)", ("t", "tokens", 1, "old-budget", old))
+        connection.execute("INSERT INTO notification_outbox(event_id,payload_json,status,created_at) VALUES(?,?,?,?)", ("old-note", "{}", "failed", old))
+        connection.execute("INSERT INTO task_state VALUES(?,?,?)", ("old-task", 1, old))
+    deleted = store.retention(90, 30, 365, preserve_state=True)
+    assert deleted == {
+        "events": 1, "call_history": 1, "approvals": 0,
+        "budget_ledger": 1, "financial_ledger": 0,
+        "notification_outbox": 0, "task_state": 0,
+    }
+    with store.connect() as connection:
+        assert connection.execute("SELECT COUNT(*) FROM approvals").fetchone()[0] == 1
+        assert connection.execute("SELECT COUNT(*) FROM notification_outbox").fetchone()[0] == 1
+        assert connection.execute("SELECT COUNT(*) FROM task_state").fetchone()[0] == 1
+        assert connection.execute("SELECT COUNT(*) FROM events").fetchone()[0] == 0
 
 
 def test_worker_environment_cannot_decide_approval(tmp_path, monkeypatch):
@@ -179,7 +208,7 @@ def test_migrate_self_heals_half_migrated_v3_store(tmp_path):
         tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
     assert {"run_budget", "run_state", "run_call_history"} <= tables
-    assert markers == [1, 2, 3, 4]  # markers untouched, not re-inserted
+    assert markers == [1, 2, 3, 4, 5]  # v5 appended by the idempotent heal, older markers untouched
 
     # The F1 run-scoped path must now be operational on the healed store.
     store.touch_run("t_heal", "run-1", int(time.time()))
@@ -195,5 +224,5 @@ def test_migrate_self_heal_is_noop_on_healthy_store(tmp_path):
     with store.connect() as connection:
         markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
         tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    assert markers == [1, 2, 3, 4]
+    assert markers == [1, 2, 3, 4, 5]
     assert {"run_budget", "run_state", "run_call_history"} <= tables

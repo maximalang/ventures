@@ -192,6 +192,14 @@ def kanban_task_claimed(task_id: str = "", board: str = "", assignee: str = "", 
         {"task_id": task_id, "board": board, "profile": assignee, "run_id": run_id},
         runtime().config.get("projects", {}),
     )
+    # v1.2.42 — встроенный retention/size-guard тик: внутри плагина, а не во
+    # внешнем cron. Каденс привязан к росту БД (claim = активность флота),
+    # троттлинг — maintenance_state в самом сторе. Полностью best-effort:
+    # maybe_run не бросает, страховочный except держит даже сбой импорта.
+    try:
+        runtime().maybe_maintenance(ctx, source="kanban_task_claimed")
+    except Exception:
+        pass
     task_type, error = runtime().task_type(ctx)
     # v1.2.36 (SPEC v5) — нативный автороутинг в pre-claim пути: рядом с этой
     # пре-диспатч проверкой, ONLY за флагом router_hook.enabled (конфиг), режим
@@ -254,6 +262,13 @@ def rr_guidance(session_info: Any) -> str:
 def register(ctx) -> None:
     # Prewarm config + idempotent schema migration outside the hot tool path.
     runtime()
+    # v1.2.42: process start is one of the two in-plugin maintenance ticks
+    # (the other is kanban_task_claimed). Best-effort — plugin load must never
+    # fail on maintenance.
+    try:
+        runtime().maybe_maintenance(None, source="register")
+    except Exception:
+        pass
     ctx.register_hook("pre_tool_call", pre_tool_call)
     ctx.register_hook("post_tool_call", post_tool_call)
     ctx.register_hook("post_api_request", post_api_request)
