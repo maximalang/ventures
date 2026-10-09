@@ -568,11 +568,6 @@ mcp_servers:
       - '@21st-dev/magic@latest'
     env:
       API_KEY: ${env:TWENTYFIRST_API_KEY}
-  timeweb:
-    url: https://timeweb.cloud/api/v1/mcp
-    headers:
-      Authorization: ${env:...KEN}
-    connect_timeout: 120
   node_repl:
     enabled: false
     command: C:\Users\max\AppData\Local\OpenAI\Codex\runtimes\cua_node\2fb562745e6d66f0\bin\node_repl.exe
@@ -591,10 +586,6 @@ mcp_servers:
       SKY_CUA_NATIVE_PIPE: '1'
       SKY_CUA_NATIVE_PIPE_DIRECTORY: \\.\pipe\codex-computer-use-5b8ec212-98ef-4d98-b3b4-9b978fc74429
       CODEX_CLI_PATH: C:\Users\max\AppData\Local\OpenAI\Codex\bin\39633208fb6e0c47\codex.exe
-  donut:
-    url: http://127.0.0.1:51080/mcp/WdacSCnDSM44oAWCP9ngtPF930R6JoxW_ikIEBMdjMQ
-    connect_timeout: 5
-    enabled: true
 dashboard:
   ws_orphan_reap_grace_s: 300
 max_live_sessions: 24
