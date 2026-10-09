@@ -1044,7 +1044,7 @@ def _effect_for(name: str, arguments: dict[str, Any]) -> Literal["read", "state_
     return "state_change"
 
 
-# v1.2.44 (t_fc317116 F1/F2): programs whose POSITIONAL arguments are real
+# v1.2.57 (t_fc317116 F1/F2): programs whose POSITIONAL arguments are real
 # filesystem operands even when quoted. The F5 prose rule (quoted spans are
 # never targets) let `sqlite3 "<board db>" "<mutation>"` classify as
 # allow:scoped_state_change and `rm "<board db>"` as allow:destructive_change
@@ -1111,7 +1111,7 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
             search_head = PurePath(head.replace("\\", "/")).name.lower() in {
                 "grep", "rg", "findstr", "select-string",
             }
-            # v1.2.44 (t_fc317116 F1/F2): for allowlisted file-operand
+            # v1.2.57 (t_fc317116 F1/F2): for allowlisted file-operand
             # programs a quoted positional is a real filesystem target, not
             # prose. Fail-closed bias: an unbalanced quoted fragment left by
             # the stage split still guards (its stripped text is inspected).

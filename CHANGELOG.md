@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.44] - 2026-10-09
+## [1.2.57] - 2026-10-09
 
 ### Fixed
 - F1/F2 (t_fc317116, rework t_5a2b60e7): quoted file-operand path-guard
@@ -27,7 +27,7 @@
 ### Lineage
 - Slice content is byte-identical to the never-merged PR #54 candidate
   ea8f4263 (stale pin 1.2.35, dead anchor 4908dd4d), re-anchored on trunk
-  9b094449 with version re-pinned to 1.2.44; PR #54 is closed by
+  9b094449 with version re-pinned to 1.2.57; PR #54 is closed by
   disposition, this PR supersedes it.
 
 ## [1.2.36] - 2026-10-04
