@@ -1044,6 +1044,24 @@ def _effect_for(name: str, arguments: dict[str, Any]) -> Literal["read", "state_
     return "state_change"
 
 
+# v1.2.57 (t_fc317116 F1/F2): programs whose POSITIONAL arguments are real
+# filesystem operands even when quoted. The F5 prose rule (quoted spans are
+# never targets) let `sqlite3 "<board db>" "<mutation>"` classify as
+# allow:scoped_state_change and `rm "<board db>"` as allow:destructive_change
+# — an in-process bypass of the protected-path guard. Extraction is strictly
+# allowlist-only: no unconditional quoted-span scan is added, the value-flag
+# prose exclusion still applies, and non-allowlisted programs keep the old
+# quoted-prose behavior (cat/head/tail stay read verbs, so quoted READ probes
+# of policy-controlled stores remain allow:read_only via the guard's read arm).
+_FILE_OPERAND_PROGRAMS = frozenset({
+    "sqlite3", "cp", "mv", "rm", "del", "copy", "move", "xcopy", "robocopy", "tee",
+})
+# sqlite3 takes exactly ONE file positional (the database); every later
+# positional is SQL text (prose), matching the v1.2.31 read-lane shape of
+# exactly two positionals (db + one statement).
+_SINGLE_FILE_OPERAND_PROGRAMS = frozenset({"sqlite3"})
+
+
 def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
     """F4: the path guard sees only path-like targets, never free text."""
     if name in TERMINAL_TOOLS:
@@ -1093,6 +1111,14 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
             search_head = PurePath(head.replace("\\", "/")).name.lower() in {
                 "grep", "rg", "findstr", "select-string",
             }
+            # v1.2.57 (t_fc317116 F1/F2): for allowlisted file-operand
+            # programs a quoted positional is a real filesystem target, not
+            # prose. Fail-closed bias: an unbalanced quoted fragment left by
+            # the stage split still guards (its stripped text is inspected).
+            head_program = _program_name(head) if head else ""
+            file_operand_head = head_program in _FILE_OPERAND_PROGRAMS
+            single_file_operand = head_program in _SINGLE_FILE_OPERAND_PROGRAMS
+            file_operand_seen = False
             pattern_seen = False
             expect_value = False
             for token in stage[1:]:
@@ -1105,6 +1131,16 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
                 if token.startswith(('"', "'")):
                     if search_head and not pattern_seen:
                         pattern_seen = True  # quoted expression consumes the slot
+                        continue
+                    if file_operand_head and not (single_file_operand and file_operand_seen):
+                        file_operand_seen = True  # first positional = the file slot
+                        value = (
+                            token[1:-1]
+                            if len(token) > 1 and token.endswith(token[0])
+                            else token[1:]
+                        )
+                        if _is_path_like(value):
+                            subjects.append(value)
                     continue
                 if token.startswith("-"):
                     if "=" in token:
@@ -1118,6 +1154,8 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
                 if search_head and not pattern_seen:
                     pattern_seen = True  # first positional = expression
                     continue
+                if file_operand_head:
+                    file_operand_seen = True  # unquoted positional fills the file slot
                 if _is_path_like(token):
                     subjects.append(token)
         return subjects
