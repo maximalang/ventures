@@ -53,6 +53,32 @@ providers:
     models:
       qwen/qwen3.8-27b: {}
     key_env: HERMES_CUSTOM_GROQ_API_KEY
+  cheapmodels:
+    name: cheapmodels
+    base_url: https://cheapmodels.xyz/v1
+    model: cheapmodels/claude-opus-5.5
+    discover_models: true
+    models:
+      cheapmodels/claude-opus-5.5: {}
+      cheapmodels/claude-fable-5.1: {}
+      cheapmodels/claude-opus-5.0: {}
+      cheapmodels/claude-sonnet-5.5: {}
+      cheapmodels/claude-fable-5: {}
+      cheapmodels/claude-opus-4.8: {}
+      cheapmodels/claude-sonnet-5: {}
+      cheapmodels/gpt-6.1-sol: {}
+      cheapmodels/gpt-6-astra: {}
+      cheapmodels/gpt-5.6-sol: {}
+      cheapmodels/gpt-5.6-terra: {}
+      cheapmodels/gpt-5.6-luna: {}
+      cheapmodels/grok-4.7: {}
+      cheapmodels/grok-4.6: {}
+      cheapmodels/kimi-k3: {}
+      cheapmodels/qwen-3.8-max: {}
+      cheapmodels/glm-5.3-flash: {}
+      cheapmodels/gemini-3.8-flash: {}
+      cheapmodels/deepseek-v4.1-flash: {}
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
