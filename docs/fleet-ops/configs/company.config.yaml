@@ -1,6 +1,9 @@
 model:
-  default: qwen3.8-max
-  provider: custom
+  # TEMP 20261010 evening: default moved off qwen3.8-max/custom — DashScope key invalid (401 both cn/intl).
+  # Revert to qwen3.8-max/custom after a valid key is added (base_url already fixed to compatible-mode/v1).
+  # Backup: config.yaml.bak-dashscope-20261010-181321
+  default: glm-5.3-flash
+  provider: zai
   aliases:
     astra: openai-codex/gpt-6-astra
     ar-opus:
@@ -20,16 +23,16 @@ model:
     - provider: groq
       model: qwen/qwen3.8-27b
       base_url: https://api.groq.com/openai/v1
-  base_url: https://dashscope.aliyuncs.com/v1
+  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
   api_mode: chat_completions
   key_env: HERMES_CUSTOM_CUSTOM_API_KEY
 providers:
   custom:
     name: DashScope
-    base_url: https://dashscope.aliyuncs.com/v1
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
     model: qwen3.8-max
     key_env: HERMES_CUSTOM_CUSTOM_API_KEY
-    discover_models: false
+    discover_models: true
     models:
       qwen3.8-max: {}
       "{'id': 'qwen3.8-max'}": {}
