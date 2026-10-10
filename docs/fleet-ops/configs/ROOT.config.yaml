@@ -1,7 +1,7 @@
 model:
   default: qwen3.8-max
   provider: custom
-  base_url: https://chatgpt.com/backend-api/codex
+  base_url: https://cheapmodels.xyz/v1
   aliases:
     q38: custom/qwen3.8-max
     glm52: custom/glm-5.2
@@ -9,15 +9,16 @@ model:
     kimi3: custom/kimi-k3
     dsv4: custom/deepseek-v4-pro
   fallback_providers:
-    - provider: zai
-      model: glm-5.3
-      base_url:
-    - provider: zai
-      model: glm-5.3-flash
-      base_url:
-    - provider: groq
-      model: qwen/qwen3.8-27b
-      base_url: https://api.groq.com/openai/v1
+  - provider: zai
+    model: glm-5.3
+    base_url: null
+  - provider: zai
+    model: glm-5.3-flash
+    base_url: null
+  - provider: groq
+    model: qwen/qwen3.8-27b
+    base_url: https://api.groq.com/openai/v1
+  key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 providers:
   groq:
     name: groq
@@ -58,19 +59,20 @@ providers:
       '@cf/qwen/qwen3.8-27b': {}
     key_env: HERMES_CUSTOM_CLOUDFLARE_API_KEY
   custom:
-    name: DashScope
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    model: qwen3.8-max
-    key_env: HERMES_CUSTOM_CUSTOM_API_KEY
+    name: cheapmodels
+    base_url: https://cheapmodels.xyz/v1
+    model: qwen-3.8-max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
     discover_models: false
     models:
-      - id: qwen3.8-max
-      - id: kimi-k3
-      - id: qwen-vl-max
+    - id: qwen3.8-max
+    - id: kimi-k3
+    - id: qwen-vl-max
+    provider: custom
 fallback_providers:
-  - provider: zai
-    model: glm-5.3-flash
-    base_url: https://api.z.ai/api/coding/paas/v4
+- provider: zai
+  model: glm-5.3-flash
+  base_url: https://api.z.ai/api/coding/paas/v4
 fallback:
   min_switch_reset_seconds: 120
 credential_pool_strategies:
@@ -151,93 +153,95 @@ auxiliary:
     timeout: 120
   skills_hub:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   review:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   mcp:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   title_generation:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   memory_query_rewrite:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   triage_specifier:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   profile_describer:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   goal_judge:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   curator:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   background_review:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   approval:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   kanban_decomposer:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   tts_audio_tags:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   monitor:
     provider: custom
-    model: qwen3.8-max
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
+    model: qwen-3.8-max
+    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   compression:
     provider: custom
     model: kimi-k3
     reasoning_effort: low
     timeout: 300
+    base_url: https://cheapmodels.xyz/v1
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 display:
   compact: false
   busy_input_mode: interrupt
@@ -278,30 +282,32 @@ memory:
   nudge_interval: 20
   provider: holographic
 delegation:
-  model: qwen3.8-max
+  model: qwen-3.8-max
   provider: custom
   max_iterations: 40
   child_timeout_seconds: 0
   reasoning_effort: max
   max_concurrent_children: 4
   max_spawn_depth: 1
+  base_url: https://cheapmodels.xyz/v1
+  key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 moa:
   active_preset: ''
   presets:
     default:
       reference_models:
-        - provider: openai-codex
-          model: gpt-5.5
-          enabled: true
+      - provider: openai-codex
+        model: gpt-5.5
+        enabled: true
       aggregator:
         provider: openai-codex
         model: gpt-6.1-sol
       degraded_reference_policy: loud
       fanout: user_turn
   reference_models:
-    - provider: openai-codex
-      model: gpt-5.5
-      enabled: true
+  - provider: openai-codex
+    model: gpt-5.5
+    enabled: true
   aggregator:
     provider: openai-codex
     model: gpt-6.1-sol
@@ -312,127 +318,127 @@ moa:
 skills:
   creation_nudge_interval: 15
   disabled:
-    - openhue
-    - xurl
+  - openhue
+  - xurl
 curator:
   consolidate: true
 approvals:
   mode: 'off'
   deny:
-    - Remove-Item -Recurse -Force /Users*
-    - Remove-Item -Recurse -Force /home*
-    - Remove-Item -Recurse -Force C*
-    - dd if=/dev/zero of=/dev/*
-    - git push --force origin main*
-    - git push --force-with-lease origin main*
-    - git push -f origin main*
-    - mkfs*
-    - rm -rf $HOME*
-    - rm -rf .git*
-    - rm -rf /*
-    - rm -rf /Users*
-    - rm -rf /c/Users*
-    - rm -rf /home*
-    - rm -rf C*
-    - rm -rf ~*
+  - Remove-Item -Recurse -Force /Users*
+  - Remove-Item -Recurse -Force /home*
+  - Remove-Item -Recurse -Force C*
+  - dd if=/dev/zero of=/dev/*
+  - git push --force origin main*
+  - git push --force-with-lease origin main*
+  - git push -f origin main*
+  - mkfs*
+  - rm -rf $HOME*
+  - rm -rf .git*
+  - rm -rf /*
+  - rm -rf /Users*
+  - rm -rf /c/Users*
+  - rm -rf /home*
+  - rm -rf C*
+  - rm -rf ~*
 command_allowlist:
-  - gzip *
-  - tail *
-  - zip *
-  - ss *
-  - cd *
-  - docker *
-  - basename *
-  - head *
-  - git *
-  - kill *
-  - ls
-  - sort *
-  - realpath *
-  - ping *
-  - ssh *
-  - cat
-  - pg_dump *
-  - ps *
-  - chmod *
-  - dirname *
-  - diff *
-  - scp *
-  - '*'
-  - psql *
-  - pg_restore *
-  - pkill *
-  - cd
-  - yarn *
-  - ls *
-  - df *
-  - sleep *
-  - rsync *
-  - stat *
-  - 'true'
-  - access to Hermes secrets (Windows path)
-  - date *
-  - seq *
-  - mkdir *
-  - netstat *
-  - telnet *
-  - wc *
-  - test *
-  - lsof *
-  - whoami *
-  - printenv *
-  - curl *
-  - redis-cli *
-  - wget *
-  - gh *
-  - cp *
-  - pwd
-  - env *
-  - printf *
-  - touch
-  - pg_isready *
-  - recursive delete
-  - nc *
-  - 'false'
-  - rg *
-  - chown *
-  - which *
-  - less *
-  - docker-compose *
-  - pnpm *
-  - mkdir
-  - tsx *
-  - where *
-  - echo
-  - mv
-  - ssh -V
-  - uname *
-  - command *
-  - tree *
-  - tar *
-  - sftp *
-  - node *
-  - hostname *
-  - grep *
-  - sed *
-  - cp
-  - echo *
-  - cat *
-  - mv *
-  - file *
-  - npx *
-  - readlink *
-  - npm *
-  - unzip *
-  - find *
-  - script execution via -e/-c flag
-  - xargs *
-  - du *
-  - gunzip *
-  - crontab *
-  - touch *
-  - uniq *
-  - awk *
+- gzip *
+- tail *
+- zip *
+- ss *
+- cd *
+- docker *
+- basename *
+- head *
+- git *
+- kill *
+- ls
+- sort *
+- realpath *
+- ping *
+- ssh *
+- cat
+- pg_dump *
+- ps *
+- chmod *
+- dirname *
+- diff *
+- scp *
+- '*'
+- psql *
+- pg_restore *
+- pkill *
+- cd
+- yarn *
+- ls *
+- df *
+- sleep *
+- rsync *
+- stat *
+- 'true'
+- access to Hermes secrets (Windows path)
+- date *
+- seq *
+- mkdir *
+- netstat *
+- telnet *
+- wc *
+- test *
+- lsof *
+- whoami *
+- printenv *
+- curl *
+- redis-cli *
+- wget *
+- gh *
+- cp *
+- pwd
+- env *
+- printf *
+- touch
+- pg_isready *
+- recursive delete
+- nc *
+- 'false'
+- rg *
+- chown *
+- which *
+- less *
+- docker-compose *
+- pnpm *
+- mkdir
+- tsx *
+- where *
+- echo
+- mv
+- ssh -V
+- uname *
+- command *
+- tree *
+- tar *
+- sftp *
+- node *
+- hostname *
+- grep *
+- sed *
+- cp
+- echo *
+- cat *
+- mv *
+- file *
+- npx *
+- readlink *
+- npm *
+- unzip *
+- find *
+- script execution via -e/-c flag
+- xargs *
+- du *
+- gunzip *
+- crontab *
+- touch *
+- uniq *
+- awk *
 kanban:
   auto_subscribe_on_create: true
   dispatch_in_gateway: true
@@ -441,14 +447,6 @@ kanban:
   orchestrator_profile: company
   default_assignee: company
   max_in_progress: 6
-  # Owner word 07.10 14:5x: «поднять до 10» — с kill-критерием: «OOM / host
-  # freeze recurrence after this change → reduce before blaming RAM audit».
-  # 09.10 kill-критерий СРАБОТАЛ: load 95%, avail 0.4–0.8GB/15.5GB, pagefile
-  # 29.5GB used, gateway housekeeping lag 120–150с (paging thrash), воркеры в
-  # crash-лупах. По условию самого владельца снижено 10→6 (per-profile 3→2).
-  # Доп. защита: Windows-ветка sample_memory (local layer 09.10) → pressure
-  # gate + derived cap живут после рестарта гейтвея; ram-guard сторожа чистит
-  # сирот каждый тик. Откат: config-backups/ram-cap-20261009/config.yaml.
   max_in_progress_per_profile: 2
   auto_decompose: false
 code_execution:
@@ -482,92 +480,92 @@ session_reset:
 group_sessions_per_user: true
 platform_toolsets:
   cli:
-    - browser
-    - clarify
-    - code_execution
-    - computer_use
-    - connections
-    - cronjob
-    - delegation
-    - file
-    - image_gen
-    - memory
-    - session_search
-    - skills
-    - terminal
-    - todo
-    - tts
-    - vision
-    - web
+  - browser
+  - clarify
+  - code_execution
+  - computer_use
+  - connections
+  - cronjob
+  - delegation
+  - file
+  - image_gen
+  - memory
+  - session_search
+  - skills
+  - terminal
+  - todo
+  - tts
+  - vision
+  - web
   telegram:
-    - hermes-telegram
+  - hermes-telegram
   discord:
-    - hermes-discord
+  - hermes-discord
   whatsapp:
-    - hermes-whatsapp
+  - hermes-whatsapp
   slack:
-    - hermes-slack
+  - hermes-slack
   signal:
-    - hermes-signal
+  - hermes-signal
   homeassistant:
-    - hermes-homeassistant
+  - hermes-homeassistant
   qqbot:
-    - hermes-qqbot
+  - hermes-qqbot
   yuanbao:
-    - hermes-yuanbao
+  - hermes-yuanbao
   teams:
-    - hermes-teams
+  - hermes-teams
   google_chat:
-    - hermes-google_chat
+  - hermes-google_chat
 known_plugin_toolsets:
   cli:
-    - a2a
-    - homeassistant
-    - spotify
+  - a2a
+  - homeassistant
+  - spotify
   acp:
-    - homeassistant
+  - homeassistant
   webhook:
-    - homeassistant
+  - homeassistant
 known_builtin_toolsets:
   cli:
-    - browser
-    - clarify
-    - code_execution
-    - computer_use
-    - connections
-    - context_engine
-    - cronjob
-    - delegation
-    - discord
-    - discord_admin
-    - file
-    - homeassistant
-    - image_gen
-    - memory
-    - session_search
-    - skills
-    - spotify
-    - stt
-    - terminal
-    - todo
-    - tts
-    - video
-    - video_gen
-    - vision
-    - web
-    - x_search
-    - yuanbao
+  - browser
+  - clarify
+  - code_execution
+  - computer_use
+  - connections
+  - context_engine
+  - cronjob
+  - delegation
+  - discord
+  - discord_admin
+  - file
+  - homeassistant
+  - image_gen
+  - memory
+  - session_search
+  - skills
+  - spotify
+  - stt
+  - terminal
+  - todo
+  - tts
+  - video
+  - video_gen
+  - vision
+  - web
+  - x_search
+  - yuanbao
 mcp_servers:
   codegraph:
     command: codegraph
     args:
-      - serve
-      - --mcp
+    - serve
+    - --mcp
   magic:
     command: npx
     args:
-      - -y
-      - '@21st-dev/magic@latest'
+    - -y
+    - '@21st-dev/magic@latest'
     env:
       API_KEY: ${env:TWENTYFIRST_API_KEY}
   node_repl:
@@ -580,8 +578,11 @@ mcp_servers:
       NODE_REPL_TRUSTED_CODE_PATHS: C:\Users\max\.codex;C:\Users\max\AppData\Local\OpenAI\Codex\runtimes\cua_node\2fb562745e6d66f0\bin\node_modules
       CODEX_HOME: C:\Users\max\.codex
       BROWSER_USE_AVAILABLE_BACKENDS: chrome,iab
-      NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER: Control the in-app browser in conjunction with the Browser Plugin.
-      NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME: Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative.
+      NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER: Control the in-app browser in conjunction
+        with the Browser Plugin.
+      NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME: Control the Chrome browser in conjunction
+        with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives
+        (such as Computer Use) unless the user explicitly mentions an alternative.
       BROWSER_USE_CODEX_APP_BUILD_FLAVOR: prod
       BROWSER_USE_CODEX_APP_VERSION: 26.814.41407
       NODE_REPL_TRUSTED_SERVICES: '{"browser":"C:/Users/max/.codex/plugins/cache/openai-bundled/browser/26.814.41407/scripts/browser-service.mjs","sky":"@oai/sky/service"}'
@@ -601,12 +602,16 @@ platforms:
   telegram:
     channel_overrides:
       '1256122537':
-        model: qwen3.8-max
+        model: qwen-3.8-max
         provider: custom
+        base_url: https://cheapmodels.xyz/v1
+        key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
       '-1004426332349':
-        model: qwen3.8-max
+        model: qwen-3.8-max
         provider: custom
+        base_url: https://cheapmodels.xyz/v1
+        key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 _left_core_scoped:
-  - homeassistant
+- homeassistant
 _left_core_installed:
-  - homeassistant
+- homeassistant

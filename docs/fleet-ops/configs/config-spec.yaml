@@ -3,7 +3,7 @@
 # whole-file damage is restored from the git copy in this directory.
 # Owner directive changes = edit this file. No frozen snapshots.
 version: 1
-recovery_ref: "6e3e31a"   # pinned commit for whole-file restores (independent of repo checkout state)
+recovery_ref: "282f6d3"   # pinned commit for whole-file restores (independent of repo checkout state)
 updated: "2026-10-06"
 memory_char_limit:
   profiles: 8000      # the 12 agent profiles; ROOT keeps its own standing value
