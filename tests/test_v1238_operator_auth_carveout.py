@@ -1,4 +1,4 @@
-"""v1.2.37: operator auth-store maintenance carve-out (regression tests).
+"""v1.2.38: operator auth-store maintenance carve-out (regression tests).
 
 Owner-directed credential purges must be executable by operator sessions via
 structured JSON edits, while workers, raw reads and destructive file effects
