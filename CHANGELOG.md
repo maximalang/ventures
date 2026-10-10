@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.58] - 2026-10-10
+
+### Changed
+- Operator-session maintenance carve-out for the fleet's own auth stores
+  (`secret_read_or_write` guard): owner-directed credential purges no longer
+  strand ghost entries behind a blanket deny. Allowed ONLY for operator
+  sessions (workers keep the deny), ONLY on the auth-store basename, via
+  (a) structured terminal edits (python/jq/Node JSON one-liners — read and
+  state_change) and (b) read-lane containment probes naming a literal
+  credential fingerprint or env-var NAME. Direct file reads (read_file/
+  search_files), `.env*`/key/PEM stores, file-level effects (rm/mv/cp) and
+  all worker calls keep the hard deny (fail-closed). Regression tests:
+  tests/test_v1258_operator_auth_carveout.py (7 cases). Incident context:
+  DashScope provider retirement 2026-10-10 — 8 ghost credential pools could
+  not be removed by any sanctioned CLI path (`auth remove` only suppressed
+  them) and manual JSON surgery was blocked for the operator session too.
+
 ## [1.2.36] - 2026-10-04
 
 ### Added

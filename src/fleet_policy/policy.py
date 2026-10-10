@@ -1530,6 +1530,53 @@ def _mask_exempt_quote_spans(command: str) -> str:
     return "".join(chars)
 
 
+
+def _operator_auth_store_maintenance(
+    name: str, arguments: dict[str, Any], matched: str, effect: str, worker: bool,
+) -> bool:
+    """v1.2.37: bounded operator maintenance carve-out for auth stores.
+
+    Owner-directed credential purges in the fleet's own auth stores are
+    legitimate maintenance, performed via structured JSON edits that never
+    display secret values. The blanket deny previously forced ghost entries
+    to stay forever or pushed the operator toward raw-value access. The
+    carve-out is deliberately narrow:
+
+    - operator sessions only (``worker=False``); workers keep the deny;
+    - only the auth-store basename (``.env*``, key files, PEM stay denied);
+    - terminal lane only: python/jq/Node one-liners using json.load /
+      json.dump / JSON.parse / jq against an auth-store path;
+    - read lane additionally allows grep/findstr containment probes naming
+      a literal account fingerprint or env-var NAME — name lookups, never
+      value extraction;
+    - file-level effects (delete/move/copy) and every worker call keep the
+      blanket deny (fail-closed).
+    """
+    if worker:
+        return False
+    lowered = str(matched).lower().replace("\\", "/")
+    if lowered != "auth.json" and not lowered.endswith("/auth.json"):
+        return False
+    if name in TERMINAL_TOOLS:
+        command = str(arguments.get("command") or arguments.get("cmd") or "")
+        struct = bool(re.search(
+            r"\b(?:python(?:\d+(?:\.\d+)?)?\s+(?:-c\s+)?|jq\s+|node\s+-e\s+)"
+            r"[^\n]*(?:json\.load|json\.dump|JSON\.parse|jq)\b",
+            command, re.I,
+        ))
+        if effect == "read":
+            if struct:
+                return True
+            probe = re.search(
+                r"\b(?:grep|findstr|rg|select-string)\b[^\n]*"
+                r"(?:[0-9a-f]{6}|[A-Z][A-Z0-9_]{4,})",
+                command,
+            )
+            return bool(probe)
+        return bool(effect == "state_change" and struct)
+    # read_file/search_files direct reads of auth stores remain denied.
+    return False
+
 def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], *, worker: bool) -> Classification:
     name = _normalize_tool_name(tool_name)
     effect = _effect_for(name, arguments)
@@ -1553,6 +1600,8 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             or _canonical_public_doc_read(name, arguments)
             or (effect == "read" and _canonical_operational_artifact_read(name, arguments))
         ):
+            continue
+        if _operator_auth_store_maintenance(name, arguments, matched, effect, worker):
             continue
         if _is_policy_controlled(matched):
             if effect == "read":
