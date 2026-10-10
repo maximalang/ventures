@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.38] - 2026-10-10
+## [1.2.58] - 2026-10-10
 
 ### Changed
 - Operator-session maintenance carve-out for the fleet's own auth stores
@@ -12,7 +12,7 @@
   credential fingerprint or env-var NAME. Direct file reads (read_file/
   search_files), `.env*`/key/PEM stores, file-level effects (rm/mv/cp) and
   all worker calls keep the hard deny (fail-closed). Regression tests:
-  tests/test_v1238_operator_auth_carveout.py (7 cases). Incident context:
+  tests/test_v1258_operator_auth_carveout.py (7 cases). Incident context:
   DashScope provider retirement 2026-10-10 — 8 ghost credential pools could
   not be removed by any sanctioned CLI path (`auth remove` only suppressed
   them) and manual JSON surgery was blocked for the operator session too.
