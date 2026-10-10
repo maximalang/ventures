@@ -25,7 +25,7 @@ providers:
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
     discover_models: false
     models:
-    - id: qwen3.8-max
+    - id: qwen-3.8-max
     - id: kimi-k3
     - id: qwen-vl-max
     provider: custom
@@ -54,7 +54,7 @@ agent:
   reasoning_overrides:
     glm-5.3-flash: high
     kimi-k3: max
-    qwen3.8-max: max
+    qwen-3.8-max: max
     gpt-6-sol: max
     gpt-6.1-sol: max
   verbose: false

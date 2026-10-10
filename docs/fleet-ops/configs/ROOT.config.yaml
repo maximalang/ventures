@@ -1,9 +1,9 @@
 model:
-  default: qwen3.8-max
+  default: qwen-3.8-max
   provider: custom
   base_url: https://cheapmodels.xyz/v1
   aliases:
-    q38: custom/qwen3.8-max
+    q38: custom/qwen-3.8-max
     glm52: custom/glm-5.2
     glm53: zai/glm-5.3
     kimi3: custom/kimi-k3
@@ -65,7 +65,7 @@ providers:
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
     discover_models: false
     models:
-    - id: qwen3.8-max
+    - id: qwen-3.8-max
     - id: kimi-k3
     - id: qwen-vl-max
     provider: custom
@@ -90,7 +90,7 @@ agent:
   reasoning_effort: max
   personalities: {}
   reasoning_overrides:
-    qwen3.8-max: max
+    qwen-3.8-max: max
     kimi-k3: max
 terminal:
   backend: local
