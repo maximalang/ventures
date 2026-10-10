@@ -15,9 +15,6 @@ model:
     - provider: custom
       model: kimi-k3
       base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    - provider: gpt-free
-      model: gpt-6-luna
-      base_url:
 providers:
   custom:
     name: DashScope
@@ -39,9 +36,6 @@ fallback_providers:
   - provider: custom
     model: kimi-k3
     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  - provider: gpt-free
-    model: gpt-6-luna
-    base_url:
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first

@@ -14,9 +14,6 @@ model:
     - provider: zai
       model: glm-5.3-flash
       base_url:
-    - provider: gpt-free
-      model: gpt-6-luna
-      base_url:
 providers:
   custom:
     name: DashScope
