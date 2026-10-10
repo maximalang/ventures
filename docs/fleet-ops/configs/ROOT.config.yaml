@@ -9,15 +9,15 @@ model:
     kimi3: custom/kimi-k3
     dsv4: custom/deepseek-v4-pro
   fallback_providers:
-    - provider: custom
-      model: kimi-k3
-      base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
     - provider: zai
       model: glm-5.3
       base_url:
     - provider: zai
       model: glm-5.3-flash
       base_url:
+    - provider: groq
+      model: qwen/qwen3.8-27b
+      base_url: https://api.groq.com/openai/v1
 providers:
   groq:
     name: groq
@@ -236,8 +236,6 @@ auxiliary:
   compression:
     provider: custom
     model: kimi-k3
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
     reasoning_effort: low
     timeout: 300
 display:

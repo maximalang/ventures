@@ -17,6 +17,9 @@ model:
     - provider: custom
       model: kimi-k3
       base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    - provider: groq
+      model: qwen/qwen3.8-27b
+      base_url: https://api.groq.com/openai/v1
 providers:
   custom:
     name: DashScope
@@ -42,6 +45,14 @@ providers:
       claude-opus-5: {}
       gpt-5.6-sol: {}
     key_env: HERMES_CUSTOM_AGENTROUTER_API_KEY
+  groq:
+    name: groq
+    base_url: https://api.groq.com/openai/v1
+    model: qwen/qwen3.8-27b
+    discover_models: false
+    models:
+      qwen/qwen3.8-27b: {}
+    key_env: HERMES_CUSTOM_GROQ_API_KEY
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
@@ -49,9 +60,9 @@ fallback_providers:
   - provider: zai
     model: glm-5.3-flash
     base_url: https://api.z.ai/api/coding/paas/v4
-  - provider: custom
-    model: kimi-k3
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  - provider: groq
+    model: qwen/qwen3.8-27b
+    base_url: https://api.groq.com/openai/v1
 fallback:
   min_switch_reset_seconds: 120
 toolsets:
@@ -144,8 +155,6 @@ auxiliary:
   compression:
     provider: custom
     model: kimi-k3
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    api_key: ${env:HERMES_CUSTOM_CUSTOM_API_KEY}
     reasoning_effort: low
     timeout: 300
   skills_hub:
