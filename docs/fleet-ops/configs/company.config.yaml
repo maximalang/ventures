@@ -20,17 +20,21 @@ model:
     - provider: groq
       model: qwen/qwen3.8-27b
       base_url: https://api.groq.com/openai/v1
+  base_url: https://dashscope.aliyuncs.com/v1
+  api_mode: chat_completions
+  key_env: HERMES_CUSTOM_CUSTOM_API_KEY
 providers:
   custom:
     name: DashScope
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    base_url: https://dashscope.aliyuncs.com/v1
     model: qwen3.8-max
     key_env: HERMES_CUSTOM_CUSTOM_API_KEY
     discover_models: false
     models:
-      - id: qwen3.8-max
-      - id: kimi-k3
-      - id: qwen-vl-max
+      qwen3.8-max: {}
+      "{'id': 'qwen3.8-max'}": {}
+      "{'id': 'kimi-k3'}": {}
+      "{'id': 'qwen-vl-max'}": {}
   agentrouter:
     extra_headers:
       User-Agent: hermes-agent/1.0.0
