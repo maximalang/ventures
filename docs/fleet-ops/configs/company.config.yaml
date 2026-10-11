@@ -193,11 +193,12 @@ auxiliary:
     timeout: 300
     main_agent_fallback: false
   skills_hub:
-    provider: kilocode
-    model: stepfun/step-5-preview-free
-    base_url: ''
+    provider: zai
+    model: glm-5.3-flash
+    base_url: 'https://api.z.ai/api/coding/paas/v4'
     reasoning_effort: max
-    key_env: HERMES_CUSTOM_GROQ_API_KEY
+    key_env: ZAI_API_KEY
+    main_agent_fallback: true
   approval:
     provider: custom
     model: qwen-3.8-max
@@ -218,24 +219,27 @@ auxiliary:
     reasoning_effort: max
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   title_generation:
-    provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
+    provider: zai
+    model: glm-5.3-flash
+    base_url: 'https://api.z.ai/api/coding/paas/v4'
     reasoning_effort: max
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    key_env: ZAI_API_KEY
+    main_agent_fallback: true
   memory_query_rewrite:
-    provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
+    provider: zai
+    model: glm-5.3-flash
+    base_url: 'https://api.z.ai/api/coding/paas/v4'
     reasoning_effort: max
     timeout: 30
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    key_env: ZAI_API_KEY
+    main_agent_fallback: true
   tts_audio_tags:
-    provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
+    provider: zai
+    model: glm-5.3-flash
+    base_url: 'https://api.z.ai/api/coding/paas/v4'
     reasoning_effort: max
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    key_env: ZAI_API_KEY
+    main_agent_fallback: true
   triage_specifier:
     provider: custom
     model: qwen-3.8-max
@@ -250,11 +254,12 @@ auxiliary:
     timeout: 180
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   profile_describer:
-    provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
+    provider: zai
+    model: glm-5.3-flash
+    base_url: 'https://api.z.ai/api/coding/paas/v4'
     reasoning_effort: max
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    key_env: ZAI_API_KEY
+    main_agent_fallback: true
   goal_judge:
     provider: custom
     model: qwen-3.8-max
@@ -268,11 +273,12 @@ auxiliary:
     reasoning_effort: max
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   monitor:
-    provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
+    provider: ollama-cloud
+    model: gemma4:31b
+    base_url: ''
     reasoning_effort: max
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    key_env: OLLAMA_API_KEY
+    main_agent_fallback: true
   background_review:
     provider: custom
     model: qwen-3.8-max
