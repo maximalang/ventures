@@ -11,12 +11,12 @@ model:
   max_tokens: 16384
   reasoning_echo: true
   fallback_providers:
-  - provider: zai
-    model: glm-5.3-flash
-    base_url: https://api.z.ai/api/coding/paas/v4
-  - provider: groq
-    model: qwen/qwen3.8-27b
-    base_url: https://api.groq.com/openai/v1
+    - provider: zai
+      model: glm-5.3-flash
+      base_url: https://api.z.ai/api/coding/paas/v4
+    - provider: groq
+      model: qwen/qwen3.8-27b
+      base_url: https://api.groq.com/openai/v1
   base_url: https://cheapmodels.xyz/v1
   api_mode: chat_completions
   key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
@@ -28,13 +28,13 @@ providers:
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
     discover_models: false
     models:
-    - id: qwen-3.8-max
-    - id: kimi-k3
-    - id: glm-5.3-flash
-    - id: deepseek-v4.1-flash
-    - id: claude-sonnet-5.5
-    - id: claude-opus-5.5
-    - id: gemini-3.8-flash
+      - id: qwen-3.8-max
+      - id: kimi-k3
+      - id: glm-5.3-flash
+      - id: deepseek-v4.1-flash
+      - id: claude-sonnet-5.5
+      - id: claude-opus-5.5
+      - id: gemini-3.8-flash
   agentrouter:
     extra_headers:
       User-Agent: hermes-agent/1.0.0
@@ -99,14 +99,14 @@ credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
 fallback_providers:
-- provider: zai
-  model: glm-5.3-flash
-  base_url: https://api.z.ai/api/coding/paas/v4
+  - provider: zai
+    model: glm-5.3-flash
+    base_url: https://api.z.ai/api/coding/paas/v4
 fallback:
   min_switch_reset_seconds: 120
 toolsets:
-- hermes-cli
-- kanban
+  - hermes-cli
+  - kanban
 database:
   journal_mode: wal
 runtime:
@@ -330,9 +330,7 @@ stt:
   local:
     model: small
     language: ru
-    initial_prompt: 'Проверь канбан-доску: задача по Рекрутер Радару заблокирована,
-      нужен гейт-ревью и деплой на прод. Отправь отчёт владельцу в телеграм. Флот,
-      профиль, сессия, метрика, выручка, бюджет, эскалация, сабагент, воркер, дашборд.'
+    initial_prompt: 'Проверь канбан-доску: задача по Рекрутер Радару заблокирована, нужен гейт-ревью и деплой на прод. Отправь отчёт владельцу в телеграм. Флот, профиль, сессия, метрика, выручка, бюджет, эскалация, сабагент, воркер, дашборд.'
     device: cpu
     compute_type: int8
   openai:
@@ -360,9 +358,9 @@ moa:
   presets:
     default:
       reference_models:
-      - provider: openai-codex
-        model: gpt-5.5
-        enabled: true
+        - provider: openai-codex
+          model: gpt-5.5
+          enabled: true
       aggregator:
         provider: openai-codex
         model: gpt-6.1-sol
@@ -370,9 +368,9 @@ moa:
       fanout: user_turn
       enabled: false
   reference_models:
-  - provider: openai-codex
-    model: gpt-5.5
-    enabled: true
+    - provider: openai-codex
+      model: gpt-5.5
+      enabled: true
   aggregator:
     provider: openai-codex
     model: gpt-6.1-sol
@@ -382,197 +380,197 @@ moa:
 skills:
   creation_nudge_interval: 15
   disabled:
-  - after-action-report
-  - agent-skills-build
-  - agent-skills-code-simplify
-  - agent-skills-commands
-  - agent-skills-personas
-  - agent-skills-plan
-  - agent-skills-review
-  - agent-skills-ship
-  - agent-skills-spec
-  - agent-skills-test
-  - airtable
-  - analytics-strategy
-  - architecture-diagram
-  - arxiv
-  - ascii-art
-  - ascii-video
-  - baoyu-infographic
-  - blogwatcher
-  - box
-  - brand-voice
-  - code-review-web
-  - code-simplification
-  - comfyui
-  - constraint-driven-development
-  - delegated-worktree-verification
-  - deprecation-and-migration
-  - discovery-research-synthesis
-  - excalidraw
-  - figma
-  - funnel-flow-architecture
-  - gh-address-comments
-  - gh-fix-ci
-  - hermes-desktop-settings
-  - humanizer
-  - jtbd-framing
-  - launch-runbook
-  - llm-wiki
-  - manim-video
-  - node-inspect-debugger
-  - notion
-  - obsidian
-  - okr-design
-  - p5js
-  - parallel-cli
-  - plan
-  - pretext
-  - product-analytics-setup
-  - product-price-monitor
-  - roadmap-planning
-  - rr-commands-source
-  - rr-preflight
-  - rr-review
-  - rr-review-lite
-  - rr-task
-  - rr-tools-audit
-  - simplify-code
-  - sketch
-  - songwriting-and-ai-music
-  - spike
-  - subagent-driven-development
-  - teams-meeting-pipeline
-  - touchdesigner-mcp
-  - user-feedback-aggregation
+    - after-action-report
+    - agent-skills-build
+    - agent-skills-code-simplify
+    - agent-skills-commands
+    - agent-skills-personas
+    - agent-skills-plan
+    - agent-skills-review
+    - agent-skills-ship
+    - agent-skills-spec
+    - agent-skills-test
+    - airtable
+    - analytics-strategy
+    - architecture-diagram
+    - arxiv
+    - ascii-art
+    - ascii-video
+    - baoyu-infographic
+    - blogwatcher
+    - box
+    - brand-voice
+    - code-review-web
+    - code-simplification
+    - comfyui
+    - constraint-driven-development
+    - delegated-worktree-verification
+    - deprecation-and-migration
+    - discovery-research-synthesis
+    - excalidraw
+    - figma
+    - funnel-flow-architecture
+    - gh-address-comments
+    - gh-fix-ci
+    - hermes-desktop-settings
+    - humanizer
+    - jtbd-framing
+    - launch-runbook
+    - llm-wiki
+    - manim-video
+    - node-inspect-debugger
+    - notion
+    - obsidian
+    - okr-design
+    - p5js
+    - parallel-cli
+    - plan
+    - pretext
+    - product-analytics-setup
+    - product-price-monitor
+    - roadmap-planning
+    - rr-commands-source
+    - rr-preflight
+    - rr-review
+    - rr-review-lite
+    - rr-task
+    - rr-tools-audit
+    - simplify-code
+    - sketch
+    - songwriting-and-ai-music
+    - spike
+    - subagent-driven-development
+    - teams-meeting-pipeline
+    - touchdesigner-mcp
+    - user-feedback-aggregation
 approvals:
   mode: 'off'
   deny:
-  - Remove-Item -Recurse -Force /Users*
-  - Remove-Item -Recurse -Force /home*
-  - Remove-Item -Recurse -Force C*
-  - dd if=/dev/zero of=/dev/*
-  - git push --force origin main*
-  - git push --force-with-lease origin main*
-  - git push -f origin main*
-  - mkfs*
-  - rm -rf $HOME*
-  - rm -rf .git*
-  - rm -rf /*
-  - rm -rf /Users*
-  - rm -rf /c/Users*
-  - rm -rf /home*
-  - rm -rf C*
-  - rm -rf ~*
+    - Remove-Item -Recurse -Force /Users*
+    - Remove-Item -Recurse -Force /home*
+    - Remove-Item -Recurse -Force C*
+    - dd if=/dev/zero of=/dev/*
+    - git push --force origin main*
+    - git push --force-with-lease origin main*
+    - git push -f origin main*
+    - mkfs*
+    - rm -rf $HOME*
+    - rm -rf .git*
+    - rm -rf /*
+    - rm -rf /Users*
+    - rm -rf /c/Users*
+    - rm -rf /home*
+    - rm -rf C*
+    - rm -rf ~*
 command_allowlist:
-- gzip *
-- tail *
-- zip *
-- ss *
-- cd *
-- docker *
-- basename *
-- head *
-- git *
-- kill *
-- ls
-- sort *
-- realpath *
-- ping *
-- ssh *
-- cat
-- pg_dump *
-- ps *
-- chmod *
-- dirname *
-- diff *
-- scp *
-- '*'
-- psql *
-- pg_restore *
-- pkill *
-- cd
-- yarn *
-- ls *
-- df *
-- sleep *
-- rsync *
-- stat *
-- 'true'
-- access to Hermes secrets (Windows path)
-- date *
-- seq *
-- mkdir *
-- netstat *
-- telnet *
-- wc *
-- test *
-- lsof *
-- whoami *
-- printenv *
-- curl *
-- redis-cli *
-- wget *
-- gh *
-- cp *
-- pwd
-- env *
-- printf *
-- touch
-- pg_isready *
-- recursive delete
-- nc *
-- 'false'
-- rg *
-- chown *
-- which *
-- less *
-- docker-compose *
-- pnpm *
-- mkdir
-- tsx *
-- where *
-- echo
-- mv
-- ssh -V
-- uname *
-- command *
-- tree *
-- tar *
-- sftp *
-- node *
-- hostname *
-- grep *
-- sed *
-- cp
-- echo *
-- cat *
-- mv *
-- file *
-- npx *
-- readlink *
-- npm *
-- unzip *
-- find *
-- script execution via -e/-c flag
-- xargs *
-- du *
-- gunzip *
-- crontab *
-- touch *
-- uniq *
-- awk *
+  - gzip *
+  - tail *
+  - zip *
+  - ss *
+  - cd *
+  - docker *
+  - basename *
+  - head *
+  - git *
+  - kill *
+  - ls
+  - sort *
+  - realpath *
+  - ping *
+  - ssh *
+  - cat
+  - pg_dump *
+  - ps *
+  - chmod *
+  - dirname *
+  - diff *
+  - scp *
+  - '*'
+  - psql *
+  - pg_restore *
+  - pkill *
+  - cd
+  - yarn *
+  - ls *
+  - df *
+  - sleep *
+  - rsync *
+  - stat *
+  - 'true'
+  - access to Hermes secrets (Windows path)
+  - date *
+  - seq *
+  - mkdir *
+  - netstat *
+  - telnet *
+  - wc *
+  - test *
+  - lsof *
+  - whoami *
+  - printenv *
+  - curl *
+  - redis-cli *
+  - wget *
+  - gh *
+  - cp *
+  - pwd
+  - env *
+  - printf *
+  - touch
+  - pg_isready *
+  - recursive delete
+  - nc *
+  - 'false'
+  - rg *
+  - chown *
+  - which *
+  - less *
+  - docker-compose *
+  - pnpm *
+  - mkdir
+  - tsx *
+  - where *
+  - echo
+  - mv
+  - ssh -V
+  - uname *
+  - command *
+  - tree *
+  - tar *
+  - sftp *
+  - node *
+  - hostname *
+  - grep *
+  - sed *
+  - cp
+  - echo *
+  - cat *
+  - mv *
+  - file *
+  - npx *
+  - readlink *
+  - npm *
+  - unzip *
+  - find *
+  - script execution via -e/-c flag
+  - xargs *
+  - du *
+  - gunzip *
+  - crontab *
+  - touch *
+  - uniq *
+  - awk *
 plugins:
   enabled:
-  - disk-cleanup
-  - fleet-policy
-  - hermes-hookdeck/hookdeck
-  - hermes-session-reset-policy
-  - rtk-rewrite
-  - security-guidance
-  - telegram-business
-  - tg-owner-control
-  - yandex_mail
+    - disk-cleanup
+    - fleet-policy
+    - hermes-hookdeck/hookdeck
+    - hermes-session-reset-policy
+    - rtk-rewrite
+    - security-guidance
+    - telegram-business
+    - tg-owner-control
+    - yandex_mail
   disabled: []
   entries:
     telegram-business:
@@ -613,20 +611,20 @@ computer_use:
   backend: cua
 desktop:
   repo_scan_exclude_paths:
-  - C:/Users/max/scratch
-  - C:/Users/max/agent-world-test
-  - C:/Users/max/hermes-skill-repos
-  - C:/Users/max/Desktop/all/qa-merged-ee3448f-20260831
-  - C:/Users/max/Desktop/all/qa-fresh-fb4dfed-20260831-1150
-  - C:/Users/max/Desktop/all/qa-v124-aa7ef401-20260831-1605
-  - C:/Users/max/Desktop/all/qa-v121-3e24a986
-  - C:/Users/max/Desktop/all/qa-v122-9388bd0
-  - C:/Users/max/Desktop/all/release-v124-b782c44-20260831-1618
-  - C:/Users/max/Desktop/all/accounting-ingestion-qa
-  - C:/Users/max/Desktop/all/lifecycle-gate-fix
-  - C:/Users/max/Desktop/all/fix-migrate-selfheal
-  - C:/Users/max/Desktop/all/notifier-lane-B
-  - C:/Users/max/Desktop/all/mvp-peni-site
+    - C:/Users/max/scratch
+    - C:/Users/max/agent-world-test
+    - C:/Users/max/hermes-skill-repos
+    - C:/Users/max/Desktop/all/qa-merged-ee3448f-20260831
+    - C:/Users/max/Desktop/all/qa-fresh-fb4dfed-20260831-1150
+    - C:/Users/max/Desktop/all/qa-v124-aa7ef401-20260831-1605
+    - C:/Users/max/Desktop/all/qa-v121-3e24a986
+    - C:/Users/max/Desktop/all/qa-v122-9388bd0
+    - C:/Users/max/Desktop/all/release-v124-b782c44-20260831-1618
+    - C:/Users/max/Desktop/all/accounting-ingestion-qa
+    - C:/Users/max/Desktop/all/lifecycle-gate-fix
+    - C:/Users/max/Desktop/all/fix-migrate-selfheal
+    - C:/Users/max/Desktop/all/notifier-lane-B
+    - C:/Users/max/Desktop/all/mvp-peni-site
 _config_version: 49
 session_reset:
   mode: both
@@ -635,88 +633,88 @@ session_reset:
 group_sessions_per_user: true
 platform_toolsets:
   cli:
-  - browser
-  - clarify
-  - code_execution
-  - computer_use
-  - connections
-  - cronjob
-  - delegation
-  - file
-  - image_gen
-  - kanban
-  - memory
-  - session_search
-  - skills
-  - terminal
-  - todo
-  - vision
-  - web
+    - browser
+    - clarify
+    - code_execution
+    - computer_use
+    - connections
+    - cronjob
+    - delegation
+    - file
+    - image_gen
+    - kanban
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - vision
+    - web
   telegram:
-  - hermes-telegram
-  - kanban
+    - hermes-telegram
+    - kanban
   discord:
-  - hermes-discord
+    - hermes-discord
   whatsapp:
-  - hermes-whatsapp
+    - hermes-whatsapp
   slack:
-  - hermes-slack
+    - hermes-slack
   signal:
-  - hermes-signal
+    - hermes-signal
   homeassistant:
-  - hermes-homeassistant
+    - hermes-homeassistant
   qqbot:
-  - hermes-qqbot
+    - hermes-qqbot
   yuanbao:
-  - hermes-yuanbao
+    - hermes-yuanbao
   teams:
-  - hermes-teams
+    - hermes-teams
   google_chat:
-  - hermes-google_chat
+    - hermes-google_chat
 known_plugin_toolsets:
   cli:
-  - a2a
-  - homeassistant
-  - spotify
+    - a2a
+    - homeassistant
+    - spotify
   acp:
-  - homeassistant
+    - homeassistant
   webhook:
-  - homeassistant
+    - homeassistant
 known_builtin_toolsets:
   cli:
-  - browser
-  - clarify
-  - code_execution
-  - computer_use
-  - connections
-  - context_engine
-  - cronjob
-  - delegation
-  - discord
-  - discord_admin
-  - file
-  - homeassistant
-  - image_gen
-  - memory
-  - session_search
-  - skills
-  - spotify
-  - stt
-  - terminal
-  - todo
-  - tts
-  - video
-  - video_gen
-  - vision
-  - web
-  - x_search
-  - yuanbao
+    - browser
+    - clarify
+    - code_execution
+    - computer_use
+    - connections
+    - context_engine
+    - cronjob
+    - delegation
+    - discord
+    - discord_admin
+    - file
+    - homeassistant
+    - image_gen
+    - memory
+    - session_search
+    - skills
+    - spotify
+    - stt
+    - terminal
+    - todo
+    - tts
+    - video
+    - video_gen
+    - vision
+    - web
+    - x_search
+    - yuanbao
 mcp_servers:
   codegraph:
     command: codegraph
     args:
-    - serve
-    - --mcp
+      - serve
+      - --mcp
   donut:
     url: http://127.0.0.1:51080/mcp/WdacSCnDSM44oAWCP9ngtPF930R6JoxW_ikIEBMdjMQ
     connect_timeout: 5
@@ -724,8 +722,8 @@ mcp_servers:
   magic:
     command: npx
     args:
-    - -y
-    - '@21st-dev/magic@latest'
+      - -y
+      - '@21st-dev/magic@latest'
     env:
       API_KEY: ${env:TWENTYFIRST_API_KEY}
   timeweb:
@@ -761,19 +759,19 @@ platforms:
         max_commands: 13
         priority_mode: replace
         priority:
-        - blocked
-        - idea
-        - audit
-        - new
-        - stop
-        - pause
-        - agents
-        - usage
-        - approve
-        - deny
-        - retry
-        - status
-        - commands
+          - blocked
+          - idea
+          - audit
+          - new
+          - stop
+          - pause
+          - agents
+          - usage
+          - approve
+          - deny
+          - retry
+          - status
+          - commands
       rich_messages: true
       rich_all: true
     channel_overrides:
@@ -790,6 +788,6 @@ sessions:
 telegram:
   proxy_url: http://127.0.0.1:10809
 _left_core_scoped:
-- homeassistant
+  - homeassistant
 _left_core_installed:
-- homeassistant
+  - homeassistant

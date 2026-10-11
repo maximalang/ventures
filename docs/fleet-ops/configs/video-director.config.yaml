@@ -6,6 +6,30 @@ model:
     astra: openai-codex/gpt-6-astra
   reasoning_echo: false
   fallback_providers:
+    - provider: zai
+      model: glm-5.3-flash
+      base_url: https://api.z.ai/api/coding/paas/v4
+    - provider: custom
+      model: qwen-3.8-max
+      base_url: https://cheapmodels.xyz/v1
+      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    - provider: custom
+      model: qwen-3.8-max
+      base_url: https://cheapmodels.xyz/v1
+      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+providers:
+  custom:
+    name: cheapmodels
+    base_url: https://cheapmodels.xyz/v1
+    model: qwen-3.8-max
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    discover_models: false
+    models:
+      - id: qwen-3.8-max
+      - id: kimi-k3
+      - id: qwen-vl-max
+    provider: custom
+fallback_providers:
   - provider: zai
     model: glm-5.3-flash
     base_url: https://api.z.ai/api/coding/paas/v4
@@ -17,30 +41,6 @@ model:
     model: kimi-k3
     base_url: https://cheapmodels.xyz/v1
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-providers:
-  custom:
-    name: cheapmodels
-    base_url: https://cheapmodels.xyz/v1
-    model: qwen-3.8-max
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-    discover_models: false
-    models:
-    - id: qwen-3.8-max
-    - id: kimi-k3
-    - id: qwen-vl-max
-    provider: custom
-fallback_providers:
-- provider: zai
-  model: glm-5.3-flash
-  base_url: https://api.z.ai/api/coding/paas/v4
-- provider: custom
-  model: qwen-3.8-max
-  base_url: https://cheapmodels.xyz/v1
-  key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-- provider: custom
-  model: kimi-k3
-  base_url: https://cheapmodels.xyz/v1
-  key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
@@ -224,13 +224,10 @@ auxiliary:
     api_key: ''
     timeout: 900
   compression:
-    main_agent_fallback: false
     provider: custom
     model: kimi-k3
-    base_url: https://cheapmodels.xyz/v1
     reasoning_effort: low
     timeout: 300
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 display:
   compact: false
   personality: creative
@@ -278,128 +275,128 @@ skills:
 approvals:
   mode: 'off'
   deny:
-  - Remove-Item -Recurse -Force /Users*
-  - Remove-Item -Recurse -Force /home*
-  - Remove-Item -Recurse -Force C*
-  - dd if=/dev/zero of=/dev/*
-  - git push --force origin main*
-  - git push --force-with-lease origin main*
-  - git push -f origin main*
-  - mkfs*
-  - rm -rf $HOME*
-  - rm -rf .git*
-  - rm -rf /*
-  - rm -rf /Users*
-  - rm -rf /c/Users*
-  - rm -rf /home*
-  - rm -rf C*
-  - rm -rf ~*
+    - Remove-Item -Recurse -Force /Users*
+    - Remove-Item -Recurse -Force /home*
+    - Remove-Item -Recurse -Force C*
+    - dd if=/dev/zero of=/dev/*
+    - git push --force origin main*
+    - git push --force-with-lease origin main*
+    - git push -f origin main*
+    - mkfs*
+    - rm -rf $HOME*
+    - rm -rf .git*
+    - rm -rf /*
+    - rm -rf /Users*
+    - rm -rf /c/Users*
+    - rm -rf /home*
+    - rm -rf C*
+    - rm -rf ~*
 command_allowlist:
-- gzip *
-- tail *
-- zip *
-- ss *
-- cd *
-- docker *
-- basename *
-- head *
-- git *
-- kill *
-- ls
-- sort *
-- realpath *
-- ping *
-- ssh *
-- cat
-- pg_dump *
-- ps *
-- chmod *
-- dirname *
-- diff *
-- scp *
-- '*'
-- psql *
-- pg_restore *
-- pkill *
-- cd
-- yarn *
-- ls *
-- df *
-- sleep *
-- rsync *
-- stat *
-- 'true'
-- access to Hermes secrets (Windows path)
-- date *
-- seq *
-- mkdir *
-- netstat *
-- telnet *
-- wc *
-- test *
-- lsof *
-- whoami *
-- printenv *
-- curl *
-- redis-cli *
-- wget *
-- gh *
-- cp *
-- pwd
-- env *
-- printf *
-- touch
-- pg_isready *
-- recursive delete
-- nc *
-- 'false'
-- rg *
-- chown *
-- which *
-- less *
-- docker-compose *
-- pnpm *
-- mkdir
-- tsx *
-- where *
-- echo
-- mv
-- ssh -V
-- uname *
-- command *
-- tree *
-- tar *
-- sftp *
-- node *
-- hostname *
-- grep *
-- sed *
-- cp
-- echo *
-- cat *
-- mv *
-- file *
-- npx *
-- readlink *
-- npm *
-- unzip *
-- find *
-- script execution via -e/-c flag
-- xargs *
-- du *
-- gunzip *
-- crontab *
-- touch *
-- uniq *
-- awk *
+  - gzip *
+  - tail *
+  - zip *
+  - ss *
+  - cd *
+  - docker *
+  - basename *
+  - head *
+  - git *
+  - kill *
+  - ls
+  - sort *
+  - realpath *
+  - ping *
+  - ssh *
+  - cat
+  - pg_dump *
+  - ps *
+  - chmod *
+  - dirname *
+  - diff *
+  - scp *
+  - '*'
+  - psql *
+  - pg_restore *
+  - pkill *
+  - cd
+  - yarn *
+  - ls *
+  - df *
+  - sleep *
+  - rsync *
+  - stat *
+  - 'true'
+  - access to Hermes secrets (Windows path)
+  - date *
+  - seq *
+  - mkdir *
+  - netstat *
+  - telnet *
+  - wc *
+  - test *
+  - lsof *
+  - whoami *
+  - printenv *
+  - curl *
+  - redis-cli *
+  - wget *
+  - gh *
+  - cp *
+  - pwd
+  - env *
+  - printf *
+  - touch
+  - pg_isready *
+  - recursive delete
+  - nc *
+  - 'false'
+  - rg *
+  - chown *
+  - which *
+  - less *
+  - docker-compose *
+  - pnpm *
+  - mkdir
+  - tsx *
+  - where *
+  - echo
+  - mv
+  - ssh -V
+  - uname *
+  - command *
+  - tree *
+  - tar *
+  - sftp *
+  - node *
+  - hostname *
+  - grep *
+  - sed *
+  - cp
+  - echo *
+  - cat *
+  - mv *
+  - file *
+  - npx *
+  - readlink *
+  - npm *
+  - unzip *
+  - find *
+  - script execution via -e/-c flag
+  - xargs *
+  - du *
+  - gunzip *
+  - crontab *
+  - touch *
+  - uniq *
+  - awk *
 plugins:
   enabled:
-  - disk-cleanup
-  - fleet-policy
-  - homeassistant
-  - rtk-rewrite
-  - security-guidance
-  - yandex_mail
+    - disk-cleanup
+    - fleet-policy
+    - homeassistant
+    - rtk-rewrite
+    - security-guidance
+    - yandex_mail
   disabled: []
 kanban:
   dispatch_in_gateway: false
@@ -433,89 +430,89 @@ session_reset:
 group_sessions_per_user: true
 platform_toolsets:
   cli:
-  - browser
-  - clarify
-  - connections
-  - file
-  - memory
-  - session_search
-  - skills
-  - terminal
-  - todo
-  - vision
-  - web
-  - yandex_mail
+    - browser
+    - clarify
+    - connections
+    - file
+    - memory
+    - session_search
+    - skills
+    - terminal
+    - todo
+    - vision
+    - web
+    - yandex_mail
   telegram:
-  - hermes-telegram
+    - hermes-telegram
   discord:
-  - hermes-discord
+    - hermes-discord
   whatsapp:
-  - hermes-whatsapp
+    - hermes-whatsapp
   slack:
-  - hermes-slack
+    - hermes-slack
   signal:
-  - hermes-signal
+    - hermes-signal
   homeassistant:
-  - hermes-homeassistant
+    - hermes-homeassistant
   qqbot:
-  - hermes-qqbot
+    - hermes-qqbot
   yuanbao:
-  - hermes-yuanbao
+    - hermes-yuanbao
   teams:
-  - hermes-teams
+    - hermes-teams
   google_chat:
-  - hermes-google_chat
+    - hermes-google_chat
 known_plugin_toolsets:
   cli:
-  - a2a
-  - homeassistant
-  - spotify
-  - yandex_mail
+    - a2a
+    - homeassistant
+    - spotify
+    - yandex_mail
   acp:
-  - homeassistant
+    - homeassistant
   webhook:
-  - homeassistant
+    - homeassistant
 known_builtin_toolsets:
   cli:
-  - browser
-  - clarify
-  - code_execution
-  - computer_use
-  - connections
-  - context_engine
-  - cronjob
-  - delegation
-  - discord
-  - discord_admin
-  - file
-  - homeassistant
-  - image_gen
-  - kanban
-  - memory
-  - session_search
-  - skills
-  - spotify
-  - stt
-  - terminal
-  - todo
-  - tts
-  - video
-  - video_gen
-  - vision
-  - web
-  - x_search
-  - yuanbao
+    - browser
+    - clarify
+    - code_execution
+    - computer_use
+    - connections
+    - context_engine
+    - cronjob
+    - delegation
+    - discord
+    - discord_admin
+    - file
+    - homeassistant
+    - image_gen
+    - kanban
+    - memory
+    - session_search
+    - skills
+    - spotify
+    - stt
+    - terminal
+    - todo
+    - tts
+    - video
+    - video_gen
+    - vision
+    - web
+    - x_search
+    - yuanbao
 mcp_servers:
   codegraph:
     command: codegraph
     args:
-    - serve
-    - --mcp
+      - serve
+      - --mcp
   magic:
     command: npx
     args:
-    - -y
-    - '@21st-dev/magic@latest'
+      - -y
+      - '@21st-dev/magic@latest'
     env:
       API_KEY: ${env:TWENTYFIRST_API_KEY}
   donut:
@@ -526,6 +523,6 @@ reasoning_effort: high
 model_aliases:
   astra: openai-codex/gpt-6-astra
 _left_core_scoped:
-- homeassistant
+  - homeassistant
 _left_core_installed:
-- homeassistant
+  - homeassistant
