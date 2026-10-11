@@ -191,86 +191,86 @@ auxiliary:
     model: qwen-3.8-max
     reasoning_effort: low
     timeout: 300
-    main_agent_fallback: false
+    main_agent_fallback: False
   skills_hub:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: 'https://cheapmodels.xyz/v1'
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   approval:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
-    reasoning_effort: max
+    reasoning_effort: ''
     timeout: 60
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   review:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   mcp:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   title_generation:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: 'https://cheapmodels.xyz/v1'
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   memory_query_rewrite:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: 'https://cheapmodels.xyz/v1'
-    reasoning_effort: max
+    reasoning_effort: ''
     timeout: 30
     key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   tts_audio_tags:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: 'https://cheapmodels.xyz/v1'
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   triage_specifier:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   kanban_decomposer:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
-    reasoning_effort: max
+    reasoning_effort: ''
     timeout: 180
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   profile_describer:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: 'https://cheapmodels.xyz/v1'
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   goal_judge:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   curator:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
-    reasoning_effort: max
+    reasoning_effort: ''
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   monitor:
     provider: ollama-cloud
@@ -281,21 +281,24 @@ auxiliary:
     main_agent_fallback: true
   background_review:
     provider: custom
-    model: qwen-3.8-max
+    model: claude-opus-5.5
     base_url: https://cheapmodels.xyz/v1
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    reasoning_effort: ''
   moa_reference:
-    provider: auto
-    model: ''
-    base_url: ''
+    provider: custom
+    model: 'gemini-3.8-flash'
+    base_url: 'https://cheapmodels.xyz/v1'
     api_key: ''
     timeout: 900
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   moa_aggregator:
-    provider: auto
-    model: ''
-    base_url: ''
+    provider: custom
+    model: 'claude-opus-5.5'
+    base_url: 'https://cheapmodels.xyz/v1'
     api_key: ''
     timeout: 900
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 display:
   compact: false
   personality: helpful
