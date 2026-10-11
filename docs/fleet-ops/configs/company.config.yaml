@@ -11,9 +11,8 @@ model:
   max_tokens: 16384
   reasoning_echo: true
   fallback_providers:
-    - provider: zai
-      model: glm-5.3-flash
-      base_url: https://api.z.ai/api/coding/paas/v4
+    - provider: openai-codex
+      model: gpt-6-luna
   base_url: https://cheapmodels.xyz/v1
   api_mode: chat_completions
   key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
@@ -31,6 +30,7 @@ providers:
       - id: claude-sonnet-5.5
       - id: claude-opus-5.5
       - id: gemini-3.8-flash
+      - id: gpt-6-astra
   agentrouter:
     extra_headers:
       User-Agent: hermes-agent/1.0.0
@@ -74,7 +74,7 @@ providers:
   openai-codex:
     name: OpenAI Codex
     model: gpt-6-luna
-    discover_models: false
+    discover_models: true
     models:
       gpt-6-luna: {}
   gpt-free:
@@ -94,10 +94,6 @@ providers:
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
-fallback_providers:
-  - provider: zai
-    model: glm-5.3-flash
-    base_url: https://api.z.ai/api/coding/paas/v4
 fallback:
   min_switch_reset_seconds: 120
 toolsets:
@@ -191,7 +187,8 @@ auxiliary:
     model: qwen-3.8-max
     reasoning_effort: low
     timeout: 300
-    main_agent_fallback: False
+    main_agent_fallback: false
+    base_url: https://cheapmodels.xyz/v1
   skills_hub:
     provider: custom
     model: claude-opus-5.5
@@ -781,9 +778,9 @@ platforms:
       rich_all: true
     channel_overrides:
       '1256122537':
-        model: qwen-3.8-max
+        model: gpt-6-astra
       '-1004426332349':
-        model: qwen-3.8-max
+        model: gpt-6-astra
   webhook:
     enabled: true
 cron:

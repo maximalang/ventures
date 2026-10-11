@@ -218,6 +218,7 @@ auxiliary:
     main_agent_fallback: false
     reasoning_effort: low
     timeout: 300
+    base_url: https://cheapmodels.xyz/v1
 display:
   compact: false
   busy_input_mode: interrupt
