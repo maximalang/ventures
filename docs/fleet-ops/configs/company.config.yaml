@@ -29,7 +29,6 @@ providers:
     discover_models: false
     models:
       - id: qwen-3.8-max
-      - id: kimi-k3
       - id: glm-5.3-flash
       - id: deepseek-v4.1-flash
       - id: claude-sonnet-5.5
@@ -117,7 +116,6 @@ agent:
   api_max_retries: 5
   reasoning_overrides:
     glm-5.3-flash: high
-    kimi-k3: max
     qwen-3.8-max: max
     gpt-6-sol: max
     glm-5.3: max
@@ -193,7 +191,8 @@ auxiliary:
     timeout: 120
   compression:
     provider: custom
-    model: kimi-k3
+    model: qwen-3.8-max
+    main_agent_fallback: false
     reasoning_effort: low
     timeout: 300
   skills_hub:

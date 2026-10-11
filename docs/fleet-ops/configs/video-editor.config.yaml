@@ -25,7 +25,6 @@ providers:
     discover_models: false
     models:
       - id: qwen-3.8-max
-      - id: kimi-k3
       - id: qwen-vl-max
     provider: custom
 credential_pool_strategies:
@@ -40,7 +39,6 @@ agent:
   max_turns: 500
   reasoning_overrides:
     glm-5.3-flash: high
-    kimi-k3: max
     qwen-3.8-max: max
     gpt-6-sol: high
     gpt-6.1-sol: high
@@ -210,7 +208,8 @@ auxiliary:
     timeout: 900
   compression:
     provider: custom
-    model: kimi-k3
+    model: qwen-3.8-max
+    main_agent_fallback: false
     reasoning_effort: low
     timeout: 300
 display:

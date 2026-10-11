@@ -6,7 +6,6 @@ model:
     q38: custom/qwen-3.8-max
     glm52: custom/glm-5.2
     glm53: zai/glm-5.3
-    kimi3: custom/kimi-k3
     dsv4: custom/deepseek-v4-pro
   fallback_providers:
   - provider: zai
@@ -66,7 +65,6 @@ providers:
     discover_models: false
     models:
     - id: qwen-3.8-max
-    - id: kimi-k3
     - id: qwen-vl-max
     provider: custom
 fallback_providers:
@@ -91,7 +89,6 @@ agent:
   personalities: {}
   reasoning_overrides:
     qwen-3.8-max: max
-    kimi-k3: max
 terminal:
   backend: local
   cwd: .
@@ -237,7 +234,8 @@ auxiliary:
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   compression:
     provider: custom
-    model: kimi-k3
+    model: qwen-3.8-max
+    main_agent_fallback: false
     reasoning_effort: low
     timeout: 300
     base_url: https://cheapmodels.xyz/v1

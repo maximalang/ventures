@@ -26,7 +26,6 @@ providers:
     discover_models: false
     models:
       - id: qwen-3.8-max
-      - id: kimi-k3
       - id: qwen-vl-max
     provider: custom
 fallback_providers:
@@ -35,10 +34,6 @@ fallback_providers:
     base_url: https://api.z.ai/api/coding/paas/v4
   - provider: custom
     model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-  - provider: custom
-    model: kimi-k3
     base_url: https://cheapmodels.xyz/v1
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 credential_pool_strategies:
@@ -53,7 +48,6 @@ agent:
   max_turns: 500
   reasoning_overrides:
     glm-5.3-flash: high
-    kimi-k3: max
     qwen-3.8-max: max
     gpt-6-astra: max
     gpt-6-sol: max
@@ -225,7 +219,8 @@ auxiliary:
     timeout: 900
   compression:
     provider: custom
-    model: kimi-k3
+    model: qwen-3.8-max
+    main_agent_fallback: false
     reasoning_effort: low
     timeout: 300
 display:
