@@ -193,11 +193,11 @@ auxiliary:
     timeout: 300
     main_agent_fallback: false
   skills_hub:
-    provider: zai
-    model: glm-5.3-flash
-    base_url: 'https://api.z.ai/api/coding/paas/v4'
+    provider: custom
+    model: qwen-3.8-max
+    base_url: 'https://cheapmodels.xyz/v1'
     reasoning_effort: max
-    key_env: ZAI_API_KEY
+    key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   approval:
     provider: custom
@@ -219,26 +219,26 @@ auxiliary:
     reasoning_effort: max
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   title_generation:
-    provider: zai
-    model: glm-5.3-flash
-    base_url: 'https://api.z.ai/api/coding/paas/v4'
+    provider: custom
+    model: qwen-3.8-max
+    base_url: 'https://cheapmodels.xyz/v1'
     reasoning_effort: max
-    key_env: ZAI_API_KEY
+    key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   memory_query_rewrite:
-    provider: zai
-    model: glm-5.3-flash
-    base_url: 'https://api.z.ai/api/coding/paas/v4'
+    provider: custom
+    model: qwen-3.8-max
+    base_url: 'https://cheapmodels.xyz/v1'
     reasoning_effort: max
     timeout: 30
-    key_env: ZAI_API_KEY
+    key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   tts_audio_tags:
-    provider: zai
-    model: glm-5.3-flash
-    base_url: 'https://api.z.ai/api/coding/paas/v4'
+    provider: custom
+    model: qwen-3.8-max
+    base_url: 'https://cheapmodels.xyz/v1'
     reasoning_effort: max
-    key_env: ZAI_API_KEY
+    key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   triage_specifier:
     provider: custom
@@ -254,11 +254,11 @@ auxiliary:
     timeout: 180
     key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   profile_describer:
-    provider: zai
-    model: glm-5.3-flash
-    base_url: 'https://api.z.ai/api/coding/paas/v4'
+    provider: custom
+    model: qwen-3.8-max
+    base_url: 'https://cheapmodels.xyz/v1'
     reasoning_effort: max
-    key_env: ZAI_API_KEY
+    key_env: 'HERMES_CUSTOM_CHEAPMODELS_API_KEY'
     main_agent_fallback: true
   goal_judge:
     provider: custom
