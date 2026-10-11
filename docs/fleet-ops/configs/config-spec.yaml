@@ -2,8 +2,12 @@
 # The reconciler (config_integrity_watch.py) repairs fields FROM this spec;
 # whole-file damage is restored from the git copy in this directory.
 # Owner directive changes = edit this file. No frozen snapshots.
+# RULE (incident 11.10 08:57): any fleet-wide model repin that touches a
+# governed field MUST repoint this spec in the same change — the reconciler
+# enforces this file within the hour and reverts "drift" that is actually
+# the newer desired state (that mismatch rewrote 12 configs to a dead pin).
 version: 1
-recovery_ref: "c173f0a"   # pinned commit for whole-file restores (independent of repo checkout state)
+recovery_ref: "9a7d691"   # pinned commit for whole-file restores (independent of repo checkout state)
 updated: "2026-10-06"
 memory_char_limit:
   profiles: 8000      # the 12 agent profiles; ROOT keeps its own standing value

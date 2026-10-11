@@ -194,7 +194,7 @@ auxiliary:
     main_agent_fallback: false
   skills_hub:
     provider: kilocode
-    model: kilo-auto/free
+    model: stepfun/step-5-preview-free
     base_url: ''
     reasoning_effort: max
     key_env: HERMES_CUSTOM_GROQ_API_KEY
