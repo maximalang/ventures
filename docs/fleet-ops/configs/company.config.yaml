@@ -14,9 +14,6 @@ model:
     - provider: zai
       model: glm-5.3-flash
       base_url: https://api.z.ai/api/coding/paas/v4
-    - provider: groq
-      model: qwen/qwen3.8-27b
-      base_url: https://api.groq.com/openai/v1
   base_url: https://cheapmodels.xyz/v1
   api_mode: chat_completions
   key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
@@ -48,14 +45,6 @@ providers:
       claude-opus-5: {}
       gpt-5.6-sol: {}
     key_env: HERMES_CUSTOM_AGENTROUTER_API_KEY
-  groq:
-    name: groq
-    base_url: https://api.groq.com/openai/v1
-    model: qwen/qwen3.8-27b
-    discover_models: false
-    models:
-      qwen/qwen3.8-27b: {}
-    key_env: HERMES_CUSTOM_GROQ_API_KEY
   cheapmodels:
     name: cheapmodels
     base_url: https://cheapmodels.xyz/v1
@@ -94,6 +83,14 @@ providers:
     discover_models: false
     models:
       gpt-6-luna: {}
+  groq:
+    name: groq
+    base_url: https://api.groq.com/openai/v1
+    model: qwen/qwen3.8-27b
+    discover_models: false
+    key_env: HERMES_CUSTOM_GROQ_API_KEY
+    models:
+      qwen/qwen3.8-27b: {}
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
@@ -192,15 +189,15 @@ auxiliary:
   compression:
     provider: custom
     model: qwen-3.8-max
-    main_agent_fallback: false
     reasoning_effort: low
     timeout: 300
+    main_agent_fallback: false
   skills_hub:
-    provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
+    provider: kilocode
+    model: kilo-auto/free
+    base_url: ''
     reasoning_effort: max
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    key_env: HERMES_CUSTOM_GROQ_API_KEY
   approval:
     provider: custom
     model: qwen-3.8-max
