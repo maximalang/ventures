@@ -208,6 +208,7 @@ auxiliary:
     reasoning_effort: low
     timeout: 300
     base_url: https://cheapmodels.xyz/v1
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 display:
   compact: false
   personality: technical
