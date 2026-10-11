@@ -202,6 +202,7 @@ auxiliary:
     timeout: 300
     main_agent_fallback: false
     base_url: https://cheapmodels.xyz/v1
+    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
   skills_hub:
     provider: custom
     model: claude-opus-5.5
