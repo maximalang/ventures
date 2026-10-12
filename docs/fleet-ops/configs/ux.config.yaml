@@ -5,13 +5,11 @@ model:
   max_tokens: 16384
   reasoning_echo: true
   fallback_providers:
-    - provider: custom
-      model: qwen-3.8-max
-      base_url: https://cheapmodels.xyz/v1
-      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
     - provider: zai
       model: glm-5.3
       base_url:
+    - provider: openai-codex
+      model: gpt-6-luna
   key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 providers:
   custom:
@@ -510,6 +508,3 @@ _left_core_scoped:
   - homeassistant
 _left_core_installed:
   - homeassistant
-fallback_providers:
-  - provider: openai-codex
-    model: gpt-6-luna

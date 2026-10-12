@@ -5,17 +5,13 @@ model:
     astra: openai-codex/gpt-6-astra
   reasoning_echo: false
   fallback_providers:
+    - provider: custom
+      model: qwen-3.8-max
+      base_url: https://cheapmodels.xyz/v1
+      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
     - provider: zai
       model: glm-5.3-flash
       base_url: https://api.z.ai/api/coding/paas/v4
-    - provider: custom
-      model: qwen-3.8-max
-      base_url: https://cheapmodels.xyz/v1
-      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-    - provider: custom
-      model: qwen-3.8-max
-      base_url: https://cheapmodels.xyz/v1
-      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 providers:
   custom:
     name: cheapmodels
@@ -27,14 +23,6 @@ providers:
       - id: qwen-3.8-max
       - id: qwen-vl-max
     provider: custom
-fallback_providers:
-  - provider: zai
-    model: glm-5.3-flash
-    base_url: https://api.z.ai/api/coding/paas/v4
-  - provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first

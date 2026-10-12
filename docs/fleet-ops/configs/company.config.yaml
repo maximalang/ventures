@@ -606,6 +606,7 @@ kanban:
   default_assignee: company
   max_in_progress: 5
   auto_decompose: false
+  max_in_progress_per_profile: 2
 code_execution:
   timeout: 300
   max_tool_calls: 50
@@ -807,6 +808,3 @@ _left_core_scoped:
   - homeassistant
 _left_core_installed:
   - homeassistant
-fallback_providers:
-  - provider: openai-codex
-    model: gpt-6-luna

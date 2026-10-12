@@ -6,12 +6,10 @@ model:
   reasoning_echo: true
   fallback_providers:
     - provider: zai
-      model: glm-5.3-flash
-      base_url: https://api.z.ai/api/coding/paas/v4
-    - provider: custom
-      model: qwen-3.8-max
-      base_url: https://cheapmodels.xyz/v1
-      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+      model: glm-5.3
+      base_url:
+    - provider: openai-codex
+      model: gpt-6-luna
   key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 providers:
   custom:
@@ -508,6 +506,3 @@ _left_core_scoped:
   - homeassistant
 _left_core_installed:
   - homeassistant
-fallback_providers:
-  - provider: openai-codex
-    model: gpt-6-luna

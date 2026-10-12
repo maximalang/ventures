@@ -445,7 +445,7 @@ kanban:
   orchestrator_profile: company
   default_assignee: company
   max_in_progress: 6
-  max_in_progress_per_profile: 2
+  max_in_progress_per_profile: 1
   auto_decompose: false
 code_execution:
   timeout: 300

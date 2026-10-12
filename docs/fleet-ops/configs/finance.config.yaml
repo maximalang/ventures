@@ -9,10 +9,8 @@ model:
       model: qwen-3.8-max
       base_url: https://cheapmodels.xyz/v1
       key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-    - provider: custom
-      model: qwen-3.8-max
-      base_url: https://cheapmodels.xyz/v1
-      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
+    - provider: openai-codex
+      model: gpt-6-luna
 providers:
   custom:
     name: cheapmodels
@@ -503,6 +501,3 @@ _left_core_scoped:
   - homeassistant
 _left_core_installed:
   - homeassistant
-fallback_providers:
-  - provider: openai-codex
-    model: gpt-6-luna

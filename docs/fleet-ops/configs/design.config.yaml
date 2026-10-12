@@ -7,22 +7,13 @@ model:
     astra: openai-codex/gpt-6-astra
   reasoning_echo: false
   fallback_providers:
+    - provider: custom
+      model: qwen-3.8-max
+      base_url: https://cheapmodels.xyz/v1
+      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
     - provider: zai
       model: glm-5.3-flash
       base_url: https://api.z.ai/api/coding/paas/v4
-    - provider: custom
-      model: qwen-3.8-max
-      base_url: https://cheapmodels.xyz/v1
-      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-    - provider: custom
-      model: qwen-3.8-max
-      base_url: https://cheapmodels.xyz/v1
-      key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-  fallback_providers[1]:
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
-  fallback_providers[2]:
-    base_url: https://cheapmodels.xyz/v1
 providers:
   custom:
     name: cheapmodels
@@ -33,14 +24,6 @@ providers:
     models:
       - id: qwen-3.8-max
       - id: qwen-vl-max
-fallback_providers:
-  - provider: zai
-    model: glm-5.3-flash
-    base_url: https://api.z.ai/api/coding/paas/v4
-  - provider: custom
-    model: qwen-3.8-max
-    base_url: https://cheapmodels.xyz/v1
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
@@ -527,6 +510,3 @@ _left_core_scoped:
   - homeassistant
 _left_core_installed:
   - homeassistant
-fallback_providers[1]:
-  model: qwen-3.8-max
-  base_url: https://cheapmodels.xyz/v1
