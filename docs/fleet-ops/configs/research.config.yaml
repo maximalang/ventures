@@ -510,3 +510,6 @@ _left_core_scoped:
   - homeassistant
 _left_core_installed:
   - homeassistant
+fallback_providers:
+  - provider: openai-codex
+    model: gpt-6-luna
