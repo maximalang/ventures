@@ -5,12 +5,12 @@ model:
   max_tokens: 16384
   reasoning_echo: false
   fallback_providers:
+    - provider: openai-codex
+      model: gpt-6-luna
     - provider: custom
       model: qwen-3.8-max
       base_url: https://cheapmodels.xyz/v1
       key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-    - provider: openai-codex
-      model: gpt-6-luna
 providers:
   custom:
     name: cheapmodels
