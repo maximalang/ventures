@@ -1,0 +1,49 @@
+SOURCE: https://vk.ru/@authors-fond-avtorov  (Fond originalnykh avtorov VK, FAQ)
+CHANNEL: web_extract (Hermes fetch) — NOT curl (vk.ru TLS handshake fails under curl/schannel)
+ACCESSED: 2026-10-13
+PAGE META: Published 2025-02-05; page title carries "2026"
+---
+
+# Fond originalnykh avtorov VK: chastye voprosy 2026 | VK
+
+### Zachem VK zapuskaet novuyu programmu monetizatsii?
+Tsel programmy — pomoch kreatoram s maloy i sredney auditoriey (ot 1 000 do 100 000 podpischikov)
+protestirovat raznye podkhody k vedeniyu bloga, razvit soobschestvo i ego kontent.
+
+### Skolko ya budu zarabatyvat? Ot chego zavisit summy vyplat? Oni gibkie ili fiksirovannye?
+Ezhemesyachnaya vyplata — fiksirovannaya i sostavlyaet 30 tysyach rubley pri uslovii soblyudeniya
+pravil programmy, kotoraya dlitsya god.
+
+### Kak imenno budet nachislyatsya vyplata?
+Sredstva postupayut avtoru ezhemesyachno v techenie 5 rabochikh dney mesyatsa, sleduyuschego za
+otchetnym, i budut dostupny v «Kabinetе vyplat».
+
+### Nuzhno li mne budet platit nalog ili on budet uderzhan iz summy?
+Avtor samostoyatelno platit nalog v zavisimosti ot ego nalogovogo statusa.
+
+### Kak dolgo ya mogu poluchat podderzhku fonda?
+Vy mozhete nakhoditsya v programme ne bolee goda s momenta vstupleniya i pri uslovii soblyudeniya
+pravil fonda.
+
+### Chto delat, esli ya uzhe zarabatyvayu cherez instrumenty monetizatsii platformy?
+Da, esli vash summarnyy zarabotok na drugikh programmakh monetizatsii VKontakte ne prevyshaet
+100 tysyach rubley za odin mesyats.
+
+### Mogu li ya uchastvovat, esli u menya neskolko soobschestv?
+Da, no neobkhodimo budet vybrat odno soobschestvo, kotoroe budet uchastvovat v dannoy programme.
+
+### Mogut li menya isklyuchit iz programmy?
+Da, ... za narushenie pravil platformy i prenebrezhenie usloviyami uchastiya v programme ili pri
+dostizhenii obschego zarabotka na platforme bolee 100 tysyach rubley za odin mesyats.
+
+---
+
+KEY FACTS (for CONTENT_SOURCES_V2 §1.4):
+- 30 000 RUB/month FIXED, subject to program rules, program duration 1 year.  -> H (primary)
+- Audience band: 1 000-100 000 followers.                                      -> H (primary)
+- Paid monthly within 5 business days of the month following the reporting one, in «Kabinet vyplat». -> H
+- Author pays tax themselves (platform does not withhold).                      -> H
+- Cap: total earnings on other VK monetization programs <= 100 000 RUB/month.  -> H
+- Only ONE community may participate.                                          -> H
+- CLAUSE NOT PRESENT: no "12 original posts + 2 clips per month" obligation appears in this FAQ.
+  -> the round-1 review item stands: that obligation is unverified (M/null), not H.

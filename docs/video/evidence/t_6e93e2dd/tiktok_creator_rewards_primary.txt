@@ -1,0 +1,55 @@
+SOURCE: https://www.tiktok.com/creator-academy/en/article/creator-rewards-program
+CHANNEL: web_extract (Hermes fetch; page body rendered) — NOT curl (curl returns JS shell only)
+ACCESSED: 2026-10-13
+PAGE: "Join the TikTok Creator Rewards Program" — Last updated: May 7, 2025
+---
+
+Join the TikTok Creator Rewards Program
+Last updated: May 7, 2025
+
+If you're passionate about crafting high-quality, long-form TikTok videos and turning your
+creativity into rewards, we've got something special just for you: the Creator Rewards Program!
+
+We're giving you the chance to collect rewards just for sharing your original video content over
+1 minute long. ...
+
+Joining the Creator Rewards Program
+
+Ready to dive right in? Just make sure you meet these criteria to get started:
+
+The program is currently open to creators in the United States, United Kingdom, Germany, Japan,
+South Korea, France, and Brazil, so you must be based in one of these countries and have an
+account registered there.
+
+Your TikTok account should be in good standing, meaning you've been following our Community
+Guidelines and Terms of Service.
+
+Only Personal Accounts are eligible. Business Accounts and accounts associated with political or
+government organizations won't qualify.
+
+You need to be at least 18 years old to participate.
+
+Your account should have at least 10,000 followers and 100,000 video views in the last 30 days.
+
+...
+
+Creating reward-worthy content
+
+First things first, to be eligible for rewards, your content must fit these criteria:
+
+It must be original, high-quality content over 1 minute long.
+It should rack up at least 1,000 views on the For You feed.
+It can't be a Duet or Stitch.
+It shouldn't be created using Photo Mode.
+No ads, paid promotions, or sponsored content allowed.
+It must follow the program's terms, the Terms of Service, Community Guidelines, Creator Code of
+Conduct, and Copyright Policy.
+
+---
+
+KEY FACTS EXTRACTED (for CONTENT_SOURCES_V2 §1.2):
+1. Country list is EXPLICIT and closed: US, UK, Germany, Japan, South Korea, France, Brazil.
+   Russia is NOT in the list -> Creator Rewards unavailable for RU-registered accounts (primary).
+2. Threshold: >=10,000 followers AND >=100,000 video views in last 30 days.
+3. 18+, Personal Accounts only, video >1 min, original.
+4. Eligibility excludes Duet/Stitch and Photo Mode content.
