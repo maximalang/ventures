@@ -1,4 +1,4 @@
-"""v1.2.42 — built-in event retention, verified archive, and DB size guard.
+"""v1.2.47 — built-in event retention, verified archive, and DB size guard.
 
 Root cause (2026-10-07 deny-triage stall, fleet-fast-watch): the policy event
 store grew unbounded (2.8 GB at the incident, 513 MB after the emergency

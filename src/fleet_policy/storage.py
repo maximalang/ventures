@@ -84,7 +84,7 @@ CREATE INDEX IF NOT EXISTS idx_run_calls_sig ON run_call_history(task_id,run_key
 CREATE INDEX IF NOT EXISTS idx_run_calls_failure ON run_call_history(task_id,run_key,failure_signature,created_at);
 """
 
-# v1.2.42: hot-path event indexes + the maintenance ledger. Root cause
+# v1.2.47: hot-path event indexes + the maintenance ledger. Root cause
 # (2026-10-07 deny-triage stall): window queries over events(created_at)
 # full-scanned the largest table because the schema never shipped the index;
 # the emergency fix created it by hand on the live store. The schema now
@@ -157,7 +157,7 @@ class PolicyStore:
     def migrate(self) -> None:
         with self.connect() as connection:
             # auto_vacuum=INCREMENTAL lets the maintenance tick return freed
-            # pages to the OS gradually (v1.2.42). ORDER MATTERS (QA F1,
+            # pages to the OS gradually (v1.2.47). ORDER MATTERS (QA F1,
             # PR #63): journal_mode=WAL materializes the database header
             # immediately, and a mode requested after the header exists is
             # only staged in memory — it survives neither the commit nor the
@@ -287,7 +287,7 @@ class PolicyStore:
         )
 
     def _heal_events_v5(self, connection: sqlite3.Connection) -> None:
-        """v1.2.42 — hot-path event indexes + maintenance ledger, marker 5.
+        """v1.2.47 — hot-path event indexes + maintenance ledger, marker 5.
 
         Idempotent IF NOT EXISTS DDL only: a store where the emergency
         idx_events_created was created by hand no-ops; a fresh store already
@@ -942,7 +942,7 @@ class PolicyStore:
         return deleted
 
     # ------------------------------------------------------------ maintenance
-    # v1.2.42: the storage manifesto (WAL + sane autocheckpoint, auto_vacuum,
+    # v1.2.47: the storage manifesto (WAL + sane autocheckpoint, auto_vacuum,
     # retention, size caps) is a built-in feature of the store, not an external
     # cron. PolicyStore owns the primitives; fleet_policy.maintenance owns the
     # schedule and the size-guard policy.

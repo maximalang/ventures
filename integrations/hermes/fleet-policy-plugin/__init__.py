@@ -192,7 +192,7 @@ def kanban_task_claimed(task_id: str = "", board: str = "", assignee: str = "", 
         {"task_id": task_id, "board": board, "profile": assignee, "run_id": run_id},
         runtime().config.get("projects", {}),
     )
-    # v1.2.42 — встроенный retention/size-guard тик: внутри плагина, а не во
+    # v1.2.47 — встроенный retention/size-guard тик: внутри плагина, а не во
     # внешнем cron. Каденс привязан к росту БД (claim = активность флота),
     # троттлинг — maintenance_state в самом сторе. Полностью best-effort:
     # maybe_run не бросает, страховочный except держит даже сбой импорта.
@@ -262,7 +262,7 @@ def rr_guidance(session_info: Any) -> str:
 def register(ctx) -> None:
     # Prewarm config + idempotent schema migration outside the hot tool path.
     runtime()
-    # v1.2.42: process start is one of the two in-plugin maintenance ticks
+    # v1.2.47: process start is one of the two in-plugin maintenance ticks
     # (the other is kanban_task_claimed). Best-effort — plugin load must never
     # fail on maintenance.
     try:

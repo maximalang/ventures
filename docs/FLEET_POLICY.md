@@ -111,7 +111,7 @@ uv run python scripts/fleet_migration.py rollback
 
 Rollback verifies `snapshot.sha256`, restores owners/blocked states and the exact prior Kanban routing values, including nullable `max_in_progress`. Old cron jobs are never automatically re-enabled.
 
-## Storage maintenance (v1.2.42)
+## Storage maintenance (v1.2.47)
 
 The event store is append-only audit data, so retention, vacuuming and size
 caps are built into the storage layer itself — not an external cron.

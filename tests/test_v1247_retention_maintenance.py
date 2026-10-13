@@ -1,4 +1,4 @@
-"""v1.2.42 — built-in retention, verified archive, size guard, hot-path indexes.
+"""v1.2.47 — built-in retention, verified archive, size guard, hot-path indexes.
 
 Root cause (fleet-ops t_1d99b96b, 2026-10-07 incident): the policy event
 store grew without bound (no retention, no size guard, no events(created_at)
