@@ -13,9 +13,11 @@ def test_migrations_are_idempotent_and_indexed(tmp_path):
     store.migrate()
     store.migrate()
     with store.connect() as connection:
-        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 4
+        assert connection.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 5
         indexes = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='index'")}
     assert "idx_events_task_created" in indexes
+    assert "idx_events_created" in indexes
+    assert "idx_events_kind_created" in indexes
     assert "idx_calls_task_sig" in indexes
     assert "idx_calls_task_failure" in indexes
     assert "idx_run_budget_lookup" in indexes
@@ -179,7 +181,7 @@ def test_migrate_self_heals_half_migrated_v3_store(tmp_path):
         tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
     assert {"run_budget", "run_state", "run_call_history"} <= tables
-    assert markers == [1, 2, 3, 4]  # markers untouched, not re-inserted
+    assert markers == [1, 2, 3, 4, 5]  # v5 appended by the idempotent heal, older markers untouched
 
     # The F1 run-scoped path must now be operational on the healed store.
     store.touch_run("t_heal", "run-1", int(time.time()))
@@ -195,5 +197,5 @@ def test_migrate_self_heal_is_noop_on_healthy_store(tmp_path):
     with store.connect() as connection:
         markers = [r[0] for r in connection.execute("SELECT version FROM schema_migrations ORDER BY version")]
         tables = {r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    assert markers == [1, 2, 3, 4]
+    assert markers == [1, 2, 3, 4, 5]
     assert {"run_budget", "run_state", "run_call_history"} <= tables

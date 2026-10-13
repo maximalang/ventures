@@ -62,6 +62,13 @@ class FleetPolicyRuntime:
         chat = str(principal.get("direct_chat_id") or "")
         return PolicyStore.principal_ref(user, chat) if user and chat else ""
 
+    def maybe_maintenance(self, context: dict[str, Any] | None = None, *,
+                          force: bool = False, source: str = "") -> dict[str, Any]:
+        """v1.2.47: throttled built-in retention + size guard. Never raises —
+        a broken maintenance path must not take the gate down with it."""
+        from .maintenance import maybe_run
+        return maybe_run(self.store, self.config, context=context, force=force, source=source)
+
     def task_type(self, context: dict[str, Any]) -> tuple[str | None, str | None]:
         return infer_task_type(context.get("task_body"), context.get("comments"), context.get("skills"))
 

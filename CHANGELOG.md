@@ -1,5 +1,68 @@
 # Changelog
 
+## [1.2.47] - 2026-10-07
+
+### Fixed (root cause)
+- Unbounded policy event store (fleet-ops t_1d99b96b; 2026-10-07 incident:
+  deny-triage window queries timed out 3× at 240s against a 2.8 GB store, the
+  emergency hand-created index dropped them 14.5s→0.001s). The storage
+  manifesto — WAL with a sane autocheckpoint, auto_vacuum, retention, size
+  caps — is now a built-in feature of the storage layer instead of an
+  external cron plus manual hotfixes.
+
+### Fixed (QA boundary rework, fleet-ops t_7733d471)
+- Legacy auto_vacuum conversion (QA F1): the `PRAGMA auto_vacuum=2` staged in
+  `migrate()` never persisted — `journal_mode=WAL` materializes the database
+  header first, so even fresh stores silently stayed in mode NONE, and a
+  staged mode does not cross connections. The pragma is now issued BEFORE
+  the WAL switch (fresh stores are born INCREMENTAL) and re-issued by
+  `full_vacuum()` on the vacuuming connection (legacy stores convert on the
+  advertised one-time operator full vacuum), proven by freelist + file-size
+  reclamation, not a marker.
+- Maintenance CLI exit status (QA F2): a run whose report carries per-batch
+  errors (fail-closed archive verification) now exits 1 instead of 0.
+- Retry throttle (QA F3): a run with errors no longer stamps the success
+  throttle (`retention_last_run_epoch`), so the documented retry-next-tick
+  actually fires; failed attempts are ledgered separately
+  (`retention_last_failure_epoch`, `retention_consecutive_failures`).
+
+### Added
+- Schema v5 (idempotent, applied on every plugin load): hot-path indexes
+  `idx_events_created` (time window) and `idx_events_kind_created`
+  (class window) join the existing task window `idx_events_task_created`;
+  `maintenance_state` KV ledger for cross-process throttling. Index coverage
+  never again depends on a manual hotfix.
+- `src/fleet_policy/maintenance.py`: throttled maintenance tick invoked from
+  the plugin hooks (`register`, `kanban_task_claimed`) and the operator CLI —
+  not from an external cron. Expired events are archived to deterministic
+  `JSONL.gz` + `.sha256` sidecar + `manifest.jsonl` under
+  `.state/fleet-policy-archive/`; the archive is verified (hash + gzip decode
+  + row count) BEFORE the covered primary keys are deleted, so history stays
+  restorable for legal/incident review. After a run: WAL checkpoint(TRUNCATE)
+  and incremental vacuum when the freelist is large.
+- Size guard: DB size (pages + WAL) ≥ soft cap (default 100 MB) emits one
+  significant event per UTC day through the existing notification lane;
+  ≥ hard cap (default 300 MB) forces an immediate retention run regardless
+  of the interval. Maintenance never crashes the gate: every failure lands
+  in the returned report dict.
+- `fleet-policy maintenance [--full-vacuum]` CLI (operator run + one-time
+  auto_vacuum activation on legacy stores); `status` now reports
+  `db_size_bytes` and `maintenance_last_run_epoch`.
+- `PolicyStore.retention(..., skip_events=True)` for the archive-first path;
+  the legacy delete-only behavior is unchanged for the manual CLI.
+
+### Notes
+- Re-pinned 2026-10-13: PR #63 was refreshed onto the released v1.2.46 trunk;
+  landing at the 1.2.42 pin would have regressed the trunk version labels from
+  1.2.46 back to 1.2.42. The pin moved to 1.2.47 — the first value free of the
+  open-PR pins (1.2.44 #65, 1.2.45 #68, 1.2.57 #67, 1.2.58 #70) and of the
+  announced titles (1.2.43 #65, 1.2.37 #56/#64/#66); released max is 1.2.46.
+- No policy-semantics changes: deny/allow rules, protected paths, approver
+  roles and gates are untouched (storage lifecycle only).
+- Rollback: revert the merge and redeploy the previous bundle; the v5 schema
+  objects (indexes, maintenance_state) are additive and harmless to older
+  code, and archived events are never re-imported automatically.
+
 ## [1.2.46] - 2026-10-09
 
 ### Security
@@ -7,9 +70,11 @@
   refreshed onto the released v1.2.36 base including the live per-class
   token caps (refresh t_f68e8bed; v2 semantics unchanged). Pin 1.2.46 is
   the next collision-free version per the v1.2.29 guard contract:
-  1.2.37/1.2.38/1.2.39/1.2.40/1.2.41/1.2.42/1.2.44/1.2.45 are pinned by
+  1.2.37/1.2.38/1.2.39/1.2.40/1.2.41/1.2.44/1.2.45 are pinned by
   open PR heads and 1.2.43 is announced in an open PR title (pin drift),
   so 1.2.46 is the first value free of both pins and announced claims.
+  (The 1.2.42 pin named here was held by the retention branch; that branch
+  re-pinned to 1.2.47 on 2026-10-13 and the value is free again.)
   Class X1 updater boundary — any invocation, inspection, planning
   or dependency on the external auto-updater is denied before any other
   classification (``updater_dependency``); detection is word-bounded
@@ -39,7 +104,6 @@
 - ``docs/FLEET_POLICY.md``: owner principal + binding tuple + X1 boundary +
   A4 review path documented alongside the mandate (same-PR doc sync per
   ADR-001 consequences).
-
 ## [1.2.36] - 2026-10-04
 
 ### Added
