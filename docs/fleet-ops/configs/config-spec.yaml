@@ -7,7 +7,7 @@
 # enforces this file within the hour and reverts "drift" that is actually
 # the newer desired state (that mismatch rewrote 12 configs to a dead pin).
 version: 1
-recovery_ref: "fdf3d3b"   # pinned commit for whole-file restores (independent of repo checkout state)
+recovery_ref: "f4b1ea8"   # pinned commit for whole-file restores (independent of repo checkout state)
 updated: "2026-10-06"
 memory_char_limit:
   profiles: 8000      # the 12 agent profiles; ROOT keeps its own standing value

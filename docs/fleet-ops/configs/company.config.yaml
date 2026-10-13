@@ -1,6 +1,5 @@
 model:
   default: qwen-3.8-max
-  provider: custom
   aliases:
     astra: openai-codex/gpt-6-astra
     ar-opus:
@@ -13,24 +12,8 @@ model:
   fallback_providers:
     - provider: openai-codex
       model: gpt-6-luna
-  base_url: https://cheapmodels.xyz/v1
   api_mode: chat_completions
-  key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
 providers:
-  custom:
-    name: cheapmodels
-    base_url: https://cheapmodels.xyz/v1
-    model: qwen-3.8-max
-    key_env: HERMES_CUSTOM_CHEAPMODELS_API_KEY
-    discover_models: false
-    models:
-      - id: qwen-3.8-max
-      - id: glm-5.3-flash
-      - id: deepseek-v4.1-flash
-      - id: claude-sonnet-5.5
-      - id: claude-opus-5.5
-      - id: gemini-3.8-flash
-      - id: gpt-6-astra
   agentrouter:
     extra_headers:
       User-Agent: hermes-agent/1.0.0
@@ -104,6 +87,36 @@ providers:
     key_env: HERMES_CUSTOM_GROQ_API_KEY
     models:
       qwen/qwen3.8-27b: {}
+  position:
+    name: position
+    base_url: https://positionapi.top/v1
+    model: claude-opus-5-5
+    discover_models: false
+    models:
+      claude-opus-5-5: {}
+      claude-opus-5: {}
+      claude-sonnet-5: {}
+      gpt-6-astra: {}
+      deepseek-v4-pro: {}
+      claude-opus-4-8: {}
+      claude-fable-5-1: {}
+      claude-fable-5: {}
+      gpt-5.6-sol: {}
+      gpt-5.6-terra: {}
+      deepseek-v4-flash: {}
+      codex-auto-review: {}
+      gemini-3.8-flash: {}
+      gemini-3.7-flash: {}
+      glm-5.3: {}
+      gpt-5.5: {}
+      gpt-5.4: {}
+      claude-haiku-4-5-20251001: {}
+      gpt-5.4-mini: {}
+      gpt-5.6-luna: {}
+      grok-4.70: {}
+      gpt-oss-120b: {}
+      gemini-3.1-flash-lite-image: {}
+    key_env: HERMES_CUSTOM_POSITION_API_KEY
 credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
