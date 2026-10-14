@@ -804,11 +804,11 @@ platforms:
       rich_all: true
     channel_overrides:
       '1256122537':
-        model: gpt-6-luna
-        provider: openai-codex
+        model: gpt-6-astra
+        provider: cheapmodels
       '-1004426332349':
-        model: gpt-6-luna
-        provider: openai-codex
+        model: gpt-6-astra
+        provider: cheapmodels
   webhook:
     enabled: true
 cron:
