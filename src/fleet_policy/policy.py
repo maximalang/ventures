@@ -1734,13 +1734,17 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         # earlier stage (fetch/merge-base/prose) cannot arm the gate, and
         # `merge` no longer matches bare: `git merge origin/main` integrates
         # main INTO the current branch (repository_change), it is not a
-        # protected release. The ref alternatives are boundary-anchored
-        # (`(?<![:\w./-])` / `(?![\w./-])`) so a protected name that is merely
-        # a path component of a DIFFERENT branch (`push origin feature/main-fix`,
-        # `push origin mainnet`) no longer reads as a protected target.
+        # protected release. The ref alternatives are boundary-anchored so a
+        # protected name that is merely a path component of a DIFFERENT branch
+        # (`push origin feature/main-fix`, `push origin mainnet`) no longer
+        # reads as a protected target, and the bare alternative also refuses a
+        # protected name followed by `:` (`push origin main:feature/x` pushes
+        # local main INTO feature/x, so the protected ref is the SOURCE and the
+        # destination is not protected; `push origin HEAD:main` still matches
+        # through the `:` alternative).
         (
             rf"(?:\bpush\b[^;&|\n]*(?:"
-            rf"(?<![:\w./-])(?:{branches})(?![\w./-])"
+            rf"(?<![:\w./-])(?:{branches})(?!(?:[\w./-]|:))"
             rf"|:(?:refs/heads/)?(?:{branches})(?![\w./-])"
             rf"|refs/heads/(?:{branches})(?![\w./-])"
             rf")|\bgh\s+pr\s+merge\b|\bmerge\b[^;&|\n]*\binto\s+(?:{branches})\b)",
