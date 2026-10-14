@@ -971,6 +971,60 @@ def _sqlite_stage_is_read_only(tokens: list[str]) -> bool:
     )
 
 
+# ADR-001 v2 section 6 — class X1 updater boundary. The external Hermes
+# auto-updater is out of fleet scope: agents never invoke, inspect, plan, or
+# depend on it. Detection is lexical over command/target text and argument
+# values, word-bounded so prose merely DESCRIBING the boundary stays safe.
+_UPDATER_PROGRAMS = frozenset({"hermes-updater", "updater"})
+_UPDATER_WORDS_RE = re.compile(
+    r"(?<![\w.-])(?:hermes[-_ ]updater|auto[-_]?update[r]?|updater\.exe)(?![\w-])"
+)
+_UPDATER_SUBCOMMAND_RE = re.compile(r"(?<![\w.-])hermes\s+(?:updater|update|upgrade)(?![\w-])")
+_UPDATER_APPDIR_MARKERS = ("hermes", ".hermes")
+_UPDATER_APPDIR_SUBDIRS = ("updates", "update")
+
+# ADR-001 v2 section 2 — decision-namespace authority markers. A comment or
+# other board free-text write carrying these prefixes is an attempt to author
+# company/owner authority; only the matching principal (never a generic
+# worker) may mint them. Word-bounded so prose quoting history stays safe.
+_DECISION_PREFIX_RE = re.compile(r"(?<![\w-])(decision:company|decision:owner)\s*=", re.I)
+_BOARD_TEXT_KEYS = frozenset({"body", "reason", "message", "summary", "result", "title", "comment"})
+
+
+def _mentions_updater(text: str) -> bool:
+    lowered = text.lower()
+    if not lowered:
+        return False
+    if _UPDATER_WORDS_RE.search(lowered) or _UPDATER_SUBCOMMAND_RE.search(lowered):
+        return True
+    # Path dependency: any operand reaching into the updater's own
+    # application directory (.../<hermes|\.hermes>/<updates|update>/...).
+    if any(marker in lowered for marker in _UPDATER_APPDIR_MARKERS) and any(
+        f"/{part}/" in lowered or f"\\{part}\\" in lowered
+        for part in _UPDATER_APPDIR_SUBDIRS
+    ):
+        return True
+    return False
+
+
+def _is_updater_call(name: str, arguments: dict[str, Any]) -> bool:
+    """Class X1: updater invocation, inspection, planning or dependency.
+
+    Action-bearing carriers only: the tool name itself, terminal commands
+    (command/workdir), and path- or URL-shaped arguments of other tools.
+    Prose in free-text content bodies merely DESCRIBING the boundary is not
+    an updater interaction (docs stay writable)."""
+    if "updater" in name:
+        return True
+    if name in TERMINAL_TOOLS:
+        values = [arguments.get(key) for key in ("command", "cmd", "workdir")]
+    else:
+        values = [arguments.get(key) for key in ("path", "file_path", "workdir", "url",
+                                                 "target", "file", "filename",
+                                                 "dir", "directory", "module", "import")]
+    return _mentions_updater(" ".join(str(value) for value in values if value))
+
+
 def _stage_is_read_only(segment: str) -> bool:
     if READ_COMMAND.match(segment):
         return True
@@ -1596,6 +1650,38 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
     ):
         return Classification("state_change", "policy_control_plane_mutation", "approval_required", "control-plane security changes require owner approval")
 
+    # ADR-001 v2 section 6 — class X1. Fleet agents never invoke, inspect,
+    # plan, or depend on the external auto-updater; any such call is out of
+    # fleet scope and denied before any other classification (kill criterion:
+    # an updater interaction appearing at all).
+    if _is_updater_call(name, arguments):
+        return Classification(
+            "state_change", "updater_dependency", "deny",
+            "the external auto-updater is out of fleet scope (class X1)",
+        )
+
+    # ADR-001 v2 section 2 — forged-input resistance. decision-namespace
+    # authority (company/owner) may be authored only by the matching
+    # principal; a dispatcher worker context can never mint it, and company
+    # authority cannot satisfy owner-only serious classes. Live regression
+    # 2026-09-04: a worker card comment wrote a company binding right after a
+    # serious-risk deny. Scoped to board free-text fields (comment/block/
+    # create bodies): repo file writes legitimately QUOTE the markers in
+    # docs/ADRs and stay writable; the board is where authority claims are
+    # minted.
+    if worker and name.startswith("kanban_"):
+        board_texts = " ".join(
+            str(value)
+            for key, value in arguments.items()
+            if key in _BOARD_TEXT_KEYS and value
+        )
+        match = _DECISION_PREFIX_RE.search(board_texts)
+        if match:
+            return Classification(
+                "state_change", "decision_namespace_forgery", "deny",
+                f"a worker cannot author {match.group(1)} authority; fail-closed per ADR-001 v2 section 2",
+            )
+
     if effect == "read":
         return Classification(effect, "read_only", "allow", "read-only action")
 
@@ -1641,14 +1727,26 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
-        # v1.2.37 (t_c0f25265): release = moving commits ONTO a protected ref:
-        # a push whose target ref resolves to a protected branch, `gh pr merge`,
-        # or an explicit "merge ... into <protected>" form. Scoped to a single
-        # shell stage ([^;&|\n]) so a protected name mentioned in an earlier
-        # stage (fetch/merge-base/prose) cannot arm the gate, and `merge` no
-        # longer matches bare: `git merge origin/main` integrates main INTO the
-        # current branch (repository_change), it is not a protected release.
-        (rf"(?:\bpush\b[^;&|\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b|\bmerge\b[^;&|\n]*\binto\s+(?:{branches})\b)", "release_to_protected_branch", "allow"),
+        # v1.2.48 (t_c0f25265): release = moving commits ONTO a protected ref:
+        # a push whose ref argument RESOLVES to a protected branch, `gh pr
+        # merge`, or an explicit "merge ... into <protected>" form. Scoped to a
+        # single shell stage ([^;&|\n]) so a protected name mentioned in an
+        # earlier stage (fetch/merge-base/prose) cannot arm the gate, and
+        # `merge` no longer matches bare: `git merge origin/main` integrates
+        # main INTO the current branch (repository_change), it is not a
+        # protected release. The ref alternatives are boundary-anchored
+        # (`(?<![:\w./-])` / `(?![\w./-])`) so a protected name that is merely
+        # a path component of a DIFFERENT branch (`push origin feature/main-fix`,
+        # `push origin mainnet`) no longer reads as a protected target.
+        (
+            rf"(?:\bpush\b[^;&|\n]*(?:"
+            rf"(?<![:\w./-])(?:{branches})(?![\w./-])"
+            rf"|:(?:refs/heads/)?(?:{branches})(?![\w./-])"
+            rf"|refs/heads/(?:{branches})(?![\w./-])"
+            rf")|\bgh\s+pr\s+merge\b|\bmerge\b[^;&|\n]*\binto\s+(?:{branches})\b)",
+            "release_to_protected_branch",
+            "allow",
+        ),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),

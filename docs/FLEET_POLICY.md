@@ -40,6 +40,17 @@ Exact Kanban comments from independent roles unlock routine actions:
 
 Missing gates block the task with actionable diagnostics; they do not create a user approval request.
 
+## Owner principal, hard-gate bindings and boundary classes (ADR-001 v2)
+
+Serious-class approvals are exact one-time bindings owned by an authenticated owner principal. Since v1.2.18:
+
+- binding tuple: every pending approval row carries `nonce` (issued at approve), `expires_at` (24h TTL, enforced at consumption; an expired grant is refused and re-armed as a fresh pending cycle), `principal_ref` (sha256 fingerprint of owner user/direct-chat ids — never the raw ids), decision `channel`, `amount_rub` and `scope` digest. Legacy rows keep v1 semantics (`NULL` expiry = never expires);
+- decision-namespace forge guard: worker board writes (card bodies, comments, reasons) cannot mint company or owner authority markers — such a write is denied at the classifier (`decision_namespace_forgery`). Repo docs/ADRs may still quote the markers;
+- class X1: any invocation, inspection, planning or dependency on the external auto-updater is denied before any other classification (`updater_dependency`). Detection is word-bounded over tool names, terminal commands/workdirs and path/URL arguments, so prose describing the boundary stays writable;
+- A4 ordinary product/UX/brand risk is non-blocking: the call queues exactly one `a4_review_notice` event and proceeds; the owner may veto within the review window. A4 review never blocks execution.
+
+`APPROVALS.md` remains the protected canonical escalation list; this section mirrors its wording for the classifier and cannot drift without a doc-sync PR.
+
 ## Finance and capabilities
 
 A financial tool call must provide `amount_rub` and `capability_id`. Capabilities are one-time owner grants:
