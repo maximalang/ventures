@@ -121,7 +121,7 @@ credential_pool_strategies:
   openai-codex: round_robin
   zai: fill_first
 fallback:
-  min_switch_reset_seconds: 120
+  min_switch_reset_seconds: 90
 toolsets:
   - hermes-cli
   - kanban
@@ -804,11 +804,11 @@ platforms:
       rich_all: true
     channel_overrides:
       '1256122537':
-        model: gpt-6-astra
-        provider: cheapmodels
+        model: glm-5.3-flash
+        provider: zai
       '-1004426332349':
-        model: gpt-6-astra
-        provider: cheapmodels
+        model: glm-5.3-flash
+        provider: zai
   webhook:
     enabled: true
 cron:
