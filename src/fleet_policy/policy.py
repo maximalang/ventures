@@ -1727,7 +1727,30 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
-        (rf"(?:\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
+        # v1.2.48 (t_c0f25265): release = moving commits ONTO a protected ref:
+        # a push whose ref argument RESOLVES to a protected branch, `gh pr
+        # merge`, or an explicit "merge ... into <protected>" form. Scoped to a
+        # single shell stage ([^;&|\n]) so a protected name mentioned in an
+        # earlier stage (fetch/merge-base/prose) cannot arm the gate, and
+        # `merge` no longer matches bare: `git merge origin/main` integrates
+        # main INTO the current branch (repository_change), it is not a
+        # protected release. The ref alternatives are boundary-anchored so a
+        # protected name that is merely a path component of a DIFFERENT branch
+        # (`push origin feature/main-fix`, `push origin mainnet`) no longer
+        # reads as a protected target, and the bare alternative also refuses a
+        # protected name followed by `:` (`push origin main:feature/x` pushes
+        # local main INTO feature/x, so the protected ref is the SOURCE and the
+        # destination is not protected; `push origin HEAD:main` still matches
+        # through the `:` alternative).
+        (
+            rf"(?:\bpush\b[^;&|\n]*(?:"
+            rf"(?<![:\w./-])(?:{branches})(?!(?:[\w./-]|:))"
+            rf"|:(?:refs/heads/)?(?:{branches})(?![\w./-])"
+            rf"|refs/heads/(?:{branches})(?![\w./-])"
+            rf")|\bgh\s+pr\s+merge\b|\bmerge\b[^;&|\n]*\binto\s+(?:{branches})\b)",
+            "release_to_protected_branch",
+            "allow",
+        ),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),
