@@ -10,8 +10,11 @@ RELEASE = "release_to_protected_branch"
 
 @pytest.mark.parametrize("command", [
     "git push origin feature/x && git log --format=HEAD:main",
+    "git push HEAD:feature/x",
+    "git push +HEAD:feature/x",
     "git push origin feature/x ; git log --format=HEAD:main",
     "git push origin feature/x | git log --format=HEAD:main",
+
     "git push origin feature/x || git log --format=HEAD:main",
     "git push origin feature/x\ngit log --format=HEAD:main",
     "git push origin main:feature/x",
@@ -43,8 +46,11 @@ def test_non_release_operands_and_stage_boundaries(config, command):
 
 
 @pytest.mark.parametrize("command", [
+    "git push HEAD:main",
+    "git push +HEAD:refs/heads/main",
     "git push origin HEAD:main",
     "git push origin feature/x main",
+
     "git push origin main",
     "git push origin HEAD:refs/heads/main",
     'git push origin HEAD:"main"',

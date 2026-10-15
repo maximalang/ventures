@@ -1246,7 +1246,10 @@ def _push_targets_protected(args: list[str], protected: set[str]) -> bool:
             operands.append(arg)
         index += 1
     if not has_remote and operands:
-        operands.pop(0)  # repository, not a refspec
+        first = operands[0].lstrip("+")
+        if ":" not in first:
+            operands.pop(0)  # repository, not a refspec
+
     if dry_run:
         return False
     if broad and protected:
