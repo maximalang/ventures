@@ -1190,6 +1190,129 @@ def _path_guard_subjects(name: str, arguments: dict[str, Any]) -> list[str]:
     return subjects
 
 
+def _release_invocation(segment: str) -> tuple[str, list[str]]:
+    """Recognize the executable and skip option VALUES, never search prose."""
+    try:
+        tokens = shlex.split(segment, posix=True)
+    except ValueError:
+        tokens = [_clean_shell_token(token) for token in _stage_tokens(segment)]
+    while tokens and (_ASSIGNMENT_STAGE.fullmatch(tokens[0]) or tokens[0] == "env"):
+        tokens.pop(0)
+    if not tokens:
+        return "", []
+    program = _program_name(tokens.pop(0))
+    value_options = {
+        "git": {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env"},
+        "gh": {"-R", "--repo", "--hostname"},
+    }.get(program, set())
+    while program in {"git", "gh"} and tokens and tokens[0].startswith("-"):
+        option = tokens.pop(0)
+        if option == "--":
+            break
+        if option in value_options and tokens:
+            tokens.pop(0)
+    return program, tokens
+
+
+def _push_targets_protected(args: list[str], protected: set[str]) -> bool:
+    """Resolve explicit push refspec destinations without repository probes.
+
+    Remote names, option values and refspec SOURCES cannot select a protected
+    destination. Implicit push.default destinations stay unresolved, as before.
+    Wildcard/all/mirror pushes are conservative when they can include a ref.
+    """
+    operands: list[str] = []
+    has_remote = False
+    broad = False
+    dry_run = False
+    index = 0
+    value_options = {"--repo", "--receive-pack", "--exec", "-o", "--push-option"}
+    while index < len(args):
+        arg = args[index]
+        if arg == "--":
+            operands.extend(args[index + 1:])
+            break
+        if arg in value_options:
+            has_remote |= arg == "--repo"
+            index += 2
+            continue
+        if arg in {"--dry-run", "-n"}:
+            dry_run = True
+        elif arg.startswith("--repo="):
+            has_remote = True
+        elif arg in {"--all", "--branches", "--mirror"}:
+            broad = True
+        elif not arg.startswith("-"):
+            operands.append(arg)
+        index += 1
+    if not has_remote and operands:
+        operands.pop(0)  # repository, not a refspec
+    if dry_run:
+        return False
+    if broad and protected:
+        return True
+    for refspec in operands:
+        if refspec in {":", "+:"} and protected:
+            return True  # matching push can update every matching branch
+        destination = refspec.lstrip("+").rsplit(":", 1)[-1]
+        if destination.startswith("refs/heads/"):
+            destination = destination[len("refs/heads/"):]
+        elif destination.startswith("refs/"):
+            continue  # a tag named main is not the main branch
+        if any(fnmatch.fnmatchcase(ref, destination) for ref in protected):
+            return True
+    return False
+
+
+def _targets_protected_release(command: str, protected_refs: list[str]) -> bool:
+    """Stage-bounded release classifier; no config or runtime gate changes.
+
+    git merge operands are sources. Only an explicit checkout in this command
+    establishes its destination; a bare merge's checkout is unknown. gh pr merge
+    targets a remote PR base and always keeps its existing release gate.
+    """
+    protected = {ref.removeprefix("refs/heads/") for ref in protected_refs}
+    checkout: str | None = None
+    # Newlines are shell boundaries too; do not let a query after a push supply
+    # its destination. _simple_commands handles quoted &&/;/| payloads.
+    for line in command.splitlines():
+        for segment in _simple_commands(line):
+            program, args = _release_invocation(segment)
+            if program in {"sh", "bash", "zsh", "ksh", "dash", "ash"}:
+                for index, arg in enumerate(args[:-1]):
+                    if re.fullmatch(r"-[A-Za-z]*c", arg) and _targets_protected_release(args[index + 1], protected_refs):
+                        return True
+                continue
+            if program in _INTERPRETER_PROGRAMS or _VERSIONED_INTERPRETER_RE.fullmatch(program):
+                # Opaque executed code keeps the pre-existing conservative
+                # guard. This FP fix must not create an interpreter bypass.
+                branches = "|".join(re.escape(ref) for ref in protected)
+                if branches and re.search(
+                    rf"\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b",
+                    segment, re.I,
+                ):
+                    return True
+            if program == "gh" and args[:2] == ["pr", "merge"]:
+                return True
+            if program != "git" or not args:
+                continue
+            verb, operands = args[0], args[1:]
+            if verb == "push" and _push_targets_protected(operands, protected):
+                return True
+            if verb in {"checkout", "switch"}:
+                # Path checkout / detached HEAD does not establish a branch.
+                checkout = None
+                if "--" not in operands and not any(
+                    arg in {"--detach", "-d"} for arg in operands
+                ):
+                    checkout = next((arg for arg in operands if not arg.startswith("-")), None)
+            if verb == "merge" and checkout in protected and not any(
+                arg in {"--abort", "--quit"} for arg in operands
+            ):
+                return True
+    return False
+
+
 def _risk_subject(name: str, arguments: dict[str, Any]) -> str:
     """F4: risk regexes scan real targets (commands, URLs), never free text."""
     if name in TERMINAL_TOOLS:
@@ -1620,7 +1743,8 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         # task_already_blocked and starved read-only diagnostics.
         return Classification(effect, PROTECTED_STORE_RULE, "deny", DENY_MSG)
 
-    subject = _risk_subject(name, arguments)
+    release_subject = _risk_subject(name, arguments)
+    subject = release_subject
     # v1.2.34 W4: deny phrases quoted as DATA are exempt from the risk
     # scans below; executable spans (code-flag values, interpreter lines,
     # URLs) keep their raw text. Length-preserving masking, so no new token
@@ -1716,7 +1840,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
             "ephemeral scratch-root cleanup is autonomous",
         )
 
-    branches = "|".join(re.escape(branch) for branch in config["protected"]["branches"])
+    protected_refs = config["protected"]["branches"]
     rules = [
         # Serious-only escalation classes.
         (r"\b(?:mass outreach|bulk (?:message|email|dm)|unsolicited campaign|scrape and send|spam)\b", "mass_outreach_or_bulk_messaging", "approval_required"),
@@ -1727,7 +1851,7 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"(?:\b(?:irreversible|unrecoverable|without backup|force[- ]?push|push\s+(?:-f|--force)|reset\s+--hard|filter-branch|drop\s+table|truncate)\b|(?:^|\s)rm\s+-rf\b)", "irreversible_data_loss", "approval_required"),
         (r"\b(?:material security policy|material privacy policy|disable encryption|disable audit)\b", "material_security_or_privacy_policy_change", "approval_required"),
         # Autonomous actions that require role/evidence gates in runtime.
-        (rf"(?:\b(?:push|merge(?!-base))[^\n]*(?:\b(?:{branches})\b|refs/heads/(?:{branches}))|\bgh\s+pr\s+merge\b)", "release_to_protected_branch", "allow"),
+        (None, "release_to_protected_branch", "allow"),
         (r"\b(?:deploy|release to production|release to staging|production deploy|staging deploy)\b", "deploy_external_runtime", "allow"),
         (r"\b(?:publish|publication|public post|product launch|content update|advertis|campaign)\b", "public_product_action", "allow"),
         (r"\b(?:pay|payment|purchase|ad spend|experiment spend|transfer funds|charge|stripe|yookassa|/charges)\b", "financial_action", "allow"),
@@ -1735,7 +1859,11 @@ def classify(tool_name: str, arguments: dict[str, Any], config: dict[str, Any], 
         (r"\b(?:create|open|register)[^\n]*(?:free service account|free account|trial account)\b", "free_service_account", "allow"),
     ]
     for pattern, category, decision in rules:
-        if re.search(pattern, lower, re.I):
+        matches = (
+            name in TERMINAL_TOOLS and _targets_protected_release(release_subject, protected_refs)
+            if pattern is None else re.search(pattern, lower, re.I)
+        )
+        if matches:
             reason = f"{category} requires serious-risk approval" if decision == "approval_required" else f"{category} is autonomous after evidence gates"
             return Classification(effect, category, decision, reason)
 
