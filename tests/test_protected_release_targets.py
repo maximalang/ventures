@@ -114,6 +114,52 @@ def test_runtime_feature_push_is_not_blocked_by_later_query(runtime, task_contex
     assert result.rule_id != "evidence_gate_missing"
 
 
+@pytest.mark.parametrize("remote", [
+    "git@example.invalid:main",
+    "git@example.invalid:refs/heads/main",
+    "ssh://git@example.invalid/main",
+    "https://example.invalid/main",
+])
+@pytest.mark.parametrize("refspec, protected", [
+    ("HEAD:feature/x", False),
+    ("+HEAD:feature/x", False),
+    ("HEAD:main", True),
+    ("+HEAD:refs/heads/main", True),
+])
+def test_transport_repository_is_not_a_push_destination(config, remote, refspec, protected):
+    command = f"git push {remote} {refspec}"
+    result = classify("terminal", {"command": command}, config, worker=True)
+    assert result.decision == "allow"
+    assert result.category == (RELEASE if protected else "repository_change")
+
+
+@pytest.mark.parametrize("repository", [
+    "git@example.invalid:main",
+    "git@example.invalid:refs/heads/main",
+    "--repo=git@example.invalid:main",
+    "--repo git@example.invalid:refs/heads/main",
+    "",  # preserve the conservative default-remote refspec handling
+])
+@pytest.mark.parametrize("refspec, protected", [
+    ("HEAD:feature/x", False),
+    ("+HEAD:feature/x", False),
+    ("HEAD:main", True),
+    ("+HEAD:refs/heads/main", True),
+])
+def test_runtime_repository_path_does_not_select_release_gate(
+    runtime, task_context, repository, refspec, protected,
+):
+    result = runtime.pre_tool_call(
+        "terminal", {"command": f"git push {repository} {refspec}"}, task_context,
+    )
+    if protected:
+        assert (result.decision, result.rule_id) == ("deny", "evidence_gate_missing")
+    else:
+        assert result.decision == "allow"
+        assert result.pattern_category == "repository_change"
+        assert result.rule_id != "evidence_gate_missing"
+
+
 def test_force_push_keeps_serious_risk_precedence(config):
     result = classify("terminal", {"command": "git push --force origin HEAD:main"}, config, worker=True)
     assert (result.decision, result.category) == ("approval_required", "irreversible_data_loss")

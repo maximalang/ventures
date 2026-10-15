@@ -1247,7 +1247,11 @@ def _push_targets_protected(args: list[str], protected: set[str]) -> bool:
         index += 1
     if not has_remote and operands:
         first = operands[0].lstrip("+")
-        if ":" not in first:
+        # A colon also separates an SCP repository's host and path. Keep
+        # transport operands out of destination matching; ambiguous bare
+        # HEAD:main-style operands retain the conservative refspec behavior.
+        is_transport = "://" in first or "@" in first.partition(":")[0]
+        if ":" not in first or is_transport:
             operands.pop(0)  # repository, not a refspec
 
     if dry_run:
