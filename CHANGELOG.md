@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.49] - 2026-10-15
+
+### Fixed
+- Re-author protected-release classification from trunk (t_b2841084): direct
+  git pushes inspect every refspec destination within its own shell stage.
+  Protected source refs, remote names, option values and later query stages
+  no longer trigger release gates. Exact configured branch names, quoted
+  destinations, wildcard/all/mirror pushes and gh pr merge retain gating.
+- Local merge operands are sources; a checkout established explicitly in the
+  command determines the merge destination. Implicit push.default and an
+  unknown local checkout remain unresolved without repository probes.
+  Opaque interpreter code retains the previous conservative release scan;
+  shell -c payloads use the same stage-bounded destination parser.
+- Add required shell-boundary/refspec regression matrix and runtime checks
+  that protected releases still require independent evidence. No runtime,
+  policy configuration, evidence-gate or live-plugin changes.
+
 ## [1.2.46] - 2026-10-09
 
 ### Security
