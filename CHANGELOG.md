@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.47] - 2026-10-15
+## [1.2.49] - 2026-10-15
 
 ### Fixed
 - Re-author protected-release classification from trunk (t_b2841084): direct
