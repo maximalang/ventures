@@ -21,6 +21,16 @@
   Tests: `tests/test_v1250_callback_projection.py` (bounded deny < 2s, one
   projection per run, TimeoutExpired survival, failure audit without replay).
 
+- Block-verb fallback: the fleet CLI patch that teaches `hermes kanban block`
+  the `policy_denied` disposition is a tracked update-lock, and an unpatched
+  host rejects it with rc=2 `invalid choice: 'policy_denied'` (measured live
+  2026-10-16), so the projection comment landed while the card was never moved.
+  `comment_and_block` now retries the block exactly once with
+  `FALLBACK_BLOCK_KIND = "needs_input"` -- same card, same rule text, same
+  message, one logical block, still off the callback path -- and audits the
+  degraded verb as `projection_fallback`. Deny rules, classifications and
+  messages are unchanged.
+
 ## [1.2.46] - 2026-10-09
 
 ### Security

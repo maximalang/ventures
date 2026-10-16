@@ -217,3 +217,77 @@ def test_block_cli_timeout_is_bounded_below_the_hook_budget():
     ]
     # The former hard-coded 20s bound equalled the hook budget that expired.
     assert 0 < HermesProjector.BLOCK_TIMEOUT_SECONDS < 20
+
+
+def test_typed_block_kind_is_a_single_call_on_a_patched_host():
+    seen: list[list[str]] = []
+
+    def runner(command, timeout):
+        seen.append(list(command))
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    projector = HermesProjector(runner)
+    assert projector.comment_and_block("fleet-ops", "t_x", "msg") == {"block": 0}
+    assert len(seen) == 1
+    assert seen[0][-2:] == ["--kind", "policy_denied"]
+
+
+def test_typed_kind_rejection_falls_back_to_the_supported_verb():
+    """The host CLI lost its fleet-patched verb: the card must still land.
+
+    Live 2026-10-16: an unpatched ``hermes kanban block`` answers
+    ``invalid choice: 'policy_denied'`` with rc=2, so before this fallback the
+    projection never moved the card at all.
+    """
+    seen: list[list[str]] = []
+    rejection = ("usage: hermes kanban block [-h] [--ids IDS [IDS ...]]\n"
+                 "hermes kanban block: error: argument --kind: invalid choice: "
+                 "'policy_denied' (choose from 'capability', 'dependency', "
+                 "'needs_input', 'transient')")
+
+    def runner(command, timeout):
+        seen.append(list(command))
+        if "policy_denied" in command:
+            return subprocess.CompletedProcess(command, 2, "", rejection)
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    projector = HermesProjector(runner)
+    result = projector.comment_and_block("fleet-ops", "t_x", "FLEET POLICY BLOCKED msg")
+
+    assert result == {"block": 0, "block_kind": "needs_input"}
+    assert [call[-2:] for call in seen] == [
+        ["--kind", "policy_denied"], ["--kind", "needs_input"],
+    ]
+    # Same card, same rule text, same bound: only the disposition verb changed.
+    assert [call[5] for call in seen] == ["t_x", "t_x"]
+    assert [call[6] for call in seen] == ["FLEET POLICY BLOCKED msg"] * 2
+    assert {call[1] for call in seen} == {"kanban"}
+
+
+def test_other_cli_errors_do_not_trigger_the_fallback():
+    seen: list[list[str]] = []
+
+    def runner(command, timeout):
+        seen.append(list(command))
+        return subprocess.CompletedProcess(command, 2, "", "error: unrecognized arguments")
+
+    projector = HermesProjector(runner)
+    assert projector.comment_and_block("fleet-ops", "t_x", "msg") == {"block": 2}
+    assert len(seen) == 1
+
+
+def test_degraded_disposition_is_audited_without_a_failure(tmp_path, monkeypatch):
+    module = _load_plugin("fp_plugin_kind_fallback")
+    _runtime, store = _wire(module, tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        module._PROJECTOR, "comment_and_block",
+        lambda board, task_id, message, *, block: {"block": 0, "block_kind": "needs_input"},
+    )
+
+    module._project({"task_id": "t_nomarker", "rule_id": TIMEOUT_RULES,
+                     "board": "fleet-ops", "run_key": "run-1"})
+    module._PROJECTIONS.join(timeout=10)
+
+    assert _count(store, "projection_claim") == 1
+    assert _count(store, "projection_fallback") == 1
+    assert _count(store, "projection_failed") == 0

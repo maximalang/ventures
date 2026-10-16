@@ -91,6 +91,18 @@ class HermesProjector:
     # callback budget; the projection is now asynchronous, so an expired bound
     # costs the card move, never the worker's tool call.
     BLOCK_TIMEOUT_SECONDS = 12
+    # The typed disposition (``--kind policy_denied``) is a FLEET PATCH to the
+    # host CLI, tracked as a required update-lock
+    # (docs/fleet-ops/hermes-update-locks-20261001/FLEET-UPDATE-AUDIT.md:
+    # hermes_cli/kanban.py + tests/hermes_cli/test_kanban_policy_denied.py).
+    # A plain upstream ``hermes kanban block`` accepts only
+    # capability/dependency/needs_input/transient, so on an unpatched host the
+    # typed disposition exits 2 and the card move is silently lost (measured
+    # live 2026-10-16: rc=2, "invalid choice: 'policy_denied'"). The policy
+    # decision and the message are unchanged; only the disposition verb is
+    # downgraded, and the downgrade is audited.
+    BLOCK_KIND = "policy_denied"
+    FALLBACK_BLOCK_KIND = "needs_input"
     # One bounded bot turn: session resume + a single model turn. Measured
     # real latency is ~19s on this host (2026-09-01 probe); the former 15s
     # hard timeout made nearly every batch expire, releasing rows into an
@@ -132,14 +144,24 @@ class HermesProjector:
             return None
         return board, task_id
 
-    def comment_and_block(self, board: str, task_id: str, message: str, *, block: bool = True) -> dict[str, int]:
-        result: dict[str, int] = {}
+    def comment_and_block(self, board: str, task_id: str, message: str, *, block: bool = True) -> dict[str, int | str]:
+        result: dict[str, int | str] = {}
         if block:
             blocked = self.runner(
                 ["hermes", "kanban", "--board", board, "block", task_id, message,
-                 "--kind", "policy_denied"], self.BLOCK_TIMEOUT_SECONDS
+                 "--kind", self.BLOCK_KIND], self.BLOCK_TIMEOUT_SECONDS
             )
             result["block"] = int(blocked.returncode)
+            if self._typed_kind_rejected(blocked):
+                # Narrow, single retry: the host CLI lost its fleet-patched
+                # disposition verb. Same task, same message, only the kind
+                # downgraded, so the card still lands exactly once.
+                fallback = self.runner(
+                    ["hermes", "kanban", "--board", board, "block", task_id, message,
+                     "--kind", self.FALLBACK_BLOCK_KIND], self.BLOCK_TIMEOUT_SECONDS
+                )
+                result["block"] = int(fallback.returncode)
+                result["block_kind"] = self.FALLBACK_BLOCK_KIND
         else:
             comment = self.runner(
                 ["hermes", "kanban", "--board", board, "comment", task_id, message, "--author", "fleet-policy"],
@@ -147,6 +169,14 @@ class HermesProjector:
             )
             result["comment"] = int(comment.returncode)
         return result
+
+    @classmethod
+    def _typed_kind_rejected(cls, result: subprocess.CompletedProcess[str]) -> bool:
+        """True only for the argparse ``invalid choice`` rejection of our kind."""
+        if int(getattr(result, "returncode", 0)) == 0:
+            return False
+        stderr = str(getattr(result, "stderr", "") or "")
+        return "invalid choice" in stderr and cls.BLOCK_KIND in stderr
 
     @staticmethod
     def approval_text(payload: dict) -> str:

@@ -626,6 +626,29 @@ class FleetPolicyRuntime:
             False,
         )
 
+    def record_projection_fallback(self, payload: dict[str, Any], kind: str) -> bool:
+        """Audit a projection that landed with a degraded disposition verb.
+
+        The typed disposition (``--kind policy_denied``) reaches the host CLI
+        only through the fleet's required update-lock patch
+        (docs/fleet-ops/hermes-update-locks-20261001/FLEET-UPDATE-AUDIT.md).
+        On an unpatched host the card still lands blocked under the fallback
+        verb -- the deny is not weakened -- but the degraded verb is recorded,
+        because it is the signal that the host CLI lost its patch.
+        """
+        event_id = stable_id(self.projection_event_id(payload), "fallback", kind)
+        return self.store.record_event(
+            event_id, event_id, str(payload.get("task_id") or "") or None,
+            "projection_fallback",
+            {
+                "source_rule": payload.get("rule_id"),
+                "block_kind": str(kind)[:40],
+                "board": payload.get("board"),
+                "run_key": payload.get("run_key"),
+            },
+            False,
+        )
+
     def post_tool_call(self, tool_name: str, arguments: dict[str, Any], context: dict[str, Any], *,
                        success: bool, error_type: str = "", error_message: str = "") -> dict[str, Any] | None:
         task_id = str(context.get("task_id") or "")

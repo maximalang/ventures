@@ -125,14 +125,25 @@ def _project(payload: dict[str, Any]) -> None:
 
 
 def _deliver_projection(payload: dict[str, Any], board: str, task_id: str, message: str) -> None:
-    """Runs in the projection thread: bounded CLI call, audited failure."""
+    """Runs in the projection thread: bounded CLI call, audited outcome.
+
+    A degraded disposition verb (the host CLI lost its fleet-patched
+    ``policy_denied`` kind) still blocks the card, so it is audited separately
+    from a real failure: the card move happened, the vocabulary did not.
+    """
     try:
         result = _PROJECTOR.comment_and_block(board, task_id, message, block=True)
     except Exception as exc:
         _audit_projection_failure(payload, type(exc).__name__)
         return
     if result.get("block") != 0:
-        _audit_projection_failure(payload, f"block_exit_{result.get('block')}")
+        detail = f"block_exit_{result.get('block')}"
+        if result.get("block_kind"):
+            detail = f"{detail} kind={result['block_kind']}"
+        _audit_projection_failure(payload, detail)
+        return
+    if result.get("block_kind"):
+        _audit_projection_fallback(payload, str(result["block_kind"]))
 
 
 def _audit_projection_failure(payload: dict[str, Any], detail: str) -> None:
@@ -140,6 +151,14 @@ def _audit_projection_failure(payload: dict[str, Any], detail: str) -> None:
         runtime().record_projection_failure(payload, detail)
     except Exception:
         # The deny already reached the worker; a failed audit changes nothing.
+        return
+
+
+def _audit_projection_fallback(payload: dict[str, Any], kind: str) -> None:
+    try:
+        runtime().record_projection_fallback(payload, kind)
+    except Exception:
+        # The card is already blocked; losing the audit must not raise here.
         return
 
 
