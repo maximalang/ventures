@@ -173,7 +173,7 @@ def test_projection_never_auto_drains_company_notifications(tmp_path, monkeypatc
     assert len(store.pending_notifications()) == 3
 
 
-def test_failed_projection_releases_idempotency_claim(tmp_path, monkeypatch):
+def test_failed_projection_keeps_claim_until_the_next_run(tmp_path, monkeypatch):
     import importlib.util
     from pathlib import Path
     module_path = Path(__file__).parents[1] / "integrations" / "hermes" / "fleet-policy-plugin" / "__init__.py"
@@ -186,12 +186,27 @@ def test_failed_projection_releases_idempotency_claim(tmp_path, monkeypatch):
     runtime = module.runtime()
     monkeypatch.setattr(runtime, "store", store)
     monkeypatch.setattr(module, "_RUNTIME", runtime)
-    monkeypatch.setattr(module._PROJECTOR, "comment_and_block", lambda *a, **k: {"block": 1})
+    calls = []
+    monkeypatch.setattr(
+        module._PROJECTOR, "comment_and_block",
+        lambda board, task_id, message, *, block: calls.append(task_id) or {"block": 1},
+    )
     payload = {"task_id": "t_retry", "rule_id": "approval", "action": "terminal",
-               "target": "deploy", "args_hash": "abc", "board": "rr-team"}
+               "target": "deploy", "args_hash": "abc", "board": "rr-team", "run_key": "run-1"}
     module._project(payload)
-    # Failed delivery released the claim; a later retry can claim again.
-    assert runtime.claim_projection(payload) is True
+    module._project(dict(payload))
+    module._PROJECTIONS.join(timeout=10)
+
+    # v1.2.50: a failed delivery KEEPS its claim. Releasing it (the previous
+    # behaviour) made every following tool call of the same run replay the
+    # nested `hermes kanban block` CLI — the 2026-10-16 crash-loop amplifier.
+    assert calls == ["t_retry"]
+    assert runtime.claim_projection(payload) is False
+    assert runtime.claim_projection({**payload, "run_key": "run-2"}) is True
+    with runtime.store.connect() as connection:
+        assert connection.execute(
+            "SELECT COUNT(*) FROM events WHERE kind='projection_failed'"
+        ).fetchone()[0] == 1
 
 
 def test_blocked_task_denials_do_not_create_fallback_projections(tmp_path, monkeypatch):

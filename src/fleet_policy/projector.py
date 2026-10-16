@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import subprocess
 import tempfile
+import threading
+import time
 from collections.abc import Callable, Sequence
 from html import escape as _escape
 from pathlib import Path
@@ -16,9 +18,79 @@ def subprocess_runner(command: Sequence[str], timeout: int) -> subprocess.Comple
     return subprocess.run(list(command), check=False, capture_output=True, text=True, timeout=timeout, shell=False)
 
 
+class ProjectionExecutor:
+    """Run one callback-path projection off the tool-call thread.
+
+    2026-10-16 incident (board fleet-ops, 11:36-12:48): the auto-block
+    projection ran ``hermes kanban block`` synchronously inside
+    ``pre_tool_call``. Every card of that window lacked its ``task_type``
+    marker, so the deny callback fired on *every* tool call, and one nested CLI
+    invocation costs ~8s of pure process start on this host (measured: 8.19s
+    for a plain ``hermes kanban show --json``). The hook's own 20s bound then
+    expired (``TimeoutExpired 20.10s`` on skills_list / kanban_block /
+    kanban_comment / memory), the worker crash-looped three times and the
+    dispatcher stalled for 54 ticks.
+
+    A policy *decision* must be immediate; moving the card is bookkeeping and
+    must never gate the caller. ``submit`` therefore hands the projection to a
+    daemon thread and waits at most ``fast_path_seconds``: the common fast case
+    still lands inside the hook, while a wedged or missing CLI can no longer
+    hold a tool call open.
+    """
+
+    FAST_PATH_SECONDS = 0.5
+
+    def __init__(self, *, fast_path_seconds: float = FAST_PATH_SECONDS) -> None:
+        self.fast_path_seconds = max(0.0, float(fast_path_seconds))
+        self._threads: list[threading.Thread] = []
+
+    def submit(self, work: Callable[[], None]) -> threading.Thread | None:
+        """Start ``work`` in a daemon thread. Never raises, never blocks long."""
+        thread = threading.Thread(target=self._run, args=(work,), daemon=True,
+                                  name="fleet-policy-projection")
+        try:
+            thread.start()
+        except RuntimeError:
+            # Interpreter shutdown or thread exhaustion: the caller's tool call
+            # still wins — the projection is lost, the deny is not.
+            return None
+        self._reap()
+        self._threads.append(thread)
+        if self.fast_path_seconds:
+            thread.join(self.fast_path_seconds)
+        return thread
+
+    @staticmethod
+    def _run(work: Callable[[], None]) -> None:
+        try:
+            work()
+        except BaseException:
+            # A projection failure is never a policy failure: the deny already
+            # reached the caller, and the delivery layer keeps its own audit.
+            pass
+
+    def _reap(self) -> None:
+        self._threads = [thread for thread in self._threads if thread.is_alive()]
+
+    def join(self, timeout: float | None = None) -> None:
+        """Bounded wait for in-flight projections (probes, drains, tests)."""
+        deadline = None if timeout is None else time.monotonic() + timeout
+        for thread in list(self._threads):
+            remaining = None if deadline is None else max(0.0, deadline - time.monotonic())
+            thread.join(remaining)
+        self._reap()
+
+
 class HermesProjector:
     CLOSED_TASK_STATUSES = frozenset({"done", "archived", "superseded"})
     LOOKUP_TIMEOUT_SECONDS = 5
+    # A card projection must never outlive the callback that asked for it: the
+    # nested CLI costs ~8s of process start alone (measured 2026-10-16), so a
+    # 20s bound kept a wedged CLI on the tool-call path until the hook expired.
+    # 12s clears the measured start-up with headroom and stays far below the
+    # callback budget; the projection is now asynchronous, so an expired bound
+    # costs the card move, never the worker's tool call.
+    BLOCK_TIMEOUT_SECONDS = 12
     # One bounded bot turn: session resume + a single model turn. Measured
     # real latency is ~19s on this host (2026-09-01 probe); the former 15s
     # hard timeout made nearly every batch expire, releasing rows into an
@@ -65,12 +137,13 @@ class HermesProjector:
         if block:
             blocked = self.runner(
                 ["hermes", "kanban", "--board", board, "block", task_id, message,
-                 "--kind", "policy_denied"], 20
+                 "--kind", "policy_denied"], self.BLOCK_TIMEOUT_SECONDS
             )
             result["block"] = int(blocked.returncode)
         else:
             comment = self.runner(
-                ["hermes", "kanban", "--board", board, "comment", task_id, message, "--author", "fleet-policy"], 20
+                ["hermes", "kanban", "--board", board, "comment", task_id, message, "--author", "fleet-policy"],
+                self.BLOCK_TIMEOUT_SECONDS,
             )
             result["comment"] = int(comment.returncode)
         return result

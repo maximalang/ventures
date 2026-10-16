@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.50] - 2026-10-16
+
+### Fixed
+- Deny-callback projection no longer runs the nested `hermes kanban block` CLI
+  on the worker's tool-call path (incident 2026-10-16, board fleet-ops,
+  11:36-12:48). A card without its `task_type` marker denied *every* tool call,
+  and the projection sat synchronously in front of each one; one CLI invocation
+  costs ~8s of process start on this host, so the callback's 20s bound expired
+  (`TimeoutExpired 20.10s` on skills_list / kanban_block / kanban_comment /
+  memory), the worker crash-looped three times and the dispatcher stalled 54
+  ticks. The projection is now delivered asynchronously and claimed exactly once
+  per `run_key`, and a refused delivery no longer releases its claim — releasing
+  it replayed the CLI on every following tool call of the same run, which is how
+  the stall amplified. A failed delivery is audited as `projection_failed` and
+  retried by the next run's claim.
+- `HermesProjector.BLOCK_TIMEOUT_SECONDS` (12s) replaces the hard-coded 20s CLI
+  bound inside `comment_and_block`; the value only ever bounds the delivery
+  thread now. Policy rules and classifications are unchanged.
+  Tests: `tests/test_v1250_callback_projection.py` (bounded deny < 2s, one
+  projection per run, TimeoutExpired survival, failure audit without replay).
+
 ## [1.2.46] - 2026-10-09
 
 ### Security

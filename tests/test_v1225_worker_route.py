@@ -93,6 +93,7 @@ def test_company_route_denies_still_park_card_with_continuation(tmp_path, monkey
     monkeypatch.setenv("HERMES_KANBAN_BOARD", "fleet-ops")
     result = module.pre_tool_call(tool_name="terminal", args={"command": "git push origin main"})
     assert result["action"] == "block"
+    module._PROJECTIONS.join(timeout=10)  # v1.2.50: projection is off the callback path
     assert len(calls) == 1
     assert calls[0][0] == "fleet-ops" and calls[0][1] == "t_v1225a" and calls[0][3] is True
     assert "next_step=" in calls[0][2]
@@ -126,4 +127,5 @@ def test_owner_route_secret_denies_park_card(tmp_path, monkeypatch):
     monkeypatch.setenv("HERMES_KANBAN_BOARD", "fleet-ops")
     result = module.pre_tool_call(tool_name="read_file", args={"path": "." + "env"})
     assert result["action"] == "block"
+    module._PROJECTIONS.join(timeout=10)  # v1.2.50: projection is off the callback path
     assert len(calls) == 1
