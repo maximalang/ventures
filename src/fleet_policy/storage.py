@@ -320,7 +320,11 @@ class PolicyStore:
             return cursor.rowcount == 1
 
     def delete_event(self, event_id: str) -> bool:
-        """Release a non-significant idempotency claim after failed delivery."""
+        """Drop a non-significant ledger row (explicit operator re-arm only).
+
+        The projection path no longer uses this: a failed projection keeps its
+        claim (v1.2.50), and only a new run's claim may retry the delivery.
+        """
         with self.connect() as connection:
             cursor = connection.execute(
                 "DELETE FROM events WHERE event_id=? AND significant=0", (event_id,)

@@ -16,11 +16,15 @@ if str(SRC) not in sys.path:
 
 from fleet_policy.kanban_context import load_task_context  # noqa: E402
 from fleet_policy.policy import classify  # noqa: E402
-from fleet_policy.projector import HermesProjector  # noqa: E402
+from fleet_policy.projector import HermesProjector, ProjectionExecutor  # noqa: E402
 from fleet_policy.runtime import FleetPolicyRuntime  # noqa: E402
 
 _RUNTIME: FleetPolicyRuntime | None = None
 _PROJECTOR = HermesProjector()
+# One projection thread per claimed deny, never one per tool call: the tool
+# call returns immediately (bounded fast path inside submit) while the nested
+# `hermes kanban block` finishes off the critical path.
+_PROJECTIONS = ProjectionExecutor()
 _KANBAN_TASK_RE = re.compile(r"^t_[0-9a-f]{6,}$")
 
 
@@ -80,31 +84,82 @@ def _continuation(payload: dict[str, Any]) -> str | None:
 
 
 def _project(payload: dict[str, Any]) -> None:
+    """Project one deny/approval onto its card — never on the caller's budget.
+
+    v1.2.50 (incident 2026-10-16): the projection is delivered asynchronously
+    and claimed once per run. Two former properties were the defect:
+
+    * the nested ``hermes kanban block`` ran synchronously in front of every
+      denied tool call, and one CLI invocation costs ~8s of process start, so
+      the hook's 20s bound expired (``TimeoutExpired 20.10s``) and the worker
+      crash-looped;
+    * a failed projection released its claim, so *every* following tool call of
+      the same run replayed the same CLI — the crash-loop amplifier.
+
+    Now a claim is taken once per ``run_key`` and kept even when delivery
+    fails; the failure is audited as ``projection_failed`` and the next run's
+    claim retries it. Whatever happens in the delivery thread, this function
+    returns immediately and never raises: the deny decision is what the caller
+    needs, the card move is bookkeeping.
+    """
     # This denial is emitted only after a primary projection already moved the
     # card to blocked. Re-projecting it produces comments without changing the
     # stop outcome and can amplify fallback chains into owner-visible noise.
     if payload.get("rule_id") == "task_already_blocked":
         return
     task_id = str(payload.get("task_id") or "")
-    if not task_id or not runtime().claim_projection(payload):
-        return
-    board = str(payload.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "default")
-
-    # Synchronous official CLI projection is deliberate: a daemon thread could be
-    # killed with a short-lived worker before the block lands. `kanban block` also
-    # appends the evidence comment and normally completes in <2s; the callback's
-    # 30s Hermes timeout remains fail-closed if the CLI itself is unavailable.
     try:
-        result = _PROJECTOR.comment_and_block(board, task_id, _message(payload), block=True)
+        if not task_id or not runtime().claim_projection(payload):
+            return
+        board = str(payload.get("board") or os.environ.get("HERMES_KANBAN_BOARD") or "default")
+        message = _message(payload)
+        _PROJECTIONS.submit(lambda: _deliver_projection(payload, board, task_id, message))
     except Exception:
-        runtime().release_projection(payload)
-        raise
-    if result.get("block") != 0:
-        runtime().release_projection(payload)
+        # Fail-open on the callback path only: a broken projection must not turn
+        # a policy deny into a crashed tool call.
+        return
     # Company notifications are NOT drained here: _project fires on every
     # significant deny/approval, so auto-drain would retry the whole pending
     # outbox per blocked call and spam company's Bot Chat. Delivery is explicit:
     # `fleet-policy drain-notifications`.
+
+
+def _deliver_projection(payload: dict[str, Any], board: str, task_id: str, message: str) -> None:
+    """Runs in the projection thread: bounded CLI call, audited outcome.
+
+    A degraded disposition verb (the host CLI lost its fleet-patched
+    ``policy_denied`` kind) still blocks the card, so it is audited separately
+    from a real failure: the card move happened, the vocabulary did not.
+    """
+    try:
+        result = _PROJECTOR.comment_and_block(board, task_id, message, block=True)
+    except Exception as exc:
+        _audit_projection_failure(payload, type(exc).__name__)
+        return
+    if result.get("block") != 0:
+        detail = f"block_exit_{result.get('block')}"
+        if result.get("block_kind"):
+            detail = f"{detail} kind={result['block_kind']}"
+        _audit_projection_failure(payload, detail)
+        return
+    if result.get("block_kind"):
+        _audit_projection_fallback(payload, str(result["block_kind"]))
+
+
+def _audit_projection_failure(payload: dict[str, Any], detail: str) -> None:
+    try:
+        runtime().record_projection_failure(payload, detail)
+    except Exception:
+        # The deny already reached the worker; a failed audit changes nothing.
+        return
+
+
+def _audit_projection_fallback(payload: dict[str, Any], kind: str) -> None:
+    try:
+        runtime().record_projection_fallback(payload, kind)
+    except Exception:
+        # The card is already blocked; losing the audit must not raise here.
+        return
 
 
 def pre_tool_call(tool_name: str = "", args: Any = None, **kwargs: Any) -> dict[str, Any] | None:

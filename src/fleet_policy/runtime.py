@@ -596,7 +596,58 @@ class FleetPolicyRuntime:
         )
 
     def release_projection(self, payload: dict[str, Any]) -> bool:
+        """Drop a projection claim so an explicit operator/CLI action can re-arm it.
+
+        NOT part of the tool-call path any more (v1.2.50): releasing the claim
+        from the deny callback made every following tool call of the same run
+        replay the nested ``hermes kanban block`` CLI, which is exactly how the
+        2026-10-16 stall amplified. Delivery failures are audited through
+        ``record_projection_failure`` and retried by the next run's claim.
+        """
         return self.store.delete_event(self.projection_event_id(payload))
+
+    def record_projection_failure(self, payload: dict[str, Any], detail: str) -> bool:
+        """Audit a failed card projection while KEEPING its claim.
+
+        Keeping the claim is the point: one deny covers a whole run, so a
+        repetition of the same deny may not trigger a second nested CLI call.
+        The claim is keyed on ``run_key``, so a new run retries the projection.
+        """
+        event_id = stable_id(self.projection_event_id(payload), "failed", detail)
+        return self.store.record_event(
+            event_id, event_id, str(payload.get("task_id") or "") or None,
+            "projection_failed",
+            {
+                "source_rule": payload.get("rule_id"),
+                "detail": str(detail)[:200],
+                "board": payload.get("board"),
+                "run_key": payload.get("run_key"),
+            },
+            False,
+        )
+
+    def record_projection_fallback(self, payload: dict[str, Any], kind: str) -> bool:
+        """Audit a projection that landed with a degraded disposition verb.
+
+        The typed disposition (``--kind policy_denied``) reaches the host CLI
+        only through the fleet's required update-lock patch
+        (docs/fleet-ops/hermes-update-locks-20261001/FLEET-UPDATE-AUDIT.md).
+        On an unpatched host the card still lands blocked under the fallback
+        verb -- the deny is not weakened -- but the degraded verb is recorded,
+        because it is the signal that the host CLI lost its patch.
+        """
+        event_id = stable_id(self.projection_event_id(payload), "fallback", kind)
+        return self.store.record_event(
+            event_id, event_id, str(payload.get("task_id") or "") or None,
+            "projection_fallback",
+            {
+                "source_rule": payload.get("rule_id"),
+                "block_kind": str(kind)[:40],
+                "board": payload.get("board"),
+                "run_key": payload.get("run_key"),
+            },
+            False,
+        )
 
     def post_tool_call(self, tool_name: str, arguments: dict[str, Any], context: dict[str, Any], *,
                        success: bool, error_type: str = "", error_message: str = "") -> dict[str, Any] | None:
